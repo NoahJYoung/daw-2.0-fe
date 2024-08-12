@@ -1,0 +1,15 @@
+{
+  "helloWorld": "Hello World!",
+  "changeLanguage": "Change Language",
+  "requestNotifications": {
+    "titles": {
+      "success": "Success!",
+      "error": "Oops! Something went wrong"
+    },
+    "summaries": {
+      "create": { "success": "{{item}} created successfully" },
+      "update": { "success": "{{item}} updated successfully" },
+      "delete": { "success": "{{item}} deleted successfully" }
+    }
+  }
+}
