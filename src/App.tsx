@@ -5,23 +5,29 @@ import { routes } from "./routes";
 import { useThemeContext } from "./hooks";
 import { Button } from "./components/ui/button";
 import { useTranslation } from "react-i18next";
+import { useToast } from "./components/ui/use-toast";
+import "./i18n";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
 
 function App() {
   const { theme, toggleTheme } = useThemeContext();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const { toast } = useToast();
 
-  const newLanguage = i18n.language === "en" ? "es" : "en";
+  const testToast = () => {
+    toast({ title: "Hello!", description: `Theme changed to: ${theme}` });
+  };
+
+  const onClick = () => {
+    toggleTheme();
+    testToast();
+  };
 
   return (
-    <div className={theme}>
-      <Button onClick={toggleTheme}>Toggle Theme</Button>
-      <Button onClick={() => i18n.changeLanguage(newLanguage)}>
-        {t("changeLanguage")}
-      </Button>
-
+    <div className={`w-full ${theme}`}>
+      <Button onClick={onClick}>{t("toggleTheme")}</Button>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <Toaster />

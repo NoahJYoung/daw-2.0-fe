@@ -1,6 +1,7 @@
 {
   "helloWorld": "Hello World!",
   "changeLanguage": "Change Language",
+  "toggleTheme": "Toggle Theme",
   "requestNotifications": {
     "titles": {
       "success": "Success!",
