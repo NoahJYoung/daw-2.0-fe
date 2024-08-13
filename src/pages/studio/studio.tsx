@@ -3,6 +3,7 @@ import { AudioEngine } from "./audio-engine";
 import { Button } from "@/components/ui/button";
 import { UndoManager, undoMiddleware } from "mobx-keystone";
 import { useEffect, useState } from "react";
+import { Clip, exampleTrack, Track } from "./audio-engine/audio-engine";
 
 export const Studio = observer(() => {
   const [audioEngine, setAudioEngine] = useState<AudioEngine | null>(null);
@@ -21,17 +22,24 @@ export const Studio = observer(() => {
   };
 
   useEffect(() => {
-    const engine = new AudioEngine({ text: "Test text" });
+    const clip = new Clip({ text: "test text" });
+    const track = new Track({ clips: [clip] });
+    const engine = new AudioEngine({
+      text: "Test text",
+      tracks: [track],
+    });
     setAudioEngine(engine);
     setUndoManager(undoMiddleware(engine));
   }, []);
 
   return (
     <div>
-      <span>{audioEngine?.text}</span>
+      <span>{audioEngine?.tracks?.[0]?.clips?.[0].text}</span>
       <Button
         onClick={() => {
-          audioEngine?.setText("did the component rerender?");
+          audioEngine?.tracks?.[0]?.clips?.[0].setText(
+            "did the component rerender?"
+          );
         }}
       >
         Click me
