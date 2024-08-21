@@ -6,9 +6,12 @@ export class BaseAudioNodeWrapper extends Model({}) {
     onPatches(this, () => {
       this.sync();
     });
+    this.init();
   }
 
   protected sync(): void {}
+
+  protected init(): void {}
 
   public serialize() {
     return getSnapshot(this);

@@ -10,7 +10,7 @@ export class Transport extends ExtendedModel(BaseAudioNodeWrapper, {
   bpm: prop(Tone.getTransport().bpm.value).withSetter(),
   timeSignature: prop(Tone.getTransport().timeSignature as number).withSetter(),
   measures: prop(200).withSetter(),
-  samplesPerPixel: prop(32).withSetter(),
+  samplesPerPixel: prop(4096).withSetter(),
   ticks: prop(0).withSetter(),
 }) {
   toneTransport = Tone.getTransport();
@@ -21,12 +21,12 @@ export class Transport extends ExtendedModel(BaseAudioNodeWrapper, {
     this.toneTransport.ticks = this.ticks;
   }
 
-  zoomIn() {
+  zoomOut() {
     if (this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL) {
       this.setSamplesPerPixel(this.samplesPerPixel * 2);
     }
   }
-  zoomOut() {
+  zoomIn() {
     if (this.samplesPerPixel >= MIN_SAMPLES_PER_PIXEL) {
       this.setSamplesPerPixel(this.samplesPerPixel / 2);
     }

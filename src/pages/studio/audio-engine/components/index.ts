@@ -1,3 +1,5 @@
 export { Transport } from "./transport";
 export { Track } from "./track";
-export { Clip } from "./clip";
+export { AudioClip } from "./audio-clip";
+export { MidiClip } from "./midi-clip";
+export { Mixer } from "./mixer";

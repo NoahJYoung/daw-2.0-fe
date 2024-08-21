@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { AudioEngineProvider, UndoManagerProvider } from "./hooks";
-import { TestComponent } from "./components/test-component";
+import { TestComponent } from "./components/test-components/test-component";
 import { HotKeysManager } from "./components";
 
 export const Studio = observer(() => {
