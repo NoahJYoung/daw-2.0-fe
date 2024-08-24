@@ -9,6 +9,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   track: prop<Track>(),
   audioBuffer: prop<Tone.ToneAudioBuffer>(),
+  loopSamples: prop<number>(0),
   start: prop<number>().withSetter(),
   notes: prop<unknown[]>(() => []),
 }) {
@@ -28,6 +29,8 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   get end(): number {
     return this.start + this.length;
   }
+
+  setLoopSamples() {}
 
   dispose() {
     // TODO:

@@ -2,7 +2,7 @@ import { Slider } from "@/components/ui/slider";
 import type { Track } from "../../audio-engine/components";
 import { observer } from "mobx-react-lite";
 import { Input } from "@/components/ui/input";
-import { useAudioEngine } from "../../hooks";
+import { useAudioEngine, useDeferredUpdate } from "../../hooks";
 import { Button } from "@/components/ui/button";
 
 interface TestComponentProps {
@@ -12,20 +12,31 @@ interface TestComponentProps {
 export const TestTrack = observer(({ track }: TestComponentProps) => {
   const { mixer } = useAudioEngine();
 
-  const handlePanChange = (values: number[]) => {
-    const [value] = values;
-    track.setPan(value);
-  };
+  const {
+    localValue: volumeInput,
+    onValueChange: onVolumeChange,
+    onValueCommit: commitVolumeChange,
+  } = useDeferredUpdate<number[]>(
+    [track.volume],
+    (values) => track.setVolume(values[0]),
+    [track.volume]
+  );
 
-  const handleVolumeChange = (value: number) => {
-    track.setVolume(value);
-  };
+  const {
+    localValue: panInput,
+    onValueChange: onPanChange,
+    onValueCommit: commitPanChange,
+  } = useDeferredUpdate<number[]>(
+    [track.pan],
+    (values) => track.setPan(values[0]),
+    [track.pan]
+  );
 
   const selected = mixer.selectedTracks.includes(track);
 
   return (
     <div
-      className="flex flex-col"
+      className="flex flex-col items-center"
       style={{
         padding: 10,
         width: 120,
@@ -36,6 +47,7 @@ export const TestTrack = observer(({ track }: TestComponentProps) => {
       <Button onClick={() => track.setActive(!track.active)}>
         {track.active ? "Deactivate" : "Activate"}
       </Button>
+
       <Input
         onChange={(e) => track.setName(e.target.value)}
         value={track.name}
@@ -43,8 +55,9 @@ export const TestTrack = observer(({ track }: TestComponentProps) => {
       <div className="flex w-full gap-1 items-center">
         <p>L</p>
         <Slider
-          onValueChange={handlePanChange}
-          value={[track.pan]}
+          onValueChange={onPanChange}
+          onValueCommit={commitPanChange}
+          value={panInput}
           min={-1}
           max={1}
           step={0.02}
@@ -52,14 +65,14 @@ export const TestTrack = observer(({ track }: TestComponentProps) => {
         <p>R</p>
       </div>
 
-      <input
-        type="range"
-        style={{ writingMode: "vertical-rl", direction: "rtl", height: "100%" }}
-        onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
+      <Slider
+        onValueChange={onVolumeChange}
+        orientation="vertical"
+        onValueCommit={commitVolumeChange}
         step={0.01}
         min={-100}
         max={0}
-        value={track.volume}
+        value={volumeInput}
       />
     </div>
   );

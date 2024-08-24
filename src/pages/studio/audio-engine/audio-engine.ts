@@ -1,19 +1,39 @@
 import { model, prop, ExtendedModel } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
-import { AudioClip, Mixer, Transport } from "./components";
-import * as Tone from "tone";
+import { AudioClip, Mixer, Timeline } from "./components";
 import { getSerializableAudioData } from "./helpers";
+import { action, observable } from "mobx";
+import { AudioEngineState } from "./types";
+import * as Tone from "tone";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
-  transport: prop<Transport>(() => new Transport({})),
+  timeline: prop<Timeline>(() => new Timeline({})),
   mixer: prop<Mixer>(() => new Mixer({})),
   projectId: prop<string | undefined>().withSetter(),
   projectName: prop<string>("New Project").withSetter(),
 }) {
+  @observable
+  state: AudioEngineState = AudioEngineState.stopped;
+
+  init() {
+    const ctx = new AudioContext({ sampleRate: 44100 });
+    const toneCtx = new Tone.Context(ctx);
+    Tone.setContext(toneCtx);
+    console.log(
+      "Initializing context with sample rate: ",
+      Tone.getContext().sampleRate
+    );
+  }
+
+  @action
+  private setState(state: AudioEngineState) {
+    this.state = state;
+  }
+
   mockRecord = async () => {
     Tone.start();
-    console.log("started tone");
+    console.log("started recording");
     const mic = new Tone.UserMedia();
     const recorder = new Tone.Recorder();
 
@@ -25,18 +45,21 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       console.error(error);
     }
 
+    this.setState(AudioEngineState.recording);
+
     if (this.mixer.tracks.length) {
       await recorder.start();
 
-      console.log("recording");
       setTimeout(async () => {
         const recording = await recorder.stop();
+        this.setState(AudioEngineState.stopped);
+
         const url = URL.createObjectURL(recording);
         const audioData = (await new Tone.ToneAudioBuffer().load(url))
           .toMono()
           .toArray();
 
-        const targetTrack = this.mixer.tracks[0];
+        const targetTrack = this.mixer.tracks[this.mixer.tracks.length - 1];
         const clip = new AudioClip({
           trackId: targetTrack.id,
           start: 0,
@@ -46,7 +69,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
         recorder.dispose();
         mic.dispose();
-      }, 4000);
+      }, 2000);
     }
   };
+
+  mockPlay = async () => {};
 }
