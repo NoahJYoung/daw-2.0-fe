@@ -1,0 +1,11 @@
+export enum GridSubdivision {
+  WHOLE_NOTE = "1n",
+  HALF_NOTE = "2n",
+  HALF_NOTE_TRIPLET = "2t",
+  QUARTER_NOTE = "4n",
+  QUARTER_NOTE_TRIPLET = "4t",
+  EIGHTH_NOTE = "8n",
+  EIGHTH_NOTE_TRIPLET = "8t",
+  SIXTEENTH_NOTE = "16n",
+  SIXTEENTH_NOTE_TRIPLET = "16t",
+}

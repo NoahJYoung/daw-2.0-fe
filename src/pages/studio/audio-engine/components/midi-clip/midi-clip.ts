@@ -32,6 +32,8 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   setLoopSamples() {}
 
+  split() {}
+
   dispose() {
     // TODO:
   }

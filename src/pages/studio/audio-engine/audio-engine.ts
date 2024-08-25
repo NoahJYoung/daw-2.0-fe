@@ -1,7 +1,7 @@
 import { model, prop, ExtendedModel } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
 import { AudioClip, Mixer, Timeline } from "./components";
-import { getSerializableAudioData } from "./helpers";
+import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
 import { AudioEngineState } from "./types";
 import * as Tone from "tone";
@@ -55,21 +55,25 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setState(AudioEngineState.stopped);
 
         const url = URL.createObjectURL(recording);
-        const audioData = (await new Tone.ToneAudioBuffer().load(url))
-          .toMono()
-          .toArray();
+        const audioBuffer = await new Tone.ToneAudioBuffer().load(url);
+        // .toMono()
+        // .toArray();
 
         const targetTrack = this.mixer.tracks[this.mixer.tracks.length - 1];
         const clip = new AudioClip({
           trackId: targetTrack.id,
           start: 0,
-          audioData: getSerializableAudioData(audioData),
+          // audioData,
         });
+
+        audioBufferCache.add(clip.id, audioBuffer.toMono());
+        clip.setBuffer(audioBuffer);
         targetTrack.createAudioClip(clip);
 
         recorder.dispose();
         mic.dispose();
-      }, 2000);
+        console.log("stoppedRecording");
+      }, 4000);
     }
   };
 

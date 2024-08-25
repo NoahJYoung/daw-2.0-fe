@@ -38,17 +38,16 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   createAudioClip = (clip: AudioClip) => {
-    console.log("called createAudioClip");
     this.clips.push(clip);
-    console.log("reached end");
   };
 
   @modelAction
-  removeClip(audioClip: AudioClip) {
+  deleteClip(audioClip: Clip) {
     const index = this.clips.indexOf(audioClip);
     if (index >= 0) {
       this.clips.splice(index, 1);
     }
+    audioClip.dispose();
   }
 
   @computed

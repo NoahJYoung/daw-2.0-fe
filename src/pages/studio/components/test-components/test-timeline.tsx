@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite";
 import { Track } from "../../audio-engine/components";
-import { useAudioEngine } from "../../hooks";
 import { TestClip } from "./test-clip";
 
 interface TestTimelineProps {
@@ -8,8 +7,6 @@ interface TestTimelineProps {
 }
 
 export const TestTimeline = observer(({ tracks }: TestTimelineProps) => {
-  const audioEngine = useAudioEngine();
-
   return (
     <div className="flex flex-col">
       {tracks.map((track) => (

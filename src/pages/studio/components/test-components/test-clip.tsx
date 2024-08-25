@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import { Track } from "../../audio-engine/components";
+import React, { useState, useEffect, useCallback } from "react";
+import { AudioClip, Track } from "../../audio-engine/components";
 import { useAudioEngine, useUndoManager } from "../../hooks";
 import { observer } from "mobx-react-lite";
 import { Clip } from "../../audio-engine/components/types";
+import { audioBufferCache } from "../../audio-engine/components/audio-buffer-cache";
 
 export const TestClip = observer(
   ({ clip, track }: { clip: Clip; track: Track }) => {
@@ -10,7 +11,37 @@ export const TestClip = observer(
     const audioEngine = useAudioEngine();
     const undoManager = useUndoManager();
 
-    const onMouseDown = () => {
+    const onMouseDown = (e: React.MouseEvent) => {
+      // TODO: REMOVE THIS AFTER TESTING
+      if (e.ctrlKey) {
+        const data = clip.split(
+          audioEngine.timeline.pixelsToSamples(e.clientX - 200)
+        );
+        if (data) {
+          const { snapshots, clipIdToDelete } = data;
+          snapshots.forEach((snapshot) => {
+            const { buffer, trackId, start, fadeInSamples, fadeOutSamples } =
+              snapshot;
+            const clip = new AudioClip({
+              trackId,
+              start,
+              fadeInSamples,
+              fadeOutSamples,
+            });
+            audioBufferCache.add(clip.id, buffer);
+            clip.setBuffer(buffer);
+            track.createAudioClip(clip);
+            const oldClip = track.clips.find(
+              (clip) => clip.id === clipIdToDelete
+            );
+            if (oldClip) {
+              track.deleteClip(oldClip);
+            }
+          });
+        }
+        return;
+      }
+
       setDragging(true);
       undoManager.withGroup(() => {
         audioEngine.mixer.tracks.forEach((track) => {
@@ -27,25 +58,28 @@ export const TestClip = observer(
           );
 
           undoManager.withoutUndo(() => {
-            audioEngine.mixer.tracks.forEach((track) => {
-              track.clips.forEach((clip) =>
-                clip.setStart(clip.start + movementXInSamples)
-              );
-            });
+            const position = clip.start + movementXInSamples;
+            clip.setStart(position >= 0 ? position : 0);
           });
         }
       },
-      [audioEngine.mixer.tracks, audioEngine.timeline, dragging, undoManager]
+      [audioEngine.timeline, clip, dragging, undoManager]
     );
 
-    const onMouseUp = () => {
-      undoManager.withoutUndo(() => {
-        audioEngine.mixer.tracks.forEach((track) => {
-          track.clips.forEach((clip) => clip.setStart(clip.start - 1));
+    const onMouseUp = useCallback(
+      (e: MouseEvent) => {
+        if (e.ctrlKey) {
+          return;
+        }
+        undoManager.withoutUndo(() => {
+          audioEngine.mixer.tracks.forEach((track) => {
+            track.clips.forEach((clip) => clip.setStart(clip.start - 1));
+          });
         });
-      });
-      setDragging(false);
-    };
+        setDragging(false);
+      },
+      [audioEngine.mixer.tracks, undoManager]
+    );
 
     const clipWidth = audioEngine.timeline.samplesToPixels(clip.length);
     const clipLeft = audioEngine.timeline.samplesToPixels(clip.start);
@@ -60,7 +94,7 @@ export const TestClip = observer(
         window.removeEventListener("mouseup", onMouseUp);
         window.removeEventListener("mousemove", onMouseMove);
       };
-    }, [onMouseMove]);
+    }, [onMouseMove, onMouseUp]);
 
     return (
       <div onMouseDown={onMouseDown} key={clip.id}>
@@ -73,7 +107,7 @@ export const TestClip = observer(
             width: clipWidth,
           }}
         />
-        {clip.loopSamples && (
+        {clip.loopSamples > 0 && (
           <div
             style={{
               height: 80,

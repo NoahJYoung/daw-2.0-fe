@@ -1,31 +1,32 @@
 import { ExtendedModel, idProp, model, modelAction, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import * as Tone from "tone";
-import { getAudioBufferFromNumberArray } from "../../helpers";
-import { action, computed, observable } from "mobx";
+// import {
+//   getAudioBufferFromNumberArray,
+//   getSerializableAudioData,
+// } from "../../helpers";
+import { computed, observable } from "mobx";
+import { audioBufferCache } from "../audio-buffer-cache";
 
 @model("AudioEngine/Mixer/Track/AudioClip")
 export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
+  type: prop("audio"),
   trackId: prop<string>(),
   start: prop<number>().withSetter(),
   loopSamples: prop<number>(0),
-  audioData: prop<number[] | number[][]>(),
+  fadeInSamples: prop<number>(0),
+  fadeOutSamples: prop<number>(0),
 }) {
-  player = new Tone.Player().toDestination();
-  public startEventId: number | null = null;
-  public stopEventId: number | null = null;
+  player = new Tone.Player();
+  private startEventId: number | null = null;
+  private stopEventId: number | null = null;
 
   @observable
   buffer: Tone.ToneAudioBuffer | null = null;
 
   getRefId() {
     return this.id;
-  }
-
-  init() {
-    const toneBuffer = getAudioBufferFromNumberArray(this.audioData);
-    this.setBuffer(toneBuffer);
   }
 
   @computed
@@ -43,7 +44,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     return this.start + this.length;
   }
 
-  @action
+  @modelAction
   setBuffer(buffer: Tone.ToneAudioBuffer) {
     this.buffer = buffer;
     this.setPlayerBuffer();
@@ -69,6 +70,43 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   setLoopSamples(samples: number) {
     this.loopSamples = samples;
     this.setPlayerBuffer();
+  }
+
+  init() {
+    const cachedBuffer = audioBufferCache.get(this.id);
+    if (cachedBuffer) {
+      this.setBuffer(cachedBuffer);
+    }
+  }
+
+  split(positionInSamples: number) {
+    if (
+      !this.buffer ||
+      positionInSamples < this.start ||
+      positionInSamples > this.end
+    ) {
+      return;
+    }
+    const clipOne = {
+      start: this.start,
+      trackId: this.trackId,
+      fadeInSamples: this.fadeInSamples,
+      fadeOutSamples: 0,
+      buffer: new Tone.ToneAudioBuffer().fromArray(
+        this.buffer?.toArray().slice(0, positionInSamples)
+      ),
+    };
+    const clipTwo = {
+      start: positionInSamples,
+      trackId: this.trackId,
+      fadeInSamples: 0,
+      fadeOutSamples: this.fadeOutSamples,
+      buffer: new Tone.ToneAudioBuffer().fromArray(
+        this.buffer?.toArray().slice(positionInSamples, this.end)
+      ),
+    };
+
+    return { snapshots: [clipOne, clipTwo], clipIdToDelete: this.id };
   }
 
   private setPlayerBuffer() {
@@ -144,7 +182,14 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     return new Tone.ToneAudioBuffer(concatenatedBuffer);
   };
 
-  sync() {}
+  sync() {
+    if (!this.buffer) {
+      const cachedBuffer = audioBufferCache.get(this.id);
+      if (cachedBuffer) {
+        this.setBuffer(cachedBuffer);
+      }
+    }
+  }
 
   dispose() {
     // TODO:

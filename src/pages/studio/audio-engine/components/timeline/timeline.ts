@@ -1,9 +1,7 @@
 import { model, ExtendedModel, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
+import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
 import * as Tone from "tone";
-
-const MAX_SAMPLES_PER_PIXEL = 4096;
-const MIN_SAMPLES_PER_PIXEL = 32;
 
 @model("AudioEngine/Transport")
 export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -12,6 +10,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   measures: prop(200).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
   ticks: prop(0).withSetter(),
+  grid: prop("4n").withSetter(),
 }) {
   sync() {
     const transport = Tone.getTransport();

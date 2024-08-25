@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo } from "react";
 import { useAudioEngine } from "../use-audio-engine";
 import { UndoManager, undoMiddleware } from "mobx-keystone";
+import { MAX_UNDO_LEVELS } from "../../audio-engine/constants";
 
 type UndoManagerContextType = UndoManager | null;
 
@@ -24,7 +25,14 @@ export const UndoManagerProvider: React.FC<AudioEngineProviderProps> = ({
   children,
 }) => {
   const audioEngine = useAudioEngine();
-  const undoManager = useMemo(() => undoMiddleware(audioEngine), [audioEngine]);
+  const undoManager = useMemo(
+    () =>
+      undoMiddleware(audioEngine, undefined, {
+        maxUndoLevels: MAX_UNDO_LEVELS,
+        maxRedoLevels: MAX_UNDO_LEVELS,
+      }),
+    [audioEngine]
+  );
 
   return (
     <AudioEngineContext.Provider value={undoManager}>
