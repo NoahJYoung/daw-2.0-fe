@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Track } from "../../audio-engine/components";
 import { observer } from "mobx-react-lite";
+import { BASE_TRACK_HEIGHT } from "../../utils/constants";
 
 interface TestTrackPanelsProps {
   tracks: Track[];
@@ -16,7 +17,7 @@ export const TestTrackPanels = observer(({ tracks }: TestTrackPanelsProps) => {
           style={{
             border: `1px solid ${track.rgbColor}`,
             width: 200,
-            height: 80,
+            height: BASE_TRACK_HEIGHT,
           }}
         >
           <Input

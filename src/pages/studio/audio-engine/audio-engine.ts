@@ -31,7 +31,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     this.state = state;
   }
 
-  mockRecord = async () => {
+  record = async () => {
     Tone.start();
     console.log("started recording");
     const mic = new Tone.UserMedia();

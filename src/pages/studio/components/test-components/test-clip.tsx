@@ -4,6 +4,7 @@ import { useAudioEngine, useUndoManager } from "../../hooks";
 import { observer } from "mobx-react-lite";
 import { Clip } from "../../audio-engine/components/types";
 import { audioBufferCache } from "../../audio-engine/components/audio-buffer-cache";
+import { BASE_TRACK_HEIGHT } from "../../utils/constants";
 
 export const TestClip = observer(
   ({ clip, track }: { clip: Clip; track: Track }) => {
@@ -15,7 +16,7 @@ export const TestClip = observer(
       // TODO: REMOVE THIS AFTER TESTING
       if (e.ctrlKey) {
         const data = clip.split(
-          audioEngine.timeline.pixelsToSamples(e.clientX - 200)
+          audioEngine.timeline.pixelsToSamples(e.clientX - 220)
         );
         if (data) {
           const { snapshots, clipIdToDelete } = data;
@@ -100,7 +101,7 @@ export const TestClip = observer(
       <div onMouseDown={onMouseDown} key={clip.id}>
         <div
           style={{
-            height: 80,
+            height: BASE_TRACK_HEIGHT,
             background: track.rgbColor,
             position: "absolute",
             left: clipLeft,
@@ -110,7 +111,7 @@ export const TestClip = observer(
         {clip.loopSamples > 0 && (
           <div
             style={{
-              height: 80,
+              height: BASE_TRACK_HEIGHT,
               border: `1px solid ${track.rgbColor}`,
               position: "absolute",
               left: loopLeft,

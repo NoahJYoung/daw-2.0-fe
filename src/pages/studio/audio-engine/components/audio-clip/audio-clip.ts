@@ -1,10 +1,6 @@
 import { ExtendedModel, idProp, model, modelAction, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import * as Tone from "tone";
-// import {
-//   getAudioBufferFromNumberArray,
-//   getSerializableAudioData,
-// } from "../../helpers";
 import { computed, observable } from "mobx";
 import { audioBufferCache } from "../audio-buffer-cache";
 
@@ -81,19 +77,21 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   split(positionInSamples: number) {
     if (
-      !this.buffer ||
+      !this.buffer?.loaded ||
       positionInSamples < this.start ||
       positionInSamples > this.end
     ) {
       return;
     }
+
     const clipOne = {
       start: this.start,
       trackId: this.trackId,
       fadeInSamples: this.fadeInSamples,
       fadeOutSamples: 0,
-      buffer: new Tone.ToneAudioBuffer().fromArray(
-        this.buffer?.toArray().slice(0, positionInSamples)
+      buffer: this.buffer?.slice(
+        0,
+        Tone.Time(positionInSamples - this.start, "samples").toSeconds()
       ),
     };
     const clipTwo = {
@@ -101,8 +99,8 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
       trackId: this.trackId,
       fadeInSamples: 0,
       fadeOutSamples: this.fadeOutSamples,
-      buffer: new Tone.ToneAudioBuffer().fromArray(
-        this.buffer?.toArray().slice(positionInSamples, this.end)
+      buffer: this.buffer?.slice(
+        Tone.Time(positionInSamples - this.start, "samples").toSeconds()
       ),
     };
 
@@ -189,6 +187,9 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setBuffer(cachedBuffer);
       }
     }
+
+    this.player.fadeIn = Tone.Time(this.fadeInSamples, "samples").toSeconds();
+    this.player.fadeOut = Tone.Time(this.fadeOutSamples, "samples").toSeconds();
   }
 
   dispose() {

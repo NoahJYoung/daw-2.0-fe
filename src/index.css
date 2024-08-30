@@ -29,6 +29,20 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* surface layers light */
+
+    --surface-10: 240, 10%, 4%;
+    --surface-9: 240, 6%, 10%;
+    --surface-8: 240, 4%, 16%;
+    --surface-7: 240, 5%, 26%;
+    --surface-6: 240, 5%, 34%;
+    --surface-5: 240, 4%, 46%;
+    --surface-4: 240, 5%, 65%;
+    --surface-3: 240, 5%, 84%;
+    --surface-2: 240, 6%, 90%;
+    --surface-1: 240, 5%, 96%;
+    --surface-0: 0, 0%, 98%;
   }
 
   .dark {
@@ -56,6 +70,20 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* surface layers dark */
+
+    --surface-0: 240, 10%, 4%;
+    --surface-1: 240, 6%, 10%;
+    --surface-2: 240, 4%, 16%;
+    --surface-3: 240, 5%, 26%;
+    --surface-4: 240, 5%, 34%;
+    --surface-5: 240, 4%, 46%;
+    --surface-6: 240, 5%, 65%;
+    --surface-7: 240, 5%, 84%;
+    --surface-8: 240, 6%, 90%;
+    --surface-9: 240, 5%, 96%;
+    --surface-10: 0, 0%, 98%;
   }
 }
 
@@ -65,5 +93,16 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

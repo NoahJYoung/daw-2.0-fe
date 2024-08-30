@@ -1,15 +1,15 @@
 import { Slider } from "@/components/ui/slider";
-import type { Track } from "../../audio-engine/components";
 import { observer } from "mobx-react-lite";
 import { Input } from "@/components/ui/input";
-import { useAudioEngine, useDeferredUpdate } from "../../hooks";
 import { Button } from "@/components/ui/button";
+import type { Track } from "@/pages/studio/audio-engine/components";
+import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
 
 interface TestComponentProps {
   track: Track;
 }
 
-export const TestTrack = observer(({ track }: TestComponentProps) => {
+export const ChannelStrip = observer(({ track }: TestComponentProps) => {
   const { mixer } = useAudioEngine();
 
   const {

@@ -1,0 +1,4 @@
+export const BASE_TRACK_HEIGHT = 82;
+export const SCROLLBAR_OFFSET = 16;
+export const TRACK_PANEL_COLLAPSED_WIDTH = 36;
+export const TRACK_PANEL_EXPANDED_WIDTH = 220;

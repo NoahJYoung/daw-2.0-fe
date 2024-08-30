@@ -34,14 +34,32 @@ export const HotKeysManager = observer(() => {
     }
   });
 
-  useHotkeys("add", (event) => {
+  useHotkeys("shift+add", (event) => {
     event.preventDefault();
-    audioEngine.transport.zoomIn();
+    undoManager.withoutUndo(() => {
+      event.preventDefault();
+      audioEngine.timeline.zoomIn();
+    });
   });
 
-  useHotkeys("subtract", (event) => {
+  useHotkeys("shift+subtract", (event) => {
     event.preventDefault();
-    audioEngine.transport.zoomOut();
+    undoManager.withoutUndo(() => {
+      event.preventDefault();
+      audioEngine.timeline.zoomOut();
+    });
+  });
+
+  useHotkeys("shift+t", (event) => {
+    event.preventDefault();
+    audioEngine.mixer.createTrack();
+  });
+
+  useHotkeys("shift+r", (event) => {
+    event.preventDefault();
+    undoManager.withoutUndo(() => {
+      audioEngine.record();
+    });
   });
 
   return null;
