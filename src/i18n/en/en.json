@@ -12,5 +12,30 @@
       "update": { "success": "{{item}} updated successfully" },
       "delete": { "success": "{{item}} deleted successfully" }
     }
+  },
+  "studio": {
+    "toolbar": {
+      "metronome": "Metronome",
+      "snapToGrid": "Snap to grid",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "copy": "Copy",
+      "paste": "Paste",
+      "settings": "Settings",
+      "undo": "Undo",
+      "redo": "Redo",
+      "download": "Download",
+      "save": "Save",
+      "userMenu": "User menu",
+      "subdivision": "Subdivision"
+    },
+    "trackPanel": {
+      "placeholders": {
+        "input": "Input",
+        "instrument": "Instrument"
+      }
+    }
   }
 }

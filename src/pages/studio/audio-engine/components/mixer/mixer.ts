@@ -24,16 +24,6 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     track.dispose();
   }
 
-  @computed
-  get selectedTracks() {
-    return this.selectedRefs.map((r) => r.current);
-  }
-
-  @computed
-  get selectedClips() {
-    return this.tracks.map((track) => track.selectedClips).flat();
-  }
-
   @modelAction
   selectTrack(track: Track) {
     if (!this.tracks.includes(track)) throw new Error("unknown track");
@@ -54,5 +44,23 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     if (trackRefIndex >= 0) {
       this.selectedRefs.splice(trackRefIndex, 1);
     }
+  }
+
+  @computed
+  get selectedTracks() {
+    return this.selectedRefs.map((r) => r.current);
+  }
+
+  @computed
+  get selectedClips() {
+    return this.tracks.map((track) => track.selectedClips).flat();
+  }
+
+  @computed
+  get combinedLaneHeights() {
+    return this.tracks.reduce(
+      (total, current) => (total += current.laneHeight),
+      0
+    );
   }
 }

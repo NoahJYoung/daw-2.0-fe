@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
+import { Knob } from "@/components/ui/custom/knob";
 
 interface TestComponentProps {
   track: Track;
@@ -26,13 +27,25 @@ export const ChannelStrip = observer(({ track }: TestComponentProps) => {
     localValue: panInput,
     onValueChange: onPanChange,
     onValueCommit: commitPanChange,
-  } = useDeferredUpdate<number[]>(
-    [track.pan],
-    (values) => track.setPan(values[0]),
-    [track.pan]
-  );
+  } = useDeferredUpdate<number>(track.pan, (value) => track.setPan(value), [
+    track.pan,
+  ]);
 
   const selected = mixer.selectedTracks.includes(track);
+
+  const displayPercentage = (value: number) => {
+    const percentage = Math.round(Math.abs(value) * 100);
+    if (value < 0) {
+      return `L${percentage}%`;
+    }
+    if (value > 0) {
+      return `R${percentage}%`;
+    }
+
+    return `${percentage}%`;
+  };
+
+  const resetPan = () => track.setPan(0);
 
   return (
     <div
@@ -52,15 +65,18 @@ export const ChannelStrip = observer(({ track }: TestComponentProps) => {
         onChange={(e) => track.setName(e.target.value)}
         value={track.name}
       />
-      <div className="flex w-full gap-1 items-center">
+      <div className="flex w-full gap-1 items-center justify-between">
         <p>L</p>
-        <Slider
+        <Knob
           onValueChange={onPanChange}
           onValueCommit={commitPanChange}
+          renderValue={displayPercentage}
+          onDoubleClick={resetPan}
           value={panInput}
           min={-1}
           max={1}
           step={0.02}
+          size={24}
         />
         <p>R</p>
       </div>

@@ -2,12 +2,9 @@ import { observer } from "mobx-react-lite";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { TrackPanel } from "./components";
 import {
-  BASE_TRACK_HEIGHT,
   SCROLLBAR_OFFSET,
-  TRACK_PANEL_COLLAPSED_WIDTH,
   TRACK_PANEL_EXPANDED_WIDTH,
 } from "@/pages/studio/utils/constants";
-import { useState } from "react";
 import { isTouchDevice } from "@/pages/studio/utils";
 
 interface TrackPanelsProps {
@@ -17,7 +14,6 @@ interface TrackPanelsProps {
 
 export const TrackPanels = observer(
   ({ scrollRef, onScroll }: TrackPanelsProps) => {
-    const [expanded, setExpanded] = useState(true);
     const { mixer } = useAudioEngine();
     const { tracks } = mixer;
 
@@ -25,23 +21,16 @@ export const TrackPanels = observer(
       <div
         ref={scrollRef}
         onScroll={onScroll}
-        className="no-scrollbar"
+        className="no-scrollbar flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0"
         style={{
-          width: expanded
-            ? TRACK_PANEL_EXPANDED_WIDTH
-            : TRACK_PANEL_COLLAPSED_WIDTH,
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          overflowY: "auto",
+          width: TRACK_PANEL_EXPANDED_WIDTH,
+          height: "calc(100% - 74px)",
         }}
       >
         <div
           className="flex flex-col"
           style={{
-            minHeight: `calc(100vh + ${
-              isTouchDevice() ? 0 : SCROLLBAR_OFFSET
-            }px)`,
+            height: mixer.combinedLaneHeights,
           }}
         >
           {tracks.map((track, i) => (

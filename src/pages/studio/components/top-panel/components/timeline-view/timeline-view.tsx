@@ -1,6 +1,6 @@
 import { useAudioEngine } from "@/pages/studio/hooks";
-import { BASE_TRACK_HEIGHT } from "@/pages/studio/utils/constants";
 import { observer } from "mobx-react-lite";
+import { TopBar } from "./components";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -16,15 +16,23 @@ export const TimelineView = observer(
       <div
         onScroll={onScroll}
         ref={scrollRef}
-        className="w-full h-full overflow-y-auto overflow-x-auto"
+        className="w-full bg-surface-0 z-10 h-full overflow-y-auto overflow-x-auto"
+        style={{ height: "100%" }}
       >
-        <div style={{ minHeight: "100vh" }}>
+        <div
+          className="flex flex-col"
+          style={{
+            height: mixer.combinedLaneHeights,
+          }}
+        >
+          <TopBar />
+
           {mixer.tracks.map((track) => (
             <div
               className="border border-secondary"
               key={track.id}
               style={{
-                height: BASE_TRACK_HEIGHT,
+                height: track.laneHeight,
                 width: timeline.pixels,
                 flexShrink: 0,
               }}

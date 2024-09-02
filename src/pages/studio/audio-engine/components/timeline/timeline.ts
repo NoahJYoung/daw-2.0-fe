@@ -11,7 +11,8 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   measures: prop(200).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
   ticks: prop(0).withSetter(),
-  grid: prop("4n").withSetter(),
+  subdivision: prop("1n").withSetter(),
+  snapToGrid: prop(false).withSetter(),
 }) {
   sync() {
     const transport = Tone.getTransport();
@@ -55,5 +56,15 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   @computed
   get pixels(): number {
     return this.samplesToPixels(this.samples);
+  }
+
+  @computed
+  get canZoomIn(): boolean {
+    return this.samplesPerPixel > MIN_SAMPLES_PER_PIXEL;
+  }
+
+  @computed
+  get canZoomOut(): boolean {
+    return this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL;
   }
 }

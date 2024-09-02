@@ -12,6 +12,11 @@ import * as Tone from "tone";
 import { computed } from "mobx";
 import { clipRef } from "../refs";
 import { Clip } from "../types";
+import {
+  INITIAL_LANE_HEIGHT,
+  MAX_LANE_HEIGHT,
+  MIN_LANE_HEIGHT,
+} from "../../constants";
 
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -22,6 +27,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   active: prop(false).withSetter(),
   mute: prop(false).withSetter(),
   pan: prop(0).withSetter(),
+  laneHeight: prop(INITIAL_LANE_HEIGHT),
   volume: prop(-12).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
 }) {
@@ -90,5 +96,20 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     this.channel.dispose();
     this.clips.forEach((clip) => clip.dispose());
     this.clips = [];
+  }
+
+  @modelAction
+  setLaneHeight(newHeight: number) {
+    if (newHeight > MAX_LANE_HEIGHT) {
+      this.laneHeight = MAX_LANE_HEIGHT;
+    } else if (newHeight < MIN_LANE_HEIGHT) {
+      this.laneHeight = MIN_LANE_HEIGHT;
+    } else {
+      this.laneHeight = newHeight;
+    }
+  }
+
+  resetLaneHeight() {
+    this.setLaneHeight(INITIAL_LANE_HEIGHT);
   }
 }
