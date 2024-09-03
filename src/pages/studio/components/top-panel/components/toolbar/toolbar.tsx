@@ -1,4 +1,4 @@
-import { StudioButton } from "@/components/ui/custom/studio-button";
+import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { PiMetronomeFill, PiMagnetStraight } from "react-icons/pi";
 import { MdContentPasteGo, MdContentCopy } from "react-icons/md";
@@ -17,6 +17,8 @@ import { observer } from "mobx-react-lite";
 import { TRACK_PANEL_EXPANDED_WIDTH } from "@/pages/studio/utils/constants";
 import { useThemeContext } from "@/hooks";
 import { useTranslation } from "react-i18next";
+import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
+import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -68,10 +70,12 @@ export const Toolbar = observer(
           onClassName="text-surface-10"
         />
 
-        <StudioButton
+        <StudioDropdownMenu
+          triggerIcon={PiMusicNoteSimpleFill}
           title={t("studio.toolbar.subdivision")}
-          icon={PiMusicNoteSimpleFill}
-          onClick={() => {}}
+          value={timeline.subdivision}
+          onValueChange={(newValue) => timeline.setSubdivision(newValue)}
+          options={SubdivisionSelectOptions}
         />
 
         <StudioButton
@@ -93,10 +97,11 @@ export const Toolbar = observer(
           onClick={() => {}}
         />
 
-        <StudioButton
+        <StudioDropdownMenu
+          triggerIcon={IoIosSettings}
           title={t("studio.toolbar.settings")}
-          onClick={() => toggleTheme()}
-          icon={IoIosSettings}
+          onValueChange={(newValue) => timeline.setSubdivision(newValue)}
+          options={[{ label: "Toggle Theme", onClick: toggleTheme }]}
         />
 
         <StudioButton

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
-import { Knob } from "@/components/ui/custom/knob";
+import { Knob } from "@/components/ui/custom/studio/knob";
 
 interface TestComponentProps {
   track: Track;

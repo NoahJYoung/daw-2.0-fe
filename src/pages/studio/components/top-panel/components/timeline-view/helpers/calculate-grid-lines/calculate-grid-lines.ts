@@ -1,4 +1,7 @@
-export const gridSubdivisionRatioMap: Record<string, number> = {
+import { Timeline } from "@/pages/studio/audio-engine/components";
+import * as Tone from "tone";
+
+export const subdivisionToQuarterMap: Record<string, number> = {
   ["1n"]: 0.25,
   ["2n"]: 0.5,
   ["2t"]: 0.75,
@@ -10,14 +13,12 @@ export const gridSubdivisionRatioMap: Record<string, number> = {
   ["16t"]: 6,
 };
 
-export const calculateGridLines = (
-  timeSignature: number,
-  totalMeasures: number,
-  subdivision: string
-) => {
-  const totalBeats = totalMeasures * timeSignature;
-  const subdivisionsPerBeat = gridSubdivisionRatioMap[subdivision];
-  const totalGridLines = totalBeats * subdivisionsPerBeat;
+export const findSmallestSubdivision = (timeline: Timeline) => {
+  const subdivisionsToRender = Object.keys(subdivisionToQuarterMap).filter(
+    (subdivision) =>
+      timeline.samplesToPixels(Tone.Time(subdivision).toSamples()) >= 16 &&
+      subdivision.split("")[subdivision.split("").length - 1] === "n"
+  );
 
-  return { totalGridLines, subdivisionsPerBeat };
+  return subdivisionsToRender[subdivisionsToRender.length - 1];
 };

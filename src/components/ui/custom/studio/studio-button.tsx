@@ -1,8 +1,8 @@
 import { IconType } from "react-icons/lib";
-import { Button } from "../button";
+import { Button } from "../../button";
 
 interface StudioButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   on?: boolean;
   onClassName?: string;
   label?: string;
