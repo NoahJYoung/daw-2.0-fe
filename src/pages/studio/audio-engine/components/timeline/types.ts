@@ -12,39 +12,39 @@ export enum GridSubdivision {
 
 export const SubdivisionSelectOptions = [
   {
-    label: "Whole Note",
+    label: "1/1",
     value: "1n",
   },
   {
-    label: "Half Note",
+    label: "1/2",
     value: "2n",
   },
   {
-    label: "Half Note Triplet",
+    label: "1/2T",
     value: "2t",
   },
   {
-    label: "Quarter Note",
+    label: "1/4",
     value: "4n",
   },
   {
-    label: "Quarter Note Triplet",
+    label: "1/4T",
     value: "4t",
   },
   {
-    label: "Eighth Note",
+    label: "1/8",
     value: "8n",
   },
   {
-    label: "Eighth Note Triplet",
+    label: "1/8T",
     value: "8t",
   },
   {
-    label: "Sixteenth Note",
+    label: "1/16",
     value: "16n",
   },
   {
-    label: "Sixteenth Note Triplet",
+    label: "1/16T",
     value: "16t",
   },
 ];

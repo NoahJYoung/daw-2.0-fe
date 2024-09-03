@@ -1,6 +1,6 @@
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
-import { TopBar } from "./components";
+import { Grid, TopBar } from "./components";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -19,26 +19,15 @@ export const TimelineView = observer(
         className="w-full bg-surface-0 z-10 h-full overflow-y-auto overflow-x-auto"
         style={{ height: "100%" }}
       >
-        <div
-          className="flex flex-col"
+        {/* <div
+          className="flex flex-col h-full"
           style={{
             height: mixer.combinedLaneHeights,
           }}
-        >
-          <TopBar />
-
-          {mixer.tracks.map((track) => (
-            <div
-              className="border border-secondary"
-              key={track.id}
-              style={{
-                height: track.laneHeight,
-                width: timeline.pixels,
-                flexShrink: 0,
-              }}
-            />
-          ))}
-        </div>
+        > */}
+        <TopBar />
+        <Grid />
+        {/* </div> */}
       </div>
     );
   }

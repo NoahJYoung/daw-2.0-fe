@@ -52,15 +52,18 @@ export const TopBar = observer(() => {
     [timeline, timeline.samplesPerPixel]
   );
 
-  const getSubdivisionStyle = (j: number) => {
-    if (j === 0) {
-      return { height: 66, marginTop: 0 };
-    } else if (j % subdivisionsPerBeat === 0) {
-      return { height: 54, marginTop: 12 };
-    } else {
-      return { height: 42, marginTop: 24 };
-    }
-  };
+  const getSubdivisionStyle = useCallback(
+    (j: number) => {
+      if (j === 0) {
+        return { height: 66, marginTop: 0 };
+      } else if (j % subdivisionsPerBeat === 0) {
+        return { height: 54, marginTop: 12 };
+      } else {
+        return { height: 42, marginTop: 24 };
+      }
+    },
+    [subdivisionsPerBeat]
+  );
 
   const renderEveryFourthMeasure = beatWidth * timeSignature < 40;
 
