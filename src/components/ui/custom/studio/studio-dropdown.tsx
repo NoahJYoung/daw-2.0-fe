@@ -43,7 +43,9 @@ export const StudioDropdown = ({
         <SelectGroup className="bg-surface-2">
           <SelectLabel>{label}</SelectLabel>
           {options.map((option) => (
-            <SelectItem value={option.value}>{option.label}</SelectItem>
+            <SelectItem key={label} value={option.value}>
+              {option.label}
+            </SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>

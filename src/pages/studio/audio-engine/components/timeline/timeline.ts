@@ -10,7 +10,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   timeSignature: prop(Tone.getTransport().timeSignature as number).withSetter(),
   measures: prop(200).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
-  ticks: prop(0).withSetter(),
+  seconds: prop(0).withSetter(),
   subdivision: prop("1n").withSetter(),
   snapToGrid: prop(false).withSetter(),
 }) {
@@ -18,7 +18,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
     transport.bpm.value = Math.round(this.bpm);
     transport.timeSignature = this.timeSignature;
-    transport.ticks = this.ticks;
+    transport.seconds = this.seconds;
   }
 
   zoomOut() {
@@ -32,10 +32,10 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
-  setTicksFromPixels(pixels: number) {
+  setSecondsFromPixels(pixels: number) {
     const samples = this.pixelsToSamples(pixels);
-    const ticks = Tone.Time(samples, "samples").toTicks();
-    this.setTicks(ticks);
+    const seconds = Tone.Time(samples, "samples").toSeconds();
+    this.setSeconds(seconds);
   }
 
   samplesToPixels(samples: number) {
@@ -56,6 +56,16 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   @computed
   get pixels(): number {
     return this.samplesToPixels(this.samples);
+  }
+
+  @computed
+  get positionInSamples() {
+    return Tone.Time(this.seconds, "s").toSamples();
+  }
+
+  @computed
+  get positionInPixels() {
+    return this.samplesToPixels(this.positionInSamples);
   }
 
   @computed

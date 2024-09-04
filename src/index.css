@@ -43,6 +43,9 @@
     --surface-2: 240, 6%, 90%;
     --surface-1: 240, 5%, 96%;
     --surface-0: 0, 0%, 98%;
+
+    /* brand colors */
+    --brand-1: 341, 98%, 60%;
   }
 
   .dark {
@@ -104,5 +107,18 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .small-scrollbar::-webkit-scrollbar,
+  .small-scrollbar::-webkit-scrollbar-thumb,
+  .small-scrollbar::-webkit-scrollbar-corner,
+  .small-scrollbar::-webkit-scrollbar-track,
+  .small-scrollbar::-webkit-scrollbar-track-piece {
+    height: 8px;
+    width: 8px;
+  }
+
+  .show-scrollbar::webkit-scrollbar {
+    opacity: 1;
   }
 }

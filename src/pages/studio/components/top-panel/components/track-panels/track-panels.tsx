@@ -28,9 +28,9 @@ export const TrackPanels = observer(
         }}
       >
         <div
-          className="flex flex-col"
+          className="flex flex-col flex-shrink-0"
           style={{
-            height: mixer.combinedLaneHeights,
+            height: mixer.topPanelHeight + SCROLLBAR_OFFSET,
           }}
         >
           {tracks.map((track, i) => (

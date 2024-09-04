@@ -75,6 +75,7 @@ export const TrackPanel = observer(
 
     const showExpandedOptions = track.laneHeight > 75;
     const showInstrumentSelector = track.laneHeight > 110;
+
     return (
       <div
         className="flex rounded-xxs gap-1 pr-1 w-full flex-shrink-0 w-full bg-surface-1 border border-surface-0 border-b-0 border-l-0"
@@ -90,7 +91,7 @@ export const TrackPanel = observer(
             <Button
               onClick={() => track.setActive(!track.active)}
               className={`bg-transparent ${
-                track.active ? "text-red-900" : "text-surface-4"
+                track.active ? "text-brand-1" : "text-surface-4"
               } rounded-full text-xl w-5 h-5 p-0 flex items-center justify-center hover:bg-surface-1 hover:opacity-80`}
             >
               <GrPower className="text-lg w-5 h-5" />
