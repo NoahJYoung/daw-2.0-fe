@@ -8,6 +8,7 @@ import {
 } from "react-resizable-panels";
 import { ReactElement, useRef } from "react";
 import { useThemeContext } from "@/hooks";
+import { useAudioEngine } from "../../hooks";
 
 interface StudioLayoutProps {
   upperPanel: ReactElement;
@@ -21,7 +22,7 @@ export const StudioLayout = observer(
     const bottomPanelRef = useRef<ImperativePanelHandle>(null);
     const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
     const { toggleTheme } = useThemeContext();
-
+    const audioEngine = useAudioEngine();
     const toggleBottomPanel = () => {
       if (panelGroupRef.current) {
         const currentLayout = panelGroupRef.current.getLayout();
@@ -61,7 +62,8 @@ export const StudioLayout = observer(
               <button onClick={toggleBottomPanel}>
                 {bottomPanelRef?.current?.isExpanded() ? "Collapse" : "Expand"}
               </button>
-              <button onClick={toggleTheme}>Toggle Theme</button>
+              <button onClick={() => audioEngine.play()}>PLAY</button>
+              <button onClick={() => audioEngine.stop()}>STOP</button>
             </div>
           </PanelResizeHandle>
           <Panel

@@ -77,5 +77,13 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   };
 
-  mockPlay = async () => {};
+  play = async () => {
+    Tone.getTransport().start();
+    this.setState(AudioEngineState.playing);
+  };
+
+  stop = async () => {
+    Tone.getTransport().stop();
+    this.setState(AudioEngineState.stopped);
+  };
 }

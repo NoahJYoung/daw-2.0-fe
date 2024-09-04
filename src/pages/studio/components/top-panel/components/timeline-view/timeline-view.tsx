@@ -1,12 +1,13 @@
 import { observer } from "mobx-react-lite";
 import { Grid, Playhead, TopBar } from "./components";
-import { useAudioEngine } from "@/pages/studio/hooks";
+import { useAudioEngine, useRequestAnimationFrame } from "@/pages/studio/hooks";
 import { useMemo, useCallback } from "react";
 import * as Tone from "tone";
 import {
   findSmallestSubdivision,
   subdivisionToQuarterMap,
 } from "./helpers/calculate-grid-lines/calculate-grid-lines";
+import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -15,7 +16,8 @@ interface TimelineViewProps {
 
 export const TimelineView = observer(
   ({ onScroll, scrollRef }: TimelineViewProps) => {
-    const { timeline, mixer } = useAudioEngine();
+    const audioEngine = useAudioEngine();
+    const { timeline, mixer } = audioEngine;
     const { pixels, measures, timeSignature } = timeline;
 
     const measureWidth = useMemo(() => pixels / measures, [pixels, measures]);
@@ -71,6 +73,15 @@ export const TimelineView = observer(
         timeline.setSecondsFromPixels(xValue);
       }
     };
+
+    useRequestAnimationFrame(
+      () => {
+        timeline.setSeconds(Tone.getTransport().seconds);
+      },
+      {
+        enabled: audioEngine.state === AudioEngineState.playing,
+      }
+    );
 
     const playheadLeft = timeline.positionInPixels;
 
