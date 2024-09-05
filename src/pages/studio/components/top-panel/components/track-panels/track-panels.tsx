@@ -21,7 +21,7 @@ export const TrackPanels = observer(
       <div
         ref={scrollRef}
         onScroll={onScroll}
-        className="no-scrollbar flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0"
+        className="no-scrollbar flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0 ml-[2px] pr-[2px]"
         style={{
           width: TRACK_PANEL_EXPANDED_WIDTH,
           height: "calc(100% - 74px)",

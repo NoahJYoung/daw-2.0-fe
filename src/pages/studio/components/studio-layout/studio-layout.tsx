@@ -7,8 +7,8 @@ import {
   PanelResizeHandle,
 } from "react-resizable-panels";
 import { ReactElement, useRef } from "react";
-import { useThemeContext } from "@/hooks";
-import { useAudioEngine } from "../../hooks";
+import { StudioButton } from "@/components/ui/custom/studio/studio-button";
+import { FaArrowsAltV } from "react-icons/fa";
 
 interface StudioLayoutProps {
   upperPanel: ReactElement;
@@ -21,8 +21,7 @@ export const StudioLayout = observer(
     const topPanelRef = useRef<ImperativePanelHandle>(null);
     const bottomPanelRef = useRef<ImperativePanelHandle>(null);
     const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
-    const { toggleTheme } = useThemeContext();
-    const audioEngine = useAudioEngine();
+
     const toggleBottomPanel = () => {
       if (panelGroupRef.current) {
         const currentLayout = panelGroupRef.current.getLayout();
@@ -51,25 +50,18 @@ export const StudioLayout = observer(
           >
             <div className="w-full h-full">{upperPanel}</div>
           </Panel>
-          <PanelResizeHandle>
-            <div
-              className="w-full border border-secondary"
-              style={{
-                height: 48,
-              }}
-            >
-              {middlePanel}
-              <button onClick={toggleBottomPanel}>
-                {bottomPanelRef?.current?.isExpanded() ? "Collapse" : "Expand"}
-              </button>
-              <button onClick={() => audioEngine.play()}>PLAY</button>
-              <button onClick={() => audioEngine.stop()}>STOP</button>
-            </div>
-          </PanelResizeHandle>
+          <PanelResizeHandle className="h-2 bg-surface-1" />
+          <div className="flex bg-surface-1 items-start h-[48px] gap-2">
+            <StudioButton
+              className="rounded-xxs shadow-none text-xl relative flex items-center justify-centers p-1 w-10 h-10 bg-transparent text-surface-3 hover:text-surface-4 hover:bg-transparent"
+              icon={FaArrowsAltV}
+              onClick={toggleBottomPanel}
+            />
+            {middlePanel}
+          </div>
           <Panel
+            className="bg-surface-1"
             order={2}
-            onExpand={() => alert("EXPANDING")}
-            onCollapse={() => alert("Collapsing")}
             ref={bottomPanelRef}
             defaultSize={45}
             maxSize={65}

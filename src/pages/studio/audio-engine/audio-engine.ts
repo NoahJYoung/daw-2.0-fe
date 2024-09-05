@@ -82,8 +82,15 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     this.setState(AudioEngineState.playing);
   };
 
+  pause = async () => {
+    Tone.getTransport().pause();
+    this.setState(AudioEngineState.paused);
+  };
+
   stop = async () => {
-    Tone.getTransport().stop();
+    const transport = Tone.getTransport();
+    transport.stop();
+    this.timeline.setSeconds(transport.seconds);
     this.setState(AudioEngineState.stopped);
   };
 }

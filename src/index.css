@@ -108,17 +108,26 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
 
-  .small-scrollbar::-webkit-scrollbar,
-  .small-scrollbar::-webkit-scrollbar-thumb,
-  .small-scrollbar::-webkit-scrollbar-corner,
-  .small-scrollbar::-webkit-scrollbar-track,
-  .small-scrollbar::-webkit-scrollbar-track-piece {
-    height: 8px;
-    width: 8px;
-  }
+.styled-scrollbar::-webkit-scrollbar-thumb,
+.styled-scrollbar::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background: rgba(125, 125, 125, 0);
+  border-radius: 0.06125rem;
+}
 
-  .show-scrollbar::webkit-scrollbar {
-    opacity: 1;
-  }
+.styled-scrollbar:hover::-webkit-scrollbar-track {
+  visibility: visible;
+  display: block;
+  background: rgba(125, 125, 125, 0);
+}
+
+.styled-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(125, 125, 125, 0.25);
+}
+
+.styled-scrollbar::-webkit-scrollbar-corner {
+  background: rgba(125, 125, 125, 0);
 }

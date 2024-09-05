@@ -5,6 +5,7 @@ import {
   HotKeysManager,
   StudioLayout,
   TopPanel,
+  MainControls,
 } from "./components";
 
 export const Studio = observer(() => {
@@ -14,7 +15,7 @@ export const Studio = observer(() => {
         <HotKeysManager />
         <StudioLayout
           upperPanel={<TopPanel />}
-          middlePanel={<div>TRANSPORT</div>}
+          middlePanel={<MainControls />}
           lowerPanel={<BottomPanel />}
         />
       </UndoManagerProvider>

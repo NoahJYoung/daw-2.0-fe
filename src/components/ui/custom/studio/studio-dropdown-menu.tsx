@@ -39,16 +39,21 @@ export const StudioDropdownMenu = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="rounded-xxs bg-surface-1">
-        {options.map((option) => {
+        {options.map((option, i) => {
           if (option?.separator) {
-            return <DropdownMenuSeparator />;
+            return <DropdownMenuSeparator key={option.label ?? i} />;
           }
 
           if (option.header) {
-            return <DropdownMenuLabel>{option.label}</DropdownMenuLabel>;
+            return (
+              <DropdownMenuLabel key={option.label ?? i}>
+                {option.label}
+              </DropdownMenuLabel>
+            );
           }
           return (
             <DropdownMenuItem
+              key={option.label ?? i}
               className={
                 value && option?.value === value
                   ? "bg-surface-1 rounded-xxs font-bold text-surface-6 cursor-pointer"

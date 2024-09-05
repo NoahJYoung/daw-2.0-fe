@@ -72,7 +72,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get topPanelHeight() {
-    const min = window.innerHeight - 147;
+    const min = window.innerHeight - 156;
     return this.combinedLaneHeights > min ? this.combinedLaneHeights : min;
   }
 }

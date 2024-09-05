@@ -1,7 +1,6 @@
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { TOOLBAR_HEIGHT } from "@/pages/studio/utils/constants";
-import { observer } from "mobx-react-lite";
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 interface TopBarProps {
   subdivisionsPerBeat: number;
@@ -12,7 +11,7 @@ interface TopBarProps {
   renderEveryFourthMeasure: boolean;
 }
 
-export const TopBar = observer(
+export const TopBar = memo(
   ({
     subdivisionsPerBeat,
     subdivisionWidth,
@@ -41,6 +40,7 @@ export const TopBar = observer(
       () =>
         measuresArray.map((_, i) => (
           <div
+            key={i}
             style={{ width: measureWidth, borderLeftWidth: i === 0 ? 1 : 0 }}
             className="flex-shrink-0 flex rounded-xxs border-surface-2 border relative border-1"
           >

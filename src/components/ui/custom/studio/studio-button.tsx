@@ -2,14 +2,14 @@ import { IconType } from "react-icons/lib";
 import { Button } from "../../button";
 
 interface StudioButtonProps {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   on?: boolean;
   onClassName?: string;
   label?: string;
   icon?: IconType;
   disabled?: boolean;
-  tooltip?: string;
   title?: string;
+  className?: string;
 }
 
 export const StudioButton = ({
@@ -20,13 +20,14 @@ export const StudioButton = ({
   icon: Icon,
   disabled,
   title,
+  className,
 }: StudioButtonProps) => {
   const getClassName = () => {
-    const baseClass = `rounded-xxs text-xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3`;
+    const baseClass =
+      className ??
+      `rounded-xxs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3`;
     if (!!on && !!onClassName) {
-      if (on) {
-        return [...baseClass.split(" "), ...onClassName.split(" ")].join(" ");
-      }
+      return [...baseClass.split(" "), ...onClassName.split(" ")].join(" ");
     }
     return baseClass;
   };

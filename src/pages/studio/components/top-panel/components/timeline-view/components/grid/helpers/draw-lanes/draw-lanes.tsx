@@ -17,22 +17,14 @@ export const drawLanes = (
         y2={0}
       />
       {tracks.map((track, i) => {
-        if (i === 0) {
-          return (
-            <line
-              strokeWidth={1}
-              className={className}
-              x1={0}
-              x2={width}
-              y1={track.laneHeight}
-              y2={track.laneHeight}
-            />
-          );
-        }
-        const y = mixer.getCombinedLaneHeightsAtIndex(i) + track.laneHeight;
+        const y =
+          i === 0
+            ? track.laneHeight
+            : mixer.getCombinedLaneHeightsAtIndex(i) + track.laneHeight;
 
         return (
           <line
+            key={track.id}
             strokeWidth={1}
             className={className}
             x1={0}

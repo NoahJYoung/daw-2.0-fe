@@ -1,6 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { observer } from "mobx-react-lite";
 import { Grid, Playhead, TopBar } from "./components";
-import { useAudioEngine, useRequestAnimationFrame } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useRequestAnimationFrame,
+  useUndoManager,
+} from "@/pages/studio/hooks";
 import { useMemo, useCallback } from "react";
 import * as Tone from "tone";
 import {
@@ -17,6 +22,7 @@ interface TimelineViewProps {
 export const TimelineView = observer(
   ({ onScroll, scrollRef }: TimelineViewProps) => {
     const audioEngine = useAudioEngine();
+    const undoManager = useUndoManager();
     const { timeline, mixer } = audioEngine;
     const { pixels, measures, timeSignature } = timeline;
 
@@ -48,7 +54,6 @@ export const TimelineView = observer(
       []
     );
 
-    // Memoized measure and subdivision arrays
     const measuresArray = useMemo(
       () => generateArray(measures),
       [generateArray, measures, timeline.samplesPerPixel]
@@ -67,16 +72,20 @@ export const TimelineView = observer(
     const renderEveryFourthMeasure = beatWidth * timeSignature < 40;
 
     const handleClick = (e: React.MouseEvent) => {
-      if (scrollRef.current) {
-        const xOffset = scrollRef.current.getBoundingClientRect().x;
-        const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
-        timeline.setSecondsFromPixels(xValue);
-      }
+      undoManager.withoutUndo(() => {
+        if (scrollRef.current) {
+          const xOffset = scrollRef.current.getBoundingClientRect().x;
+          const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
+          timeline.setSecondsFromPixels(xValue);
+        }
+      });
     };
 
     useRequestAnimationFrame(
       () => {
-        timeline.setSeconds(Tone.getTransport().seconds);
+        undoManager.withoutUndo(() =>
+          timeline.setSeconds(Tone.getTransport().seconds)
+        );
       },
       {
         enabled: audioEngine.state === AudioEngineState.playing,
@@ -91,7 +100,7 @@ export const TimelineView = observer(
         onScroll={onScroll}
         ref={scrollRef}
         style={{ width: pixels }}
-        className="h-full bg-surface-0 z-10 overflow-auto relative"
+        className="h-full bg-surface-0 z-10 styled-scrollbar overflow-auto relative pt-[2px]"
       >
         <TopBar
           renderEveryFourthMeasure={renderEveryFourthMeasure}
@@ -103,6 +112,7 @@ export const TimelineView = observer(
         />
 
         <Grid
+          scrollRef={scrollRef}
           subdivisionWidth={subdivisionWidth}
           subdivisionsArray={subdivisionsArray}
           renderEveryFourthMeasure={renderEveryFourthMeasure}

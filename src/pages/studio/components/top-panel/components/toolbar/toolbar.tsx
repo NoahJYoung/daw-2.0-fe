@@ -8,7 +8,8 @@ import {
   IoMdSave,
   IoIosSettings,
 } from "react-icons/io";
-import { FaUserCog } from "react-icons/fa";
+// import { FaUserCog } from "react-icons/fa";
+import { PiUserList } from "react-icons/pi";
 import { PiMusicNoteSimpleFill } from "react-icons/pi";
 import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
@@ -37,8 +38,8 @@ export const Toolbar = observer(
 
     return (
       <div
-        style={{ minWidth: TRACK_PANEL_EXPANDED_WIDTH }}
-        className="grid grid-cols-7 gap-y-1 border-surface-0 border-b-4"
+        style={{ minWidth: TRACK_PANEL_EXPANDED_WIDTH, padding: 2 }}
+        className="grid grid-cols-7 gap-y-1 border-surface-0 border-b-2"
       >
         <StudioButton
           title={
@@ -137,7 +138,7 @@ export const Toolbar = observer(
 
         <StudioButton
           title={t("studio.toolbar.userMenu")}
-          icon={FaUserCog}
+          icon={PiUserList}
           onClick={() => {}}
         />
       </div>

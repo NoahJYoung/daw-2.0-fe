@@ -8,7 +8,7 @@ import { computed } from "mobx";
 export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   bpm: prop(Tone.getTransport().bpm.value).withSetter(),
   timeSignature: prop(Tone.getTransport().timeSignature as number).withSetter(),
-  measures: prop(200).withSetter(),
+  measures: prop(100).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
   seconds: prop(0).withSetter(),
   subdivision: prop("1n").withSetter(),
