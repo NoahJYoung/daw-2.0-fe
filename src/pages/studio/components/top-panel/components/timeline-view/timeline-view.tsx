@@ -6,7 +6,7 @@ import {
   useRequestAnimationFrame,
   useUndoManager,
 } from "@/pages/studio/hooks";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 import * as Tone from "tone";
 import {
   findSmallestSubdivision,
@@ -94,6 +94,29 @@ export const TimelineView = observer(
 
     const playheadLeft = timeline.positionInPixels;
 
+    const handleWheel = (e: WheelEvent) => {
+      if (e.altKey) {
+        e.preventDefault();
+        undoManager.withoutUndo(() => {
+          if (e.deltaY > 0) {
+            timeline.zoomOut();
+          } else {
+            timeline.zoomIn();
+          }
+        });
+      }
+    };
+
+    useEffect(() => {
+      const container = scrollRef.current;
+      if (container) {
+        container.addEventListener("wheel", handleWheel, { passive: false });
+        return () => {
+          container.removeEventListener("wheel", handleWheel);
+        };
+      }
+    }, []);
+
     return (
       <div
         onClick={handleClick}
@@ -120,7 +143,7 @@ export const TimelineView = observer(
           measuresArray={measuresArray}
         />
 
-        <Playhead height={mixer.topPanelHeight + 72} left={playheadLeft} />
+        <Playhead height={mixer.topPanelHeight + 74} left={playheadLeft} />
       </div>
     );
   }

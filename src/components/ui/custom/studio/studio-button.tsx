@@ -1,5 +1,6 @@
 import { IconType } from "react-icons/lib";
 import { Button } from "../../button";
+import { CSSProperties } from "react";
 
 interface StudioButtonProps {
   onClick?: (e: React.MouseEvent) => void;
@@ -9,6 +10,7 @@ interface StudioButtonProps {
   icon?: IconType;
   disabled?: boolean;
   title?: string;
+  style?: CSSProperties;
   className?: string;
 }
 
@@ -21,6 +23,7 @@ export const StudioButton = ({
   disabled,
   title,
   className,
+  style,
 }: StudioButtonProps) => {
   const getClassName = () => {
     const baseClass =
@@ -33,6 +36,7 @@ export const StudioButton = ({
   };
   return (
     <Button
+      style={style}
       title={title}
       disabled={disabled}
       onClick={onClick}

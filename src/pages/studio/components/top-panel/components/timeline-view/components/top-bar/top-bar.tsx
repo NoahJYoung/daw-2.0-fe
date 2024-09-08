@@ -82,6 +82,7 @@ export const TopBar = memo(
         {measuresArray.slice(0, measuresArray.length / 4).map((_, i) => (
           <span
             key={i}
+            id={`measure-${i}`}
             className="border-surface-2 border relative"
             style={{
               width: measureWidth * 4,

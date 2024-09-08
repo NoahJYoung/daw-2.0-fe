@@ -35,7 +35,9 @@ export const drawGrid = (
           key={`subdivision-${startMeasure + i}-${j}`}
           strokeWidth={1}
           className={className}
-          x1={subdivisionWidth * j}
+          x1={
+            startMeasure === 0 ? 1 + subdivisionWidth * j : subdivisionWidth * j
+          }
           x2={subdivisionWidth * j}
           y1={0}
           y2={height}

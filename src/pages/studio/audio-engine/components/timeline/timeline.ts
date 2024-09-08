@@ -22,12 +22,12 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   zoomOut() {
-    if (this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL) {
+    if (this.canZoomOut) {
       this.setSamplesPerPixel(this.samplesPerPixel * 2);
     }
   }
   zoomIn() {
-    if (this.samplesPerPixel >= MIN_SAMPLES_PER_PIXEL) {
+    if (this.canZoomIn) {
       this.setSamplesPerPixel(this.samplesPerPixel / 2);
     }
   }

@@ -21,7 +21,8 @@ export const TrackPanels = observer(
       <div
         ref={scrollRef}
         onScroll={onScroll}
-        className="no-scrollbar flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0 ml-[2px] pr-[2px]"
+        onClick={() => mixer.unselectAllTracks()}
+        className="no-scrollbar relative flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0 ml-[2px] pr-[2px]"
         style={{
           width: TRACK_PANEL_EXPANDED_WIDTH,
           height: "calc(100% - 74px)",
@@ -34,7 +35,12 @@ export const TrackPanels = observer(
           }}
         >
           {tracks.map((track, i) => (
-            <TrackPanel key={track.id} track={track} trackNumber={i + 1} />
+            <TrackPanel
+              parentRef={scrollRef}
+              key={track.id}
+              track={track}
+              trackNumber={i + 1}
+            />
           ))}
           {!isTouchDevice() && <div style={{ minHeight: SCROLLBAR_OFFSET }} />}
         </div>

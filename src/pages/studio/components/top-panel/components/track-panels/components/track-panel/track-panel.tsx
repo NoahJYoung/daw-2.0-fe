@@ -1,40 +1,35 @@
 import { observer } from "mobx-react-lite";
 import { Track } from "@/pages/studio/audio-engine/components";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { FaGuitar } from "react-icons/fa";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { useUndoManager } from "@/pages/studio/hooks";
+import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { GrPower } from "react-icons/gr";
+import { changeTrackPosition, swapTrackPosition } from "./helpers";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 
-const basePanelButtonClasses = [
-  "hover:text-surface-6",
-  "hover:bg-surface-3",
-  "text-surface-5",
-  "flex",
-  "items-center",
-  "justify-center",
-  "bg-surface-2",
-  "rounded-xxs",
-  "p-2",
-  "w-6",
-  "h-6",
-  "m-0",
-  "font-bold",
-];
+const DRAG_THRESHOLD = 24;
 
 interface TrackPanelProps {
   track: Track;
   trackNumber: number;
+  parentRef: React.RefObject<HTMLDivElement>;
 }
 
 export const TrackPanel = observer(
-  ({ track, trackNumber }: TrackPanelProps) => {
+  ({ track, trackNumber, parentRef }: TrackPanelProps) => {
     const undoManager = useUndoManager();
+    const { mixer } = useAudioEngine();
     const [isResizing, setIsResizing] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+    const [yOffset, setYOffset] = useState(0);
     const { t } = useTranslation();
+    const dragStartYPosition = useRef<number | null>(null);
+    const [newTrackIndex, setNewTrackIndex] = useState<number | null>(null);
 
     const handleMouseDown = useCallback(() => {
       document.body.style.userSelect = "none";
@@ -42,21 +37,100 @@ export const TrackPanel = observer(
     }, []);
 
     const handleMouseUp = useCallback(() => {
+      if (
+        isDragging &&
+        newTrackIndex !== null &&
+        newTrackIndex !== trackNumber - 1
+      ) {
+        changeTrackPosition(mixer.tracks, trackNumber - 1, newTrackIndex);
+        setNewTrackIndex(null);
+      }
       setIsResizing(false);
+      setIsDragging(false);
+      dragStartYPosition.current = null;
       document.body.style.userSelect = "";
-    }, []);
+    }, [isDragging, mixer.tracks, newTrackIndex, trackNumber]);
 
     const handleMouseMove = useCallback(
       (e: MouseEvent) => {
         e.preventDefault();
+
+        if (
+          isDragging &&
+          !isResizing &&
+          dragStartYPosition.current !== null &&
+          parentRef.current
+        ) {
+          requestAnimationFrame(() => {
+            const currentPosition = e.clientY + parentRef.current!.scrollTop;
+            const startPosition =
+              dragStartYPosition.current! + parentRef.current!.scrollTop;
+            const difference = currentPosition - startPosition;
+
+            setYOffset(difference);
+
+            if (Math.abs(difference) > DRAG_THRESHOLD) {
+              const totalTracks = mixer.tracks.length;
+              let newIndex = trackNumber - 1;
+
+              let closestIndex = trackNumber - 1;
+              let closestDistance = Infinity;
+
+              for (let i = 0; i < totalTracks; i++) {
+                const cumulativeHeight = mixer.getCombinedLaneHeightsAtIndex(i);
+                const nextCumulativeHeight =
+                  mixer.getCombinedLaneHeightsAtIndex(i + 1);
+
+                if (
+                  currentPosition > cumulativeHeight &&
+                  currentPosition < nextCumulativeHeight
+                ) {
+                  newIndex = i;
+                  break;
+                } else {
+                  const distance = Math.min(
+                    Math.abs(currentPosition - cumulativeHeight),
+                    Math.abs(currentPosition - nextCumulativeHeight)
+                  );
+
+                  if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = i;
+                  }
+                }
+              }
+
+              if (newIndex === trackNumber - 1) {
+                newIndex = closestIndex;
+              }
+
+              setNewTrackIndex(newIndex);
+            }
+          });
+        }
+
         if (isResizing) {
           undoManager.withoutUndo(() =>
             track.setLaneHeight(track.laneHeight + e.movementY)
           );
         }
       },
-      [isResizing, track, undoManager]
+      [
+        isDragging,
+        isResizing,
+        mixer,
+        trackNumber,
+        undoManager,
+        track,
+        parentRef,
+      ]
     );
+
+    const handleDragStart = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setIsDragging(true);
+      dragStartYPosition.current = e.clientY;
+    };
 
     useEffect(() => {
       window.addEventListener("mouseup", handleMouseUp);
@@ -67,94 +141,215 @@ export const TrackPanel = observer(
       };
     }, [handleMouseMove, handleMouseUp]);
 
-    ///
-    const [testInputValue, setTestInputValue] = useState<string>("");
-    const [testInstrumentValue, setTestInstrumentValue] = useState<string>("");
+    const selected = mixer.selectedTracks.includes(track);
 
-    ///
+    const handleSelectTrack = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (isResizing || isDragging) {
+        return;
+      }
+      if (!e.ctrlKey) {
+        mixer.unselectAllTracks();
+      }
+      if (selected) {
+        mixer.unselectTrack(track);
+      } else {
+        mixer.selectTrack(track);
+      }
+    };
+
+    const handleToggleActive = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      track.setActive(!track.active);
+    };
+
+    const getIndicatorPosition = () => {
+      if (newTrackIndex) {
+        return newTrackIndex > trackNumber - 1
+          ? mixer.getCombinedLaneHeightsAtIndex(newTrackIndex + 1)
+          : mixer.getCombinedLaneHeightsAtIndex(newTrackIndex) +
+              mixer.tracks[newTrackIndex].laneHeight;
+      }
+      return 0;
+    };
+
+    const selectedBgOffset = selected ? 1 : 0;
 
     const showExpandedOptions = track.laneHeight > 75;
     const showInstrumentSelector = track.laneHeight > 110;
 
+    const showPositionArrows = track.laneHeight > 60;
+
+    const baseButtonClass = `hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
+
+    const activeButtonClass = `hover:text-surface-7
+      text-surface-5"
+      flex
+      items-center
+      justify-center
+      rounded-xxs p-2 w-6 h-6 m-0 font-bold
+      bg-transparent
+      text-surface-7
+      hover:bg-surface-3`;
+
     return (
-      <div
-        className="flex rounded-xxs gap-1 pr-1 w-full flex-shrink-0 w-full bg-surface-1 border border-surface-0 border-b-0 border-l-0"
-        style={{
-          height: track.laneHeight,
-        }}
-      >
-        <div className="h-full rounded-xxs p-1 w-9 flex-shrink-0 flex items-center justify-center bg-surface-2 text-surface-4 font-bold border-r-4 border-surface-0 border-b-0">
-          {trackNumber}
-        </div>
-        <div className="w-full h-full flex flex-col justify-between">
-          <div className="flex gap-2 items-center">
-            <Button
-              onClick={() => track.setActive(!track.active)}
-              className={`bg-transparent ${
-                track.active ? "text-brand-1" : "text-surface-4"
-              } rounded-full text-xl w-5 h-5 p-0 flex items-center justify-center hover:bg-surface-1 hover:opacity-80`}
-            >
-              <GrPower className="text-lg w-5 h-5" />
-            </Button>
-            <input
-              type="text"
-              className="text-surface-6 w-full bg-surface-1 focus:bg-surface-2 my-2 p-1 focus:outline-none text-sm h-6"
-              value={track.name}
-              onChange={(e) => track.setName(e.target.value)}
-            />
-            <span className="flex gap-1 items-center">
-              <Button
-                onClick={() => track.setMute(!track.mute)}
-                className={
-                  track.mute
-                    ? [
-                        ...basePanelButtonClasses,
-                        "bg-surface-4",
-                        "text-surface-7",
-                        "hover:bg-surface-5",
-                        "hover:text-surface-7",
-                      ].join(" ")
-                    : basePanelButtonClasses.join(" ")
-                }
+      <>
+        {isDragging && <div style={{ height: track.laneHeight, zIndex: -1 }} />}
+        {isDragging && !!newTrackIndex && (
+          <div
+            className="absolute w-[256px] h-[2px] bg-surface-5 w-full rounded-xl"
+            style={{
+              top: getIndicatorPosition(),
+              zIndex: 2,
+            }}
+          />
+        )}
+        <div
+          onClick={handleSelectTrack}
+          className={`flex rounded-xxs gap-1 pr-1 w-full flex-shrink-0 ${
+            isDragging ? "border-surface-0 border-b-1 border-r-2 border" : ""
+          } w-full bg-surface-${
+            1 + selectedBgOffset
+          } border border-surface-0  border-l-0 ${
+            !isDragging ? "border-b-0" : ""
+          }`}
+          style={{
+            height: track.laneHeight,
+            position: isDragging ? "absolute" : "static",
+            top: mixer.getCombinedLaneHeightsAtIndex(trackNumber - 1) + yOffset,
+            zIndex: isDragging ? 3 : 1,
+          }}
+        >
+          <div
+            onMouseDown={handleDragStart}
+            style={{ cursor: isDragging ? "grabbing" : "auto" }}
+            className={`relative h-full select-none rounded-xxs p-1 w-9 flex-shrink-0 flex items-center justify-center bg-surface-${
+              2 + selectedBgOffset
+            } text-surface-${
+              4 + selectedBgOffset
+            } font-bold border-r-4 border-surface-0 border-b-0`}
+          >
+            {showPositionArrows && (
+              <span
+                style={{ height: track.laneHeight }}
+                className="flex flex-col justify-between absolute items-center"
               >
-                M
-              </Button>
-              <Button className={basePanelButtonClasses.join(" ")}>S</Button>
-            </span>
-          </div>
-
-          <span className="flex flex-col">
-            {showExpandedOptions && (
-              <div className="flex flex-col gap-1">
-                <StudioDropdown
-                  options={[]}
-                  value={testInputValue}
-                  placeholder={t("studio.trackPanel.placeholders.input")}
-                  icon={<MdOutlineSettingsInputComponent />}
-                  onChange={(value: string) => setTestInputValue(value)}
+                <StudioButton
+                  className={`rounded-xxs bottom-[0px] shadow-none text-l relative flex items-center justify-centers p-1 w-6 h-6 bg-transparent text-surface-${
+                    3 + selectedBgOffset
+                  } hover:text-surface-${
+                    4 + selectedBgOffset
+                  } hover:bg-transparent`}
+                  icon={FaChevronUp}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    swapTrackPosition(
+                      mixer.tracks,
+                      trackNumber - 1,
+                      trackNumber - 2
+                    );
+                  }}
                 />
-
-                {showInstrumentSelector && (
-                  <StudioDropdown
-                    options={[{ label: "Piano", value: "piano" }]}
-                    value={testInstrumentValue}
-                    placeholder={t("studio.trackPanel.placeholders.instrument")}
-                    icon={<FaGuitar />}
-                    onChange={(value: string) => setTestInstrumentValue(value)}
-                  />
-                )}
-              </div>
+                <StudioButton
+                  className={`rounded-xxs bottom-[0px] shadow-none text-l relative flex items-center justify-centers p-1 w-6 h-6 bg-transparent text-surface-${
+                    3 + selectedBgOffset
+                  } hover:text-surface-${
+                    4 + selectedBgOffset
+                  } hover:bg-transparent`}
+                  icon={FaChevronDown}
+                  style={{ bottom: 0 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    swapTrackPosition(
+                      mixer.tracks,
+                      trackNumber - 1,
+                      trackNumber
+                    );
+                  }}
+                />
+              </span>
             )}
 
-            <div
-              onMouseDown={handleMouseDown}
-              onDoubleClick={() => track.resetLaneHeight()}
-              className="w-full h-4 flex-shrink-0"
-              style={{ cursor: "ns-resize" }}
-            />
-          </span>
+            {trackNumber}
+          </div>
+          <div className="w-full h-full flex flex-col justify-between">
+            <div className="flex gap-2 items-center">
+              <Button
+                onClick={handleToggleActive}
+                className={`bg-transparent ${
+                  track.active ? "text-brand-1" : "text-surface-4"
+                } rounded-full text-xl w-5 h-5 p-0 flex items-center justify-center hover:bg-surface-${
+                  1 + selectedBgOffset
+                } hover:opacity-80`}
+              >
+                <GrPower className="text-lg w-5 h-5" />
+              </Button>
+              <input
+                type="text"
+                className={`text-surface-6 w-full bg-surface-${
+                  1 + selectedBgOffset
+                } focus:bg-surface-3 my-2 p-1 focus:outline-none text-sm h-6`}
+                value={track.name}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => track.setName(e.target.value)}
+              />
+              <span className="flex gap-1 items-center">
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    track.setMute(!track.mute);
+                  }}
+                  className={track.mute ? activeButtonClass : baseButtonClass}
+                >
+                  M
+                </Button>
+                <Button
+                  onClick={(e) => e.stopPropagation()}
+                  className={baseButtonClass}
+                >
+                  S
+                </Button>
+              </span>
+            </div>
+
+            <span className="flex flex-col">
+              {showExpandedOptions && (
+                <div className="flex flex-col gap-1">
+                  <StudioDropdown
+                    options={[]}
+                    value={null}
+                    colorOffset={selectedBgOffset}
+                    placeholder={t("studio.trackPanel.placeholders.input")}
+                    icon={<MdOutlineSettingsInputComponent />}
+                    onChange={() => {}}
+                  />
+
+                  {showInstrumentSelector && (
+                    <StudioDropdown
+                      options={[{ label: "Piano", value: "piano" }]}
+                      value={null}
+                      placeholder={t(
+                        "studio.trackPanel.placeholders.instrument"
+                      )}
+                      colorOffset={selectedBgOffset}
+                      icon={<FaGuitar />}
+                      onChange={() => {}}
+                    />
+                  )}
+                </div>
+              )}
+
+              <div
+                onMouseDown={handleMouseDown}
+                onClick={(e) => e.stopPropagation()}
+                onDoubleClick={() => track.resetLaneHeight()}
+                className="w-full h-4 flex-shrink-0"
+                style={{ cursor: "ns-resize" }}
+              />
+            </span>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 );

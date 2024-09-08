@@ -46,6 +46,11 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
+  @modelAction
+  unselectAllTracks() {
+    this.selectedRefs = [];
+  }
+
   getCombinedLaneHeightsAtIndex(index: number) {
     return [...this.tracks]
       .slice(0, index)
