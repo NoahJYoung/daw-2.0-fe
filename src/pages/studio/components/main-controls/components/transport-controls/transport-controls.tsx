@@ -10,6 +10,7 @@ const buttonOnClassName = "bg-surface-2 text-surface-7";
 
 export const TransportControls = observer(() => {
   const audioEngine = useAudioEngine();
+
   return (
     <span
       className="flex h-full bg-surface-1 border-surface-1 border"

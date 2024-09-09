@@ -74,6 +74,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   play = async () => {
     Tone.start();
+    this.mixer.tracks.forEach((track) => track.play());
     Tone.getTransport().start();
     if (this.state !== AudioEngineState.recording) {
       this.setState(AudioEngineState.playing);

@@ -14,7 +14,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   fadeInSamples: prop<number>(0),
   fadeOutSamples: prop<number>(0),
 }) {
-  player = new Tone.Player();
+  player = new Tone.Player().toDestination();
   private startEventId: number | null = null;
   private stopEventId: number | null = null;
 

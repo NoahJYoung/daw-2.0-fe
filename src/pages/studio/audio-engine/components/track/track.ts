@@ -1,5 +1,6 @@
 import {
   ExtendedModel,
+  getRoot,
   idProp,
   model,
   modelAction,
@@ -123,4 +124,22 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   resetLaneHeight() {
     this.setLaneHeight(INITIAL_LANE_HEIGHT);
   }
+
+  play = () => {
+    const { state } = getRoot(this);
+    if (this.active && state === "recording") {
+      return;
+    }
+
+    const transport = Tone.getTransport();
+    const transportInSamples = Tone.Time(transport.seconds, "s").toSamples();
+    this.clips.forEach((clip) => {
+      const seekTime = transportInSamples - clip.start;
+      if (transportInSamples > clip.start && transportInSamples < clip.end) {
+        clip.play(Tone.now(), seekTime);
+      } else {
+        clip.schedule();
+      }
+    });
+  };
 }

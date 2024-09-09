@@ -6,5 +6,7 @@ export interface MenuItem<T = string> {
   separator?: boolean;
   value?: T;
   header?: boolean;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
+  shortcut?: string;
+  children?: MenuItem[];
 }

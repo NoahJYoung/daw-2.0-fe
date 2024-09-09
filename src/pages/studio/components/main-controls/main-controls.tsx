@@ -1,17 +1,34 @@
 import { observer } from "mobx-react-lite";
-import { useAudioEngine } from "../../hooks";
+import { useAudioEngine, useRequestAnimationFrame } from "../../hooks";
 import { TransportControls, TransportPosition } from "./components";
 import * as Tone from "tone";
+import { useState } from "react";
+import { AudioEngineState } from "../../audio-engine/types";
 
 export const MainControls = observer(() => {
-  const { timeline } = useAudioEngine();
+  const { state } = useAudioEngine();
 
-  const position = Tone.Time(timeline.seconds, "s").toBarsBeatsSixteenths();
+  const [transportPosition, setTransportPosition] = useState<string>(
+    Tone.Time(Tone.getTransport().seconds, "s").toBarsBeatsSixteenths()
+  );
+
+  useRequestAnimationFrame(
+    () => {
+      setTransportPosition(
+        Tone.Time(Tone.getTransport().seconds, "s").toBarsBeatsSixteenths()
+      );
+    },
+    {
+      enabled:
+        state === AudioEngineState.playing ||
+        state === AudioEngineState.recording,
+    }
+  );
 
   return (
     <div className="flex items-center gap-2">
       <TransportControls />
-      <TransportPosition position={position} />
+      <TransportPosition position={transportPosition} />
     </div>
   );
 });

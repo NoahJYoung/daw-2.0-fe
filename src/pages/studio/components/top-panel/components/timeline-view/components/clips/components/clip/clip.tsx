@@ -30,13 +30,16 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      if (!e.ctrlKey) {
-        mixer.unselectAllClips();
-      }
+      e.stopPropagation();
+      undoManager.withGroup(() => {
+        if (!e.ctrlKey) {
+          mixer.unselectAllClips();
+        }
 
-      track.selectClip(clip);
+        track.selectClip(clip);
+      });
     },
-    [clip, mixer, track]
+    [clip, mixer, track, undoManager]
   );
 
   const onMouseMove = useCallback(
@@ -45,13 +48,14 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
         const movementXInSamples = timeline.pixelsToSamples(e.movementX);
 
         if (selected) {
-          mixer.selectedClips.forEach((selectedClip) => {
-            const position = selectedClip.start + movementXInSamples;
-            selectedClip.setStart(position >= 0 ? position : 0);
+          undoManager.withoutUndo(() => {
+            mixer.selectedClips.forEach((selectedClip) => {
+              const position = selectedClip.start + movementXInSamples;
+              selectedClip.setStart(position >= 0 ? position : 0);
+            });
           });
         } else {
           const position = clip.start + movementXInSamples;
-
           undoManager.withoutUndo(() => {
             clip.setStart(position >= 0 ? position : 0);
           });
@@ -61,20 +65,14 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
     [dragging, timeline, clip, selected, mixer.selectedClips, undoManager]
   );
 
-  const onMouseUp = useCallback(
-    (e: MouseEvent) => {
-      if (e.ctrlKey) {
-        return;
-      }
-      undoManager.withoutUndo(() => {
-        mixer.tracks.forEach((track) => {
-          track.clips.forEach((clip) => clip.setStart(clip.start - 1));
-        });
+  const onMouseUp = useCallback(() => {
+    undoManager.withoutUndo(() => {
+      mixer.tracks.forEach((track) => {
+        track.clips.forEach((clip) => clip.setStart(clip.start - 1));
       });
-      setDragging(false);
-    },
-    [mixer.tracks, undoManager]
-  );
+    });
+    setDragging(false);
+  }, [mixer.tracks, undoManager]);
 
   const clipLeft = timeline.samplesToPixels(clip.start);
 
@@ -96,7 +94,7 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
       key={clip.id}
       className="flex-shrink-0 rounded-xs"
       style={{
-        opacity: selected ? 0.75 : 0.5,
+        opacity: selected ? 0.7 : 0.4,
         marginTop: 4,
         height: track.laneHeight - 2,
         background: track.color,
