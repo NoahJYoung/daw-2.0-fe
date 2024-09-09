@@ -102,7 +102,7 @@ export const TestClip = observer(
         <div
           style={{
             height: BASE_TRACK_HEIGHT,
-            background: track.rgbColor,
+            background: track.color,
             position: "absolute",
             left: clipLeft,
             width: clipWidth,
@@ -112,7 +112,7 @@ export const TestClip = observer(
           <div
             style={{
               height: BASE_TRACK_HEIGHT,
-              border: `1px solid ${track.rgbColor}`,
+              border: `1px solid ${track.color}`,
               position: "absolute",
               left: loopLeft,
               width: audioEngine.timeline.samplesToPixels(clip.loopSamples),

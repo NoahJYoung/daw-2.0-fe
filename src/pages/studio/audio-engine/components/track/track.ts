@@ -23,13 +23,18 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   name: prop<string>("New Track").withSetter(),
   clips: prop<Clip[]>(() => []),
-  rgbColor: prop<string>("rgb(120, 120, 120)").withSetter(),
+  rgb: prop<[number, number, number]>(() => [
+    Math.floor(Math.random() * 251),
+    Math.floor(Math.random() * 251),
+    Math.floor(Math.random() * 251),
+  ]).withSetter(),
   active: prop(false).withSetter(),
   mute: prop(false).withSetter(),
   pan: prop(0).withSetter(),
   laneHeight: prop(INITIAL_LANE_HEIGHT),
   volume: prop(-12).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
+  input: prop<string | null>(null).withSetter(),
 }) {
   channel = new Tone.Channel();
 
@@ -59,6 +64,12 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   @computed
   get selectedClips() {
     return this.selectedRefs.map((r) => r.current);
+  }
+
+  @computed
+  get color() {
+    const [r, g, b] = this.rgb;
+    return `rgb(${r}, ${g}, ${b})`;
   }
 
   @modelAction

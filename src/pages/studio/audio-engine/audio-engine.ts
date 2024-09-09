@@ -33,7 +33,12 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   record = async () => {
     Tone.start();
-    console.log("started recording");
+    const start = this.timeline.positionInSamples;
+    this.setState(AudioEngineState.recording);
+    const activeTracks = this.mixer.getActiveTracks();
+
+    const transport = Tone.getTransport();
+
     const mic = new Tone.UserMedia();
     const recorder = new Tone.Recorder();
 
@@ -45,45 +50,46 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       console.error(error);
     }
 
-    this.setState(AudioEngineState.recording);
-
-    if (this.mixer.tracks.length) {
-      await recorder.start();
-
-      setTimeout(async () => {
-        const recording = await recorder.stop();
-        this.setState(AudioEngineState.stopped);
-
-        const url = URL.createObjectURL(recording);
-        const audioBuffer = await new Tone.ToneAudioBuffer().load(url);
-        // .toMono()
-        // .toArray();
-
-        const targetTrack = this.mixer.tracks[this.mixer.tracks.length - 1];
+    await recorder.start();
+    this.play();
+    transport.once("stop", async () => {
+      const recording = await recorder.stop();
+      const url = URL.createObjectURL(recording);
+      const audioBuffer = await new Tone.ToneAudioBuffer().load(url);
+      activeTracks.forEach((track) => {
         const clip = new AudioClip({
-          trackId: targetTrack.id,
-          start: 0,
-          // audioData,
+          trackId: track.id,
+          start,
         });
 
         audioBufferCache.add(clip.id, audioBuffer.toMono());
         clip.setBuffer(audioBuffer);
-        targetTrack.createAudioClip(clip);
+        track.createAudioClip(clip);
+      });
 
-        recorder.dispose();
-        mic.dispose();
-        console.log("stoppedRecording");
-      }, 4000);
-    }
+      recorder.dispose();
+      mic.dispose();
+    });
   };
 
   play = async () => {
+    Tone.start();
     Tone.getTransport().start();
-    this.setState(AudioEngineState.playing);
+    if (this.state !== AudioEngineState.recording) {
+      this.setState(AudioEngineState.playing);
+    }
   };
 
   pause = async () => {
-    Tone.getTransport().pause();
+    const transport = Tone.getTransport();
+    const seconds = transport.seconds;
+
+    transport.pause();
+    if (this.state === AudioEngineState.recording) {
+      this.stop();
+      transport.seconds = seconds;
+      this.timeline.setSeconds(transport.seconds);
+    }
     this.setState(AudioEngineState.paused);
   };
 

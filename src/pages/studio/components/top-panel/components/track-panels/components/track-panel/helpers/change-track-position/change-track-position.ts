@@ -3,8 +3,10 @@ import { standaloneAction } from "mobx-keystone";
 
 export const changeTrackPosition = standaloneAction(
   "myApp/arrayMove",
-  (array: Track[], fromIndex: number, toIndex: number): void => {
-    const [movedTrack] = array.splice(fromIndex, 1);
-    array.splice(toIndex, 0, movedTrack);
+  (tracks: Track[], fromIndex: number, toIndex: number): void => {
+    if (toIndex < tracks.length && toIndex >= 0) {
+      const [movedTrack] = tracks.splice(fromIndex, 1);
+      tracks.splice(toIndex, 0, movedTrack);
+    }
   }
 );

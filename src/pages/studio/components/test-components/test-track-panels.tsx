@@ -15,7 +15,7 @@ export const TestTrackPanels = observer(({ tracks }: TestTrackPanelsProps) => {
           key={track.id}
           className="flex flex-col"
           style={{
-            border: `1px solid ${track.rgbColor}`,
+            border: `1px solid ${track.color}`,
             width: 200,
             height: BASE_TRACK_HEIGHT,
           }}

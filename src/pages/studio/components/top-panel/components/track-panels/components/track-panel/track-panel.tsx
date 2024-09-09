@@ -2,15 +2,15 @@ import { observer } from "mobx-react-lite";
 import { Track } from "@/pages/studio/audio-engine/components";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
-import { FaGuitar } from "react-icons/fa";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { GrPower } from "react-icons/gr";
 import { changeTrackPosition, swapTrackPosition } from "./helpers";
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { FaCaretUp, FaCaretDown, FaGuitar } from "react-icons/fa";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
+import { inputOptions } from "@/pages/studio/audio-engine/types";
 
 const DRAG_THRESHOLD = 24;
 
@@ -27,6 +27,7 @@ export const TrackPanel = observer(
     const [isResizing, setIsResizing] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [yOffset, setYOffset] = useState(0);
+    const trackNameRef = useRef<HTMLInputElement>(null);
     const { t } = useTranslation();
     const dragStartYPosition = useRef<number | null>(null);
     const [newTrackIndex, setNewTrackIndex] = useState<number | null>(null);
@@ -197,7 +198,7 @@ export const TrackPanel = observer(
         {isDragging && <div style={{ height: track.laneHeight, zIndex: -1 }} />}
         {isDragging && !!newTrackIndex && (
           <div
-            className="absolute w-[256px] h-[2px] bg-surface-5 w-full rounded-xl"
+            className="absolute w-[249px] h-[2px] bg-surface-5 w-full rounded-xl"
             style={{
               top: getIndicatorPosition(),
               zIndex: 2,
@@ -220,6 +221,26 @@ export const TrackPanel = observer(
             zIndex: isDragging ? 3 : 1,
           }}
         >
+          <span
+            style={{
+              height: track.laneHeight - 2,
+              background: "transparent",
+              width: 8,
+              zIndex: 4,
+            }}
+            className="absolute flex items-center "
+          >
+            <span
+              style={{
+                background: track.color,
+                height: "75%",
+                borderTopRightRadius: 2,
+                borderBottomRightRadius: 2,
+                opacity: selected ? 0.75 : 0.5,
+              }}
+              className="w-full border-surface-1 border-1 border"
+            />
+          </span>
           <div
             onMouseDown={handleDragStart}
             style={{ cursor: isDragging ? "grabbing" : "auto" }}
@@ -240,7 +261,7 @@ export const TrackPanel = observer(
                   } hover:text-surface-${
                     4 + selectedBgOffset
                   } hover:bg-transparent`}
-                  icon={FaChevronUp}
+                  icon={FaCaretUp}
                   onClick={(e) => {
                     e.stopPropagation();
                     swapTrackPosition(
@@ -256,7 +277,7 @@ export const TrackPanel = observer(
                   } hover:text-surface-${
                     4 + selectedBgOffset
                   } hover:bg-transparent`}
-                  icon={FaChevronDown}
+                  icon={FaCaretDown}
                   style={{ bottom: 0 }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -285,13 +306,19 @@ export const TrackPanel = observer(
                 <GrPower className="text-lg w-5 h-5" />
               </Button>
               <input
+                ref={trackNameRef}
                 type="text"
                 className={`text-surface-6 w-full bg-surface-${
                   1 + selectedBgOffset
-                } focus:bg-surface-3 my-2 p-1 focus:outline-none text-sm h-6`}
+                } focus:bg-surface-3 my-2 p-1 text-ellipsis focus:outline-none text-sm h-6`}
                 value={track.name}
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => track.setName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    trackNameRef?.current?.blur();
+                  }
+                }}
               />
               <span className="flex gap-1 items-center">
                 <Button
@@ -316,12 +343,15 @@ export const TrackPanel = observer(
               {showExpandedOptions && (
                 <div className="flex flex-col gap-1">
                   <StudioDropdown
-                    options={[]}
-                    value={null}
+                    options={inputOptions.map((option) => ({
+                      label: t(`studio.trackPanel.inputOptions.${option}`),
+                      value: option,
+                    }))}
+                    value={track.input}
                     colorOffset={selectedBgOffset}
                     placeholder={t("studio.trackPanel.placeholders.input")}
                     icon={<MdOutlineSettingsInputComponent />}
-                    onChange={() => {}}
+                    onChange={(input) => track.setInput(input)}
                   />
 
                   {showInstrumentSelector && (

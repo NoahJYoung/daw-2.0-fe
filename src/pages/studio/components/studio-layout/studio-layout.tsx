@@ -8,8 +8,7 @@ import {
 } from "react-resizable-panels";
 import { ReactElement, useRef } from "react";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
-import { FaArrowsAltV } from "react-icons/fa";
-
+import { PiCaretUpDownFill } from "react-icons/pi";
 interface StudioLayoutProps {
   upperPanel: ReactElement;
   middlePanel: ReactElement;
@@ -54,7 +53,7 @@ export const StudioLayout = observer(
           <div className="flex bg-surface-1 items-start h-[48px] gap-2">
             <StudioButton
               className="rounded-xxs shadow-none text-xl relative flex items-center justify-centers p-1 w-10 h-10 bg-transparent text-surface-3 hover:text-surface-4 hover:bg-transparent"
-              icon={FaArrowsAltV}
+              icon={PiCaretUpDownFill}
               onClick={toggleBottomPanel}
             />
             {middlePanel}

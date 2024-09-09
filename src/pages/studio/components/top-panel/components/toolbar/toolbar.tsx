@@ -95,7 +95,7 @@ export const Toolbar = observer(
         <StudioButton
           title={t("studio.toolbar.save")}
           icon={IoMdSave}
-          onClick={() => {}}
+          onClick={() => console.log(audioEngine.serialize())}
         />
 
         <StudioDropdownMenu

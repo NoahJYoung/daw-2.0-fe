@@ -45,15 +45,19 @@ export const StudioDropdown = ({
           placeholder={placeholder}
         />
       </SelectTrigger>
-      <SelectContent className={`rounded-xxs bg-surface-${2 + colorOffset}`}>
-        <SelectGroup className={`bg-surface-${2 + colorOffset}`}>
-          <SelectLabel>{label}</SelectLabel>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
+      <SelectContent className="rounded-xxs bg-surface-1">
+        {/* <SelectGroup className="bg-surface-2"> */}
+        {label && <SelectLabel>{label}</SelectLabel>}
+        {options.map((option) => (
+          <SelectItem
+            className="bg-surface-1 hover:bg-red-900 rounded-xxs"
+            key={option.value}
+            value={option.value}
+          >
+            {option.label}
+          </SelectItem>
+        ))}
+        {/* </SelectGroup> */}
       </SelectContent>
     </Select>
   );

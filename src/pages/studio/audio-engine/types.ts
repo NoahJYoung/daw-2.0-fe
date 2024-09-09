@@ -4,3 +4,5 @@ export enum AudioEngineState {
   paused = "PAUSED",
   stopped = "STOPPED",
 }
+
+export const inputOptions = ["mic", "midi"];

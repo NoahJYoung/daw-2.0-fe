@@ -51,6 +51,10 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     this.selectedRefs = [];
   }
 
+  unselectAllClips() {
+    this.tracks.forEach((track) => track.unselectAllClips());
+  }
+
   getCombinedLaneHeightsAtIndex(index: number) {
     return [...this.tracks]
       .slice(0, index)
@@ -79,5 +83,9 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   get topPanelHeight() {
     const min = window.innerHeight - 156;
     return this.combinedLaneHeights > min ? this.combinedLaneHeights : min;
+  }
+
+  getActiveTracks() {
+    return this.tracks.filter((track) => track.active);
   }
 }

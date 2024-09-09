@@ -35,6 +35,11 @@
       "placeholders": {
         "input": "Input",
         "instrument": "Instrument"
+      },
+      "inputOptions": {
+        "mic": "Microphone",
+        "midi": "Midi",
+        "noInput": "No input"
       }
     }
   }

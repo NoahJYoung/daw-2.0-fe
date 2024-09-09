@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { observer } from "mobx-react-lite";
-import { Grid, Playhead, TopBar } from "./components";
+import { Clips, Grid, Playhead, TopBar } from "./components";
 import {
   useAudioEngine,
   useRequestAnimationFrame,
   useUndoManager,
 } from "@/pages/studio/hooks";
-import { useMemo, useCallback, useEffect } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
 import * as Tone from "tone";
 import {
   findSmallestSubdivision,
@@ -77,22 +77,34 @@ export const TimelineView = observer(
           const xOffset = scrollRef.current.getBoundingClientRect().x;
           const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
           timeline.setSecondsFromPixels(xValue);
+          setPlayheadLeft(timeline.positionInPixels);
         }
       });
     };
 
+    const [playheadLeft, setPlayheadLeft] = useState(timeline.positionInPixels);
+
     useRequestAnimationFrame(
       () => {
-        undoManager.withoutUndo(() =>
-          timeline.setSeconds(Tone.getTransport().seconds)
+        setPlayheadLeft(
+          timeline.samplesToPixels(
+            Tone.Time(Tone.getTransport().seconds, "s").toSamples()
+          )
         );
       },
       {
-        enabled: audioEngine.state === AudioEngineState.playing,
+        enabled:
+          audioEngine.state === AudioEngineState.playing ||
+          audioEngine.state === AudioEngineState.recording,
       }
     );
 
-    const playheadLeft = timeline.positionInPixels;
+    useEffect(() => {
+      undoManager.withoutUndo(() => {
+        timeline.setSeconds(Tone.getTransport().seconds);
+      });
+      setPlayheadLeft(timeline.positionInPixels);
+    }, [audioEngine.state]);
 
     const handleWheel = (e: WheelEvent) => {
       if (e.altKey) {
@@ -142,6 +154,8 @@ export const TimelineView = observer(
           measureWidth={measureWidth}
           measuresArray={measuresArray}
         />
+
+        <Clips />
 
         <Playhead height={mixer.topPanelHeight + 74} left={playheadLeft} />
       </div>
