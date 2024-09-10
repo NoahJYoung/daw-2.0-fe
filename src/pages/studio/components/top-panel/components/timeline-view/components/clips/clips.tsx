@@ -5,10 +5,24 @@ import { PlaceholderClip } from "./components/clip/components";
 import { useEffect, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
-import { splitSelectedClips } from "./helpers";
+import {
+  deleteSelectedClips,
+  selectAllClips,
+  splitSelectedClips,
+} from "./helpers";
 import { MenuItem } from "@/components/ui/custom/types";
+import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
+import { AiOutlineSplitCells } from "react-icons/ai";
+import { FiDelete } from "react-icons/fi";
+import { PiSelectionAllThin } from "react-icons/pi";
+import * as Tone from "tone";
 
-export const Clips = observer(() => {
+interface ClipsProps {
+  startMeasure: number;
+  endMeasure: number;
+}
+
+export const Clips = observer(({ startMeasure, endMeasure }: ClipsProps) => {
   const { mixer, timeline, state } = useAudioEngine();
   const undoManager = useUndoManager();
   const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
@@ -25,23 +39,44 @@ export const Clips = observer(() => {
 
   const timelineContextMenuItems: MenuItem[] = [
     {
-      label: "Clips",
-      children: [
-        {
-          label: "Split at playhead",
-          onClick: (e) => splitSelectedClips(e, mixer, timeline, undoManager),
-        },
-      ],
+      label: "Select all",
+      onClick: () => selectAllClips(mixer, undoManager),
+      icon: PiSelectionAllThin,
+      shortcut: "ctrl+a",
+    },
+    { separator: true },
+    {
+      label: "Split at playhead",
+      onClick: () => splitSelectedClips(mixer, timeline, undoManager),
+      icon: AiOutlineSplitCells,
+      shortcut: "shift+s",
     },
 
-    { separator: true },
-    { label: "item 2" },
+    {
+      label: "Delete",
+      onClick: () => deleteSelectedClips(mixer, undoManager),
+      icon: FiDelete,
+      shortcut: "delete",
+    },
   ];
 
   const handleClick = () => {
     undoManager.withGroup(() => {
       mixer.unselectAllClips();
     });
+  };
+
+  const shouldRenderClip = (clip: ClipData) => {
+    const clipStartMeasure = parseInt(
+      Tone.Time(clip.start, "samples").toBarsBeatsSixteenths().split(":")[0]
+    );
+    const clipEndMeasure = parseInt(
+      Tone.Time(clip.end, "samples").toBarsBeatsSixteenths().split(":")[0]
+    );
+    if (clipEndMeasure >= startMeasure && clipStartMeasure <= endMeasure) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -67,9 +102,11 @@ export const Clips = observer(() => {
                 startPosition={placeholderClipPosition}
               />
             )}
-            {track.clips.map((clip) => (
-              <Clip key={clip.id} track={track} clip={clip} />
-            ))}
+            {track.clips.map((clip) =>
+              shouldRenderClip(clip) ? (
+                <Clip key={clip.id} track={track} clip={clip} />
+              ) : null
+            )}
           </div>
         ))}
       </div>

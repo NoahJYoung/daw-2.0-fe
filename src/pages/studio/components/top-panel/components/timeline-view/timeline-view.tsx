@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { observer } from "mobx-react-lite";
-import { Clips, Grid, Playhead, TopBar } from "./components";
+import {
+  Clips,
+  Grid,
+  Playhead,
+  TimelineHotKeysManager,
+  TopBar,
+} from "./components";
 import {
   useAudioEngine,
   useRequestAnimationFrame,
@@ -25,6 +31,38 @@ export const TimelineView = observer(
     const undoManager = useUndoManager();
     const { timeline, mixer } = audioEngine;
     const { pixels, measures, timeSignature } = timeline;
+
+    const [scrollLeft, setScrollLeft] = useState(0);
+    const [viewportWidth, setViewportWidth] = useState(0);
+
+    useEffect(() => {
+      const updateViewportWidth = () => {
+        if (scrollRef.current) {
+          setViewportWidth(scrollRef.current.clientWidth);
+        }
+      };
+
+      const handleScroll = () => {
+        if (scrollRef.current) {
+          setScrollLeft(scrollRef.current.scrollLeft);
+        }
+      };
+
+      const scroll = scrollRef.current;
+
+      if (scroll) {
+        scroll.addEventListener("scroll", handleScroll);
+        window.addEventListener("resize", updateViewportWidth);
+        updateViewportWidth();
+      }
+
+      return () => {
+        if (scroll) {
+          scroll.removeEventListener("scroll", handleScroll);
+        }
+        window.removeEventListener("resize", updateViewportWidth);
+      };
+    }, [scrollRef]);
 
     const measureWidth = useMemo(() => pixels / measures, [pixels, measures]);
 
@@ -119,6 +157,41 @@ export const TimelineView = observer(
       }
     };
 
+    const calculateVisibleRange = useCallback(() => {
+      if (renderEveryFourthMeasure) {
+        const startMeasure =
+          Math.max(Math.floor(scrollLeft / (measureWidth * 4)) - 1) >= 0
+            ? Math.max(Math.floor(scrollLeft / (measureWidth * 4)) - 1)
+            : 0;
+        const endMeasure = Math.min(
+          Math.ceil((scrollLeft + viewportWidth) / (measureWidth * 4)) + 1,
+          Math.floor(measuresArray.length / 4)
+        );
+
+        return {
+          startMeasure: startMeasure * 4,
+          endMeasure: endMeasure * 4,
+        };
+      }
+      const startMeasure = Math.max(
+        Math.floor(scrollLeft / measureWidth) - 4,
+        0
+      );
+      const endMeasure = Math.min(
+        Math.ceil((scrollLeft + viewportWidth) / measureWidth) + 4,
+        measuresArray.length
+      );
+      return { startMeasure, endMeasure };
+    }, [
+      renderEveryFourthMeasure,
+      scrollLeft,
+      measureWidth,
+      viewportWidth,
+      measuresArray.length,
+    ]);
+
+    const { startMeasure, endMeasure } = calculateVisibleRange();
+
     useEffect(() => {
       const container = scrollRef.current;
       if (container) {
@@ -147,6 +220,8 @@ export const TimelineView = observer(
         />
 
         <Grid
+          startMeasure={startMeasure}
+          endMeasure={endMeasure}
           scrollRef={scrollRef}
           subdivisionWidth={subdivisionWidth}
           subdivisionsArray={subdivisionsArray}
@@ -155,9 +230,10 @@ export const TimelineView = observer(
           measuresArray={measuresArray}
         />
 
-        <Clips />
+        <Clips startMeasure={startMeasure} endMeasure={endMeasure} />
 
         <Playhead height={mixer.topPanelHeight + 74} left={playheadLeft} />
+        <TimelineHotKeysManager />
       </div>
     );
   }

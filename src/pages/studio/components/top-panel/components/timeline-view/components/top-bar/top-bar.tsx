@@ -41,7 +41,11 @@ export const TopBar = memo(
         measuresArray.map((_, i) => (
           <div
             key={i}
-            style={{ width: measureWidth, borderLeftWidth: i === 0 ? 1 : 0 }}
+            style={{
+              zIndex: 10,
+              width: measureWidth,
+              borderLeftWidth: i === 0 ? 1 : 0,
+            }}
             className="flex-shrink-0 flex rounded-xxs border-surface-2 border relative border-1"
           >
             {subdivisionsArray.map((_, j) => {

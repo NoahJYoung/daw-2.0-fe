@@ -98,6 +98,7 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
         marginTop: 4,
         height: track.laneHeight - 2,
         background: track.color,
+        border: `1px solid ${track.color}`,
         position: "absolute",
         left: clipLeft,
         cursor: dragging ? "grabbing" : "auto",

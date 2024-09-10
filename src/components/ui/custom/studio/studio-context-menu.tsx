@@ -35,18 +35,30 @@ export const StudioContextMenu = ({
     if (children && children.length > 0) {
       return (
         <ContextMenuSub key={label}>
-          <ContextMenuSubTrigger inset>{label ?? ""}</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48 rounded-xxs">
+          <ContextMenuSubTrigger className="rounded-xxs" inset>
+            {label ?? ""}
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-56 rounded-xxs">
             {children.map((child) => getSubMenu(child))}
           </ContextMenuSubContent>
         </ContextMenuSub>
       );
     }
     return (
-      <ContextMenuItem onClick={onClick} inset>
+      <ContextMenuItem
+        className="flex items-center gap-2 rounded-xxs justify-between"
+        onClick={onClick}
+        inset={!Icon}
+      >
         {Icon && <Icon />}
         {label || ""}
-        {shortcut && <ContextMenuShortcut>{shortcut}</ContextMenuShortcut>}
+        {shortcut ? (
+          <ContextMenuShortcut className="flex-grow-0 m-0">
+            {shortcut}
+          </ContextMenuShortcut>
+        ) : (
+          <span />
+        )}
       </ContextMenuItem>
     );
   };
@@ -54,22 +66,31 @@ export const StudioContextMenu = ({
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
-      <ContextMenuContent className="w-48 rounded-xxs">
+      <ContextMenuContent className="w-56 rounded-xxs text-surface-6">
         {items?.map((item) => {
           if (item.children) {
             return getSubMenu(item);
           }
           const { onClick, label, shortcut, icon: Icon, separator } = item;
           if (separator) {
-            return <ContextMenuSeparator />;
+            return <ContextMenuSeparator key={label} />;
           }
 
           return (
-            <ContextMenuItem onClick={onClick} inset>
-              {Icon && <Icon />}
-              {label || ""}
-              {shortcut && (
-                <ContextMenuShortcut>{shortcut}</ContextMenuShortcut>
+            <ContextMenuItem
+              className="flex items-center gap-2 justify-between rounded-xxs"
+              onClick={onClick}
+              inset={!Icon}
+              key={label}
+            >
+              {Icon && <Icon className="w-[16px] h-[16px]" />}
+              <div className="w-[104px]">{label || ""}</div>
+              {shortcut ? (
+                <ContextMenuShortcut className="flex-grow-0 m-0 w-[40px]">
+                  {shortcut}
+                </ContextMenuShortcut>
+              ) : (
+                <span className="w-[40px]" />
               )}
             </ContextMenuItem>
           );

@@ -1,13 +1,12 @@
 import { ExtendedModel, idProp, model, prop } from "mobx-keystone";
 import { computed } from "mobx";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
-import { Track } from "../track";
 import * as Tone from "tone";
 
 @model("AudioEngine/Mixer/Track/MidiClip")
 export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
-  track: prop<Track>(),
+  trackId: prop<string>(),
   audioBuffer: prop<Tone.ToneAudioBuffer>(),
   loopSamples: prop<number>(0),
   start: prop<number>().withSetter(),
