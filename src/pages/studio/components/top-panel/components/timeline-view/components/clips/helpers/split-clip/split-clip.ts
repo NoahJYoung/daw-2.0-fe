@@ -11,8 +11,6 @@ export const splitClip = (clip: Clip, mixer: Mixer) => {
     const data = clip.split(
       Tone.Time(Tone.getTransport().seconds, "s").toSamples()
     );
-    console.log("CLIP", clip);
-    console.log("DATA", data);
     if (data) {
       const { snapshots, clipIdToDelete } = data;
       snapshots.forEach((snapshot) => {

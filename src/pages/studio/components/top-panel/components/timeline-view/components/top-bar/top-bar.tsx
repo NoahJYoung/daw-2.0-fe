@@ -56,6 +56,7 @@ export const TopBar = memo(
                   className="border-surface-2"
                   style={{
                     width: subdivisionWidth,
+                    zIndex: 10,
                     flexShrink: 0,
                     height,
                     marginTop,
@@ -81,7 +82,13 @@ export const TopBar = memo(
     return renderEveryFourthMeasure ? (
       <div
         className="flex sticky top-0 bg-surface-1"
-        style={{ width: pixels, height: TOOLBAR_HEIGHT - 4, marginBottom: 5 }}
+        style={{
+          zIndex: 10,
+          width: pixels,
+          height: TOOLBAR_HEIGHT,
+          marginBottom: 3,
+          paddingTop: 2,
+        }}
       >
         {measuresArray.slice(0, measuresArray.length / 4).map((_, i) => (
           <span
@@ -105,7 +112,12 @@ export const TopBar = memo(
     ) : (
       <div
         className="flex sticky top-0 bg-surface-1"
-        style={{ width: pixels, height: TOOLBAR_HEIGHT - 4, marginBottom: 5 }}
+        style={{
+          zIndex: 10,
+          width: pixels,
+          height: TOOLBAR_HEIGHT - 4,
+          marginBottom: 5,
+        }}
       >
         {measuresToRender}
       </div>

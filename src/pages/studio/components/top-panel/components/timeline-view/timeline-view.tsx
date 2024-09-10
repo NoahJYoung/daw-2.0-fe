@@ -208,7 +208,7 @@ export const TimelineView = observer(
         onScroll={onScroll}
         ref={scrollRef}
         style={{ width: pixels }}
-        className="h-full bg-surface-0 z-10 styled-scrollbar overflow-auto relative pt-[2px]"
+        className="h-full bg-surface-0 z-10 styled-scrollbar overflow-auto relative"
       >
         <TopBar
           renderEveryFourthMeasure={renderEveryFourthMeasure}

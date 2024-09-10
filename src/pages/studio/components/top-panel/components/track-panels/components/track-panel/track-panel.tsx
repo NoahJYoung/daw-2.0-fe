@@ -159,6 +159,20 @@ export const TrackPanel = observer(
       }
     };
 
+    const handleDoubleClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!e.ctrlKey) {
+        mixer.unselectAllTracks();
+        mixer.unselectAllClips();
+      }
+      if (selected) {
+        mixer.unselectTrack(track);
+      } else {
+        mixer.selectTrack(track);
+      }
+      track.selectAllClips();
+    };
+
     const handleToggleActive = (e: React.MouseEvent) => {
       e.stopPropagation();
       track.setActive(!track.active);
@@ -207,7 +221,8 @@ export const TrackPanel = observer(
         )}
         <div
           onClick={handleSelectTrack}
-          className={`flex rounded-xxs gap-1 pr-1 w-full flex-shrink-0 ${
+          onDoubleClick={handleDoubleClick}
+          className={`select-none flex rounded-xxs gap-1 pr-1 w-full flex-shrink-0 ${
             isDragging ? "border-surface-0 border-b-1 border-r-2 border" : ""
           } w-full bg-surface-${
             1 + selectedBgOffset
@@ -308,9 +323,9 @@ export const TrackPanel = observer(
               <input
                 ref={trackNameRef}
                 type="text"
-                className={`text-surface-6 w-full bg-surface-${
+                className={` text-surface-6 w-full bg-surface-${
                   1 + selectedBgOffset
-                } focus:bg-surface-3 my-2 p-1 text-ellipsis focus:outline-none text-sm h-6`}
+                } focus:bg-surface-3 focus:select-text my-2 p-1 text-ellipsis focus:outline-none text-sm h-6`}
                 value={track.name}
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => track.setName(e.target.value)}

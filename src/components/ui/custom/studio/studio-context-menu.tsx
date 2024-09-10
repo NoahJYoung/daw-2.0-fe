@@ -46,19 +46,22 @@ export const StudioContextMenu = ({
     }
     return (
       <ContextMenuItem
-        className="flex items-center gap-2 rounded-xxs justify-between"
+        className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs p-0"
         onClick={onClick}
         inset={!Icon}
+        key={label}
       >
-        {Icon && <Icon />}
-        {label || ""}
-        {shortcut ? (
-          <ContextMenuShortcut className="flex-grow-0 m-0">
-            {shortcut}
-          </ContextMenuShortcut>
-        ) : (
-          <span />
-        )}
+        <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
+          {Icon && <Icon className="w-[16px] h-[16px]" />}
+          <div className="w-[104px] ">{label || ""}</div>
+          {shortcut ? (
+            <ContextMenuShortcut className="flex-grow-0 m-0 w-[40px]">
+              {shortcut}
+            </ContextMenuShortcut>
+          ) : (
+            <span className="w-[40px]" />
+          )}
+        </div>
       </ContextMenuItem>
     );
   };
@@ -66,7 +69,7 @@ export const StudioContextMenu = ({
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
-      <ContextMenuContent className="w-56 rounded-xxs text-surface-6">
+      <ContextMenuContent className="w-56 bg-surface-1 rounded-xxs text-surface-6">
         {items?.map((item) => {
           if (item.children) {
             return getSubMenu(item);
@@ -78,20 +81,22 @@ export const StudioContextMenu = ({
 
           return (
             <ContextMenuItem
-              className="flex items-center gap-2 justify-between rounded-xxs"
+              className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs p-0"
               onClick={onClick}
               inset={!Icon}
               key={label}
             >
-              {Icon && <Icon className="w-[16px] h-[16px]" />}
-              <div className="w-[104px]">{label || ""}</div>
-              {shortcut ? (
-                <ContextMenuShortcut className="flex-grow-0 m-0 w-[40px]">
-                  {shortcut}
-                </ContextMenuShortcut>
-              ) : (
-                <span className="w-[40px]" />
-              )}
+              <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
+                {Icon && <Icon className="w-[16px] h-[16px]" />}
+                <div className="w-[104px] ">{label || ""}</div>
+                {shortcut ? (
+                  <ContextMenuShortcut className="flex-grow-0 m-0 w-[40px]">
+                    {shortcut}
+                  </ContextMenuShortcut>
+                ) : (
+                  <span className="w-[40px]" />
+                )}
+              </div>
             </ContextMenuItem>
           );
         })}
