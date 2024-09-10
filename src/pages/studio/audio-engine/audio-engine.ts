@@ -84,6 +84,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   pause = async () => {
     const transport = Tone.getTransport();
     const seconds = transport.seconds;
+    this.mixer.tracks.forEach((track) => track.stop());
 
     transport.pause();
     if (this.state === AudioEngineState.recording) {

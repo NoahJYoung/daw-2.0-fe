@@ -70,13 +70,13 @@ export const StudioContextMenu = ({
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-56 bg-surface-1 rounded-xxs text-surface-6">
-        {items?.map((item) => {
+        {items?.map((item, i) => {
           if (item.children) {
             return getSubMenu(item);
           }
           const { onClick, label, shortcut, icon: Icon, separator } = item;
           if (separator) {
-            return <ContextMenuSeparator key={label} />;
+            return <ContextMenuSeparator key={label ?? i} />;
           }
 
           return (

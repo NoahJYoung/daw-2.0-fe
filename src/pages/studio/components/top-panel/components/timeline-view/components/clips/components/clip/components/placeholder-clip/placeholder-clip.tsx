@@ -14,7 +14,7 @@ export const PlaceholderClip = observer(
   ({ startPosition, track }: PlaceholderClipProps) => {
     const [width, setWidth] = useState(0);
     const audioEngine = useAudioEngine();
-    const { timeline } = audioEngine;
+    const { timeline, mixer } = audioEngine;
 
     const renderPlaceholderClip = Boolean(
       startPosition !== null && audioEngine.state === AudioEngineState.recording
@@ -41,10 +41,15 @@ export const PlaceholderClip = observer(
       Tone.Time(startPosition || 0, "s").toSamples()
     );
 
+    const top = mixer.getCombinedLaneHeightsAtIndex(
+      mixer.tracks.indexOf(track)
+    );
+
     return renderPlaceholderClip ? (
       <div
         className="absolute rounded-xs"
         style={{
+          top,
           width,
           left,
           marginTop: 4,

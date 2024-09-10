@@ -20,96 +20,100 @@ import * as Tone from "tone";
 interface ClipsProps {
   startMeasure: number;
   endMeasure: number;
+  scrollRef: React.RefObject<HTMLDivElement>;
 }
 
-export const Clips = observer(({ startMeasure, endMeasure }: ClipsProps) => {
-  const { mixer, timeline, state } = useAudioEngine();
-  const undoManager = useUndoManager();
-  const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
-    number | null
-  >(null);
+export const Clips = observer(
+  ({ startMeasure, endMeasure, scrollRef }: ClipsProps) => {
+    const { mixer, timeline, state } = useAudioEngine();
+    const undoManager = useUndoManager();
+    const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
+      number | null
+    >(null);
 
-  useEffect(() => {
-    if (state === AudioEngineState.recording) {
-      setPlaceholderClipPosition(timeline.seconds);
-    } else {
-      setPlaceholderClipPosition(null);
-    }
-  }, [state, timeline.seconds]);
+    useEffect(() => {
+      if (state === AudioEngineState.recording) {
+        setPlaceholderClipPosition(timeline.seconds);
+      } else {
+        setPlaceholderClipPosition(null);
+      }
+    }, [state, timeline.seconds]);
 
-  const timelineContextMenuItems: MenuItem[] = [
-    {
-      label: "Select all",
-      onClick: () => selectAllClips(mixer, undoManager),
-      icon: PiSelectionAllThin,
-      shortcut: "ctrl+a",
-    },
-    { separator: true },
-    {
-      label: "Split at playhead",
-      onClick: () => splitSelectedClips(mixer, timeline, undoManager),
-      icon: AiOutlineSplitCells,
-      shortcut: "shift+s",
-    },
+    const timelineContextMenuItems: MenuItem[] = [
+      {
+        label: "Select all",
+        onClick: () => selectAllClips(mixer, undoManager),
+        icon: PiSelectionAllThin,
+        shortcut: "ctrl+a",
+      },
+      { separator: true },
+      {
+        label: "Split at playhead",
+        onClick: () => splitSelectedClips(mixer, timeline, undoManager),
+        icon: AiOutlineSplitCells,
+        shortcut: "shift+s",
+      },
 
-    {
-      label: "Delete",
-      onClick: () => deleteSelectedClips(mixer, undoManager),
-      icon: FiDelete,
-      shortcut: "delete",
-    },
-  ];
+      {
+        label: "Delete",
+        onClick: () => deleteSelectedClips(mixer, undoManager),
+        icon: FiDelete,
+        shortcut: "delete",
+      },
+    ];
 
-  const handleClick = () => {
-    undoManager.withGroup(() => {
-      mixer.unselectAllClips();
-    });
-  };
+    const handleClick = () => {
+      undoManager.withGroup(() => {
+        mixer.unselectAllClips();
+      });
+    };
 
-  const shouldRenderClip = (clip: ClipData) => {
-    const clipStartMeasure = parseInt(
-      Tone.Time(clip.start, "samples").toBarsBeatsSixteenths().split(":")[0]
+    const shouldRenderClip = (clip: ClipData) => {
+      const clipStartMeasure = parseInt(
+        Tone.Time(clip.start, "samples").toBarsBeatsSixteenths().split(":")[0]
+      );
+      const clipEndMeasure = parseInt(
+        Tone.Time(clip.end, "samples").toBarsBeatsSixteenths().split(":")[0]
+      );
+      if (clipEndMeasure >= startMeasure && clipStartMeasure <= endMeasure) {
+        return true;
+      }
+      return false;
+    };
+
+    return (
+      <StudioContextMenu items={timelineContextMenuItems}>
+        <div
+          onClick={handleClick}
+          className="absolute flex flex-col"
+          style={{
+            width: timeline.pixels,
+            height: mixer.topPanelHeight,
+            top: 72,
+          }}
+        >
+          {mixer.tracks.map((track) => (
+            <div key={track.id} className="flex flex-shrink-0 absolute">
+              {state === AudioEngineState.recording && track.active && (
+                <PlaceholderClip
+                  track={track}
+                  startPosition={placeholderClipPosition}
+                />
+              )}
+              {track.clips.map((clip) =>
+                shouldRenderClip(clip) ? (
+                  <Clip
+                    scrollRef={scrollRef}
+                    key={clip.id}
+                    track={track}
+                    clip={clip}
+                  />
+                ) : null
+              )}
+            </div>
+          ))}
+        </div>
+      </StudioContextMenu>
     );
-    const clipEndMeasure = parseInt(
-      Tone.Time(clip.end, "samples").toBarsBeatsSixteenths().split(":")[0]
-    );
-    if (clipEndMeasure >= startMeasure && clipStartMeasure <= endMeasure) {
-      return true;
-    }
-    return false;
-  };
-
-  return (
-    <StudioContextMenu items={timelineContextMenuItems}>
-      <div
-        onClick={handleClick}
-        className="absolute flex flex-col"
-        style={{
-          width: timeline.pixels,
-          height: mixer.topPanelHeight,
-          top: 72,
-        }}
-      >
-        {mixer.tracks.map((track, i) => (
-          <div
-            style={{ top: mixer.getCombinedLaneHeightsAtIndex(i) }}
-            key={track.id}
-            className="flex flex-shrink-0 absolute"
-          >
-            {state === AudioEngineState.recording && track.active && (
-              <PlaceholderClip
-                track={track}
-                startPosition={placeholderClipPosition}
-              />
-            )}
-            {track.clips.map((clip) =>
-              shouldRenderClip(clip) ? (
-                <Clip key={clip.id} track={track} clip={clip} />
-              ) : null
-            )}
-          </div>
-        ))}
-      </div>
-    </StudioContextMenu>
-  );
-});
+  }
+);

@@ -15,6 +15,17 @@ class AudioBufferCache {
     this.cache.set(id, audioBuffer);
   }
 
+  copy(oldId: string, newId: string) {
+    if (this.maxCacheSize && this.cache.size >= this.maxCacheSize) {
+      const oldestKey = this.cache.keys().next().value;
+      this.cache.delete(oldestKey);
+    }
+    const buffer = this.cache.get(oldId);
+    if (buffer) {
+      this.cache.set(newId, buffer);
+    }
+  }
+
   get(id: string) {
     return this.cache.get(id) || null;
   }

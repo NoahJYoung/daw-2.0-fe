@@ -33,6 +33,8 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   play() {}
 
+  stop() {}
+
   schedule() {}
 
   split() {}

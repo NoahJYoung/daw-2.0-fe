@@ -6,11 +6,13 @@ import {
 import { observer } from "mobx-react-lite";
 import { AudioClipView } from "./components";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { moveClipToNewTrack } from "../../helpers";
 
 interface ClipProps {
   track: Track;
   clip: AudioClip | MidiClip;
+  scrollRef: React.RefObject<HTMLDivElement>;
 }
 
 export const Clip = observer(({ clip, track }: ClipProps) => {
@@ -19,8 +21,11 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
   const undoManager = useUndoManager();
   const selected = mixer.selectedClips.includes(clip);
 
-  const onMouseDown = () => {
+  const initialY = useRef<number>(0);
+
+  const onMouseDown = (e: React.MouseEvent) => {
     setDragging(true);
+    initialY.current = e.clientY;
     undoManager.withGroup(() => {
       mixer.tracks.forEach((track) => {
         track.clips.forEach((clip) => clip.setStart(clip.start + 1));
@@ -42,27 +47,63 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
     [clip, mixer, track, undoManager]
   );
 
+  const [tempTrackIndex, setTempTrackIndex] = useState(
+    mixer.tracks.indexOf(track)
+  );
+
   const onMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (dragging) {
-        const movementXInSamples = timeline.pixelsToSamples(e.movementX);
+      if (!dragging) return;
 
+      const movementXInSamples = timeline.pixelsToSamples(e.movementX);
+
+      undoManager.withoutUndo(() => {
         if (selected) {
-          undoManager.withoutUndo(() => {
-            mixer.selectedClips.forEach((selectedClip) => {
-              const position = selectedClip.start + movementXInSamples;
-              selectedClip.setStart(position >= 0 ? position : 0);
-            });
+          mixer.selectedClips.forEach((selectedClip) => {
+            const newStart = Math.max(
+              0,
+              selectedClip.start + movementXInSamples
+            );
+            selectedClip.setStart(newStart);
           });
         } else {
-          const position = clip.start + movementXInSamples;
-          undoManager.withoutUndo(() => {
-            clip.setStart(position >= 0 ? position : 0);
-          });
+          const newStart = Math.max(0, clip.start + movementXInSamples);
+          clip.setStart(newStart);
         }
-      }
+      });
+
+      const movementY = e.clientY - initialY?.current;
+
+      const multiplier = mixer.tracks[tempTrackIndex].laneHeight;
+
+      requestAnimationFrame(() => {
+        if (movementY > multiplier) {
+          if (tempTrackIndex + 1 < mixer.tracks.length) {
+            setTempTrackIndex((prev) => prev + 1);
+          } else {
+            setTempTrackIndex(mixer.tracks.length - 1);
+          }
+          initialY.current = e.clientY;
+        } else if (movementY < -multiplier) {
+          if (tempTrackIndex - 1 >= 0) {
+            setTempTrackIndex((prev) => prev - 1);
+          } else {
+            setTempTrackIndex(0);
+          }
+          initialY.current = e.clientY;
+        }
+      });
     },
-    [dragging, timeline, clip, selected, mixer.selectedClips, undoManager]
+    [
+      dragging,
+      timeline,
+      undoManager,
+      mixer.tracks,
+      mixer.selectedClips,
+      tempTrackIndex,
+      selected,
+      clip,
+    ]
   );
 
   const onMouseUp = useCallback(() => {
@@ -71,12 +112,16 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
         track.clips.forEach((clip) => clip.setStart(clip.start - 1));
       });
     });
+    const oldIndex = mixer.tracks.indexOf(track);
+    if (tempTrackIndex !== oldIndex) {
+      moveClipToNewTrack(clip, mixer, undoManager, oldIndex, tempTrackIndex);
+    }
+    setTempTrackIndex(oldIndex);
     setDragging(false);
-  }, [mixer.tracks, undoManager]);
+    initialY.current = 0;
+  }, [clip, mixer, tempTrackIndex, track, undoManager]);
 
   const clipLeft = timeline.samplesToPixels(clip.start);
-
-  // const loopLeft = clipLeft + timeline.samplesToPixels(clip.length);
 
   useEffect(() => {
     window.addEventListener("mouseup", onMouseUp);
@@ -96,9 +141,14 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
       style={{
         opacity: selected ? 0.7 : 0.4,
         marginTop: 4,
-        height: track.laneHeight - 2,
-        background: track.color,
-        border: `1px solid ${track.color}`,
+        height: dragging
+          ? mixer.tracks[tempTrackIndex].laneHeight - 2
+          : track.laneHeight - 2,
+        background: dragging ? mixer.tracks[tempTrackIndex].color : track.color,
+        border: `1px solid ${
+          dragging ? mixer.tracks[tempTrackIndex].color : track.color
+        }`,
+        top: mixer.getCombinedLaneHeightsAtIndex(tempTrackIndex),
         zIndex: 9,
         position: "absolute",
         left: clipLeft,

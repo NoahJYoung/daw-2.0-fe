@@ -13,6 +13,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   loopSamples: prop<number>(0),
   fadeInSamples: prop<number>(0),
   fadeOutSamples: prop<number>(0),
+  initialBufferLength: prop<number>(0),
 }) {
   player = new Tone.Player().toDestination();
   private startEventId: number | null = null;
@@ -32,7 +33,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get length(): number {
-    return this.buffer?.length ?? 0;
+    return this.buffer?.length ?? this.initialBufferLength;
   }
 
   @computed

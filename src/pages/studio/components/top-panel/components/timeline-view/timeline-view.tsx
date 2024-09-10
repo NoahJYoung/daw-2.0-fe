@@ -230,8 +230,11 @@ export const TimelineView = observer(
           measuresArray={measuresArray}
         />
 
-        <Clips startMeasure={startMeasure} endMeasure={endMeasure} />
-
+        <Clips
+          scrollRef={scrollRef}
+          startMeasure={startMeasure}
+          endMeasure={endMeasure}
+        />
         <Playhead height={mixer.topPanelHeight + 74} left={playheadLeft} />
         <TimelineHotKeysManager />
       </div>

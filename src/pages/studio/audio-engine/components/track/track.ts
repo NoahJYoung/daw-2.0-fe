@@ -142,4 +142,8 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
       }
     });
   };
+
+  stop = () => {
+    this.clips.forEach((clip) => clip.stop());
+  };
 }
