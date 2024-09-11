@@ -19,6 +19,7 @@ import {
   subdivisionToQuarterMap,
 } from "./helpers/calculate-grid-lines/calculate-grid-lines";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
+import { Timeline } from "@/pages/studio/audio-engine/components";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -144,6 +145,20 @@ export const TimelineView = observer(
       setPlayheadLeft(timeline.positionInPixels);
     }, [audioEngine.state]);
 
+    const adjustScrollToZoomChange = (
+      timeline: Timeline,
+      containerRef: React.RefObject<HTMLDivElement>
+    ) => {
+      const newScrollLeft = timeline.positionInPixels - window.innerWidth / 2;
+      if (containerRef.current) {
+        containerRef.current.scrollLeft = newScrollLeft;
+      }
+    };
+
+    useEffect(() => {
+      setPlayheadLeft(timeline.positionInPixels);
+    }, [timeline.positionInPixels, timeline.samplesPerPixel]);
+
     const handleWheel = (e: WheelEvent) => {
       if (e.altKey) {
         e.preventDefault();
@@ -153,6 +168,7 @@ export const TimelineView = observer(
           } else {
             timeline.zoomIn();
           }
+          adjustScrollToZoomChange(timeline, scrollRef);
         });
       }
     };

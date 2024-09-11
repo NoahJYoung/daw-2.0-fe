@@ -3,62 +3,100 @@ import {
   MidiClip,
   Track,
 } from "@/pages/studio/audio-engine/components";
+import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
 import { observer } from "mobx-react-lite";
 import { AudioClipView } from "./components";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
-import { useState, useCallback, useEffect, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { moveClipToNewTrack } from "../../helpers";
 
 interface ClipProps {
   track: Track;
   clip: AudioClip | MidiClip;
   scrollRef: React.RefObject<HTMLDivElement>;
+  selectedIndexOffset: number;
+  setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
+  dragging: boolean;
+  setDragging: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Clip = observer(({ clip, track }: ClipProps) => {
-  const [dragging, setDragging] = useState(false);
-  const { timeline, mixer } = useAudioEngine();
-  const undoManager = useUndoManager();
-  const selected = mixer.selectedClips.includes(clip);
+const inBounds = (
+  tracks: Track[],
+  selectedClips: ClipData[],
+  offset: number
+) => {
+  if (
+    selectedClips.some((selectedClip) => {
+      const parentTrackIndex = tracks.findIndex(
+        (track) => track.id === selectedClip.trackId
+      );
+      return (
+        parentTrackIndex + offset >= tracks.length ||
+        parentTrackIndex + offset < 0
+      );
+    })
+  ) {
+    return false;
+  }
+  return true;
+};
 
-  const initialY = useRef<number>(0);
+export const Clip = observer(
+  ({
+    clip,
+    track,
+    selectedIndexOffset,
+    setSelectedIndexOffset,
+    dragging,
+    setDragging,
+  }: ClipProps) => {
+    const { timeline, mixer } = useAudioEngine();
+    const undoManager = useUndoManager();
+    const selected = mixer.selectedClips.includes(clip);
 
-  const onMouseDown = (e: React.MouseEvent) => {
-    setDragging(true);
-    initialY.current = e.clientY;
-    undoManager.withGroup(() => {
-      mixer.tracks.forEach((track) => {
-        track.clips.forEach((clip) => clip.setStart(clip.start + 1));
-      });
-    });
-  };
+    const initialY = useRef<number>(0);
+    const initialX = useRef<number>(0);
+    const parentTrackIndex = mixer.tracks.indexOf(track);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
+    const onMouseDown = (e: React.MouseEvent) => {
+      setDragging(true);
+      initialY.current = e.clientY;
+      initialX.current = e.clientX;
+
       undoManager.withGroup(() => {
-        if (!e.ctrlKey) {
-          mixer.unselectAllClips();
-        }
-
-        track.selectClip(clip);
+        mixer.tracks.forEach((track) => {
+          track.clips.forEach((clip) => clip.setStart(clip.start + 1));
+        });
       });
-    },
-    [clip, mixer, track, undoManager]
-  );
+    };
 
-  const [tempTrackIndex, setTempTrackIndex] = useState(
-    mixer.tracks.indexOf(track)
-  );
+    const handleClick = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        undoManager.withGroup(() => {
+          if (!e.ctrlKey) {
+            mixer.unselectAllClips();
+          }
 
-  const onMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!dragging) return;
+          track.selectClip(clip);
+        });
+      },
+      [clip, mixer, track, undoManager]
+    );
 
-      const movementXInSamples = timeline.pixelsToSamples(e.movementX);
+    const onMouseMove = useCallback(
+      (e: MouseEvent) => {
+        if (!dragging || !selected) return;
 
-      undoManager.withoutUndo(() => {
-        if (selected) {
+        const movementXInSamples = timeline.pixelsToSamples(e.movementX);
+
+        undoManager.withoutUndo(() => {
           mixer.selectedClips.forEach((selectedClip) => {
             const newStart = Math.max(
               0,
@@ -66,96 +104,130 @@ export const Clip = observer(({ clip, track }: ClipProps) => {
             );
             selectedClip.setStart(newStart);
           });
-        } else {
-          const newStart = Math.max(0, clip.start + movementXInSamples);
-          clip.setStart(newStart);
-        }
-      });
+        });
 
-      const movementY = e.clientY - initialY?.current;
+        const movementY = e.clientY - initialY?.current;
+        const multiplier = Math.max(track.laneHeight);
 
-      const multiplier = mixer.tracks[tempTrackIndex].laneHeight;
+        const clampedMultiplier = Math.max(80, Math.min(140, multiplier));
 
-      requestAnimationFrame(() => {
-        if (movementY > multiplier) {
-          if (tempTrackIndex + 1 < mixer.tracks.length) {
-            setTempTrackIndex((prev) => prev + 1);
-          } else {
-            setTempTrackIndex(mixer.tracks.length - 1);
+        const { selectedClips, tracks } = mixer;
+
+        if (Math.abs(movementY) >= clampedMultiplier) {
+          const direction = movementY > 0 ? 1 : -1;
+          const newOffset = selectedIndexOffset + direction;
+
+          if (inBounds(tracks, selectedClips, newOffset)) {
+            setSelectedIndexOffset(newOffset);
+            initialY.current = e.clientY;
           }
-          initialY.current = e.clientY;
-        } else if (movementY < -multiplier) {
-          if (tempTrackIndex - 1 >= 0) {
-            setTempTrackIndex((prev) => prev - 1);
-          } else {
-            setTempTrackIndex(0);
-          }
-          initialY.current = e.clientY;
         }
+      },
+      [
+        dragging,
+        selected,
+        timeline,
+        undoManager,
+        track.laneHeight,
+        mixer,
+        selectedIndexOffset,
+        setSelectedIndexOffset,
+      ]
+    );
+
+    const onMouseUp = useCallback(() => {
+      undoManager.withoutUndo(() => {
+        mixer.tracks.forEach((track) => {
+          track.clips.forEach((clip) => clip.setStart(clip.start - 1));
+        });
       });
-    },
-    [
-      dragging,
-      timeline,
+      undoManager.withGroup(() => {
+        mixer.selectedClips.forEach((selectedClip) => {
+          const selectedParentIndex = mixer.tracks.findIndex(
+            (track) => track.id === selectedClip.trackId
+          );
+          if (selectedParentIndex !== -1) {
+            moveClipToNewTrack(
+              selectedClip,
+              mixer,
+              undoManager,
+              selectedParentIndex,
+              selectedParentIndex + selectedIndexOffset
+            );
+          } else {
+            throw new Error("No parent track found");
+          }
+        });
+      });
+      setSelectedIndexOffset(0);
+      setDragging(false);
+      initialY.current = 0;
+    }, [
+      mixer,
+      selectedIndexOffset,
+      setDragging,
+      setSelectedIndexOffset,
       undoManager,
-      mixer.tracks,
-      mixer.selectedClips,
-      tempTrackIndex,
-      selected,
-      clip,
-    ]
-  );
+    ]);
 
-  const onMouseUp = useCallback(() => {
-    undoManager.withoutUndo(() => {
-      mixer.tracks.forEach((track) => {
-        track.clips.forEach((clip) => clip.setStart(clip.start - 1));
-      });
-    });
-    const oldIndex = mixer.tracks.indexOf(track);
-    if (tempTrackIndex !== oldIndex) {
-      moveClipToNewTrack(clip, mixer, undoManager, oldIndex, tempTrackIndex);
-    }
-    setTempTrackIndex(oldIndex);
-    setDragging(false);
-    initialY.current = 0;
-  }, [clip, mixer, tempTrackIndex, track, undoManager]);
+    const clipLeft = timeline.samplesToPixels(clip.start);
 
-  const clipLeft = timeline.samplesToPixels(clip.start);
+    useEffect(() => {
+      window.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      return () => {
+        window.removeEventListener("mouseup", onMouseUp);
+        window.removeEventListener("mousemove", onMouseMove);
+      };
+    }, [onMouseMove, onMouseUp]);
 
-  useEffect(() => {
-    window.addEventListener("mouseup", onMouseUp);
-    window.addEventListener("mousemove", onMouseMove);
-    return () => {
-      window.removeEventListener("mouseup", onMouseUp);
-      window.removeEventListener("mousemove", onMouseMove);
+    const getTop = () => {
+      if (selected && dragging) {
+        return mixer.getCombinedLaneHeightsAtIndex(
+          parentTrackIndex + selectedIndexOffset
+        );
+      }
+
+      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex);
     };
-  }, [onMouseMove, onMouseUp]);
 
-  return (
-    <div
-      onMouseDown={onMouseDown}
-      onClick={handleClick}
-      key={clip.id}
-      className="flex-shrink-0 rounded-xs"
-      style={{
-        opacity: selected ? 0.7 : 0.4,
-        marginTop: 4,
-        height: dragging
-          ? mixer.tracks[tempTrackIndex].laneHeight - 2
-          : track.laneHeight - 2,
-        background: dragging ? mixer.tracks[tempTrackIndex].color : track.color,
-        border: `1px solid ${
-          dragging ? mixer.tracks[tempTrackIndex].color : track.color
-        }`,
-        top: mixer.getCombinedLaneHeightsAtIndex(tempTrackIndex),
-        zIndex: 9,
-        position: "absolute",
-        left: clipLeft,
-        cursor: dragging ? "grabbing" : "auto",
-      }}
-    >
-      {clip?.type === "audio" && <AudioClipView track={track} clip={clip} />}
-    </div>
-  );
-});
+    const getHeight = () => {
+      if (selected && dragging) {
+        return (
+          mixer.tracks[parentTrackIndex + selectedIndexOffset]?.laneHeight - 2
+        );
+      }
+      return track.laneHeight - 2;
+    };
+
+    const getColor = () => {
+      if (selected && dragging) {
+        return mixer.tracks[parentTrackIndex + selectedIndexOffset]?.color;
+      }
+      return track.color;
+    };
+
+    return (
+      <div
+        onMouseDown={onMouseDown}
+        onClick={handleClick}
+        key={clip.id}
+        className="flex-shrink-0 rounded-xs"
+        style={{
+          opacity: selected ? 0.7 : 0.4,
+          marginTop: 4,
+          height: getHeight(),
+          background: getColor(),
+          border: `1px solid ${getColor()}`,
+          top: getTop(),
+          zIndex: 9,
+          position: "absolute",
+          left: clipLeft,
+          cursor: dragging ? "grabbing" : "auto",
+        }}
+      >
+        {clip?.type === "audio" && <AudioClipView track={track} clip={clip} />}
+      </div>
+    );
+  }
+);

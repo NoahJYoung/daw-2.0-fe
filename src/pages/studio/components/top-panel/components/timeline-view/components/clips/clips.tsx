@@ -27,6 +27,9 @@ export const Clips = observer(
   ({ startMeasure, endMeasure, scrollRef }: ClipsProps) => {
     const { mixer, timeline, state } = useAudioEngine();
     const undoManager = useUndoManager();
+    const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
+    const [dragging, setDragging] = useState(false);
+
     const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
       number | null
     >(null);
@@ -103,6 +106,10 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    dragging={dragging}
+                    setDragging={setDragging}
+                    setSelectedIndexOffset={setSelectedIndexOffset}
+                    selectedIndexOffset={selectedIndexOffset}
                     scrollRef={scrollRef}
                     key={clip.id}
                     track={track}
