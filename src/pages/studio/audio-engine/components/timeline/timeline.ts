@@ -1,8 +1,15 @@
-import { model, ExtendedModel, prop } from "mobx-keystone";
+import {
+  model,
+  ExtendedModel,
+  prop,
+  modelAction,
+  getRoot,
+} from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
 import * as Tone from "tone";
 import { computed } from "mobx";
+import { AudioEngineState } from "../../types";
 
 @model("AudioEngine/Transport")
 export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -10,7 +17,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   timeSignature: prop(Tone.getTransport().timeSignature as number).withSetter(),
   measures: prop(100).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
-  seconds: prop(0).withSetter(),
+  seconds: prop(0),
   subdivision: prop("1n").withSetter(),
   snapToGrid: prop(false).withSetter(),
 }) {
@@ -44,6 +51,22 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
 
   pixelsToSamples(pixels: number) {
     return pixels * this.samplesPerPixel;
+  }
+
+  @modelAction
+  setSeconds(seconds: number) {
+    const audioEngine = getRoot(this);
+    if (audioEngine.state === AudioEngineState.recording) {
+      return;
+    }
+
+    if (audioEngine.state === AudioEngineState.playing) {
+      audioEngine.pause();
+      this.seconds = seconds;
+      audioEngine.play();
+    } else {
+      this.seconds = seconds;
+    }
   }
 
   @computed

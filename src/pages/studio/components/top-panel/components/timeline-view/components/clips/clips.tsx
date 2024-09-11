@@ -2,7 +2,7 @@ import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { Clip } from "./components";
 import { PlaceholderClip } from "./components/clip/components";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import {
@@ -21,10 +21,11 @@ interface ClipsProps {
   startMeasure: number;
   endMeasure: number;
   scrollRef: React.RefObject<HTMLDivElement>;
+  setPlayheadLeft: Dispatch<SetStateAction<number>>;
 }
 
 export const Clips = observer(
-  ({ startMeasure, endMeasure, scrollRef }: ClipsProps) => {
+  ({ startMeasure, endMeasure, scrollRef, setPlayheadLeft }: ClipsProps) => {
     const { mixer, timeline, state } = useAudioEngine();
     const undoManager = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
@@ -110,6 +111,7 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    setPlayheadLeft={setPlayheadLeft}
                     dragging={dragging}
                     setDragging={setDragging}
                     setSelectedIndexOffset={setSelectedIndexOffset}

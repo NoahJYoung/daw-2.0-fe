@@ -24,6 +24,7 @@ interface ClipProps {
   setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
   dragging: boolean;
   setDragging: Dispatch<SetStateAction<boolean>>;
+  setPlayheadLeft: Dispatch<SetStateAction<number>>;
 }
 
 const inBoundsX = (selectedClips: ClipData[], movementXInSamples: number) => {
@@ -59,8 +60,10 @@ export const Clip = observer(
     track,
     selectedIndexOffset,
     setSelectedIndexOffset,
+    scrollRef,
     dragging,
     setDragging,
+    setPlayheadLeft,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const undoManager = useUndoManager();
@@ -91,9 +94,20 @@ export const Clip = observer(
       });
     };
 
-    const handleClick = useCallback((e: React.MouseEvent) => {
-      e.stopPropagation();
-    }, []);
+    const handleClick = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        undoManager.withoutUndo(() => {
+          if (scrollRef.current) {
+            const xOffset = scrollRef.current.getBoundingClientRect().x;
+            const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
+            timeline.setSecondsFromPixels(xValue);
+            setPlayheadLeft(timeline.positionInPixels);
+          }
+        });
+      },
+      [scrollRef, setPlayheadLeft, timeline, undoManager]
+    );
 
     const onMouseMove = useCallback(
       (e: MouseEvent) => {

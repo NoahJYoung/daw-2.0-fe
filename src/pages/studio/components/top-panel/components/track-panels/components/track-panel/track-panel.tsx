@@ -165,11 +165,7 @@ export const TrackPanel = observer(
         mixer.unselectAllTracks();
         mixer.unselectAllClips();
       }
-      if (selected) {
-        mixer.unselectTrack(track);
-      } else {
-        mixer.selectTrack(track);
-      }
+      mixer.selectTrack(track);
       track.selectAllClips();
     };
 
@@ -191,7 +187,7 @@ export const TrackPanel = observer(
     const selectedBgOffset = selected ? 1 : 0;
 
     const showExpandedOptions = track.laneHeight > 75;
-    const showInstrumentSelector = track.laneHeight > 110;
+    const showInstrumentSelector = track.laneHeight > 130;
 
     const showPositionArrows = track.laneHeight > 60;
 
@@ -357,18 +353,6 @@ export const TrackPanel = observer(
             <span className="flex flex-col">
               {showExpandedOptions && (
                 <div className="flex flex-col gap-1">
-                  <StudioDropdown
-                    options={inputOptions.map((option) => ({
-                      label: t(`studio.trackPanel.inputOptions.${option}`),
-                      value: option,
-                    }))}
-                    value={track.input}
-                    colorOffset={selectedBgOffset}
-                    placeholder={t("studio.trackPanel.placeholders.input")}
-                    icon={<MdOutlineSettingsInputComponent />}
-                    onChange={(input) => track.setInput(input)}
-                  />
-
                   {showInstrumentSelector && (
                     <StudioDropdown
                       options={[{ label: "Piano", value: "piano" }]}
@@ -381,6 +365,18 @@ export const TrackPanel = observer(
                       onChange={() => {}}
                     />
                   )}
+
+                  <StudioDropdown
+                    options={inputOptions.map((option) => ({
+                      label: t(`studio.trackPanel.inputOptions.${option}`),
+                      value: option,
+                    }))}
+                    value={track.input}
+                    colorOffset={selectedBgOffset}
+                    placeholder={t("studio.trackPanel.placeholders.input")}
+                    icon={<MdOutlineSettingsInputComponent />}
+                    onChange={(input) => track.setInput(input)}
+                  />
                 </div>
               )}
 

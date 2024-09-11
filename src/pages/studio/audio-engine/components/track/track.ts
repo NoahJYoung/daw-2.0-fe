@@ -134,7 +134,10 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
     const transportInSamples = Tone.Time(transport.seconds, "s").toSamples();
     this.clips.forEach((clip) => {
-      const seekTime = transportInSamples - clip.start;
+      const seekTime = Tone.Time(
+        transportInSamples - clip.start,
+        "samples"
+      ).toSeconds();
       if (transportInSamples > clip.start && transportInSamples < clip.end) {
         clip.play(Tone.now(), seekTime);
       } else {

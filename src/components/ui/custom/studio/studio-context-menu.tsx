@@ -69,7 +69,10 @@ export const StudioContextMenu = ({
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
-      <ContextMenuContent className="w-56 bg-surface-1 rounded-xxs text-surface-6">
+      <ContextMenuContent
+        onClick={(e) => e.stopPropagation()}
+        className="w-56 bg-surface-1 rounded-xxs text-surface-6"
+      >
         {items?.map((item, i) => {
           if (item.children) {
             return getSubMenu(item);

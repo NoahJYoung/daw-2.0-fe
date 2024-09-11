@@ -250,6 +250,7 @@ export const TimelineView = observer(
           scrollRef={scrollRef}
           startMeasure={startMeasure}
           endMeasure={endMeasure}
+          setPlayheadLeft={setPlayheadLeft}
         />
         <Playhead height={mixer.topPanelHeight + 74} left={playheadLeft} />
         <TimelineHotKeysManager />

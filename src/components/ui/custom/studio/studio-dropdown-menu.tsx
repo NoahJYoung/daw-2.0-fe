@@ -59,9 +59,9 @@ export const StudioDropdownMenu = ({
                   ? "bg-surface-1 rounded-xxs font-bold text-surface-6 cursor-pointer"
                   : "bg-surface-1 rounded-xxs text-surface-5 cursor-pointer"
               }
-              onClick={() => {
+              onClick={(e) => {
                 if (option?.onClick) {
-                  option.onClick();
+                  option.onClick(e);
                 } else if (option?.value) {
                   onValueChange(option.value);
                 }

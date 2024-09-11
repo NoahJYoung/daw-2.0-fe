@@ -51,6 +51,12 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     if (this.player.loaded) {
       this.player.start(time, seekTime);
     }
+    //   if (seekTime) {
+    //     this.player.stop();
+    //     this.player.seek(seekTime);
+    //   }
+    //   this.player.start();
+    // }
   };
 
   stop = () => {
