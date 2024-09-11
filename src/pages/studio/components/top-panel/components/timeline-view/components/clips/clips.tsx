@@ -65,10 +65,14 @@ export const Clips = observer(
       },
     ];
 
-    const handleClick = () => {
-      undoManager.withGroup(() => {
-        mixer.unselectAllClips();
-      });
+    const handleClick = (e: React.MouseEvent) => {
+      if (!e.ctrlKey) {
+        undoManager.withGroup(() => {
+          mixer.unselectAllClips();
+        });
+      } else {
+        e.stopPropagation();
+      }
     };
 
     const shouldRenderClip = (clip: ClipData) => {

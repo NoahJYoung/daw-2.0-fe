@@ -26,7 +26,13 @@ interface ClipProps {
   setDragging: Dispatch<SetStateAction<boolean>>;
 }
 
-const inBounds = (
+const inBoundsX = (selectedClips: ClipData[], movementXInSamples: number) => {
+  return !selectedClips.some(
+    (selectedClip) => selectedClip.start + movementXInSamples < 0
+  );
+};
+
+const inBoundsY = (
   tracks: Track[],
   selectedClips: ClipData[],
   offset: number
@@ -61,13 +67,22 @@ export const Clip = observer(
     const selected = mixer.selectedClips.includes(clip);
 
     const initialY = useRef<number>(0);
-    const initialX = useRef<number>(0);
     const parentTrackIndex = mixer.tracks.indexOf(track);
 
     const onMouseDown = (e: React.MouseEvent) => {
+      e.stopPropagation();
       setDragging(true);
       initialY.current = e.clientY;
-      initialX.current = e.clientX;
+
+      if (e.button !== 2) {
+        undoManager.withGroup(() => {
+          if (!e.ctrlKey) {
+            mixer.unselectAllClips();
+          }
+
+          track.selectClip(clip);
+        });
+      }
 
       undoManager.withGroup(() => {
         mixer.tracks.forEach((track) => {
@@ -76,48 +91,46 @@ export const Clip = observer(
       });
     };
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent) => {
-        e.stopPropagation();
-        undoManager.withGroup(() => {
-          if (!e.ctrlKey) {
-            mixer.unselectAllClips();
-          }
-
-          track.selectClip(clip);
-        });
-      },
-      [clip, mixer, track, undoManager]
-    );
+    const handleClick = useCallback((e: React.MouseEvent) => {
+      e.stopPropagation();
+    }, []);
 
     const onMouseMove = useCallback(
       (e: MouseEvent) => {
         if (!dragging || !selected) return;
 
-        const movementXInSamples = timeline.pixelsToSamples(e.movementX);
+        const movementXInSamples = timeline.pixelsToSamples(
+          Math.abs(e.movementX) > 1 ? e.movementX : 0
+        );
 
-        undoManager.withoutUndo(() => {
-          mixer.selectedClips.forEach((selectedClip) => {
-            const newStart = Math.max(
-              0,
-              selectedClip.start + movementXInSamples
-            );
-            selectedClip.setStart(newStart);
+        if (inBoundsX(mixer.selectedClips, movementXInSamples)) {
+          undoManager.withoutUndo(() => {
+            mixer.selectedClips.forEach((selectedClip) => {
+              const newStart = Math.max(
+                0,
+                selectedClip.start + movementXInSamples
+              );
+              selectedClip.setStart(newStart);
+            });
           });
-        });
+        }
 
         const movementY = e.clientY - initialY?.current;
-        const multiplier = Math.max(track.laneHeight);
+        const threshold = track.laneHeight * 0.75;
 
-        const clampedMultiplier = Math.max(80, Math.min(140, multiplier));
+        if (Math.abs(movementY) < 20) {
+          return;
+        }
+
+        const clampedThreshold = Math.max(80, Math.min(140, threshold));
 
         const { selectedClips, tracks } = mixer;
 
-        if (Math.abs(movementY) >= clampedMultiplier) {
+        if (Math.abs(movementY) >= clampedThreshold) {
           const direction = movementY > 0 ? 1 : -1;
           const newOffset = selectedIndexOffset + direction;
 
-          if (inBounds(tracks, selectedClips, newOffset)) {
+          if (inBoundsY(tracks, selectedClips, newOffset)) {
             setSelectedIndexOffset(newOffset);
             initialY.current = e.clientY;
           }
@@ -135,40 +148,44 @@ export const Clip = observer(
       ]
     );
 
-    const onMouseUp = useCallback(() => {
-      undoManager.withoutUndo(() => {
-        mixer.tracks.forEach((track) => {
-          track.clips.forEach((clip) => clip.setStart(clip.start - 1));
+    const onMouseUp = useCallback(
+      (e: MouseEvent) => {
+        e.stopPropagation();
+        undoManager.withoutUndo(() => {
+          mixer.tracks.forEach((track) => {
+            track.clips.forEach((clip) => clip.setStart(clip.start - 1));
+          });
         });
-      });
-      undoManager.withGroup(() => {
-        mixer.selectedClips.forEach((selectedClip) => {
-          const selectedParentIndex = mixer.tracks.findIndex(
-            (track) => track.id === selectedClip.trackId
-          );
-          if (selectedParentIndex !== -1) {
-            moveClipToNewTrack(
-              selectedClip,
-              mixer,
-              undoManager,
-              selectedParentIndex,
-              selectedParentIndex + selectedIndexOffset
+        undoManager.withGroup(() => {
+          mixer.selectedClips.forEach((selectedClip) => {
+            const selectedParentIndex = mixer.tracks.findIndex(
+              (track) => track.id === selectedClip.trackId
             );
-          } else {
-            throw new Error("No parent track found");
-          }
+            if (selectedParentIndex !== -1) {
+              moveClipToNewTrack(
+                selectedClip,
+                mixer,
+                undoManager,
+                selectedParentIndex,
+                selectedParentIndex + selectedIndexOffset
+              );
+            } else {
+              throw new Error("No parent track found");
+            }
+          });
         });
-      });
-      setSelectedIndexOffset(0);
-      setDragging(false);
-      initialY.current = 0;
-    }, [
-      mixer,
-      selectedIndexOffset,
-      setDragging,
-      setSelectedIndexOffset,
-      undoManager,
-    ]);
+        setSelectedIndexOffset(0);
+        setDragging(false);
+        initialY.current = 0;
+      },
+      [
+        mixer,
+        selectedIndexOffset,
+        setDragging,
+        setSelectedIndexOffset,
+        undoManager,
+      ]
+    );
 
     const clipLeft = timeline.samplesToPixels(clip.start);
 
@@ -212,13 +229,12 @@ export const Clip = observer(
         onMouseDown={onMouseDown}
         onClick={handleClick}
         key={clip.id}
-        className="flex-shrink-0 rounded-xs"
+        className="flex-shrink-0 rounded-sm"
         style={{
           opacity: selected ? 0.7 : 0.4,
           marginTop: 4,
           height: getHeight(),
           background: getColor(),
-          border: `1px solid ${getColor()}`,
           top: getTop(),
           zIndex: 9,
           position: "absolute",

@@ -318,7 +318,7 @@ export const TrackPanel = observer(
                   1 + selectedBgOffset
                 } hover:opacity-80`}
               >
-                <GrPower className="text-lg w-5 h-5" />
+                <GrPower className="text-lg w-5 h-5 flex items-center justify-center" />
               </Button>
               <input
                 ref={trackNameRef}
