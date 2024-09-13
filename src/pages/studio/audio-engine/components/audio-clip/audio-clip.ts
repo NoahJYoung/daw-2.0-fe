@@ -3,6 +3,7 @@ import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import * as Tone from "tone";
 import { computed, observable } from "mobx";
 import { audioBufferCache } from "../audio-buffer-cache";
+import { WaveformData } from "../waveform-cache";
 
 @model("AudioEngine/Mixer/Track/AudioClip")
 export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -13,11 +14,20 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   loopSamples: prop<number>(0),
   fadeInSamples: prop<number>(0),
   fadeOutSamples: prop<number>(0),
-  initialBufferLength: prop<number>(0),
 }) {
   player = new Tone.Player().toDestination();
   private startEventId: number | null = null;
   private stopEventId: number | null = null;
+  public initialBufferLength = 0;
+  public initialWaveformData: WaveformData = [];
+
+  setInitialBufferLength(length: number) {
+    this.initialBufferLength = length;
+  }
+
+  setInitialWaveformData(data: WaveformData) {
+    this.initialWaveformData = data;
+  }
 
   @observable
   buffer: Tone.ToneAudioBuffer | null = null;

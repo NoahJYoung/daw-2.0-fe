@@ -1,0 +1,1 @@
+export { getPeaks } from "./getPeaks";

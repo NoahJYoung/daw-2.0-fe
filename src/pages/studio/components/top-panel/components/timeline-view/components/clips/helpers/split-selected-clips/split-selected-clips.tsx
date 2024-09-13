@@ -14,7 +14,7 @@ export const splitSelectedClips = (
         timeline.positionInSamples > clip.start &&
         timeline.positionInSamples < clip.end
       ) {
-        splitClip(clip, mixer);
+        splitClip(clip, mixer, timeline);
       }
     });
   });

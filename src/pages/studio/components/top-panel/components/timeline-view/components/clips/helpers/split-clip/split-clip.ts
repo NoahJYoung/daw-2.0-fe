@@ -1,12 +1,14 @@
 import {
   AudioClip,
   Mixer,
+  Timeline,
   audioBufferCache,
 } from "@/pages/studio/audio-engine/components";
+import { getPeaks } from "@/pages/studio/audio-engine/components/audio-buffer-cache/helpers";
 import { Clip } from "@/pages/studio/audio-engine/components/types";
 import * as Tone from "tone";
 
-export const splitClip = (clip: Clip, mixer: Mixer) => {
+export const splitClip = (clip: Clip, mixer: Mixer, timeline: Timeline) => {
   if (clip.type === "audio") {
     const data = clip.split(
       Tone.Time(Tone.getTransport().seconds, "s").toSamples()
@@ -22,6 +24,9 @@ export const splitClip = (clip: Clip, mixer: Mixer) => {
           fadeInSamples,
           fadeOutSamples,
         });
+        clip.setInitialWaveformData(
+          getPeaks(buffer.getChannelData(0), timeline.samplesPerPixel)
+        );
         audioBufferCache.add(clip.id, buffer);
         clip.setBuffer(buffer);
         const parentTrack = mixer.tracks.find(

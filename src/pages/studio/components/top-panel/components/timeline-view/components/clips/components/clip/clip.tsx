@@ -13,7 +13,9 @@ import {
   useRef,
   Dispatch,
   SetStateAction,
+  useMemo,
 } from "react";
+import * as Tone from "tone";
 import { moveClipToNewTrack } from "../../helpers";
 
 interface ClipProps {
@@ -186,7 +188,8 @@ export const Clip = observer(
                 mixer,
                 undoManager,
                 selectedParentIndex,
-                selectedParentIndex + selectedIndexOffset
+                selectedParentIndex + selectedIndexOffset,
+                timeline.samplesPerPixel
               );
             } else {
               throw new Error("No parent track found");
@@ -202,6 +205,7 @@ export const Clip = observer(
         selectedIndexOffset,
         setDragging,
         setSelectedIndexOffset,
+        timeline.samplesPerPixel,
         undoManager,
       ]
     );
@@ -245,12 +249,30 @@ export const Clip = observer(
       return track.color;
     };
 
+    const clipInfoString = useMemo(() => {
+      return `${track.name} | ${Tone.Time(
+        clip.start,
+        "samples"
+      ).toBarsBeatsSixteenths()}`;
+    }, [clip.start, track.name]);
+
+    const clipWidth = useMemo(
+      () => timeline.samplesToPixels(clip.length),
+      [clip.length, timeline.samplesPerPixel]
+    );
+
+    const currentDragTrack =
+      dragging &&
+      inBoundsY(mixer.tracks, mixer.selectedClips, selectedIndexOffset)
+        ? mixer.tracks[parentTrackIndex + selectedIndexOffset]
+        : track;
+
     return (
       <div
         onMouseDown={onMouseDown}
         onClick={handleClick}
         key={clip.id}
-        className="flex-shrink-0 rounded-xl"
+        className=" flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
         style={{
           opacity: selected ? 0.7 : 0.4,
           marginTop: 2,
@@ -263,7 +285,15 @@ export const Clip = observer(
           cursor: dragging ? "grabbing" : "auto",
         }}
       >
-        {clip?.type === "audio" && <AudioClipView track={track} clip={clip} />}
+        <p
+          style={{ maxWidth: clipWidth }}
+          className="pl-[6px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
+        >
+          {clipInfoString}
+        </p>
+        {clip?.type === "audio" && (
+          <AudioClipView track={currentDragTrack || track} clip={clip} />
+        )}
       </div>
     );
   }
