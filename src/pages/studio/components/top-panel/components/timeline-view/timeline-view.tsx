@@ -158,10 +158,6 @@ export const TimelineView = observer(
       }
     };
 
-    useEffect(() => {
-      setPlayheadLeft(timeline.positionInPixels);
-    }, [timeline.positionInPixels, timeline.samplesPerPixel]);
-
     const handleWheel = (e: WheelEvent) => {
       if (e.altKey) {
         e.preventDefault();
@@ -220,6 +216,16 @@ export const TimelineView = observer(
         };
       }
     }, []);
+
+    useEffect(() => {
+      const pixels =
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
+        timeline.samplesPerPixel;
+
+      setPlayheadLeft(pixels);
+    }, [timeline.positionInPixels, timeline.samplesPerPixel]);
+
+    console.log(playheadLeft);
 
     return (
       <div

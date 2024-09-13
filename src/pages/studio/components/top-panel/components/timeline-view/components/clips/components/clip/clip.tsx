@@ -96,7 +96,7 @@ export const Clip = observer(
       undoManager.withGroup("MOVE CLIPS PRE", () => {
         mixer.tracks.forEach((track) => {
           track.clips.forEach((selectedTrackclip) =>
-            selectedTrackclip.setStart(clip.start + 1)
+            selectedTrackclip.setStart(selectedTrackclip.start + 1)
           );
         });
       });
@@ -112,6 +112,7 @@ export const Clip = observer(
             const xOffset = scrollRef.current.getBoundingClientRect().x;
             const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
             timeline.setSecondsFromPixels(xValue);
+
             setPlayheadLeft(timeline.positionInPixels);
           }
         });
