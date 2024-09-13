@@ -74,7 +74,9 @@ export const Clip = observer(
 
     const onMouseDown = (e: React.MouseEvent) => {
       e.stopPropagation();
-      setDragging(true);
+      if (e.button !== 2) {
+        setDragging(true);
+      }
       initialY.current = e.clientY;
 
       if (e.button !== 2) {
@@ -97,6 +99,9 @@ export const Clip = observer(
     const handleClick = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (e.ctrlKey) {
+          return;
+        }
         undoManager.withoutUndo(() => {
           if (scrollRef.current) {
             const xOffset = scrollRef.current.getBoundingClientRect().x;
@@ -214,21 +219,23 @@ export const Clip = observer(
 
     const getTop = () => {
       if (selected && dragging) {
-        return mixer.getCombinedLaneHeightsAtIndex(
-          parentTrackIndex + selectedIndexOffset
+        return (
+          mixer.getCombinedLaneHeightsAtIndex(
+            parentTrackIndex + selectedIndexOffset
+          ) + 1
         );
       }
 
-      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex);
+      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex) + 1;
     };
 
     const getHeight = () => {
       if (selected && dragging) {
         return (
-          mixer.tracks[parentTrackIndex + selectedIndexOffset]?.laneHeight - 2
+          mixer.tracks[parentTrackIndex + selectedIndexOffset]?.laneHeight - 4
         );
       }
-      return track.laneHeight - 2;
+      return track.laneHeight - 4;
     };
 
     const getColor = () => {
@@ -243,10 +250,10 @@ export const Clip = observer(
         onMouseDown={onMouseDown}
         onClick={handleClick}
         key={clip.id}
-        className="flex-shrink-0 rounded-sm"
+        className="flex-shrink-0 rounded-xl"
         style={{
           opacity: selected ? 0.7 : 0.4,
-          marginTop: 4,
+          marginTop: 2,
           height: getHeight(),
           background: getColor(),
           top: getTop(),

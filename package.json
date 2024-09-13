@@ -42,6 +42,7 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tanstack/react-query": "^5.51.23",
+    "audiobuffer-to-wav": "^1.0.0",
     "axios": "^1.7.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -72,12 +73,14 @@
     "tone": "^15.0.4",
     "uuid": "^10.0.0",
     "vaul": "^0.9.1",
+    "wavesurfer.js": "^7.8.6",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
+    "@types/audiobuffer-to-wav": "^1.0.4",
     "@types/node": "^22.2.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

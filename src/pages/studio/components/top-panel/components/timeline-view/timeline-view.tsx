@@ -112,6 +112,9 @@ export const TimelineView = observer(
 
     const handleClick = (e: React.MouseEvent) => {
       undoManager.withoutUndo(() => {
+        if (e.ctrlKey) {
+          return;
+        }
         if (scrollRef.current) {
           const xOffset = scrollRef.current.getBoundingClientRect().x;
           const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;

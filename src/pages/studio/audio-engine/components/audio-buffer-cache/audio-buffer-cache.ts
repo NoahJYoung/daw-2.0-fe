@@ -1,6 +1,5 @@
 import * as Tone from "tone";
-
-class AudioBufferCache {
+export class AudioBufferCache {
   private cache: Map<string, Tone.ToneAudioBuffer>;
 
   constructor(private maxCacheSize?: number) {

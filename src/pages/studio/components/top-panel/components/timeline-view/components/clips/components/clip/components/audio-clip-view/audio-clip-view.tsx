@@ -1,24 +1,34 @@
 import { AudioClip, Track } from "@/pages/studio/audio-engine/components";
-import { useAudioEngine } from "@/pages/studio/hooks";
+import { useWaveform } from "./hooks/use-waveform";
+
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 
 interface AudioClipViewProps {
   clip: AudioClip;
   track: Track;
 }
 
-export const AudioClipView = observer(({ clip }: AudioClipViewProps) => {
-  const { mixer, timeline } = useAudioEngine();
-  const width = timeline.samplesToPixels(clip.length);
-  const selected = mixer.selectedClips.includes(clip);
+export const AudioClipView = observer(({ clip, track }: AudioClipViewProps) => {
+  const { width, height, canvasRef } = useWaveform(clip, track);
 
+  useEffect(() => {
+    console.log("initializing clip");
+  }, []);
   return (
     <div
-      className="h-full flex-shrink-0"
+      className="h-full flex-shrink-0 flex items-center"
       style={{
-        opacity: selected ? 1 : 0.8,
         width,
       }}
-    />
+    >
+      <canvas
+        style={{ background: "transparent" }}
+        className="rounded-xl"
+        ref={canvasRef}
+        width={width}
+        height={height}
+      />
+    </div>
   );
 });

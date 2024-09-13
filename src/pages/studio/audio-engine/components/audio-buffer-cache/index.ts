@@ -1,1 +1,1 @@
-export { audioBufferCache } from "./audio-buffer-cache";
+export { audioBufferCache, AudioBufferCache } from "./audio-buffer-cache";

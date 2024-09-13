@@ -4,6 +4,7 @@ import {
   Mixer,
 } from "@/pages/studio/audio-engine/components";
 import { Clip } from "@/pages/studio/audio-engine/components/types";
+import { waveformCache } from "@/pages/studio/audio-engine/components/waveform-cache";
 import { UndoManager } from "mobx-keystone";
 
 export const moveClipToNewTrack = (
@@ -30,8 +31,8 @@ export const moveClipToNewTrack = (
           loopSamples: oldClip.loopSamples,
           initialBufferLength: oldClip.length,
         });
-
         audioBufferCache.copy(oldClip.id, newClip.id);
+        waveformCache.copy(oldClip.id, newClip.id);
         mixer.tracks[oldTrackIndex].deleteClip(oldClip);
         mixer.tracks[newTrackIndex].createAudioClip(newClip);
       }

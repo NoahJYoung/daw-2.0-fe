@@ -47,7 +47,7 @@ export const PlaceholderClip = observer(
 
     return renderPlaceholderClip ? (
       <div
-        className="absolute rounded-xs"
+        className="absolute rounded-xl"
         style={{
           top,
           width,
