@@ -107,7 +107,7 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
       drawWaveform(normalizedPeaks, canvasRef);
     }
     setInitialWaveformData(null);
-  }, [adjustedHeight, initialWaveformData]);
+  }, [adjustedHeight, clip, initialWaveformData]);
 
   return { canvasRef, width, height: adjustedHeight };
 };

@@ -4,7 +4,7 @@ import { UndoManager } from "mobx-keystone";
 export const deleteSelectedClips = (mixer: Mixer, undoManager: UndoManager) => {
   const { selectedClips } = mixer;
 
-  undoManager.withGroup(() => {
+  undoManager.withGroup("DELETE SELECTED CLIPS", () => {
     selectedClips.forEach((clip) => {
       const parentTrack = mixer.tracks.find(
         (track) => track.id === clip.trackId

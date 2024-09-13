@@ -72,6 +72,7 @@ export const Clip = observer(
     const selected = mixer.selectedClips.includes(clip);
 
     const initialY = useRef<number>(0);
+    const initialX = useRef<number>(0);
     const parentTrackIndex = mixer.tracks.indexOf(track);
 
     const onMouseDown = (e: React.MouseEvent) => {
@@ -80,9 +81,10 @@ export const Clip = observer(
         setDragging(true);
       }
       initialY.current = e.clientY;
+      initialX.current = e.clientX;
 
       if (e.button !== 2) {
-        undoManager.withGroup(() => {
+        undoManager.withGroup("UNSELECT ALL AND SELECT ONE", () => {
           if (!e.ctrlKey) {
             mixer.unselectAllClips();
           }
@@ -91,13 +93,14 @@ export const Clip = observer(
         });
       }
 
-      undoManager.withGroup(() => {
+      undoManager.withGroup("MOVE CLIPS PRE", () => {
         mixer.tracks.forEach((track) => {
-          track.clips.forEach((clip) => clip.setStart(clip.start + 1));
+          track.clips.forEach((selectedTrackclip) =>
+            selectedTrackclip.setStart(clip.start + 1)
+          );
         });
       });
     };
-
     const handleClick = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -172,36 +175,41 @@ export const Clip = observer(
     const onMouseUp = useCallback(
       (e: MouseEvent) => {
         e.stopPropagation();
-        undoManager.withoutUndo(() => {
+        undoManager.withGroup("MOVE CLIPS POST", () => {
           mixer.tracks.forEach((track) => {
             track.clips.forEach((clip) => clip.setStart(clip.start - 1));
           });
         });
-        undoManager.withGroup(() => {
-          mixer.selectedClips.forEach((selectedClip) => {
-            const selectedParentIndex = mixer.tracks.findIndex(
-              (track) => track.id === selectedClip.trackId
-            );
-            if (selectedParentIndex !== -1) {
-              moveClipToNewTrack(
-                selectedClip,
-                mixer,
-                undoManager,
-                selectedParentIndex,
-                selectedParentIndex + selectedIndexOffset,
-                timeline.samplesPerPixel
+        if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
+          undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
+            mixer.selectedClips.forEach((selectedClip) => {
+              const selectedParentIndex = mixer.tracks.findIndex(
+                (track) => track.id === selectedClip.trackId
               );
-            } else {
-              throw new Error("No parent track found");
-            }
+              if (selectedParentIndex !== -1) {
+                moveClipToNewTrack(
+                  selectedClip,
+                  mixer,
+                  undoManager,
+                  selectedParentIndex,
+                  selectedParentIndex + selectedIndexOffset,
+                  timeline.samplesPerPixel
+                );
+              } else {
+                throw new Error("No parent track found");
+              }
+            });
           });
-        });
+        }
+
         setSelectedIndexOffset(0);
         setDragging(false);
         initialY.current = 0;
+        initialX.current = 0;
       },
       [
         mixer,
+        parentTrackIndex,
         selectedIndexOffset,
         setDragging,
         setSelectedIndexOffset,
@@ -287,7 +295,7 @@ export const Clip = observer(
       >
         <p
           style={{ maxWidth: clipWidth }}
-          className="pl-[6px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
+          className="text-black pl-[6px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
         >
           {clipInfoString}
         </p>

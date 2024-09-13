@@ -9,7 +9,6 @@ export class WaveformCache {
   }
 
   add(id: string, waveformData: WaveformData, samplesPerPixel: number) {
-    this.removeOldestIfUnused();
     const entry = this.cache.get(id);
     if (entry) {
       this.cache.set(id, { ...entry, [samplesPerPixel]: waveformData });
@@ -19,7 +18,6 @@ export class WaveformCache {
   }
 
   copy(oldId: string, newId: string) {
-    this.removeOldestIfUnused();
     const buffer = this.cache.get(oldId);
     if (buffer) {
       this.cache.set(newId, buffer);

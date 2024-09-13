@@ -8,7 +8,7 @@ export const splitSelectedClips = (
   undoManager: UndoManager
 ) => {
   const { selectedClips } = mixer;
-  undoManager.withGroup(() => {
+  undoManager.withGroup("SPLIT SELECTED CLIPS", () => {
     selectedClips.forEach((clip) => {
       if (
         timeline.positionInSamples > clip.start &&

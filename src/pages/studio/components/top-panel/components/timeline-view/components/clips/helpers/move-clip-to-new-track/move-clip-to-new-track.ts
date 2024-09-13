@@ -20,7 +20,7 @@ export const moveClipToNewTrack = (
     newTrackIndex >= 0 &&
     newTrackIndex < mixer.tracks.length
   ) {
-    undoManager.withGroup(async () => {
+    undoManager.withGroup("MOVE CLIP TO NEW TRACK", () => {
       if (oldClip.type === "audio") {
         const newTrackId = mixer.tracks[newTrackIndex].id;
         const newClip = new AudioClip({
@@ -30,7 +30,6 @@ export const moveClipToNewTrack = (
           fadeOutSamples: oldClip.fadeOutSamples,
           trackId: newTrackId,
           loopSamples: oldClip.loopSamples,
-          // initialBufferLength: oldClip.length,
         });
         newClip.setInitialBufferLength(oldClip.length);
         const initialWaveformData = waveformCache.get(
