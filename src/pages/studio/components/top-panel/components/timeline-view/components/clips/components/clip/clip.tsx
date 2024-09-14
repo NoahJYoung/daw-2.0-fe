@@ -26,7 +26,7 @@ interface ClipProps {
   setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
   dragging: boolean;
   setDragging: Dispatch<SetStateAction<boolean>>;
-  setPlayheadLeft: Dispatch<SetStateAction<number>>;
+  setPlayheadLeft: (pixels: number) => void;
 }
 
 const inBoundsX = (selectedClips: ClipData[], movementXInSamples: number) => {

@@ -25,7 +25,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
     transport.bpm.value = Math.round(this.bpm);
     transport.timeSignature = this.timeSignature;
-    transport.seconds = this.seconds;
+    this.seconds = transport.seconds;
   }
 
   zoomOut() {
@@ -62,10 +62,12 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
 
     if (audioEngine.state === AudioEngineState.playing) {
       audioEngine.pause();
+      Tone.getTransport().seconds = seconds;
       this.seconds = seconds;
       audioEngine.play();
     } else {
       this.seconds = seconds;
+      Tone.getTransport().seconds = seconds;
     }
   }
 
@@ -91,29 +93,13 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
     return this.samplesToPixels(this.positionInSamples);
   }
 
-  // TODO: Figure out why changing zoom resets playhead position
-
   @computed
   get canZoomIn(): boolean {
-    const { state } = getRoot(this);
-    if (
-      state === AudioEngineState.playing ||
-      state === AudioEngineState.recording
-    ) {
-      return false;
-    }
     return this.samplesPerPixel > MIN_SAMPLES_PER_PIXEL;
   }
 
   @computed
   get canZoomOut(): boolean {
-    const { state } = getRoot(this);
-    if (
-      state === AudioEngineState.playing ||
-      state === AudioEngineState.recording
-    ) {
-      return false;
-    }
     return this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL;
   }
 }

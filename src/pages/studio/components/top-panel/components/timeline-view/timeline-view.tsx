@@ -23,6 +23,7 @@ import { Timeline } from "@/pages/studio/audio-engine/components";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
+
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
 
@@ -35,6 +36,7 @@ export const TimelineView = observer(
 
     const [scrollLeft, setScrollLeft] = useState(0);
     const [viewportWidth, setViewportWidth] = useState(0);
+    const [playheadLeft, setPlayheadLeft] = useState(timeline.positionInPixels);
 
     useEffect(() => {
       const updateViewportWidth = () => {
@@ -119,20 +121,26 @@ export const TimelineView = observer(
           const xOffset = scrollRef.current.getBoundingClientRect().x;
           const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
           timeline.setSecondsFromPixels(xValue);
-          setPlayheadLeft(timeline.positionInPixels);
+          const seconds = Tone.Time(
+            xValue * timeline.samplesPerPixel,
+            "samples"
+          ).toSeconds();
+          Tone.getTransport().seconds = seconds;
+          const pixels =
+            Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
+            timeline.samplesPerPixel;
+          setPlayheadLeft(pixels);
         }
       });
     };
 
-    const [playheadLeft, setPlayheadLeft] = useState(timeline.positionInPixels);
-
     useRequestAnimationFrame(
       () => {
-        setPlayheadLeft(
-          timeline.samplesToPixels(
-            Tone.Time(Tone.getTransport().seconds, "s").toSamples()
-          )
+        const pixels = timeline.samplesToPixels(
+          Tone.Time(Tone.getTransport().seconds, "s").toSamples()
         );
+        setPlayheadLeft(pixels);
+        // timeline.setSeconds(Tone.getTransport().seconds);
       },
       {
         enabled:
@@ -144,8 +152,8 @@ export const TimelineView = observer(
     useEffect(() => {
       undoManager.withoutUndo(() => {
         timeline.setSeconds(Tone.getTransport().seconds);
+        setPlayheadLeft(timeline.positionInPixels);
       });
-      setPlayheadLeft(timeline.positionInPixels);
     }, [audioEngine.state]);
 
     const adjustScrollToZoomChange = (
@@ -223,9 +231,7 @@ export const TimelineView = observer(
         timeline.samplesPerPixel;
 
       setPlayheadLeft(pixels);
-    }, [timeline.positionInPixels, timeline.samplesPerPixel]);
-
-    console.log(playheadLeft);
+    }, [timeline.samplesPerPixel]);
 
     return (
       <div
