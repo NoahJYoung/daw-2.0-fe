@@ -112,8 +112,15 @@ export const Clip = observer(
             const xOffset = scrollRef.current.getBoundingClientRect().x;
             const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
             timeline.setSecondsFromPixels(xValue);
-
-            setPlayheadLeft(timeline.positionInPixels);
+            const seconds = Tone.Time(
+              xValue * timeline.samplesPerPixel,
+              "samples"
+            ).toSeconds();
+            Tone.getTransport().seconds = seconds;
+            const pixels =
+              Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
+              timeline.samplesPerPixel;
+            setPlayheadLeft(pixels);
           }
         });
       },
@@ -178,7 +185,9 @@ export const Clip = observer(
         e.stopPropagation();
         undoManager.withGroup("MOVE CLIPS POST", () => {
           mixer.tracks.forEach((track) => {
-            track.clips.forEach((clip) => clip.setStart(clip.start - 1));
+            track.clips.forEach((trackClip) =>
+              trackClip.setStart(trackClip.start - 1)
+            );
           });
         });
         if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {

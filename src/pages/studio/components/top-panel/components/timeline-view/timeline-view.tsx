@@ -140,7 +140,6 @@ export const TimelineView = observer(
           Tone.Time(Tone.getTransport().seconds, "s").toSamples()
         );
         setPlayheadLeft(pixels);
-        // timeline.setSeconds(Tone.getTransport().seconds);
       },
       {
         enabled:
