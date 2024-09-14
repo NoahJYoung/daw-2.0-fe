@@ -1,6 +1,12 @@
 import { model, prop, ExtendedModel } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
-import { AudioClip, Mixer, Timeline, waveformCache } from "./components";
+import {
+  AudioClip,
+  Mixer,
+  Timeline,
+  waveformCache,
+  Clipboard,
+} from "./components";
 import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
 import { AudioEngineState } from "./types";
@@ -16,6 +22,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 }) {
   @observable
   state: AudioEngineState = AudioEngineState.stopped;
+  clipboard = new Clipboard();
 
   init() {
     const ctx = new AudioContext({ sampleRate: 44100 });
@@ -33,7 +40,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   record = async () => {
-    Tone.start();
     const start = this.timeline.positionInSamples;
     this.setState(AudioEngineState.recording);
     const activeTracks = this.mixer.getActiveTracks();
@@ -51,8 +57,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       console.error(error);
     }
 
+    await this.play();
     await recorder.start();
-    this.play();
     transport.once("stop", async () => {
       const recording = await recorder.stop();
       const url = URL.createObjectURL(recording);

@@ -15,11 +15,13 @@ import { MenuItem } from "../types";
 interface StudioContextMenuProps {
   children?: React.ReactNode;
   items?: MenuItem[];
+  disabled?: boolean;
 }
 
 export const StudioContextMenu = ({
   children,
   items,
+  disabled,
 }: StudioContextMenuProps) => {
   const getSubMenu = ({
     children,
@@ -28,6 +30,7 @@ export const StudioContextMenu = ({
     shortcut,
     icon: Icon,
     separator,
+    disabled,
   }: MenuItem) => {
     if (separator) {
       return <ContextMenuSeparator />;
@@ -48,6 +51,7 @@ export const StudioContextMenu = ({
       <ContextMenuItem
         className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs p-0"
         onClick={onClick}
+        disabled={disabled}
         inset={!Icon}
         key={label}
       >
@@ -68,7 +72,7 @@ export const StudioContextMenu = ({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger disabled={disabled}>{children}</ContextMenuTrigger>
       <ContextMenuContent
         onClick={(e) => e.stopPropagation()}
         className="w-56 bg-surface-1 rounded-xxs text-surface-6"
@@ -88,6 +92,7 @@ export const StudioContextMenu = ({
               onClick={onClick}
               inset={!Icon}
               key={label}
+              disabled={item.disabled}
             >
               <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
                 {Icon && <Icon className="w-[16px] h-[16px]" />}

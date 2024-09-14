@@ -7,14 +7,20 @@ import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import {
   deleteSelectedClips,
+  pasteClips,
   selectAllClips,
   splitSelectedClips,
 } from "./helpers";
 import { MenuItem } from "@/components/ui/custom/types";
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
-import { AiOutlineSplitCells } from "react-icons/ai";
-import { FiDelete } from "react-icons/fi";
-import { PiSelectionAllThin } from "react-icons/pi";
+import { AiOutlineSplitCells as SplitIcon } from "react-icons/ai";
+import { FiDelete as DeleteIcon } from "react-icons/fi";
+import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
+import {
+  MdOutlineContentPaste as PasteIcon,
+  MdOutlineContentCopy as CopyIcon,
+} from "react-icons/md";
+
 import * as Tone from "tone";
 
 interface ClipsProps {
@@ -26,7 +32,7 @@ interface ClipsProps {
 
 export const Clips = observer(
   ({ startMeasure, endMeasure, scrollRef, setPlayheadLeft }: ClipsProps) => {
-    const { mixer, timeline, state } = useAudioEngine();
+    const { mixer, timeline, state, clipboard } = useAudioEngine();
     const undoManager = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
@@ -43,25 +49,51 @@ export const Clips = observer(
       }
     }, [state, timeline.seconds]);
 
+    const sameParentTrack =
+      mixer.selectedClips.length &&
+      mixer.selectedClips.every(
+        (selectedClip) =>
+          selectedClip.trackId === mixer.selectedClips[0].trackId
+      );
+
     const timelineContextMenuItems: MenuItem[] = [
       {
         label: "Select all",
         onClick: () => selectAllClips(mixer, undoManager),
-        icon: PiSelectionAllThin,
+        icon: SelectAllIcon,
         shortcut: "ctrl+a",
+      },
+      {
+        label: "Copy",
+        onClick: () => clipboard.copy(mixer.selectedClips),
+        icon: CopyIcon,
+        disabled: mixer.selectedClips.length === 0 || !sameParentTrack,
+        shortcut: "ctrl+c",
+      },
+      {
+        label: "Paste",
+        onClick: () =>
+          undoManager.withGroup("PASTE CLIPS", () =>
+            pasteClips(clipboard, mixer, timeline)
+          ),
+        icon: PasteIcon,
+        disabled:
+          clipboard.getClips().length === 0 ||
+          mixer.selectedTracks.length === 0,
+        shortcut: "ctrl+v",
       },
       { separator: true },
       {
         label: "Split at playhead",
         onClick: () => splitSelectedClips(mixer, timeline, undoManager),
-        icon: AiOutlineSplitCells,
+        icon: SplitIcon,
         shortcut: "shift+s",
       },
 
       {
         label: "Delete",
         onClick: () => deleteSelectedClips(mixer, undoManager),
-        icon: FiDelete,
+        icon: DeleteIcon,
         shortcut: "delete",
       },
     ];
@@ -90,8 +122,22 @@ export const Clips = observer(
     };
 
     return (
-      <StudioContextMenu items={timelineContextMenuItems}>
+      <StudioContextMenu
+        disabled={
+          state === AudioEngineState.playing ||
+          state === AudioEngineState.recording
+        }
+        items={timelineContextMenuItems}
+      >
         <div
+          onContextMenu={(e) => {
+            if (
+              state === AudioEngineState.playing ||
+              state === AudioEngineState.recording
+            ) {
+              e.preventDefault();
+            }
+          }}
           onClick={handleClick}
           className="absolute flex flex-col"
           style={{

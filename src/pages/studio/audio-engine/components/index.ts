@@ -5,3 +5,4 @@ export { MidiClip } from "./midi-clip";
 export { Mixer } from "./mixer";
 export { audioBufferCache } from "./audio-buffer-cache";
 export { waveformCache } from "./waveform-cache";
+export { Clipboard } from "./clipboard";

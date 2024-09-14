@@ -9,4 +9,5 @@ export interface MenuItem<T = string> {
   onClick?: (e: React.MouseEvent) => void;
   shortcut?: string;
   children?: MenuItem[];
+  disabled?: boolean;
 }

@@ -244,11 +244,11 @@ export const Clip = observer(
         return (
           mixer.getCombinedLaneHeightsAtIndex(
             parentTrackIndex + selectedIndexOffset
-          ) + 1
+          ) + 3
         );
       }
 
-      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex) + 1;
+      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex) + 3;
     };
 
     const getHeight = () => {
@@ -280,6 +280,7 @@ export const Clip = observer(
     );
 
     const currentDragTrack =
+      selected &&
       dragging &&
       inBoundsY(mixer.tracks, mixer.selectedClips, selectedIndexOffset)
         ? mixer.tracks[parentTrackIndex + selectedIndexOffset]
