@@ -35,6 +35,7 @@ export const Clips = observer(
     const { mixer, timeline, state, clipboard } = useAudioEngine();
     const undoManager = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
+    const [selectedXOffset, setSelectedXOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
 
     const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
@@ -43,7 +44,7 @@ export const Clips = observer(
 
     useEffect(() => {
       if (state === AudioEngineState.recording) {
-        setPlaceholderClipPosition(timeline.seconds);
+        setPlaceholderClipPosition(Tone.getTransport().seconds);
       } else {
         setPlaceholderClipPosition(null);
       }
@@ -72,10 +73,7 @@ export const Clips = observer(
       },
       {
         label: "Paste",
-        onClick: () =>
-          undoManager.withGroup("PASTE CLIPS", () =>
-            pasteClips(clipboard, mixer, timeline)
-          ),
+        onClick: () => pasteClips(clipboard, mixer, timeline, undoManager),
         icon: PasteIcon,
         disabled:
           clipboard.getClips().length === 0 ||
@@ -107,6 +105,8 @@ export const Clips = observer(
         e.stopPropagation();
       }
     };
+
+    console.log("SELECTED OFFSET", selectedXOffset);
 
     const shouldRenderClip = (clip: ClipData) => {
       const clipStartMeasure = parseInt(
@@ -157,6 +157,8 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    selectedOffset={selectedXOffset}
+                    setSelectedOffset={setSelectedXOffset}
                     setPlayheadLeft={setPlayheadLeft}
                     dragging={dragging}
                     setDragging={setDragging}

@@ -40,7 +40,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   record = async () => {
-    const start = this.timeline.positionInSamples;
+    const start = Tone.Time(Tone.getTransport().seconds, "s").toSamples();
     this.setState(AudioEngineState.recording);
     const activeTracks = this.mixer.getActiveTracks();
 

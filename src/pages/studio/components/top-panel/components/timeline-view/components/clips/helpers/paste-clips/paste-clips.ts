@@ -6,42 +6,53 @@ import {
   Timeline,
   waveformCache,
 } from "@/pages/studio/audio-engine/components";
+import { UndoManager } from "mobx-keystone";
 import * as Tone from "tone";
 
 export const pasteClips = (
   clipboard: Clipboard,
   mixer: Mixer,
-  timeline: Timeline
+  timeline: Timeline,
+  undoManager: UndoManager
 ) => {
   const timelinePosition = Tone.Time(
     Tone.getTransport().seconds,
     "s"
   ).toSamples();
-  mixer.selectedTracks.forEach((track) => {
-    clipboard.getClips().forEach((clip) => {
-      if (clip.type === "audio") {
-        const newClip = new AudioClip({
-          start: clip.start + timelinePosition,
-          trackId: track.id,
-          fadeInSamples: clip.fadeInSamples,
-          fadeOutSamples: clip.fadeOutSamples,
-          loopSamples: clip.loopSamples,
-        });
+  undoManager.withGroup("PASTE CLIPS", () => {
+    mixer.selectedTracks.forEach((track) => {
+      const clips = clipboard.getClips();
+      const firstClipStart = clips.length > 0 ? clips[0].start : 0;
 
-        newClip.setInitialBufferLength(clip.length);
-        const initialWaveformData = waveformCache.get(
-          clip.id,
-          timeline.samplesPerPixel
-        );
-        if (initialWaveformData) {
-          newClip.setInitialWaveformData(initialWaveformData);
+      clips.forEach((clip) => {
+        if (clip.type === "audio") {
+          const relativeOffset = clip.start - firstClipStart;
+          const newStartPosition = timelinePosition + relativeOffset;
+          const newClip = new AudioClip({
+            start: newStartPosition,
+            trackId: track.id,
+            fadeInSamples: clip.fadeInSamples,
+            fadeOutSamples: clip.fadeOutSamples,
+            loopSamples: clip.loopSamples,
+          });
+
+          newClip.setInitialBufferLength(clip.length);
+          const initialWaveformData = waveformCache.get(
+            clip.id,
+            timeline.samplesPerPixel
+          );
+          undoManager.withoutUndo(() => {
+            if (initialWaveformData) {
+              newClip.setInitialWaveformData(initialWaveformData);
+            }
+          });
+
+          audioBufferCache.copy(clip.id, newClip.id);
+          waveformCache.copy(clip.id, newClip.id);
+
+          track.createAudioClip(newClip);
         }
-
-        audioBufferCache.copy(clip.id, newClip.id);
-        waveformCache.copy(clip.id, newClip.id);
-
-        track.createAudioClip(newClip);
-      }
+      });
     });
   });
 };

@@ -27,12 +27,19 @@ interface ClipProps {
   dragging: boolean;
   setDragging: Dispatch<SetStateAction<boolean>>;
   setPlayheadLeft: (pixels: number) => void;
+  selectedOffset: number;
+  setSelectedOffset: Dispatch<SetStateAction<number>>;
 }
 
-const inBoundsX = (selectedClips: ClipData[], movementXInSamples: number) => {
-  return !selectedClips.some(
-    (selectedClip) => selectedClip.start + movementXInSamples < 0
-  );
+const inBoundsX = (
+  selectedClips: ClipData[],
+  movementXInSamples: number
+): boolean => {
+  return selectedClips.every((selectedClip) => {
+    const newStart = selectedClip.start + movementXInSamples;
+    console.log("new start", newStart);
+    return newStart >= 0;
+  });
 };
 
 const inBoundsY = (
@@ -66,6 +73,8 @@ export const Clip = observer(
     dragging,
     setDragging,
     setPlayheadLeft,
+    selectedOffset,
+    setSelectedOffset,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const undoManager = useUndoManager();
@@ -92,14 +101,6 @@ export const Clip = observer(
           track.selectClip(clip);
         });
       }
-
-      undoManager.withGroup("MOVE CLIPS PRE", () => {
-        mixer.tracks.forEach((track) => {
-          track.clips.forEach((selectedTrackclip) =>
-            selectedTrackclip.setStart(selectedTrackclip.start + 1)
-          );
-        });
-      });
     };
     const handleClick = useCallback(
       (e: React.MouseEvent) => {
@@ -131,20 +132,13 @@ export const Clip = observer(
       (e: MouseEvent) => {
         if (!dragging || !selected) return;
 
-        const movementXInSamples = timeline.pixelsToSamples(
-          Math.abs(e.movementX) > 1 ? e.movementX : 0
-        );
-
-        if (inBoundsX(mixer.selectedClips, movementXInSamples)) {
-          undoManager.withoutUndo(() => {
-            mixer.selectedClips.forEach((selectedClip) => {
-              const newStart = Math.max(
-                0,
-                selectedClip.start + movementXInSamples
-              );
-              selectedClip.setStart(newStart);
-            });
-          });
+        if (
+          inBoundsX(
+            mixer.selectedClips,
+            timeline.pixelsToSamples(e.movementX + selectedOffset)
+          )
+        ) {
+          setSelectedOffset((prev) => prev + e.movementX);
         }
 
         const movementY = e.clientY - initialY?.current;
@@ -172,9 +166,10 @@ export const Clip = observer(
         dragging,
         selected,
         timeline,
-        undoManager,
-        track.laneHeight,
+        selectedOffset,
         mixer,
+        track.laneHeight,
+        setSelectedOffset,
         selectedIndexOffset,
         setSelectedIndexOffset,
       ]
@@ -183,13 +178,12 @@ export const Clip = observer(
     const onMouseUp = useCallback(
       (e: MouseEvent) => {
         e.stopPropagation();
-        undoManager.withGroup("MOVE CLIPS POST", () => {
-          mixer.tracks.forEach((track) => {
-            track.clips.forEach((trackClip) =>
-              trackClip.setStart(trackClip.start - 1)
-            );
-          });
-        });
+        mixer.selectedClips.forEach((selectedClip) =>
+          selectedClip.setStart(
+            selectedClip.start + timeline.pixelsToSamples(selectedOffset)
+          )
+        );
+        setSelectedOffset(0);
         if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
           undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
             mixer.selectedClips.forEach((selectedClip) => {
@@ -221,14 +215,18 @@ export const Clip = observer(
         mixer,
         parentTrackIndex,
         selectedIndexOffset,
+        selectedOffset,
         setDragging,
         setSelectedIndexOffset,
-        timeline.samplesPerPixel,
+        setSelectedOffset,
+        timeline,
         undoManager,
       ]
     );
 
-    const clipLeft = timeline.samplesToPixels(clip.start);
+    const clipLeft = selected
+      ? timeline.samplesToPixels(clip.start) + selectedOffset
+      : timeline.samplesToPixels(clip.start);
 
     useEffect(() => {
       window.addEventListener("mouseup", onMouseUp);
