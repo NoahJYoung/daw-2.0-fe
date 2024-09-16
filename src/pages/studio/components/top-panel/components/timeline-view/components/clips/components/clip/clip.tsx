@@ -37,7 +37,6 @@ const inBoundsX = (
 ): boolean => {
   return selectedClips.every((selectedClip) => {
     const newStart = selectedClip.start + movementXInSamples;
-    console.log("new start", newStart);
     return newStart >= 0;
   });
 };

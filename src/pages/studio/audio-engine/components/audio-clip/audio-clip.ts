@@ -3,7 +3,9 @@ import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import * as Tone from "tone";
 import { computed, observable } from "mobx";
 import { audioBufferCache } from "../audio-buffer-cache";
-import { Peak } from "../waveform-cache";
+import { waveformCache } from "../waveform-cache";
+import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
+import { getPeaks } from "../audio-buffer-cache/helpers";
 
 @model("AudioEngine/Mixer/Track/AudioClip")
 export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -14,17 +16,10 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   loopSamples: prop<number>(0),
   fadeInSamples: prop<number>(0),
   fadeOutSamples: prop<number>(0),
-  initialWaveformData: prop<Peak[] | null>(() => []).withSetter(),
 }) {
   player = new Tone.Player().toDestination();
   private startEventId: number | null = null;
   private stopEventId: number | null = null;
-
-  public initialBufferLength = 0;
-
-  setInitialBufferLength(length: number) {
-    this.initialBufferLength = length;
-  }
 
   @observable
   buffer: Tone.ToneAudioBuffer | null = null;
@@ -40,7 +35,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get length(): number {
-    return this.buffer?.length ?? this.initialBufferLength;
+    return this.buffer?.length || 0;
   }
 
   @computed
@@ -80,6 +75,13 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const cachedBuffer = audioBufferCache.get(this.id);
     if (cachedBuffer) {
       this.setBuffer(cachedBuffer);
+    }
+  }
+
+  createWaveformCache(buffer: Tone.ToneAudioBuffer) {
+    for (let i = MIN_SAMPLES_PER_PIXEL; i <= MAX_SAMPLES_PER_PIXEL; i *= 2) {
+      const peaks = getPeaks(buffer?.getChannelData(0), i);
+      waveformCache.add(this.id, peaks, i);
     }
   }
 

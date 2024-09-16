@@ -36,16 +36,9 @@ export const pasteClips = (
             loopSamples: clip.loopSamples,
           });
 
-          newClip.setInitialBufferLength(clip.length);
-          const initialWaveformData = waveformCache.get(
-            clip.id,
-            timeline.samplesPerPixel
-          );
-          undoManager.withoutUndo(() => {
-            if (initialWaveformData) {
-              newClip.setInitialWaveformData(initialWaveformData);
-            }
-          });
+          if (clip.buffer) {
+            newClip.setBuffer(clip.buffer);
+          }
 
           audioBufferCache.copy(clip.id, newClip.id);
           waveformCache.copy(clip.id, newClip.id);

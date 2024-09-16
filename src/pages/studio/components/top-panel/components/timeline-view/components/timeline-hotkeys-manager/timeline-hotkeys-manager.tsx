@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import {
   deleteSelectedClips,
+  joinClips,
   selectAllClips,
   splitSelectedClips,
 } from "../clips/helpers";
@@ -14,6 +15,11 @@ export const TimelineHotKeysManager = observer(() => {
   useHotkeys("shift+s", (event) => {
     event.preventDefault();
     splitSelectedClips(mixer, timeline, undoManager);
+  });
+
+  useHotkeys("shift+j", (event) => {
+    event.preventDefault();
+    joinClips(mixer, undoManager);
   });
 
   useHotkeys("delete", (event) => {

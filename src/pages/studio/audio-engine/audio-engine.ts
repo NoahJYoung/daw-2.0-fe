@@ -1,17 +1,10 @@
 import { model, prop, ExtendedModel } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
-import {
-  AudioClip,
-  Mixer,
-  Timeline,
-  waveformCache,
-  Clipboard,
-} from "./components";
+import { AudioClip, Mixer, Timeline, Clipboard } from "./components";
 import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
 import { AudioEngineState } from "./types";
 import * as Tone from "tone";
-import { getPeaks } from "./components/audio-buffer-cache/helpers";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -51,6 +44,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
     mic.connect(recorder);
 
+    activeTracks.forEach((activeTrack) => mic.connect(activeTrack.waveform));
+
     try {
       await mic.open();
     } catch (error) {
@@ -69,22 +64,17 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           start,
         });
 
-        const initialWaveformData = getPeaks(
-          audioBuffer.getChannelData(0),
-          this.timeline.samplesPerPixel
-        );
-
-        waveformCache.add(
-          clip.id,
-          initialWaveformData,
-          this.timeline.samplesPerPixel
-        );
         audioBufferCache.add(clip.id, audioBuffer.toMono());
         clip.setBuffer(audioBuffer);
-        clip.setInitialWaveformData(initialWaveformData);
+
+        clip.createWaveformCache(audioBuffer);
+
         track.createAudioClip(clip);
       });
 
+      activeTracks.forEach((activeTrack) =>
+        mic.disconnect(activeTrack.waveform)
+      );
       recorder.dispose();
       mic.dispose();
     });

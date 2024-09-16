@@ -12,8 +12,7 @@ export const moveClipToNewTrack = (
   mixer: Mixer,
   undoManager: UndoManager,
   oldTrackIndex: number,
-  newTrackIndex: number,
-  samplesPerPixel: number
+  newTrackIndex: number
 ) => {
   if (
     oldTrackIndex !== newTrackIndex &&
@@ -31,16 +30,9 @@ export const moveClipToNewTrack = (
           trackId: newTrackId,
           loopSamples: oldClip.loopSamples,
         });
-        newClip.setInitialBufferLength(oldClip.length);
-        const initialWaveformData = waveformCache.get(
-          oldClip.id,
-          samplesPerPixel
-        );
-        if (initialWaveformData) {
-          newClip.setInitialWaveformData(initialWaveformData);
-        }
 
         audioBufferCache.copy(oldClip.id, newClip.id);
+        newClip.setBuffer(oldClip.buffer!);
         waveformCache.copy(oldClip.id, newClip.id);
         mixer.tracks[oldTrackIndex].deleteClip(oldClip);
         mixer.tracks[newTrackIndex].createAudioClip(newClip);

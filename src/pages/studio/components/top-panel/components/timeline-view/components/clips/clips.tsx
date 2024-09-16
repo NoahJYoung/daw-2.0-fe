@@ -7,13 +7,17 @@ import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import {
   deleteSelectedClips,
+  joinClips,
   pasteClips,
   selectAllClips,
   splitSelectedClips,
 } from "./helpers";
 import { MenuItem } from "@/components/ui/custom/types";
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
-import { AiOutlineSplitCells as SplitIcon } from "react-icons/ai";
+import {
+  AiOutlineSplitCells as SplitIcon,
+  AiOutlineMergeCells as JoinIcon,
+} from "react-icons/ai";
 import { FiDelete as DeleteIcon } from "react-icons/fi";
 import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
 import {
@@ -87,6 +91,13 @@ export const Clips = observer(
         icon: SplitIcon,
         shortcut: "shift+s",
       },
+      {
+        label: "Join",
+        onClick: () => joinClips(mixer, undoManager),
+        icon: JoinIcon,
+        disabled: mixer.selectedClips.length < 2 || !sameParentTrack,
+        shortcut: "shift+j",
+      },
 
       {
         label: "Delete",
@@ -105,8 +116,6 @@ export const Clips = observer(
         e.stopPropagation();
       }
     };
-
-    console.log("SELECTED OFFSET", selectedXOffset);
 
     const shouldRenderClip = (clip: ClipData) => {
       const clipStartMeasure = parseInt(

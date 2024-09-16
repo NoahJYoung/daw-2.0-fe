@@ -67,8 +67,6 @@ export const TimelineView = observer(
       };
     }, [scrollRef]);
 
-    const measureWidth = useMemo(() => pixels / measures, [pixels, measures]);
-
     const smallestSubdivision = useMemo(
       () => findSmallestSubdivision(timeline),
       [timeline, timeline.samplesPerPixel]
@@ -111,6 +109,11 @@ export const TimelineView = observer(
     );
 
     const renderEveryFourthMeasure = beatWidth * timeSignature < 40;
+
+    const measureWidth = useMemo(
+      () => subdivisionWidth * subdivisionsArray.length,
+      [subdivisionWidth, subdivisionsArray]
+    );
 
     const handleClick = (e: React.MouseEvent) => {
       undoManager.withoutUndo(() => {

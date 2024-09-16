@@ -38,6 +38,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   input: prop<string | null>(null).withSetter(),
 }) {
   channel = new Tone.Channel();
+  waveform = new Tone.Waveform();
 
   sync() {
     const { volume, pan, mute } = this;

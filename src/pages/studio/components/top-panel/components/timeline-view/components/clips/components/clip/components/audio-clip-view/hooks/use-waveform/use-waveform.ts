@@ -1,12 +1,10 @@
 import { AudioClip, Track } from "@/pages/studio/audio-engine/components";
-import { getPeaks } from "@/pages/studio/audio-engine/components/audio-buffer-cache/helpers";
 import {
   Peak,
   waveformCache,
-  WaveformData,
 } from "@/pages/studio/audio-engine/components/waveform-cache";
 import { useAudioEngine } from "@/pages/studio/hooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export function normalizePeaks(
   peaks: Peak[],
@@ -39,7 +37,7 @@ export function drawWaveform(
     const pixelWidth = width / peaks.length;
 
     for (let i = 0; i < peaks.length; i++) {
-      if (i % 2 === 0) {
+      if (i % 3 === 0) {
         const x = i * pixelWidth;
         const peak = peaks[i];
         ctx.moveTo(x, height - peak.min);
@@ -55,8 +53,6 @@ export function drawWaveform(
 export const useWaveform = (clip: AudioClip, track: Track) => {
   const { timeline } = useAudioEngine();
   const width = timeline.samplesToPixels(clip.length);
-  const [initialWaveformData, setInitialWaveformData] =
-    useState<WaveformData | null>(clip.initialWaveformData);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const adjustedHeight = track.laneHeight - 30;
@@ -66,11 +62,7 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
   useEffect(() => {
     if (clip.buffer) {
       if (!waveformCache.has(clip.id, timeline.samplesPerPixel)) {
-        const peaks = getPeaks(
-          clip.buffer.getChannelData(0),
-          timeline.samplesPerPixel
-        );
-        waveformCache.add(clip.id, peaks, timeline.samplesPerPixel);
+        throw new Error("no waveform data found");
       }
       const cachedPeaks = waveformCache.get(clip.id, timeline.samplesPerPixel);
 
@@ -81,8 +73,6 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
           waveformMagnificationValue
         );
         drawWaveform(normalizedPeaks, canvasRef);
-      } else {
-        throw new Error("No peaks data found");
       }
     }
   }, [
@@ -97,17 +87,17 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
     clip.id,
   ]);
 
-  useEffect(() => {
-    if (initialWaveformData) {
-      const normalizedPeaks = normalizePeaks(
-        initialWaveformData,
-        adjustedHeight,
-        waveformMagnificationValue
-      );
-      drawWaveform(normalizedPeaks, canvasRef);
-    }
-    setInitialWaveformData(null);
-  }, [adjustedHeight, clip, initialWaveformData]);
+  // useEffect(() => {
+  //   if (initialWaveformData) {
+  //     const normalizedPeaks = normalizePeaks(
+  //       initialWaveformData,
+  //       adjustedHeight,
+  //       waveformMagnificationValue
+  //     );
+  //     drawWaveform(normalizedPeaks, canvasRef);
+  //   }
+  //   setInitialWaveformData(null);
+  // }, [adjustedHeight, clip, initialWaveformData]);
 
   return { canvasRef, width, height: adjustedHeight };
 };
