@@ -191,10 +191,11 @@ export const TrackPanel = observer(
 
     const showPositionArrows = track.laneHeight > 60;
 
-    const baseButtonClass = `hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
+    const baseButtonClass = `shadow-none hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
 
     const activeButtonClass = `hover:text-surface-7
-      text-surface-5"
+      text-surface-5 
+      shadow-none
       flex
       items-center
       justify-center

@@ -21,7 +21,7 @@ import {
 import { FiDelete as DeleteIcon } from "react-icons/fi";
 import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
 import {
-  MdOutlineContentPaste as PasteIcon,
+  MdContentPasteGo as PasteIcon,
   MdOutlineContentCopy as CopyIcon,
 } from "react-icons/md";
 
@@ -52,7 +52,7 @@ export const Clips = observer(
       } else {
         setPlaceholderClipPosition(null);
       }
-    }, [state, timeline.seconds]);
+    }, [state]);
 
     const sameParentTrack =
       mixer.selectedClips.length &&
@@ -109,11 +109,39 @@ export const Clips = observer(
 
     const handleClick = (e: React.MouseEvent) => {
       if (!e.ctrlKey) {
-        undoManager.withGroup("UNSELECT ALL CLIPS", () => {
-          mixer.unselectAllClips();
-        });
+        undoManager.withGroup(
+          "UNSELECT ALL CLIPS, SELECT TRACK AT Y COORDINATES",
+          () => {
+            mixer.unselectAllClips();
+            mixer.unselectAllTracks();
+
+            if (scrollRef.current) {
+              const trackToSelect = mixer.getTrackAtYPosition(
+                e.clientY + scrollRef.current.scrollTop - 72
+              );
+              if (trackToSelect) {
+                mixer.selectTrack(trackToSelect);
+              }
+            }
+          }
+        );
       } else {
         e.stopPropagation();
+        undoManager.withGroup("SELECT TRACK AT Y COORDINATES", () => {
+          if (scrollRef.current) {
+            const trackToSelect = mixer.getTrackAtYPosition(
+              e.clientY + scrollRef.current.scrollTop - 72
+            );
+            if (trackToSelect) {
+              const selected = mixer.selectedTracks.includes(trackToSelect);
+              if (selected) {
+                mixer.unselectTrack(trackToSelect);
+              } else {
+                mixer.selectTrack(trackToSelect);
+              }
+            }
+          }
+        });
       }
     };
 

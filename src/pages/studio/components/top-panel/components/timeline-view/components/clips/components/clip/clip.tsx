@@ -195,8 +195,7 @@ export const Clip = observer(
                   mixer,
                   undoManager,
                   selectedParentIndex,
-                  selectedParentIndex + selectedIndexOffset,
-                  timeline.samplesPerPixel
+                  selectedParentIndex + selectedIndexOffset
                 );
               } else {
                 throw new Error("No parent track found");

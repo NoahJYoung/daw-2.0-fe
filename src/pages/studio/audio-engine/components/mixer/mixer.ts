@@ -61,6 +61,23 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
       .reduce((total, current) => (total += current.laneHeight), 0);
   }
 
+  getTrackAtYPosition(yPosition: number): Track | null {
+    let currentHeight = 0;
+
+    for (let i = 0; i < this.tracks.length; i++) {
+      const track = this.tracks[i];
+      const trackHeight = track.laneHeight;
+
+      if (yPosition < currentHeight + trackHeight) {
+        return track;
+      }
+
+      currentHeight += trackHeight;
+    }
+
+    return null;
+  }
+
   @computed
   get selectedTracks() {
     return this.selectedRefs.map((r) => r.current);

@@ -7,13 +7,22 @@ import { useEffect, useRef, useState } from "react";
 export function normalizePeaks(
   peaks: Peak[],
   height: number,
-  scaleFactor: number = 1
+  scaleFactor: number = 1,
+  minBarHeight: number = 1
 ): Peak[] {
   const halfHeight = height / 2;
-  return peaks.map((peak) => ({
-    min: halfHeight + peak.min * halfHeight * scaleFactor,
-    max: halfHeight + peak.max * halfHeight * scaleFactor,
-  }));
+  return peaks.map((peak) => {
+    const adjustedMin = peak.min * halfHeight * scaleFactor;
+    const adjustedMax = peak.max * halfHeight * scaleFactor;
+
+    const minPeak = Math.min(adjustedMin, -minBarHeight);
+    const maxPeak = Math.max(adjustedMax, minBarHeight);
+
+    return {
+      min: halfHeight + minPeak,
+      max: halfHeight + maxPeak,
+    };
+  });
 }
 
 export function drawWaveform(
@@ -35,12 +44,10 @@ export function drawWaveform(
     const pixelWidth = width / peaks.length;
 
     for (let i = 0; i < peaks.length; i++) {
-      if (i % 2 === 0) {
-        const x = i * pixelWidth;
-        const peak = peaks[i];
-        ctx.moveTo(x, height - peak.min);
-        ctx.lineTo(x, height - peak.max);
-      }
+      const x = i * pixelWidth;
+      const peak = peaks[i];
+      ctx.moveTo(x, height - peak.min);
+      ctx.lineTo(x, height - peak.max);
     }
 
     ctx.strokeStyle = "black";
