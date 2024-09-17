@@ -35,7 +35,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   laneHeight: prop(INITIAL_LANE_HEIGHT),
   volume: prop(-12).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
-  input: prop<string | null>(null).withSetter(),
+  input: prop<string | null>("mic").withSetter(),
 }) {
   channel = new Tone.Channel();
   waveform = new Tone.Waveform();

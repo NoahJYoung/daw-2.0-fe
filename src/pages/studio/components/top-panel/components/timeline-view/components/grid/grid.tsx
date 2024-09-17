@@ -23,9 +23,9 @@ export const Grid = observer(
     startMeasure,
     endMeasure,
   }: GridProps) => {
-    const { timeline, mixer } = useAudioEngine();
+    const { mixer } = useAudioEngine();
     const { tracks } = mixer;
-    const width = timeline.pixels;
+    const width = measureWidth * measuresArray.length;
     const height = mixer.topPanelHeight;
     const className = "stroke-current text-surface-2";
 

@@ -1,7 +1,6 @@
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
@@ -46,18 +45,16 @@ export const StudioDropdown = ({
         />
       </SelectTrigger>
       <SelectContent className="rounded-xxs bg-surface-1">
-        {/* <SelectGroup className="bg-surface-2"> */}
         {label && <SelectLabel>{label}</SelectLabel>}
         {options.map((option) => (
           <SelectItem
-            className="bg-surface-1 hover:bg-red-900 rounded-xxs"
+            className="bg-surface-1 hover:bg-surface-2 rounded-xxs"
             key={option.value}
             value={option.value}
           >
             {option.label}
           </SelectItem>
         ))}
-        {/* </SelectGroup> */}
       </SelectContent>
     </Select>
   );

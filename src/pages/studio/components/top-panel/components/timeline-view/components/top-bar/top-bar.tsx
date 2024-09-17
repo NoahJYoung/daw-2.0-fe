@@ -1,4 +1,3 @@
-import { useAudioEngine } from "@/pages/studio/hooks";
 import { TOOLBAR_HEIGHT } from "@/pages/studio/utils/constants";
 import { memo, useCallback, useMemo } from "react";
 
@@ -6,6 +5,7 @@ interface TopBarProps {
   subdivisionsPerBeat: number;
   subdivisionWidth: number;
   measureWidth: number;
+  totalWidth: number;
   measuresArray: number[];
   subdivisionsArray: number[];
   renderEveryFourthMeasure: boolean;
@@ -15,14 +15,12 @@ export const TopBar = memo(
   ({
     subdivisionsPerBeat,
     subdivisionWidth,
+    totalWidth,
     measureWidth,
     measuresArray,
     subdivisionsArray,
     renderEveryFourthMeasure,
   }: TopBarProps) => {
-    const { timeline } = useAudioEngine();
-    const { pixels } = timeline;
-
     const getSubdivisionStyle = useCallback(
       (j: number) => {
         if (j === 0) {
@@ -84,7 +82,7 @@ export const TopBar = memo(
         className="flex sticky top-0 bg-surface-1 select-none"
         style={{
           zIndex: 10,
-          width: pixels,
+          width: totalWidth,
           height: TOOLBAR_HEIGHT,
           marginBottom: 3,
           paddingTop: 2,
@@ -114,7 +112,7 @@ export const TopBar = memo(
         className="flex sticky top-0 bg-surface-1 select-none"
         style={{
           zIndex: 10,
-          width: pixels,
+          width: totalWidth,
           height: TOOLBAR_HEIGHT - 4,
           marginBottom: 5,
         }}

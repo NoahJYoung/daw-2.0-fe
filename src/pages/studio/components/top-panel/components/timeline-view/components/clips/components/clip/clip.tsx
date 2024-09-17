@@ -240,20 +240,20 @@ export const Clip = observer(
         return (
           mixer.getCombinedLaneHeightsAtIndex(
             parentTrackIndex + selectedIndexOffset
-          ) + 3
+          ) + 2
         );
       }
 
-      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex) + 3;
+      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex) + 2;
     };
 
     const getHeight = () => {
       if (selected && dragging) {
         return (
-          mixer.tracks[parentTrackIndex + selectedIndexOffset]?.laneHeight - 4
+          mixer.tracks[parentTrackIndex + selectedIndexOffset]?.laneHeight - 2
         );
       }
-      return track.laneHeight - 4;
+      return track.laneHeight - 2;
     };
 
     const getColor = () => {

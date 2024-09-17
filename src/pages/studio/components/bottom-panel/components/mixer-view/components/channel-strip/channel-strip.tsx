@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
-import { Knob } from "@/components/ui/custom/studio/knob";
+import { Knob } from "@/components/ui/custom/studio/studio-knob";
 
 interface TestComponentProps {
   track: Track;
@@ -65,7 +65,7 @@ export const ChannelStrip = observer(({ track }: TestComponentProps) => {
         onChange={(e) => track.setName(e.target.value)}
         value={track.name}
       />
-      <div className="flex w-full gap-1 items-center justify-between">
+      <div className="flex w-full gap-1 items-center justify-between py-3">
         <p>L</p>
         <Knob
           onValueChange={onPanChange}
@@ -76,7 +76,8 @@ export const ChannelStrip = observer(({ track }: TestComponentProps) => {
           min={-1}
           max={1}
           step={0.02}
-          size={24}
+          size={36}
+          double={true}
         />
         <p>R</p>
       </div>

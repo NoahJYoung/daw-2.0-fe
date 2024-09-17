@@ -10,6 +10,9 @@ interface KnobProps {
   onValueCommit: (value: number) => void;
   onDoubleClick?: (value?: number) => void;
   renderValue?: (value: number) => number | string;
+  color?: string;
+  double?: boolean;
+  showValue?: boolean;
 }
 
 export const Knob = ({
@@ -22,18 +25,89 @@ export const Knob = ({
   max,
   step,
   size,
+  color = "#FD355D",
+  double,
+  showValue = true,
 }: KnobProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const knobRef = useRef<SVGSVGElement>(null);
 
-  const initialRotation = 135;
   const minRotation = -135;
   const maxRotation = 135;
+  const midValue = (min + max) / 2;
 
-  const rotation =
-    minRotation +
-    ((value - min) / (max - min)) * (maxRotation - minRotation) +
-    initialRotation;
+  const getAngles = (minRotation: number) => {
+    let endAngle = 0;
+    let startAngle = 0;
+
+    if (double) {
+      if (value < midValue) {
+        endAngle = 0 + ((value - midValue) / (min - midValue)) * -135;
+      } else if (value > midValue) {
+        endAngle = 0 + ((value - midValue) / (max - midValue)) * 135;
+      }
+    } else {
+      startAngle = -135;
+      const percentage = (value - min) / (max - min);
+      endAngle = minRotation + percentage * (maxRotation - minRotation);
+    }
+
+    return { startAngle, endAngle };
+  };
+
+  const { startAngle, endAngle } = getAngles(minRotation);
+
+  const describeArc = (
+    x: number,
+    y: number,
+    radius: number,
+    startAngle: number,
+    endAngle: number
+  ) => {
+    const start = polarToCartesian(x, y, radius, endAngle);
+    const end = polarToCartesian(x, y, radius, startAngle);
+
+    const angleDiff = Math.abs(endAngle - startAngle);
+    const largeArcFlag = angleDiff <= 180 ? "0" : "1";
+
+    const sweepFlag = value >= midValue || !double ? 0 : 1;
+
+    return [
+      "M",
+      start.x,
+      start.y,
+      "A",
+      radius,
+      radius,
+      0,
+      largeArcFlag,
+      sweepFlag,
+      end.x,
+      end.y,
+    ].join(" ");
+  };
+
+  const polarToCartesian = (
+    centerX: number,
+    centerY: number,
+    radius: number,
+    angleInDegrees: number
+  ) => {
+    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+
+    return {
+      x: centerX + radius * Math.cos(angleInRadians),
+      y: centerY + radius * Math.sin(angleInRadians),
+    };
+  };
+
+  const arcPath = describeArc(
+    size / 2,
+    size / 2,
+    size / 2 - 2,
+    startAngle,
+    endAngle
+  );
 
   const handleMouseDown = () => {
     document.body.style.userSelect = "none";
@@ -96,27 +170,43 @@ export const Knob = ({
         width={size}
         height={size}
         className="flex justify-center items-center"
-        style={{ transform: `rotate(${rotation}deg)` }}
       >
         <circle
-          className="fill-current text-surface-2"
+          className="fill-current text-surface-3"
           onMouseDown={handleMouseDown}
           onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
-          cx={size - size / 2}
-          cy={size - size / 2}
+          cx={size / 2}
+          cy={size / 2}
           r={size / 2}
         />
+
         <circle
-          cx={size * 0.1 + 3}
-          cy={size * 0.75}
-          r={size * 0.1}
-          className="fill-current text-surface-4"
+          className="fill-current text-surface-1"
+          onMouseDown={handleMouseDown}
+          onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
+          cx={size / 2}
+          cy={size / 2}
+          r={(size / 2) * 0.8}
+        />
+
+        {value !== midValue && (
+          <path d={arcPath} stroke={color} strokeWidth="4" fill="none" />
+        )}
+
+        <line
+          x1={size / 2}
+          y1={size / 2}
+          x2={size / 2}
+          y2={0}
+          stroke={color}
+          strokeWidth={2}
+          transform={`rotate(${endAngle}, ${size / 2}, ${size / 2})`}
         />
       </svg>
-      {isDragging && (
+      {showValue && isDragging && (
         <span
-          style={{ top: 25, left: -10, zIndex: 2 }}
-          className="absolute text-sm p-1 bg-surface-2 border border-surface-3"
+          style={{ top: size + 2, left: -5, zIndex: 2 }}
+          className="absolute text-xs p-1 bg-surface-2 border border-surface-3"
         >
           {renderValue
             ? renderValue(value)

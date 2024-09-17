@@ -1,19 +1,19 @@
 import { ExtendedModel, idProp, model, prop } from "mobx-keystone";
 import { computed } from "mobx";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
-import * as Tone from "tone";
+import { MidiEvent } from "../midi-event";
 
 @model("AudioEngine/Mixer/Track/MidiClip")
 export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   trackId: prop<string>(),
-  audioBuffer: prop<Tone.ToneAudioBuffer>(),
-  loopSamples: prop<number>(0),
   start: prop<number>().withSetter(),
-  notes: prop<unknown[]>(() => []),
+  events: prop<MidiEvent[]>(() => []),
+  loopSamples: prop<number>(0),
+  fadeInSamples: prop<number>(0).withSetter(),
+  fadeOutSamples: prop<number>(0).withSetter(),
 }) {
   readonly type = "midi";
-  player = new Tone.Player(this.audioBuffer);
 
   getRefId() {
     return this.id;
@@ -21,7 +21,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get length(): number {
-    return this.audioBuffer.length;
+    return 0;
   }
 
   @computed

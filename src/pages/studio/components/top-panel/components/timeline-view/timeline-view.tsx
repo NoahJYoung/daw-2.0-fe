@@ -162,7 +162,9 @@ export const TimelineView = observer(
       timeline: Timeline,
       containerRef: React.RefObject<HTMLDivElement>
     ) => {
-      const newScrollLeft = timeline.positionInPixels - window.innerWidth / 2;
+      const newScrollLeft =
+        timeline.positionInPixels -
+        scrollRef.current!.getBoundingClientRect().width / 2;
       if (containerRef.current) {
         containerRef.current.scrollLeft = newScrollLeft;
       }
@@ -235,15 +237,18 @@ export const TimelineView = observer(
       setPlayheadLeft(pixels);
     }, [timeline.samplesPerPixel]);
 
+    const totalWidth = measureWidth * measures;
+
     return (
       <div
         onClick={handleClick}
         onScroll={onScroll}
         ref={scrollRef}
-        style={{ width: pixels }}
+        style={{ width: totalWidth }}
         className="h-full bg-surface-0 z-10 styled-scrollbar overflow-auto relative"
       >
         <TopBar
+          totalWidth={totalWidth}
           renderEveryFourthMeasure={renderEveryFourthMeasure}
           subdivisionsArray={subdivisionsArray}
           measuresArray={measuresArray}

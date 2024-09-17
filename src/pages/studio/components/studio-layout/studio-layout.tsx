@@ -6,9 +6,10 @@ import {
   PanelGroup,
   PanelResizeHandle,
 } from "react-resizable-panels";
-import { ReactElement, useRef } from "react";
+import { ReactElement, useCallback, useEffect, useRef } from "react";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { PiCaretUpDownFill } from "react-icons/pi";
+import { useAudioEngine, useUndoManager } from "../../hooks";
 interface StudioLayoutProps {
   upperPanel: ReactElement;
   middlePanel: ReactElement;
@@ -17,9 +18,21 @@ interface StudioLayoutProps {
 
 export const StudioLayout = observer(
   ({ upperPanel, lowerPanel, middlePanel }: StudioLayoutProps) => {
+    const { mixer } = useAudioEngine();
+    const undoManager = useUndoManager();
     const topPanelRef = useRef<ImperativePanelHandle>(null);
     const bottomPanelRef = useRef<ImperativePanelHandle>(null);
     const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
+
+    const handleResize = useCallback(
+      () => undoManager.withoutUndo(() => mixer.refreshTopPanelHeight()),
+      [mixer, undoManager]
+    );
+
+    useEffect(() => {
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, [handleResize]);
 
     const toggleBottomPanel = () => {
       if (panelGroupRef.current) {

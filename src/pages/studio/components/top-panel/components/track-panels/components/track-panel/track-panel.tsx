@@ -193,15 +193,14 @@ export const TrackPanel = observer(
 
     const baseButtonClass = `shadow-none hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
 
-    const activeButtonClass = `hover:text-surface-7
-      text-surface-5 
-      shadow-none
-      flex
-      items-center
-      justify-center
+    const activeButtonClass = `hover:text-surface-10
+      shadow-none 
+      flex 
+      items-center 
+      justify-center 
       rounded-xxs p-2 w-6 h-6 m-0 font-bold
       bg-transparent
-      text-surface-7
+      text-surface-10 
       hover:bg-surface-3`;
 
     return (

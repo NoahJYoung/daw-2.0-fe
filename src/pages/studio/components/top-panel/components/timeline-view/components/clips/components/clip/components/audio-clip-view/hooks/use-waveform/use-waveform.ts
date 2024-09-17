@@ -64,7 +64,7 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
 
   const adjustedHeight = track.laneHeight - 30;
 
-  const waveformMagnificationValue = 4;
+  const waveformMagnificationValue = 1;
 
   useEffect(() => {
     if (clip.buffer) {

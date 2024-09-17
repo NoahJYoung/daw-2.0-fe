@@ -44,7 +44,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
     mic.connect(recorder);
 
-    activeTracks.forEach((activeTrack) => mic.connect(activeTrack.waveform));
+    activeTracks.forEach((activeTrack) => {
+      if (activeTrack.input === "mic") {
+        mic.connect(activeTrack.waveform);
+      }
+    });
 
     try {
       await mic.open();
@@ -59,22 +63,28 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       const url = URL.createObjectURL(recording);
       const audioBuffer = await new Tone.ToneAudioBuffer().load(url);
       activeTracks.forEach((track) => {
-        const clip = new AudioClip({
-          trackId: track.id,
-          start,
-        });
+        if (track.input === "mic") {
+          const clip = new AudioClip({
+            trackId: track.id,
+            start,
+          });
 
-        audioBufferCache.add(clip.id, audioBuffer.toMono());
-        clip.setBuffer(audioBuffer);
+          audioBufferCache.add(clip.id, audioBuffer.toMono());
+          clip.setBuffer(audioBuffer);
 
-        clip.createWaveformCache(audioBuffer);
+          clip.createWaveformCache(audioBuffer);
 
-        track.createAudioClip(clip);
+          track.createAudioClip(clip);
+        } else if (track.input === "midi") {
+          console.log("Starting Midi Record");
+        }
       });
 
-      activeTracks.forEach((activeTrack) =>
-        mic.disconnect(activeTrack.waveform)
-      );
+      activeTracks.forEach((activeTrack) => {
+        if (activeTrack.input === "mic") {
+          mic.disconnect(activeTrack.waveform);
+        }
+      });
       recorder.dispose();
       mic.dispose();
     });

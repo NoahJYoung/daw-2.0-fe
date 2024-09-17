@@ -63,7 +63,7 @@ export const usePlaceholderWaveform = (track: Track) => {
 
   const adjustedHeight = track.laneHeight - 30;
 
-  const waveformMagnificationValue = 4;
+  const waveformMagnificationValue = 1;
 
   useEffect(() => {
     if (waveformData) {
@@ -73,9 +73,13 @@ export const usePlaceholderWaveform = (track: Track) => {
         adjustedHeight,
         waveformMagnificationValue
       );
-      requestAnimationFrame(() => drawWaveform(normalizedPeaks, canvasRef));
+      requestAnimationFrame(() => {
+        if (track.input === "mic") {
+          drawWaveform(normalizedPeaks, canvasRef);
+        }
+      });
     }
-  }, [adjustedHeight, timeline.samplesPerPixel, waveformData]);
+  }, [adjustedHeight, timeline.samplesPerPixel, track.input, waveformData]);
 
   return { canvasRef, height: adjustedHeight, setWaveformData, waveformData };
 };

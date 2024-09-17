@@ -8,11 +8,13 @@ import { trackRef } from "../refs";
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   tracks: prop<Track[]>(() => []),
   selectedRefs: prop<Ref<Track>[]>(() => []),
+  topPanelHeight: prop<number>(window.innerHeight - 156),
 }) {
   @modelAction
   createTrack = () => {
     const track = new Track({});
     this.tracks.push(track);
+    this.refreshTopPanelHeight();
   };
 
   @modelAction
@@ -96,10 +98,11 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     );
   }
 
-  @computed
-  get topPanelHeight() {
+  @modelAction
+  refreshTopPanelHeight() {
     const min = window.innerHeight - 156;
-    return this.combinedLaneHeights > min ? this.combinedLaneHeights : min;
+    this.topPanelHeight =
+      this.combinedLaneHeights > min ? this.combinedLaneHeights : min;
   }
 
   getActiveTracks() {
