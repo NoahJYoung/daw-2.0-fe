@@ -22,7 +22,7 @@ export const TrackPanels = observer(
         ref={scrollRef}
         onScroll={onScroll}
         onClick={() => mixer.unselectAllTracks()}
-        className="no-scrollbar relative flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0 ml-[2px] pr-[2px]"
+        className="no-scrollbar relative flex flex-col max-h-full overflow-y-auto flex-shrink-0 border-r-4 border-surface-0 mx-[2px] pr-[2px]"
         style={{
           width: TRACK_PANEL_EXPANDED_WIDTH,
           height: "calc(100% - 74px)",

@@ -6,7 +6,15 @@ import {
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
 import { observer } from "mobx-react-lite";
 import { AudioClipView } from "./components";
-import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useBottomPanelViewController,
+  useUndoManager,
+} from "@/pages/studio/hooks";
+import {
+  IoLockClosedSharp as LockedIcon,
+  IoLockOpenSharp as UnlockedIcon,
+} from "react-icons/io5";
 import {
   useCallback,
   useEffect,
@@ -77,6 +85,7 @@ export const Clip = observer(
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const undoManager = useUndoManager();
+    const { selectTrack, selectClip } = useBottomPanelViewController();
     const selected = mixer.selectedClips.includes(clip);
 
     const initialY = useRef<number>(0);
@@ -97,7 +106,9 @@ export const Clip = observer(
             mixer.unselectAllClips();
           }
 
-          track.selectClip(clip);
+          if (!clip.locked) {
+            track.selectClip(clip);
+          }
         });
       }
     };
@@ -282,10 +293,43 @@ export const Clip = observer(
         ? mixer.tracks[parentTrackIndex + selectedIndexOffset]
         : track;
 
+    const handleDoubleClick = (e: React.MouseEvent) => {
+      selectTrack(track);
+      selectClip(clip);
+      if (!e.ctrlKey) {
+        mixer.unselectAllTracks();
+      }
+      mixer.selectTrack(track);
+    };
+
+    const handleLockClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (
+        selected &&
+        mixer.selectedClips.every(
+          (selectedClip) => selectedClip.locked === clip.locked
+        )
+      ) {
+        mixer.selectedClips.forEach((selectedClip) => {
+          selectedClip.setLocked(!clip.locked);
+          const parentTrack = mixer.tracks.find(
+            (track) => track.id === selectedClip.trackId
+          );
+          parentTrack?.unselectClip(selectedClip);
+        });
+      } else {
+        clip.setLocked(!clip.locked);
+        if (clip.locked && selected) {
+          track.unselectClip(clip);
+        }
+      }
+    };
+
     return (
       <div
         onMouseDown={onMouseDown}
         onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         key={clip.id}
         className=" flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
         style={{
@@ -300,12 +344,22 @@ export const Clip = observer(
           cursor: dragging ? "grabbing" : "auto",
         }}
       >
-        <p
-          style={{ maxWidth: clipWidth }}
-          className="text-black pl-[6px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
-        >
-          {clipInfoString}
-        </p>
+        <span className="flex items-center pl-[2px] pt-[2px]">
+          <button
+            className="flex items-center justify-center"
+            style={{ color: "#222", width: "1rem" }}
+            onClick={handleLockClick}
+          >
+            {clip.locked ? <LockedIcon /> : <UnlockedIcon />}
+          </button>
+          <p
+            style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
+            className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
+          >
+            {clipInfoString}
+          </p>
+        </span>
+
         {clip?.type === "audio" && (
           <AudioClipView track={currentDragTrack || track} clip={clip} />
         )}

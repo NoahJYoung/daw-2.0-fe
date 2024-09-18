@@ -1,96 +1,137 @@
-import { Slider } from "@/components/ui/slider";
 import { observer } from "mobx-react-lite";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
 import { Knob } from "@/components/ui/custom/studio/studio-knob";
+import { useRef } from "react";
+import { GrPower } from "react-icons/gr";
+import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
 
 interface TestComponentProps {
   track: Track;
+  trackNumber: number;
 }
 
-export const ChannelStrip = observer(({ track }: TestComponentProps) => {
-  const { mixer } = useAudioEngine();
+export const ChannelStrip = observer(
+  ({ track, trackNumber }: TestComponentProps) => {
+    const { mixer } = useAudioEngine();
+    const trackNameRef = useRef<HTMLInputElement>(null);
 
-  const {
-    localValue: volumeInput,
-    onValueChange: onVolumeChange,
-    onValueCommit: commitVolumeChange,
-  } = useDeferredUpdate<number[]>(
-    [track.volume],
-    (values) => track.setVolume(values[0]),
-    [track.volume]
-  );
+    const {
+      localValue: volumeInput,
+      onValueChange: onVolumeChange,
+      onValueCommit: commitVolumeChange,
+    } = useDeferredUpdate<number[]>(
+      [track.volume],
+      (values) => track.setVolume(values[0]),
+      [track.volume]
+    );
 
-  const {
-    localValue: panInput,
-    onValueChange: onPanChange,
-    onValueCommit: commitPanChange,
-  } = useDeferredUpdate<number>(track.pan, (value) => track.setPan(value), [
-    track.pan,
-  ]);
+    const {
+      localValue: panInput,
+      onValueChange: onPanChange,
+      onValueCommit: commitPanChange,
+    } = useDeferredUpdate<number>(track.pan, (value) => track.setPan(value), [
+      track.pan,
+    ]);
 
-  const selected = mixer.selectedTracks.includes(track);
+    const selected = mixer.selectedTracks.includes(track);
 
-  const displayPercentage = (value: number) => {
-    const percentage = Math.round(Math.abs(value) * 100);
-    if (value < 0) {
-      return `L${percentage}%`;
-    }
-    if (value > 0) {
-      return `R${percentage}%`;
-    }
+    const displayPercentage = (value: number) => {
+      const percentage = Math.round(Math.abs(value) * 100);
+      if (value < 0) {
+        return `L${percentage}%`;
+      }
+      if (value > 0) {
+        return `R${percentage}%`;
+      }
 
-    return `${percentage}%`;
-  };
+      return `${percentage}%`;
+    };
 
-  const resetPan = () => track.setPan(0);
+    const resetPan = () => track.setPan(0);
 
-  return (
-    <div
-      className="flex flex-col items-center"
-      style={{
-        padding: 10,
-        width: 120,
-        height: 320,
-        border: selected ? "2px solid red" : "1px solid #888",
-      }}
-    >
-      <Button onClick={() => track.setActive(!track.active)}>
-        {track.active ? "Deactivate" : "Activate"}
-      </Button>
+    const handleToggleActive = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      track.setActive(!track.active);
+    };
 
-      <Input
-        onChange={(e) => track.setName(e.target.value)}
-        value={track.name}
-      />
-      <div className="flex w-full gap-1 items-center justify-between py-3">
-        <p>L</p>
-        <Knob
-          onValueChange={onPanChange}
-          onValueCommit={commitPanChange}
-          renderValue={displayPercentage}
-          onDoubleClick={resetPan}
-          value={panInput}
-          min={-1}
-          max={1}
-          step={0.02}
-          size={36}
-          double={true}
-        />
-        <p>R</p>
+    return (
+      <div
+        className={`flex flex-col flex-shrink-0 items-center ${
+          selected ? "bg-surface-3" : "bg-surface-2"
+        } border border-surface-1`}
+        style={{
+          width: 120,
+          height: "100%",
+        }}
+      >
+        <div className="flex gap-1 items-center px-2 py-1 border-b-2 border-surface-1">
+          <Button
+            onClick={handleToggleActive}
+            className={`bg-transparent ${
+              track.active ? "text-brand-1" : "text-surface-4"
+            } rounded-full text-xl w-5 h-5 p-0 flex items-center justify-center bg-transparent hover:bg-transparent hover:opacity-80`}
+          >
+            <GrPower className="text-lg w-5 h-5 flex items-center bg-transparent justify-center" />
+          </Button>
+          <input
+            ref={trackNameRef}
+            type="text"
+            className={` text-surface-6 w-full bg-transparent focus:bg-surface-3 focus:select-text my-1 p-1 text-ellipsis focus:outline-none text-sm h-6`}
+            value={track.name}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => track.setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                trackNameRef?.current?.blur();
+              }
+            }}
+          />
+        </div>
+
+        <div className="flex w-full gap-1 items-center justify-center py-3">
+          <Knob
+            onValueChange={onPanChange}
+            onValueCommit={commitPanChange}
+            renderValue={displayPercentage}
+            onDoubleClick={resetPan}
+            value={panInput}
+            min={-1}
+            max={1}
+            step={0.02}
+            size={32}
+            double={true}
+            minLabel="L"
+            maxLabel="R"
+          />
+        </div>
+
+        <div className="h-full py-1">
+          <StudioSlider
+            onValueChange={onVolumeChange}
+            orientation="vertical"
+            onValueCommit={commitVolumeChange}
+            step={0.01}
+            min={-100}
+            max={0}
+            value={volumeInput}
+          />
+        </div>
+        <div className="border-t-2 h-[64px] border-t-surface-1 w-full text-center flex justify-center relative">
+          <p className="font-bold text-surface-5">{trackNumber}</p>
+          <span
+            className="absolute border border-surface-1"
+            style={{
+              width: "75%",
+              height: 6,
+              background: track.color,
+              bottom: 0,
+              opacity: selected ? 1 : 0.75,
+            }}
+          />
+        </div>
       </div>
-
-      <Slider
-        onValueChange={onVolumeChange}
-        orientation="vertical"
-        onValueCommit={commitVolumeChange}
-        step={0.01}
-        min={-100}
-        max={0}
-        value={volumeInput}
-      />
-    </div>
-  );
-});
+    );
+  }
+);

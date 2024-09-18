@@ -6,9 +6,9 @@ export const MixerView = observer(() => {
   const { mixer } = useAudioEngine();
 
   return (
-    <div className="flex gap-1">
-      {mixer.tracks.map((track) => (
-        <ChannelStrip key={track.id} track={track} />
+    <div className="flex w-full h-full bg-transparent sm:pb-[2px]">
+      {mixer.tracks.map((track, i) => (
+        <ChannelStrip key={track.id} track={track} trackNumber={i + 1} />
       ))}
     </div>
   );

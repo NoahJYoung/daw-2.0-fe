@@ -10,6 +10,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   start: prop<number>().withSetter(),
   events: prop<MidiEvent[]>(() => []),
   loopSamples: prop<number>(0),
+  locked: prop<boolean>(false).withSetter(),
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
 }) {

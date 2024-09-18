@@ -13,6 +13,8 @@ interface KnobProps {
   color?: string;
   double?: boolean;
   showValue?: boolean;
+  minLabel?: string;
+  maxLabel?: string;
 }
 
 export const Knob = ({
@@ -25,9 +27,11 @@ export const Knob = ({
   max,
   step,
   size,
-  color = "#FD355D",
+  color,
   double,
   showValue = true,
+  minLabel,
+  maxLabel,
 }: KnobProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const knobRef = useRef<SVGSVGElement>(null);
@@ -164,7 +168,11 @@ export const Knob = ({
   ]);
 
   return (
-    <span className="relative">
+    <span
+      onMouseDown={handleMouseDown}
+      onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
+      className="relative"
+    >
       <svg
         ref={knobRef}
         width={size}
@@ -172,47 +180,73 @@ export const Knob = ({
         className="flex justify-center items-center"
       >
         <circle
-          className="fill-current text-surface-3"
-          onMouseDown={handleMouseDown}
-          onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
+          className="fill-current text-surface-4"
           cx={size / 2}
           cy={size / 2}
           r={size / 2}
         />
 
         <circle
-          className="fill-current text-surface-1"
-          onMouseDown={handleMouseDown}
-          onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
+          className="fill-current text-surface-2"
           cx={size / 2}
           cy={size / 2}
-          r={(size / 2) * 0.8}
+          r={size / 2 - 3}
         />
 
         {value !== midValue && (
-          <path d={arcPath} stroke={color} strokeWidth="4" fill="none" />
+          <path
+            d={arcPath}
+            stroke={color}
+            className={color ? "" : "stroke-current text-surface-6"}
+            strokeWidth={3}
+            fill="none"
+          />
         )}
 
         <line
           x1={size / 2}
           y1={size / 2}
           x2={size / 2}
-          y2={0}
+          y2={1}
           stroke={color}
+          className={color ? "" : "stroke-current text-surface-6"}
           strokeWidth={2}
           transform={`rotate(${endAngle}, ${size / 2}, ${size / 2})`}
         />
       </svg>
       {showValue && isDragging && (
         <span
-          style={{ top: size + 2, left: -5, zIndex: 2 }}
-          className="absolute text-xs p-1 bg-surface-2 border border-surface-3"
+          style={{ top: size * 1.3, left: -5, zIndex: 2 }}
+          className="absolute w-full flex items-center justify-center"
         >
-          {renderValue
-            ? renderValue(value)
-            : value.toFixed(step.toString().split(".")[1]?.length || 0)}
+          <span className="text-xs p-1 bg-surface-2 border border-surface-3">
+            {renderValue
+              ? renderValue(value)
+              : value.toFixed(step.toString().split(".")[1]?.length || 0)}
+          </span>
         </span>
       )}
+      <span
+        style={{ width: size * 1.2, left: -size * 0.1, top: size - size * 0.1 }}
+        className="flex justify-between absolute"
+      >
+        {minLabel && (
+          <p
+            className="text-surface-5 font-bold select-none"
+            style={{ fontSize: Math.min(Math.max(size * 0.3, 8), 12) }}
+          >
+            {minLabel}
+          </p>
+        )}
+        {maxLabel && (
+          <p
+            className="text-surface-5 font-bold select-none"
+            style={{ fontSize: Math.min(Math.max(size * 0.3, 8), 12) }}
+          >
+            {maxLabel}
+          </p>
+        )}
+      </span>
     </span>
   );
 };

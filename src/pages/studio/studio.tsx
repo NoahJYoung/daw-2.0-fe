@@ -1,5 +1,9 @@
 import { observer } from "mobx-react-lite";
-import { AudioEngineProvider, UndoManagerProvider } from "./hooks";
+import {
+  AudioEngineProvider,
+  BottomPanelProvider,
+  UndoManagerProvider,
+} from "./hooks";
 import {
   BottomPanel,
   HotKeysManager,
@@ -13,11 +17,13 @@ export const Studio = observer(() => {
     <AudioEngineProvider>
       <UndoManagerProvider>
         <HotKeysManager />
-        <StudioLayout
-          upperPanel={<TopPanel />}
-          middlePanel={<MainControls />}
-          lowerPanel={<BottomPanel />}
-        />
+        <BottomPanelProvider>
+          <StudioLayout
+            upperPanel={<TopPanel />}
+            middlePanel={<MainControls />}
+            lowerPanel={<BottomPanel />}
+          />
+        </BottomPanelProvider>
       </UndoManagerProvider>
     </AudioEngineProvider>
   );

@@ -3,5 +3,7 @@ interface TransportPositionProps {
 }
 
 export const TransportPosition = ({ position }: TransportPositionProps) => (
-  <span className="bg-transparent text-surface-4 text-2xl">{position}</span>
+  <span className="bg-transparent w-full justify-center text-surface-4 mt-1 text-2xl">
+    {position}
+  </span>
 );

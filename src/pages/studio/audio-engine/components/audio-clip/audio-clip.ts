@@ -14,6 +14,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   trackId: prop<string>(),
   start: prop<number>().withSetter(),
   loopSamples: prop<number>(0),
+  locked: prop<boolean>(false).withSetter(),
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
 }) {
