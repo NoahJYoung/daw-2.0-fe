@@ -84,7 +84,7 @@ export const Clip = observer(
     setSelectedOffset,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
-    const undoManager = useUndoManager();
+    const { undoManager } = useUndoManager();
     const { selectTrack, selectClip } = useBottomPanelViewController();
     const selected = mixer.selectedClips.includes(clip);
 
@@ -187,6 +187,9 @@ export const Clip = observer(
 
     const onMouseUp = useCallback(
       (e: MouseEvent) => {
+        if (!dragging) {
+          return;
+        }
         e.stopPropagation();
         mixer.selectedClips.forEach((selectedClip) =>
           selectedClip.setStart(

@@ -17,7 +17,7 @@ interface StudioLayoutProps {
 export const StudioLayout = observer(
   ({ upperPanel, lowerPanel, middlePanel }: StudioLayoutProps) => {
     const { mixer } = useAudioEngine();
-    const undoManager = useUndoManager();
+    const { undoManager } = useUndoManager();
     const { panelGroupRef, bottomPanelRef, topPanelRef, toggleBottomPanel } =
       useBottomPanelViewController();
 

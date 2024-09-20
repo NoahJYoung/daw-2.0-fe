@@ -33,7 +33,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   mute: prop(false).withSetter(),
   pan: prop(0).withSetter(),
   laneHeight: prop(INITIAL_LANE_HEIGHT),
-  volume: prop(-12).withSetter(),
+  volume: prop(0).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
   input: prop<string | null>("mic").withSetter(),
 }) {
@@ -42,7 +42,9 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 
   sync() {
     const { volume, pan, mute } = this;
-    this.channel.set({ volume, pan, mute });
+    this.channel.set({ mute });
+    this.channel.volume.linearRampTo(volume, 0.01);
+    this.channel.pan.linearRampTo(pan, 0.01);
   }
 
   getRefId() {
@@ -52,15 +54,20 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   @modelAction
   createAudioClip = (clip: AudioClip) => {
     this.clips.push(clip);
+    clip.player.connect(this.channel);
   };
 
   @modelAction
-  deleteClip(audioClip: Clip) {
-    const index = this.clips.indexOf(audioClip);
+  deleteClip(clip: Clip) {
+    const index = this.clips.indexOf(clip);
     if (index >= 0) {
       this.clips.splice(index, 1);
     }
-    audioClip.dispose();
+    if (clip.type === "audio") {
+      clip.player.disconnect(this.channel);
+    }
+
+    clip.dispose();
   }
 
   @computed

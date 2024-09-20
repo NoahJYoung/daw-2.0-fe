@@ -1,26 +1,30 @@
 import { useState, useEffect } from "react";
+import { useUndoManager } from "../use-undo-manager";
 
 export function useDeferredUpdate<T = number>(
-  externalValue: T,
-  onCommit: (value: T) => void,
-  deps: unknown[] = []
+  value: T,
+  onCommit: (value: T) => void
 ) {
-  const [localValue, setLocalValue] = useState<T>(externalValue);
+  const { undoManager } = useUndoManager();
+  const [initialValue, setInitialValue] = useState(value);
 
-  const onValueCommit = () => {
-    onCommit(localValue);
+  const onValueCommit = (newValue: T) => {
+    undoManager.withoutUndo(() => onCommit(initialValue));
+
+    setInitialValue(newValue);
   };
 
   const onValueChange = (newValue: T) => {
-    setLocalValue(newValue);
+    undoManager.withoutUndo(() => {
+      onCommit(newValue);
+    });
   };
 
   useEffect(() => {
-    setLocalValue(externalValue);
-  }, deps);
+    onCommit(initialValue);
+  }, [initialValue]);
 
   return {
-    localValue,
     onValueChange,
     onValueCommit,
   };

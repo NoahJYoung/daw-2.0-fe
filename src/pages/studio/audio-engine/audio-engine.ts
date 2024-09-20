@@ -17,15 +17,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   state: AudioEngineState = AudioEngineState.stopped;
   clipboard = new Clipboard();
 
-  init() {
-    const ctx = new AudioContext({ sampleRate: 44100 });
-    const toneCtx = new Tone.Context(ctx);
-    Tone.setContext(toneCtx);
-    console.log(
-      "Initializing context with sample rate: ",
-      Tone.getContext().sampleRate
-    );
-  }
+  init() {}
 
   @action
   private setState(state: AudioEngineState) {

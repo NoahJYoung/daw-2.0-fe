@@ -12,7 +12,7 @@ export const BottomPanel = observer(() => {
   const triggerClassName =
     "data-[state=active]:border-b-surface-6 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
-  const contentClassName = "w-full flex-shrink-0 h-full bg-transparent";
+  const contentClassName = "w-full pt-2 flex-shrink-0 h-full bg-transparent";
   return (
     <Tabs
       value={mode}

@@ -26,7 +26,7 @@ interface TrackPanelProps {
 
 export const TrackPanel = observer(
   ({ track, trackNumber, parentRef }: TrackPanelProps) => {
-    const undoManager = useUndoManager();
+    const { undoManager } = useUndoManager();
     const { mixer } = useAudioEngine();
     const [isResizing, setIsResizing] = useState(false);
     const [isDragging, setIsDragging] = useState(false);

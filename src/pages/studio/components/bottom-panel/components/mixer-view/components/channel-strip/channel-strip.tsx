@@ -7,33 +7,23 @@ import { useRef } from "react";
 import { GrPower } from "react-icons/gr";
 import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
 
-interface TestComponentProps {
+interface ChannelStripProps {
   track: Track;
   trackNumber: number;
 }
 
 export const ChannelStrip = observer(
-  ({ track, trackNumber }: TestComponentProps) => {
+  ({ track, trackNumber }: ChannelStripProps) => {
     const { mixer } = useAudioEngine();
     const trackNameRef = useRef<HTMLInputElement>(null);
 
-    const {
-      localValue: volumeInput,
-      onValueChange: onVolumeChange,
-      onValueCommit: commitVolumeChange,
-    } = useDeferredUpdate<number[]>(
-      [track.volume],
-      (values) => track.setVolume(values[0]),
-      [track.volume]
-    );
+    const { onValueChange: onVolumeChange, onValueCommit: commitVolumeChange } =
+      useDeferredUpdate<number[]>([track.volume], (values) =>
+        track.setVolume(values[0])
+      );
 
-    const {
-      localValue: panInput,
-      onValueChange: onPanChange,
-      onValueCommit: commitPanChange,
-    } = useDeferredUpdate<number>(track.pan, (value) => track.setPan(value), [
-      track.pan,
-    ]);
+    const { onValueChange: onPanChange, onValueCommit: commitPanChange } =
+      useDeferredUpdate<number>(track.pan, (value) => track.setPan(value));
 
     const selected = mixer.selectedTracks.includes(track);
 
@@ -96,7 +86,7 @@ export const ChannelStrip = observer(
             onValueCommit={commitPanChange}
             renderValue={displayPercentage}
             onDoubleClick={resetPan}
-            value={panInput}
+            value={track.pan}
             min={-1}
             max={1}
             step={0.02}
@@ -114,8 +104,8 @@ export const ChannelStrip = observer(
             onValueCommit={commitVolumeChange}
             step={0.01}
             min={-100}
-            max={0}
-            value={volumeInput}
+            max={6}
+            value={[track.volume]}
           />
         </div>
         <div className="border-t-2 h-[64px] border-t-surface-1 w-full text-center flex justify-center relative">

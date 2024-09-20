@@ -30,7 +30,7 @@ interface TimelineViewProps {
 export const TimelineView = observer(
   ({ onScroll, scrollRef }: TimelineViewProps) => {
     const audioEngine = useAudioEngine();
-    const undoManager = useUndoManager();
+    const { undoManager } = useUndoManager();
     const { timeline, mixer } = audioEngine;
     const { pixels, measures, timeSignature } = timeline;
 

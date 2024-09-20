@@ -27,7 +27,7 @@ interface ToolbarProps {
 
 export const Toolbar = observer(
   ({ panelExpanded, togglePanelView }: ToolbarProps) => {
-    const undoManager = useUndoManager();
+    const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
     const audioEngine = useAudioEngine();
     const { timeline } = audioEngine;

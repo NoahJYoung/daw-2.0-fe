@@ -5,8 +5,10 @@ import { PlaceholderClip } from "./components/clip/components";
 import { useEffect, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
+import { BsFiletypeMp3 as ImportFileIcon } from "react-icons/bs";
 import {
   deleteSelectedClips,
+  importFromFile,
   joinClips,
   pasteClips,
   selectAllClips,
@@ -37,7 +39,7 @@ interface ClipsProps {
 export const Clips = observer(
   ({ startMeasure, endMeasure, scrollRef, setPlayheadLeft }: ClipsProps) => {
     const { mixer, timeline, state, clipboard } = useAudioEngine();
-    const undoManager = useUndoManager();
+    const { undoManager } = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
     const [selectedXOffset, setSelectedXOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
@@ -104,6 +106,12 @@ export const Clips = observer(
         onClick: () => deleteSelectedClips(mixer, undoManager),
         icon: DeleteIcon,
         shortcut: "delete",
+      },
+      { separator: true },
+      {
+        label: "Import file",
+        onClick: () => importFromFile(mixer.selectedTracks),
+        icon: ImportFileIcon,
       },
     ];
 

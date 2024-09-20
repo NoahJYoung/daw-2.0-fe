@@ -11,7 +11,7 @@ const buttonOnClassName = "bg-surface-2 text-surface-7";
 
 export const TransportControls = observer(() => {
   const audioEngine = useAudioEngine();
-  const undoManager = useUndoManager();
+  const { undoManager } = useUndoManager();
 
   const play = useCallback(() => {
     undoManager.withoutUndo(() => {

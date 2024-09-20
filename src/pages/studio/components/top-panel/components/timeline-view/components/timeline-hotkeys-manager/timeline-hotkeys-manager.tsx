@@ -11,7 +11,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 export const TimelineHotKeysManager = observer(() => {
-  const undoManager = useUndoManager();
+  const { undoManager } = useUndoManager();
   const { toast } = useToast();
   const { mixer, timeline, clipboard } = useAudioEngine();
 

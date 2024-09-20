@@ -3,11 +3,13 @@ import { computed } from "mobx";
 import { Track } from "../track";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { trackRef } from "../refs";
+import { Master } from "../master";
 
 @model("AudioEngine/Mixer")
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   tracks: prop<Track[]>(() => []),
   selectedRefs: prop<Ref<Track>[]>(() => []),
+  master: prop<Master>(() => new Master({})),
   topPanelHeight: prop<number>(window.innerHeight - 156),
 }) {
   @modelAction
@@ -15,6 +17,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     const track = new Track({});
     this.tracks.push(track);
     this.refreshTopPanelHeight();
+    track.channel.toDestination();
   };
 
   @modelAction

@@ -2,6 +2,7 @@ import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 
 import { cn } from "@/lib/utils";
+import { SliderThumb } from "./slider-thumb";
 
 const StudioSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
@@ -32,7 +33,12 @@ const StudioSlider = React.forwardRef<
         )}
       />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block bg-zinc-150 data-[orientation='vertical']:h-2 data-[orientation='vertical']:w-8 data-[orientation='horizontal']:h-8 data-[orientation='horizontal']:w-2 cursor-grab rounded-xxs border border-zinc-800 bg-zinc-100 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:scale-125 active:cursor-grabbing" />
+    <SliderPrimitive.Thumb className="block cursor-grab rounded-none border-none">
+      <SliderThumb
+        className="cursor-grab text-surface-6 disabled:pointer-events-none opacity-100 disabled:opacity-50 hover:scale-105 active:cursor-grabbing"
+        orientation={props.orientation ?? "vertical"}
+      />
+    </SliderPrimitive.Thumb>
   </SliderPrimitive.Root>
 ));
 StudioSlider.displayName = SliderPrimitive.Root.displayName;

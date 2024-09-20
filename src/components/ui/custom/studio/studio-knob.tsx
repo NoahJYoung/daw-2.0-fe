@@ -115,13 +115,17 @@ export const Knob = ({
 
   const handleMouseDown = () => {
     document.body.style.userSelect = "none";
+    document.body.style.cursor = "grabbing";
     setIsDragging(true);
   };
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
-    onValueCommit(value);
+    if (isDragging) {
+      onValueCommit(value);
+    }
     document.body.style.userSelect = "";
-  }, [onValueCommit, value]);
+    document.body.style.cursor = "";
+  }, [isDragging, onValueCommit, value]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
@@ -171,13 +175,15 @@ export const Knob = ({
     <span
       onMouseDown={handleMouseDown}
       onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
-      className="relative"
+      className={`relative ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
     >
       <svg
         ref={knobRef}
         width={size}
         height={size}
-        className="flex justify-center items-center"
+        className={`flex justify-center items-center hover:scale-105 ${
+          isDragging ? "scale-105" : ""
+        }`}
       >
         <circle
           className="fill-current text-surface-4"

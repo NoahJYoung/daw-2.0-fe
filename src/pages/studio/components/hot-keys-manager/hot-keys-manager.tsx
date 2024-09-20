@@ -4,7 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { observer } from "mobx-react-lite";
 
 export const HotKeysManager = observer(() => {
-  const undoManager = useUndoManager();
+  const { undoManager } = useUndoManager();
   const audioEngine = useAudioEngine();
   const { toast } = useToast();
 
