@@ -18,6 +18,7 @@ import {
   MAX_LANE_HEIGHT,
   MIN_LANE_HEIGHT,
 } from "../../constants";
+import { METER_SMOOTHING_VALUE } from "@/pages/studio/utils/constants";
 
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -39,12 +40,21 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 }) {
   channel = new Tone.Channel();
   waveform = new Tone.Waveform();
+  meterL = new Tone.Meter(METER_SMOOTHING_VALUE);
+  meterR = new Tone.Meter(METER_SMOOTHING_VALUE);
+  splitter = new Tone.Split();
 
   sync() {
     const { volume, pan, mute } = this;
     this.channel.set({ mute });
     this.channel.volume.linearRampTo(volume, 0.01);
     this.channel.pan.linearRampTo(pan, 0.01);
+  }
+
+  init() {
+    this.channel.connect(this.splitter);
+    this.splitter.connect(this.meterL, 0);
+    this.splitter.connect(this.meterR, 1);
   }
 
   getRefId() {

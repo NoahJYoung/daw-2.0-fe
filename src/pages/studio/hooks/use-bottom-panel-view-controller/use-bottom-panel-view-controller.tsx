@@ -61,6 +61,7 @@ interface BottomPanelContextProps {
   topPanelRef: React.RefObject<ImperativePanelHandle>;
   bottomPanelRef: React.RefObject<ImperativePanelHandle>;
   panelGroupRef: React.RefObject<ImperativePanelGroupHandle>;
+  windowSize: { height: number; width: number };
 }
 
 const BottomPanelContext = createContext<BottomPanelContextProps | undefined>(
@@ -180,6 +181,7 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
     topPanelRef,
     bottomPanelRef,
     panelGroupRef,
+    windowSize,
   };
 
   return (

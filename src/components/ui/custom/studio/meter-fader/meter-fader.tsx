@@ -1,8 +1,8 @@
-import { useDeferredUpdate } from "@/pages/studio/hooks";
+import { useDeferredUpdate, useSize } from "@/pages/studio/hooks";
 import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
 import * as Tone from "tone";
-import { MeterView } from "./components";
-import { useRef } from "react";
+import { LevelView, MeterView } from "./components";
+import { useRef, useState, useEffect } from "react";
 
 interface MeterFaderProps {
   onChange: (value: number) => void;
@@ -10,8 +10,9 @@ interface MeterFaderProps {
   step: number;
   min: number;
   max: number;
-  meter: Tone.Meter;
+  meters: Tone.Meter[];
   active?: boolean;
+  selected?: boolean;
   stopDelayMs?: number;
 }
 
@@ -21,45 +22,56 @@ export const MeterFader = ({
   min,
   max,
   step,
-  meter,
+  meters,
   active,
+  selected,
   stopDelayMs,
 }: MeterFaderProps) => {
-  const {
-    // localValue,
-    onValueChange: onValueChange,
-    onValueCommit: commitValueChange,
-  } = useDeferredUpdate<number[]>([value], (values) => onChange(values[0]));
-  const faderContainerRef = useRef<HTMLDivElement>(null);
+  const { onValueChange: onValueChange, onValueCommit: commitValueChange } =
+    useDeferredUpdate<number[]>([value], (values) => onChange(values[0]));
 
-  const height = faderContainerRef.current?.getBoundingClientRect().height || 0;
-  const width = faderContainerRef.current?.getBoundingClientRect().width || 0;
+  const faderRef = useRef<HTMLDivElement>(null);
+  const size = useSize(faderRef);
+
+  const height = size ? size.height : 0;
+  const [left, right] = meters;
 
   return (
     <div
-      ref={faderContainerRef}
-      className={`h-full w-full flex justify-center items-center gap-1 flex-shrink-0 items-center bg-surface-2`}
-      style={{
-        width: 90,
-        height: "100%",
-      }}
+      ref={faderRef}
+      className={`h-full w-full flex justify-center h-full items-center items-center ${
+        selected ? "bg-surface-3" : "bg-surface-2"
+      } relative`}
     >
-      <StudioSlider
-        onValueChange={onValueChange}
-        orientation="vertical"
-        onValueCommit={commitValueChange}
-        step={step}
-        min={min}
-        max={max}
-        value={[value]}
-      />
-      <MeterView
-        height={height}
-        width={width / 8}
-        stopDelayMs={stopDelayMs}
-        active={active}
-        meter={meter}
-      />
+      <div className="w-full h-full flex absolute justify-center">
+        <LevelView height={height} />
+        <MeterView
+          height={height}
+          width={20}
+          stopDelayMs={stopDelayMs}
+          active={active}
+          meter={left}
+        />
+
+        <StudioSlider
+          onValueChange={onValueChange}
+          orientation="vertical"
+          onValueCommit={commitValueChange}
+          step={step}
+          min={min}
+          max={max}
+          value={[value]}
+          showTrack={false}
+        />
+
+        <MeterView
+          height={height}
+          width={20}
+          stopDelayMs={stopDelayMs}
+          active={active}
+          meter={right}
+        />
+      </div>
     </div>
   );
 };

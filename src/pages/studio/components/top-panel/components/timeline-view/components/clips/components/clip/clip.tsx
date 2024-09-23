@@ -188,6 +188,7 @@ export const Clip = observer(
     const onMouseUp = useCallback(
       (e: MouseEvent) => {
         if (!dragging) {
+          setDragging(false);
           return;
         }
         e.stopPropagation();

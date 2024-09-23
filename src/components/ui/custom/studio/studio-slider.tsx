@@ -1,17 +1,22 @@
 import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
+import { SliderThumb } from "./slider-thumb";
 
 import { cn } from "@/lib/utils";
-import { SliderThumb } from "./slider-thumb";
+
+interface StudioSliderProps
+  extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
+  showTrack?: boolean;
+}
 
 const StudioSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
+  StudioSliderProps
+>(({ className, showTrack = true, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex touch-none select-none",
+      "relative flex touch-none select-none z-10",
       "data-[orientation='horizontal']:h-1 data-[orientation='horizontal']:w-full data-[orientation='horizontal']:items-center",
       "data-[orientation='vertical']:h-full data-[orientation='vertical']:w-1 data-[orientation='vertical']:justify-center",
       className
@@ -20,14 +25,15 @@ const StudioSlider = React.forwardRef<
   >
     <SliderPrimitive.Track
       className={cn(
-        "relative grow overflow-hidden rounded-full bg-secondary bg-black",
+        "relative grow overflow-hidden rounded-full",
+        showTrack ? "bg-black" : "bg-transparent",
         "data-[orientation='horizontal']:h-1 data-[orientation='horizontal']:w-full",
         "data-[orientation='vertical']:h-full data-[orientation='vertical']:w-1"
       )}
     >
       <SliderPrimitive.Range
         className={cn(
-          "absolute bg-black",
+          showTrack ? "bg-black" : "bg-transparent",
           "data-[orientation='horizontal']:h-full",
           "data-[orientation='vertical']:w-full"
         )}
@@ -35,7 +41,7 @@ const StudioSlider = React.forwardRef<
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb className="block cursor-grab rounded-none border-none">
       <SliderThumb
-        className="cursor-grab text-surface-6 disabled:pointer-events-none opacity-100 disabled:opacity-50 hover:scale-105 active:cursor-grabbing"
+        className="cursor-grab text-surface-6 disabled:pointer-events-none  opacity-100 disabled:opacity-50 hover:scale-105 active:cursor-grabbing"
         orientation={props.orientation ?? "vertical"}
       />
     </SliderPrimitive.Thumb>

@@ -6,3 +6,4 @@ export {
 } from "./use-bottom-panel-view-controller";
 export { useDeferredUpdate } from "./use-deferred-update";
 export { useRequestAnimationFrame } from "./use-request-animation-frame";
+export { useSize } from "./use-size";

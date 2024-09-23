@@ -16,26 +16,21 @@ const drawMeter = (
 
   ctx.clearRect(0, 0, width, height);
 
-  // We assume meterValue is in dB, where 0 is the max and -60 is a common lower bound
   const minDb = -100;
   const maxDb = 0;
 
-  // Clamp the meterValue to the min/max range to avoid drawing outside the canvas
   const clampedValue = Math.max(minDb, Math.min(meterValue, maxDb));
 
-  // Normalize the dB value to a 0-1 range
   const normalizedValue = (clampedValue - minDb) / (maxDb - minDb);
 
-  // Calculate the bar height based on the normalized value
   const barHeight = height * (1 - normalizedValue);
 
-  // Detect clipping (when the meter value reaches 0 dB or higher)
   const isClipping = meterValue >= 0;
 
-  // Set fill color (red if clipping, green otherwise)
-  ctx.fillStyle = isClipping ? "red" : "green";
+  ctx.fillStyle = isClipping
+    ? "rgba(227, 18, 18, 0.75)"
+    : "rgba(18, 227, 67, 0.75)";
 
-  // Draw the bar
   ctx.fillRect(0, barHeight, width, height - barHeight);
 };
 
@@ -45,11 +40,9 @@ interface MeterViewProps {
   width: number;
   stopDelayMs?: number;
   active?: boolean;
-  label?: string;
 }
 
 export const MeterView = ({
-  label,
   meter,
   height,
   width,
@@ -77,8 +70,11 @@ export const MeterView = ({
   }, [active, stopDelayMs]);
 
   return (
-    <div style={{ height, width: width, border: "1px solid black" }}>
-      <canvas height={height} width={width} ref={canvasRef} />
+    <div
+      style={{ width, height }}
+      className="bg-surface-1 h-full border border-surface-4"
+    >
+      <canvas width={width - 2} height={height} ref={canvasRef} />
     </div>
   );
 };

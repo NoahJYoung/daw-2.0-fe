@@ -1,11 +1,16 @@
 import { observer } from "mobx-react-lite";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
-import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useDeferredUpdate,
+  useSize,
+} from "@/pages/studio/hooks";
 import { Knob } from "@/components/ui/custom/studio/studio-knob";
 import { useRef } from "react";
 import { GrPower } from "react-icons/gr";
-import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
+import { MeterFader } from "@/components/ui/custom/studio/meter-fader";
+import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 
 interface ChannelStripProps {
   track: Track;
@@ -14,13 +19,8 @@ interface ChannelStripProps {
 
 export const ChannelStrip = observer(
   ({ track, trackNumber }: ChannelStripProps) => {
-    const { mixer } = useAudioEngine();
+    const { mixer, state } = useAudioEngine();
     const trackNameRef = useRef<HTMLInputElement>(null);
-
-    const { onValueChange: onVolumeChange, onValueCommit: commitVolumeChange } =
-      useDeferredUpdate<number[]>([track.volume], (values) =>
-        track.setVolume(values[0])
-      );
 
     const { onValueChange: onPanChange, onValueCommit: commitPanChange } =
       useDeferredUpdate<number>(track.pan, (value) => track.setPan(value));
@@ -46,14 +46,24 @@ export const ChannelStrip = observer(
       track.setActive(!track.active);
     };
 
+    const onVolumeChange = (value: number) => {
+      track.setVolume(value);
+    };
+
+    const active =
+      state === AudioEngineState.playing ||
+      state === AudioEngineState.recording;
+
+    const faderContainerRef = useRef<HTMLDivElement>(null);
+
+    // const size = useSize(faderContainerRef);
     return (
       <div
-        className={`flex flex-col flex-shrink-0 items-center ${
+        className={`flex flex-col h-full flex-shrink-0 items-center ${
           selected ? "bg-surface-3" : "bg-surface-2"
         } border border-surface-1`}
         style={{
           width: 120,
-          height: "100%",
         }}
       >
         <div className="flex gap-1 items-center px-2 py-1 border-b-2 border-surface-1">
@@ -80,7 +90,7 @@ export const ChannelStrip = observer(
           />
         </div>
 
-        <div className="flex w-full gap-1 items-center justify-center py-3">
+        <div className="flex w-full justify-center gap-1 items-center py-3">
           <Knob
             onValueChange={onPanChange}
             onValueCommit={commitPanChange}
@@ -97,15 +107,17 @@ export const ChannelStrip = observer(
           />
         </div>
 
-        <div className="h-full py-1">
-          <StudioSlider
-            onValueChange={onVolumeChange}
-            orientation="vertical"
-            onValueCommit={commitVolumeChange}
+        <div ref={faderContainerRef} className="h-full py-1 w-full">
+          <MeterFader
+            onChange={onVolumeChange}
             step={0.01}
-            min={-100}
+            min={-60}
             max={6}
-            value={[track.volume]}
+            value={track.volume}
+            meters={[track.meterL, track.meterR]}
+            stopDelayMs={800}
+            active={active}
+            selected={selected}
           />
         </div>
         <div className="border-t-2 h-[64px] border-t-surface-1 w-full text-center flex justify-center relative">

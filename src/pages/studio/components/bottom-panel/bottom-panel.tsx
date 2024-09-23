@@ -4,23 +4,30 @@ import { PanelMode } from "../../hooks/use-bottom-panel-view-controller/use-bott
 import { MixerView } from "./components";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRef } from "react";
 
 export const BottomPanel = observer(() => {
-  const { mode, selectedClip, selectedTrack, setMode } =
+  const { mode, selectedClip, selectedTrack, setMode, windowSize } =
     useBottomPanelViewController();
+  const tabsListRef = useRef<HTMLDivElement>(null);
 
   const triggerClassName =
     "data-[state=active]:border-b-surface-6 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
-  const contentClassName = "w-full pt-2 flex-shrink-0 h-full bg-transparent";
+  const contentClassName = "w-full pt-2 h-full bg-transparent";
+
   return (
     <Tabs
       value={mode}
       onValueChange={(e) => setMode(e as PanelMode)}
       defaultValue="MIXER"
-      className="w-full h-full min-h-[300px] max-h-[375px] bg-transparent flex flex-col items-center"
+      style={{ maxHeight: Math.min(windowSize.height, 375) }}
+      className="w-full h-full min-h-[300px] bg-transparent flex flex-col items-center"
     >
-      <TabsList className="w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs pb-3 pt-3">
+      <TabsList
+        ref={tabsListRef}
+        className="w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs pb-3 pt-3"
+      >
         <TabsTrigger className={triggerClassName} value="MIXER">
           Mixer
         </TabsTrigger>
