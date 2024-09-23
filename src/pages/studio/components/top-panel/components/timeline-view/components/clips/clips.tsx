@@ -104,12 +104,14 @@ export const Clips = observer(
       {
         label: "Delete",
         onClick: () => deleteSelectedClips(mixer, undoManager),
+        disabled: mixer.selectedClips.length < 1,
         icon: DeleteIcon,
         shortcut: "delete",
       },
       { separator: true },
       {
         label: "Import file",
+        disabled: mixer.selectedTracks.length < 1 || !sameParentTrack,
         onClick: () => importFromFile(mixer.selectedTracks),
         icon: ImportFileIcon,
       },

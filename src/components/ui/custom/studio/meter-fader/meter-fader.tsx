@@ -1,8 +1,7 @@
-import { useDeferredUpdate, useSize } from "@/pages/studio/hooks";
+import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
 import * as Tone from "tone";
 import { LevelView, MeterView } from "./components";
-import { useRef, useState, useEffect } from "react";
 
 interface MeterFaderProps {
   onChange: (value: number) => void;
@@ -10,6 +9,8 @@ interface MeterFaderProps {
   step: number;
   min: number;
   max: number;
+  faderHeight: number;
+
   meters: Tone.Meter[];
   active?: boolean;
   selected?: boolean;
@@ -26,27 +27,26 @@ export const MeterFader = ({
   active,
   selected,
   stopDelayMs,
+  faderHeight,
 }: MeterFaderProps) => {
   const { onValueChange: onValueChange, onValueCommit: commitValueChange } =
     useDeferredUpdate<number[]>([value], (values) => onChange(values[0]));
 
-  const faderRef = useRef<HTMLDivElement>(null);
-  const size = useSize(faderRef);
-
-  const height = size ? size.height : 0;
   const [left, right] = meters;
 
   return (
     <div
-      ref={faderRef}
       className={`h-full w-full flex justify-center h-full items-center items-center ${
         selected ? "bg-surface-3" : "bg-surface-2"
       } relative`}
     >
-      <div className="w-full h-full flex absolute justify-center">
-        <LevelView height={height} />
+      <div
+        style={{ height: faderHeight }}
+        className="w-full flex absolute justify-center"
+      >
+        <LevelView height={faderHeight} />
         <MeterView
-          height={height}
+          height={faderHeight}
           width={20}
           stopDelayMs={stopDelayMs}
           active={active}
@@ -57,6 +57,7 @@ export const MeterFader = ({
           onValueChange={onValueChange}
           orientation="vertical"
           onValueCommit={commitValueChange}
+          style={{ height: faderHeight }}
           step={step}
           min={min}
           max={max}
@@ -65,7 +66,7 @@ export const MeterFader = ({
         />
 
         <MeterView
-          height={height}
+          height={faderHeight}
           width={20}
           stopDelayMs={stopDelayMs}
           active={active}

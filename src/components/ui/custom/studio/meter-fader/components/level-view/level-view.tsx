@@ -3,7 +3,7 @@ interface LevelViewProps {
 }
 
 export const LevelView = ({ height }: LevelViewProps) => {
-  const heightOffset = height * 0.02;
+  const heightOffset = Math.round(height * 0.02);
   const renderSixDbValues = height >= 170;
   return (
     <svg
@@ -64,9 +64,9 @@ export const LevelView = ({ height }: LevelViewProps) => {
       <line
         className="stroke-current text-surface-4"
         x1="32"
-        y1="0"
+        y1={heightOffset}
         x2="80"
-        y2="0"
+        y2={heightOffset}
         strokeWidth="1"
       />
       <line
@@ -75,7 +75,6 @@ export const LevelView = ({ height }: LevelViewProps) => {
         y1={height * 0.125 - heightOffset}
         x2="80"
         y2={height * 0.125 - heightOffset}
-        stroke="black"
         strokeWidth="1"
       />
       <line
@@ -84,7 +83,6 @@ export const LevelView = ({ height }: LevelViewProps) => {
         y1={height * 0.25 - heightOffset}
         x2="80"
         y2={height * 0.25 - heightOffset}
-        stroke="black"
         strokeWidth="1"
       />
       <line
@@ -93,7 +91,6 @@ export const LevelView = ({ height }: LevelViewProps) => {
         y1={height * 0.4375 - heightOffset}
         x2="80"
         y2={height * 0.4375 - heightOffset}
-        stroke="black"
         strokeWidth="1"
       />
 
@@ -103,16 +100,14 @@ export const LevelView = ({ height }: LevelViewProps) => {
         y1={height * 0.625 - heightOffset}
         x2="80"
         y2={height * 0.625 - heightOffset}
-        stroke="black"
         strokeWidth="1"
       />
       <line
         className="stroke-current text-surface-4"
         x1="32"
-        y1={height}
+        y1={height - heightOffset}
         x2="80"
-        y2={height}
-        stroke="black"
+        y2={height - heightOffset}
         strokeWidth="1"
       />
     </svg>

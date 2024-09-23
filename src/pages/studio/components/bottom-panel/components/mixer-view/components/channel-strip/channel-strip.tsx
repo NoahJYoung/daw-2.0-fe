@@ -1,11 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
-import {
-  useAudioEngine,
-  useDeferredUpdate,
-  useSize,
-} from "@/pages/studio/hooks";
+import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
 import { Knob } from "@/components/ui/custom/studio/studio-knob";
 import { useRef } from "react";
 import { GrPower } from "react-icons/gr";
@@ -15,10 +11,11 @@ import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 interface ChannelStripProps {
   track: Track;
   trackNumber: number;
+  mixerHeight: number;
 }
 
 export const ChannelStrip = observer(
-  ({ track, trackNumber }: ChannelStripProps) => {
+  ({ track, trackNumber, mixerHeight }: ChannelStripProps) => {
     const { mixer, state } = useAudioEngine();
     const trackNameRef = useRef<HTMLInputElement>(null);
 
@@ -56,7 +53,8 @@ export const ChannelStrip = observer(
 
     const faderContainerRef = useRef<HTMLDivElement>(null);
 
-    // const size = useSize(faderContainerRef);
+    const faderHeight = mixerHeight - 138;
+
     return (
       <div
         className={`flex flex-col h-full flex-shrink-0 items-center ${
@@ -64,9 +62,13 @@ export const ChannelStrip = observer(
         } border border-surface-1`}
         style={{
           width: 120,
+          height: mixerHeight,
         }}
       >
-        <div className="flex gap-1 items-center px-2 py-1 border-b-2 border-surface-1">
+        <div
+          style={{ height: 42 }}
+          className="flex gap-1 items-center px-2 py-1 border-b-2 border-surface-1"
+        >
           <Button
             onClick={handleToggleActive}
             className={`bg-transparent ${
@@ -90,7 +92,10 @@ export const ChannelStrip = observer(
           />
         </div>
 
-        <div className="flex w-full justify-center gap-1 items-center py-3">
+        <div
+          style={{ height: 56 }}
+          className="flex w-full justify-center gap-1 items-center py-3"
+        >
           <Knob
             onValueChange={onPanChange}
             onValueCommit={commitPanChange}
@@ -107,8 +112,9 @@ export const ChannelStrip = observer(
           />
         </div>
 
-        <div ref={faderContainerRef} className="h-full py-1 w-full">
+        <div ref={faderContainerRef} className="h-full w-full">
           <MeterFader
+            faderHeight={faderHeight}
             onChange={onVolumeChange}
             step={0.01}
             min={-60}
@@ -120,7 +126,7 @@ export const ChannelStrip = observer(
             selected={selected}
           />
         </div>
-        <div className="border-t-2 h-[64px] border-t-surface-1 w-full text-center flex justify-center relative">
+        <div className="border-t-2 h-[48px] border-t-surface-1 w-full text-center flex justify-center relative">
           <p className="font-bold text-surface-5">{trackNumber}</p>
           <span
             className="absolute border border-surface-1"
