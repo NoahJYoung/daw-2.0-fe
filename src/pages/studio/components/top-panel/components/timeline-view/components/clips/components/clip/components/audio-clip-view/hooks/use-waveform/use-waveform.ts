@@ -1,17 +1,22 @@
 import { AudioClip, Track } from "@/pages/studio/audio-engine/components";
-import { waveformCache } from "@/pages/studio/audio-engine/components/waveform-cache";
+import {
+  Peak,
+  waveformCache,
+} from "@/pages/studio/audio-engine/components/waveform-cache";
 import { useAudioEngine } from "@/pages/studio/hooks";
-import { useEffect, useRef } from "react";
-import { drawWaveform, normalizePeaks } from "./helpers";
+import { useEffect, useState } from "react";
+import { normalizePeaks } from "./helpers";
 
 export const useWaveform = (clip: AudioClip, track: Track) => {
   const { timeline } = useAudioEngine();
   const width = timeline.samplesToPixels(clip.length);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const adjustedHeight = track.laneHeight - 30;
 
   const waveformMagnificationValue = 1;
+
+  const maxCanvasWidth = 4000;
+  const [peakChunks, setPeakChunks] = useState<Peak[][]>([]);
 
   useEffect(() => {
     if (clip.buffer) {
@@ -26,7 +31,21 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
           adjustedHeight,
           waveformMagnificationValue
         );
-        drawWaveform(normalizedPeaks, canvasRef);
+
+        const newPeakChunks: Peak[][] = [];
+        const totalChunks = Math.ceil(normalizedPeaks.length / maxCanvasWidth);
+
+        for (let i = 0; i < totalChunks; i++) {
+          const startSamples = i * maxCanvasWidth;
+          const endSamples = Math.min(
+            startSamples + maxCanvasWidth,
+            normalizedPeaks.length
+          );
+          const chunk = normalizedPeaks.slice(startSamples, endSamples);
+          newPeakChunks.push(chunk);
+        }
+
+        setPeakChunks(newPeakChunks);
       }
     }
   }, [
@@ -39,7 +58,13 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
     waveformMagnificationValue,
     adjustedHeight,
     clip.id,
+    maxCanvasWidth,
   ]);
 
-  return { canvasRef, width, height: adjustedHeight };
+  return {
+    width,
+    height: adjustedHeight,
+    peakChunks,
+    samplesPerPixel: timeline.samplesPerPixel,
+  };
 };

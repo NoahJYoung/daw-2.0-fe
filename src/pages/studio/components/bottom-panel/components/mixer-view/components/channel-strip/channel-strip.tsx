@@ -119,7 +119,15 @@ export const ChannelStrip = observer(
           style={{ height: 56 }}
           className="flex w-full justify-evenly gap-1 items-center py-3"
         >
-          <div className="flex-shrink-0 w-5" />
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              track.setMute(!track.mute);
+            }}
+            className={track.mute ? activeButtonClass : baseButtonClass}
+          >
+            M
+          </Button>
           <Knob
             onValueChange={onPanChange}
             onValueCommit={commitPanChange}
@@ -134,23 +142,12 @@ export const ChannelStrip = observer(
             minLabel="L"
             maxLabel="R"
           />
-          <span className="flex flex-col justify-space gap-1 items-center">
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                track.setMute(!track.mute);
-              }}
-              className={track.mute ? activeButtonClass : baseButtonClass}
-            >
-              M
-            </Button>
-            <Button
-              onClick={(e) => e.stopPropagation()}
-              className={baseButtonClass}
-            >
-              S
-            </Button>
-          </span>
+          <Button
+            onClick={(e) => e.stopPropagation()}
+            className={baseButtonClass}
+          >
+            S
+          </Button>
         </div>
 
         <div ref={faderContainerRef} className="h-full w-full">

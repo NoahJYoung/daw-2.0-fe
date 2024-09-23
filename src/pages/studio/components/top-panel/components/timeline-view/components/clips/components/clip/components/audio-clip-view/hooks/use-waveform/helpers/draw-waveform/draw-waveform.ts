@@ -1,10 +1,7 @@
 import { Peak } from "@/pages/studio/audio-engine/components/waveform-cache";
 
-export function drawWaveform(
-  peaks: Peak[],
-  canvasRef: React.RefObject<HTMLCanvasElement>
-): void {
-  const canvas = canvasRef.current;
+export function drawWaveform(peaks: Peak[], canvas: HTMLCanvasElement): void {
+  // const canvas = canvasRef.current;
   if (canvas) {
     const ctx = canvas.getContext("2d");
     if (!ctx) {
