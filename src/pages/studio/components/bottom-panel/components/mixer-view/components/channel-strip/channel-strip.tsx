@@ -55,8 +55,31 @@ export const ChannelStrip = observer(
 
     const faderHeight = mixerHeight - 138;
 
+    const handleSelectTrack = (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      if (!e.ctrlKey) {
+        mixer.unselectAllTracks();
+      }
+
+      mixer.selectTrack(track);
+    };
+
+    const baseButtonClass = `shadow-none hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
+
+    const activeButtonClass = `hover:text-surface-10
+      shadow-none 
+      flex 
+      items-center 
+      justify-center 
+      rounded-xxs p-2 w-6 h-6 m-0 font-bold
+      bg-transparent
+      text-surface-10 
+      hover:bg-surface-3`;
+
     return (
       <div
+        onClick={handleSelectTrack}
         className={`flex flex-col h-full flex-shrink-0 items-center ${
           selected ? "bg-surface-3" : "bg-surface-2"
         } border border-surface-1`}
@@ -94,8 +117,9 @@ export const ChannelStrip = observer(
 
         <div
           style={{ height: 56 }}
-          className="flex w-full justify-center gap-1 items-center py-3"
+          className="flex w-full justify-evenly gap-1 items-center py-3"
         >
+          <div className="flex-shrink-0 w-5" />
           <Knob
             onValueChange={onPanChange}
             onValueCommit={commitPanChange}
@@ -110,6 +134,23 @@ export const ChannelStrip = observer(
             minLabel="L"
             maxLabel="R"
           />
+          <span className="flex flex-col justify-space gap-1 items-center">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                track.setMute(!track.mute);
+              }}
+              className={track.mute ? activeButtonClass : baseButtonClass}
+            >
+              M
+            </Button>
+            <Button
+              onClick={(e) => e.stopPropagation()}
+              className={baseButtonClass}
+            >
+              S
+            </Button>
+          </span>
         </div>
 
         <div ref={faderContainerRef} className="h-full w-full">
@@ -121,7 +162,7 @@ export const ChannelStrip = observer(
             max={6}
             value={track.volume}
             meters={[track.meterL, track.meterR]}
-            stopDelayMs={800}
+            stopDelayMs={2000}
             active={active}
             selected={selected}
           />

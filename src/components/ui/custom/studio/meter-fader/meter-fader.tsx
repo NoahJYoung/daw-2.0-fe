@@ -1,7 +1,7 @@
 import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
-import * as Tone from "tone";
 import { LevelView, MeterView } from "./components";
+import * as Tone from "tone";
 
 interface MeterFaderProps {
   onChange: (value: number) => void;
@@ -44,7 +44,7 @@ export const MeterFader = ({
         style={{ height: faderHeight }}
         className="w-full flex absolute justify-center"
       >
-        <LevelView height={faderHeight} />
+        <LevelView height={Math.max(faderHeight, 0)} />
         <MeterView
           height={faderHeight}
           width={20}

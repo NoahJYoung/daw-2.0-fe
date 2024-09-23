@@ -1,7 +1,7 @@
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { ChannelStrip, MasterFader } from "./components";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 export const MixerView = observer(() => {
   const { mixer } = useAudioEngine();
@@ -9,7 +9,7 @@ export const MixerView = observer(() => {
 
   const [mixerHeight, setMixerHeight] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateHeight = () => {
       if (mixerRef.current) {
         setMixerHeight(mixerRef.current.getBoundingClientRect().height);
@@ -23,6 +23,7 @@ export const MixerView = observer(() => {
 
   return (
     <div
+      onClick={() => mixer.unselectAllTracks()}
       ref={mixerRef}
       className="flex w-full h-full bg-transparent sm:pb-[2px]"
     >

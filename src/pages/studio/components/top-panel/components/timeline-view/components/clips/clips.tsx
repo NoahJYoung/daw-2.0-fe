@@ -111,7 +111,7 @@ export const Clips = observer(
       { separator: true },
       {
         label: "Import file",
-        disabled: mixer.selectedTracks.length < 1 || !sameParentTrack,
+        disabled: mixer.selectedTracks.length < 1,
         onClick: () => importFromFile(mixer.selectedTracks),
         icon: ImportFileIcon,
       },

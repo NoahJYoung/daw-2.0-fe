@@ -65,8 +65,23 @@ export const MeterView = ({
   );
 
   useEffect(() => {
-    setTimeout(() => setEnabled(active), enabled ? stopDelayMs : 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    if (active) {
+      setEnabled(true);
+    } else if (stopDelayMs > 0) {
+      timeoutId = setTimeout(() => {
+        setEnabled(false);
+      }, stopDelayMs);
+    } else {
+      setEnabled(false);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [active, stopDelayMs]);
 
   return (

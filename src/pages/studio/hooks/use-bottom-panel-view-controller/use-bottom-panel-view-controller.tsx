@@ -93,11 +93,11 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
 
   const getDefaultExpandDimensions = () => {
-    if (windowSize.height <= 400) {
+    if (windowSize.height <= 450) {
       return [0, 100];
     } else if (windowSize.height <= 800) {
       return [35, 65];
-    } else return windowSize.width >= 640 ? [60, 40] : [35, 65];
+    } else return windowSize.width >= 640 ? [55, 45] : [35, 65];
   };
 
   const defaultExpandedDimensions = getDefaultExpandDimensions();

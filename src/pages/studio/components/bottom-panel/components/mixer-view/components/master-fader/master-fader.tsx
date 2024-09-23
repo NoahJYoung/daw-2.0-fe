@@ -37,7 +37,7 @@ export const MasterFader = observer(
             max={6}
             value={master.volume}
             meters={[master.meterL, master.meterR]}
-            stopDelayMs={1000}
+            stopDelayMs={2000}
             active={active}
           />
         </div>
