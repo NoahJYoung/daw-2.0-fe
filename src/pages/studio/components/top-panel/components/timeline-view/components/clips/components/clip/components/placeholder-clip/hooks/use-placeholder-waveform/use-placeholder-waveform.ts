@@ -26,8 +26,8 @@ export const usePlaceholderWaveform = (track: Track) => {
         waveformMagnificationValue
       );
       requestAnimationFrame(() => {
-        if (track.input === "mic") {
-          drawWaveform(normalizedPeaks, canvasRef);
+        if (track.input === "mic" && canvasRef.current) {
+          drawWaveform(normalizedPeaks, canvasRef.current);
         }
       });
     }

@@ -15,7 +15,7 @@ import { AudioEngineState } from "../../types";
 export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   bpm: prop(Tone.getTransport().bpm.value).withSetter(),
   timeSignature: prop(Tone.getTransport().timeSignature as number).withSetter(),
-  measures: prop(100).withSetter(),
+  measures: prop(300).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
   seconds: prop(0),
   subdivision: prop("1n").withSetter(),

@@ -29,7 +29,7 @@ const drawMeter = (
 
   ctx.fillStyle = isClipping
     ? "rgba(227, 18, 18, 0.75)"
-    : "rgba(18, 227, 67, 0.75)";
+    : "rgba(18, 227, 67, 0.5)";
 
   ctx.fillRect(0, barHeight, width, height - barHeight);
 };
