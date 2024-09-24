@@ -34,10 +34,19 @@ interface ClipsProps {
   endMeasure: number;
   scrollRef: React.RefObject<HTMLDivElement>;
   setPlayheadLeft: (pixels: number) => void;
+  measureWidth: number;
+  totalMeasures: number;
+  totalWidth: number;
 }
 
 export const Clips = observer(
-  ({ startMeasure, endMeasure, scrollRef, setPlayheadLeft }: ClipsProps) => {
+  ({
+    startMeasure,
+    endMeasure,
+    scrollRef,
+    setPlayheadLeft,
+    totalWidth,
+  }: ClipsProps) => {
     const { mixer, timeline, state, clipboard } = useAudioEngine();
     const { undoManager } = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
@@ -188,7 +197,7 @@ export const Clips = observer(
           onClick={handleClick}
           className="absolute flex flex-col"
           style={{
-            width: timeline.pixels,
+            width: totalWidth,
             height: mixer.topPanelHeight,
             top: 72,
           }}

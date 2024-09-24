@@ -192,11 +192,25 @@ export const Clip = observer(
           return;
         }
         e.stopPropagation();
-        mixer.selectedClips.forEach((selectedClip) =>
-          selectedClip.setStart(
-            selectedClip.start + timeline.pixelsToSamples(selectedOffset)
-          )
-        );
+        const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
+        const firstClipStart = clip.start + initialTimeDifference;
+
+        const quantizedFirstClipStart = Tone.Time(
+          Tone.Time(firstClipStart, "samples").quantize(timeline.subdivision),
+          "s"
+        ).toSamples();
+
+        const quantizeOffset = timeline.snapToGrid
+          ? quantizedFirstClipStart - firstClipStart
+          : 0;
+
+        mixer.selectedClips.forEach((selectedClip) => {
+          const timeOffset = timeline.pixelsToSamples(selectedOffset);
+          const newStart = selectedClip.start + timeOffset + quantizeOffset;
+
+          selectedClip.setStart(newStart);
+        });
+
         setSelectedOffset(0);
         if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
           undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
@@ -325,6 +339,11 @@ export const Clip = observer(
         clip.setLocked(!clip.locked);
         if (clip.locked && selected) {
           track.unselectClip(clip);
+        } else {
+          if (!e.ctrlKey) {
+            mixer.unselectAllClips();
+          }
+          track.selectClip(clip);
         }
       }
     };

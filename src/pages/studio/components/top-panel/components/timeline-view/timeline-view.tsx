@@ -82,11 +82,9 @@ export const TimelineView = observer(
       [subdivisionsPerBeat, timeSignature, timeline.samplesPerPixel]
     );
 
-    const subdivisionWidth = useMemo(
-      () =>
-        timeline.samplesToPixels(Tone.Time(smallestSubdivision).toSamples()),
-      [timeline, smallestSubdivision, timeline.samplesPerPixel]
-    );
+    const measureWidth = pixels / measures;
+
+    const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
 
     const generateArray = useCallback(
       (length: number) => Array.from({ length }, (_, i) => i),
@@ -110,11 +108,6 @@ export const TimelineView = observer(
 
     const renderEveryFourthMeasure = beatWidth * timeSignature < 40;
 
-    const measureWidth = useMemo(
-      () => subdivisionWidth * subdivisionsArray.length,
-      [subdivisionWidth, subdivisionsArray]
-    );
-
     const handleClick = (e: React.MouseEvent) => {
       undoManager.withoutUndo(() => {
         if (e.ctrlKey) {
@@ -124,10 +117,14 @@ export const TimelineView = observer(
           const xOffset = scrollRef.current.getBoundingClientRect().x;
           const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
           timeline.setSecondsFromPixels(xValue);
-          const seconds = Tone.Time(
-            xValue * timeline.samplesPerPixel,
-            "samples"
-          ).toSeconds();
+          const seconds = timeline.snapToGrid
+            ? Tone.Time(xValue * timeline.samplesPerPixel, "samples").quantize(
+                timeline.subdivision
+              )
+            : Tone.Time(
+                xValue * timeline.samplesPerPixel,
+                "samples"
+              ).toSeconds();
           Tone.getTransport().seconds = seconds;
           const pixels =
             Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
@@ -258,6 +255,7 @@ export const TimelineView = observer(
         />
 
         <Grid
+          totalWidth={totalWidth}
           startMeasure={startMeasure}
           endMeasure={endMeasure}
           scrollRef={scrollRef}
@@ -269,6 +267,9 @@ export const TimelineView = observer(
         />
 
         <Clips
+          totalWidth={totalWidth}
+          measureWidth={measureWidth}
+          totalMeasures={measures}
           scrollRef={scrollRef}
           startMeasure={startMeasure}
           endMeasure={endMeasure}

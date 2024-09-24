@@ -52,7 +52,7 @@ export const BottomPanel = observer(() => {
         </TabsTrigger>
       </TabsList>
 
-      <div className="bg-transparent w-full h-full overflow-x-auto styled-scrollbar flex ">
+      <div className="bg-transparent w-full h-full overflow-x-auto overflow-y-hidden styled-scrollbar flex ">
         <TabsContent className={contentClassName} value="MIXER">
           <MixerView />
         </TabsContent>

@@ -113,19 +113,24 @@ export const Knob = ({
     endAngle
   );
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
     document.body.style.userSelect = "none";
     document.body.style.cursor = "grabbing";
     setIsDragging(true);
   };
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-    if (isDragging) {
-      onValueCommit(value);
-    }
-    document.body.style.userSelect = "";
-    document.body.style.cursor = "";
-  }, [isDragging, onValueCommit, value]);
+  const handleMouseUp = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      setIsDragging(false);
+      if (isDragging) {
+        onValueCommit(value);
+      }
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+    },
+    [isDragging, onValueCommit, value]
+  );
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {

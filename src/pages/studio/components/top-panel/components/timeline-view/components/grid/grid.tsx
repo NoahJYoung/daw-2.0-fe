@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { drawGrid, drawLanes } from "./helpers";
 
 interface GridProps {
+  totalWidth: number;
   subdivisionWidth: number;
   subdivisionsArray: number[];
   renderEveryFourthMeasure: boolean;
@@ -21,17 +22,21 @@ export const Grid = observer(
     measureWidth,
     renderEveryFourthMeasure,
     startMeasure,
+    totalWidth,
     endMeasure,
   }: GridProps) => {
     const { mixer } = useAudioEngine();
     const { tracks } = mixer;
-    const width = measureWidth * measuresArray.length;
     const height = mixer.topPanelHeight;
     const className = "stroke-current text-surface-2";
 
     return (
-      <svg width={width} height={height}>
-        {drawLanes(className, width, tracks, mixer)}
+      <svg
+        className="border-r border-r-surface-2"
+        width={totalWidth}
+        height={height}
+      >
+        {drawLanes(className, totalWidth, tracks, mixer)}
         {drawGrid(
           className,
           measuresArray.slice(startMeasure, endMeasure),
