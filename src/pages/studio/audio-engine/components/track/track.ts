@@ -10,7 +10,7 @@ import {
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { AudioClip } from "../audio-clip";
 import * as Tone from "tone";
-import { computed } from "mobx";
+import { action, computed, observable } from "mobx";
 import { clipRef } from "../refs";
 import { Clip } from "../types";
 import {
@@ -43,6 +43,9 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   meterL = new Tone.Meter(METER_SMOOTHING_VALUE);
   meterR = new Tone.Meter(METER_SMOOTHING_VALUE);
   splitter = new Tone.Split();
+
+  @observable
+  isResizing: boolean = false;
 
   sync() {
     const { volume, pan, mute } = this;
@@ -113,6 +116,11 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
+  @action
+  setIsResizing(value: boolean) {
+    this.isResizing = value;
+  }
+
   selectAllClips() {
     this.clips.forEach((clip) => this.selectClip(clip));
   }
@@ -156,7 +164,10 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
         transportInSamples - clip.start,
         "samples"
       ).toSeconds();
-      if (transportInSamples > clip.start && transportInSamples < clip.end) {
+      if (
+        transportInSamples > clip.start &&
+        transportInSamples < clip.end + clip.loopSamples
+      ) {
         clip.play(Tone.now(), seekTime);
       } else {
         clip.schedule();

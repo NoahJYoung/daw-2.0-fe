@@ -28,7 +28,6 @@ export const TrackPanel = observer(
   ({ track, trackNumber, parentRef }: TrackPanelProps) => {
     const { undoManager } = useUndoManager();
     const { mixer } = useAudioEngine();
-    const [isResizing, setIsResizing] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [yOffset, setYOffset] = useState(0);
     const trackNameRef = useRef<HTMLInputElement>(null);
@@ -39,8 +38,8 @@ export const TrackPanel = observer(
 
     const handleMouseDown = useCallback(() => {
       document.body.style.userSelect = "none";
-      setIsResizing(true);
-    }, []);
+      track.setIsResizing(true);
+    }, [track]);
 
     const handleMouseUp = useCallback(() => {
       if (
@@ -51,11 +50,11 @@ export const TrackPanel = observer(
         changeTrackPosition(mixer.tracks, trackNumber - 1, newTrackIndex);
         setNewTrackIndex(null);
       }
-      setIsResizing(false);
+      track.setIsResizing(false);
       setIsDragging(false);
       dragStartYPosition.current = null;
       document.body.style.userSelect = "";
-    }, [isDragging, mixer.tracks, newTrackIndex, trackNumber]);
+    }, [isDragging, mixer.tracks, newTrackIndex, trackNumber, track]);
 
     const handleMouseMove = useCallback(
       (e: MouseEvent) => {
@@ -63,7 +62,7 @@ export const TrackPanel = observer(
 
         if (
           isDragging &&
-          !isResizing &&
+          !track.isResizing &&
           dragStartYPosition.current !== null &&
           parentRef.current
         ) {
@@ -115,7 +114,7 @@ export const TrackPanel = observer(
           });
         }
 
-        if (isResizing) {
+        if (track.isResizing) {
           undoManager.withoutUndo(() =>
             track.setLaneHeight(track.laneHeight + e.movementY)
           );
@@ -123,7 +122,7 @@ export const TrackPanel = observer(
       },
       [
         isDragging,
-        isResizing,
+        track.isResizing,
         mixer,
         trackNumber,
         undoManager,
@@ -151,7 +150,7 @@ export const TrackPanel = observer(
 
     const handleSelectTrack = (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (isResizing || isDragging) {
+      if (track.isResizing || isDragging) {
         return;
       }
       if (!e.ctrlKey) {

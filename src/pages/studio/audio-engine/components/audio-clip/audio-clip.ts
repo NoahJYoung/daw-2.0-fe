@@ -53,6 +53,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   play = (time: Tone.Unit.Time, seekTime?: Tone.Unit.Time) => {
     if (this.player.loaded) {
       this.player.start(time, seekTime);
+      console.log("play path");
     }
   };
 
@@ -130,9 +131,11 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const seekTime = transport.seconds - startTimeInSeconds;
     const playEventId = transport.scheduleOnce((time) => {
       if (seekTime > 0) {
-        this.play(Tone.now(), seekTime);
+        this.play(time, seekTime);
+        console.log("schedule path 1");
       } else {
         this.play(time);
+        console.log("schedule path 2");
       }
     }, startTimeInSeconds);
     this.startEventId = playEventId;
@@ -140,7 +143,10 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   private scheduleStop = () => {
     const transport = Tone.getTransport();
-    const endTimeInSeconds = Tone.Time(this.end, "samples").toSeconds();
+    const endTimeInSeconds = Tone.Time(
+      this.end + this.loopSamples,
+      "samples"
+    ).toSeconds();
     if (this.end) {
       const stopEventId = transport.scheduleOnce(() => {
         this.stop();
@@ -164,11 +170,12 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     if (!this.buffer) {
       throw new Error(`No audio buffer found for clip with id: ${this.id}`);
     }
+
     const sampleRate = Tone.getContext().sampleRate;
+    const bufferLength = this.buffer.length;
+    let loopSamples = this.loopSamples;
 
-    this.loopSamples = Math.min(this.loopSamples, this.buffer.length);
-
-    const totalLength = this.buffer.length + this.loopSamples;
+    const totalLength = bufferLength + loopSamples;
 
     const audioContext = Tone.getContext().rawContext;
     const concatenatedBuffer = audioContext.createBuffer(
@@ -180,13 +187,18 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     let offset = 0;
 
     concatenatedBuffer.copyToChannel(this.buffer.getChannelData(0), 0, offset);
-    offset += this.buffer.length;
+    offset += bufferLength;
 
-    concatenatedBuffer.copyToChannel(
-      this.buffer.getChannelData(0).subarray(0, this.loopSamples),
-      0,
-      offset
-    );
+    while (loopSamples > 0) {
+      const copyLength = Math.min(loopSamples, bufferLength);
+      concatenatedBuffer.copyToChannel(
+        this.buffer.getChannelData(0).subarray(0, copyLength),
+        0,
+        offset
+      );
+      offset += copyLength;
+      loopSamples -= copyLength;
+    }
 
     return new Tone.ToneAudioBuffer(concatenatedBuffer);
   };

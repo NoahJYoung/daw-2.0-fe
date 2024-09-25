@@ -5,7 +5,7 @@ import {
 } from "@/pages/studio/audio-engine/components";
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
 import { observer } from "mobx-react-lite";
-import { AudioClipView } from "./components";
+import { AudioClipView, AudioLoop } from "./components";
 import {
   useAudioEngine,
   useBottomPanelViewController,
@@ -22,22 +22,11 @@ import {
   Dispatch,
   SetStateAction,
   useMemo,
+  useState,
 } from "react";
 import * as Tone from "tone";
 import { moveClipToNewTrack } from "../../helpers";
-
-interface ClipProps {
-  track: Track;
-  clip: AudioClip | MidiClip;
-  scrollRef: React.RefObject<HTMLDivElement>;
-  selectedIndexOffset: number;
-  setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
-  dragging: boolean;
-  setDragging: Dispatch<SetStateAction<boolean>>;
-  setPlayheadLeft: (pixels: number) => void;
-  selectedOffset: number;
-  setSelectedOffset: Dispatch<SetStateAction<number>>;
-}
+import { cn } from "@/lib/utils";
 
 const inBoundsX = (
   selectedClips: ClipData[],
@@ -70,6 +59,20 @@ const inBoundsY = (
   return true;
 };
 
+interface ClipProps {
+  track: Track;
+  clip: AudioClip | MidiClip;
+  scrollRef: React.RefObject<HTMLDivElement>;
+  selectedIndexOffset: number;
+  setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
+  dragging: boolean;
+  setDragging: Dispatch<SetStateAction<boolean>>;
+  setPlayheadLeft: (pixels: number) => void;
+  selectedOffset: number;
+  setSelectedOffset: Dispatch<SetStateAction<number>>;
+  scrollLeft: number;
+}
+
 export const Clip = observer(
   ({
     clip,
@@ -80,12 +83,16 @@ export const Clip = observer(
     dragging,
     setDragging,
     setPlayheadLeft,
+    scrollLeft,
     selectedOffset,
     setSelectedOffset,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
     const { selectTrack, selectClip } = useBottomPanelViewController();
+    const [isLooping, setIsLooping] = useState(false);
+    const [showClipActions, setShowClipActions] = useState(false);
+
     const selected = mixer.selectedClips.includes(clip);
 
     const initialY = useRef<number>(0);
@@ -122,12 +129,18 @@ export const Clip = observer(
           if (scrollRef.current) {
             const xOffset = scrollRef.current.getBoundingClientRect().x;
             const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
-            timeline.setSecondsFromPixels(xValue);
-            const seconds = Tone.Time(
-              xValue * timeline.samplesPerPixel,
-              "samples"
-            ).toSeconds();
+            const seconds = timeline.snapToGrid
+              ? Tone.Time(
+                  xValue * timeline.samplesPerPixel,
+                  "samples"
+                ).quantize(timeline.subdivision)
+              : Tone.Time(
+                  xValue * timeline.samplesPerPixel,
+                  "samples"
+                ).toSeconds();
             Tone.getTransport().seconds = seconds;
+            timeline.setSeconds(seconds);
+
             const pixels =
               Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
               timeline.samplesPerPixel;
@@ -141,6 +154,13 @@ export const Clip = observer(
     const onMouseMove = useCallback(
       (e: MouseEvent) => {
         if (!dragging || !selected) return;
+
+        if (isLooping) {
+          const newValue =
+            clip.loopSamples + timeline.pixelsToSamples(e.movementX);
+          clip.setLoopSamples(newValue >= 0 ? newValue : 0);
+          return;
+        }
 
         if (
           inBoundsX(
@@ -175,10 +195,12 @@ export const Clip = observer(
       [
         dragging,
         selected,
+        isLooping,
+        mixer,
         timeline,
         selectedOffset,
-        mixer,
         track.laneHeight,
+        clip,
         setSelectedOffset,
         selectedIndexOffset,
         setSelectedIndexOffset,
@@ -187,10 +209,13 @@ export const Clip = observer(
 
     const onMouseUp = useCallback(
       (e: MouseEvent) => {
+        setIsLooping(false);
+
         if (!dragging) {
           setDragging(false);
           return;
         }
+
         e.stopPropagation();
         const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
         const firstClipStart = clip.start + initialTimeDifference;
@@ -348,45 +373,97 @@ export const Clip = observer(
       }
     };
 
-    return (
-      <div
-        onMouseDown={onMouseDown}
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-        key={clip.id}
-        className=" flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
-        style={{
-          opacity: selected ? 0.7 : 0.4,
-          marginTop: 2,
-          height: getHeight(),
-          background: getColor(),
-          top: getTop(),
-          zIndex: 9,
-          position: "absolute",
-          left: clipLeft,
-          cursor: dragging ? "grabbing" : "auto",
-        }}
-      >
-        <span className="flex items-center pl-[2px] pt-[2px]">
-          <button
-            className="flex items-center justify-center"
-            style={{ color: "#222", width: "1rem" }}
-            onClick={handleLockClick}
-          >
-            {clip.locked ? <LockedIcon /> : <UnlockedIcon />}
-          </button>
-          <p
-            style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
-            className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
-          >
-            {clipInfoString}
-          </p>
-        </span>
+    const handleMouseEnter = () => setShowClipActions(true);
+    const handleMouseLeave = () => setShowClipActions(false);
 
-        {clip?.type === "audio" && (
-          <AudioClipView track={currentDragTrack || track} clip={clip} />
+    const handleLoopDown = () => {
+      setIsLooping(true);
+    };
+
+    return (
+      <>
+        <div
+          onMouseDown={onMouseDown}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
+          key={clip.id}
+          className=" flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
+          style={{
+            opacity: selected ? 0.8 : 0.6,
+            marginTop: 2,
+            height: getHeight(),
+            background: getColor(),
+            top: getTop(),
+            zIndex: 9,
+            position: "absolute",
+            left: clipLeft,
+            cursor: dragging ? "grabbing" : "auto",
+          }}
+        >
+          <span className="flex items-center pl-[2px] pt-[2px]">
+            <button
+              className="flex items-center justify-center"
+              style={{ color: "#222", width: "1rem" }}
+              onClick={handleLockClick}
+            >
+              {clip.locked ? <LockedIcon /> : <UnlockedIcon />}
+            </button>
+            <p
+              style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
+              className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
+            >
+              {clipInfoString}
+            </p>
+          </span>
+
+          {clip?.type === "audio" && (
+            <>
+              <AudioClipView
+                scrollLeft={scrollLeft}
+                track={currentDragTrack || track}
+                clip={clip}
+                clipLeft={clipLeft}
+              />
+
+              {showClipActions && (
+                <button
+                  onMouseDown={handleLoopDown}
+                  style={{
+                    left:
+                      (clip.length + clip.loopSamples) /
+                        timeline.samplesPerPixel -
+                      24,
+                    bottom: 0,
+                  }}
+                  className={cn(
+                    "absolute flex justify-center items-center w-4 h-4 border border-red-900",
+                    isLooping ? "cursor-grabbing" : "cursor-grab"
+                  )}
+                >
+                  L
+                </button>
+              )}
+            </>
+          )}
+        </div>
+
+        {clip?.type === "audio" && clip.loopSamples > 0 && (
+          <AudioLoop
+            scrollLeft={scrollLeft}
+            top={getTop()}
+            color={getColor()}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            track={currentDragTrack || track}
+            clip={clip}
+            clipLeft={clipLeft}
+            selected={selected}
+            isLooping={isLooping}
+          />
         )}
-      </div>
+      </>
     );
   }
 );

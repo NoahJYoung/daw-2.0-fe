@@ -69,7 +69,7 @@ export const TimelineView = observer(
 
     const smallestSubdivision = useMemo(
       () => findSmallestSubdivision(timeline),
-      [timeline, timeline.samplesPerPixel]
+      [timeline, timeline.samplesPerPixel, timeline.subdivision]
     );
 
     const subdivisionsPerBeat = useMemo(
@@ -116,7 +116,6 @@ export const TimelineView = observer(
         if (scrollRef.current) {
           const xOffset = scrollRef.current.getBoundingClientRect().x;
           const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
-          timeline.setSecondsFromPixels(xValue);
           const seconds = timeline.snapToGrid
             ? Tone.Time(xValue * timeline.samplesPerPixel, "samples").quantize(
                 timeline.subdivision
@@ -126,6 +125,8 @@ export const TimelineView = observer(
                 "samples"
               ).toSeconds();
           Tone.getTransport().seconds = seconds;
+          timeline.setSeconds(seconds);
+
           const pixels =
             Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
             timeline.samplesPerPixel;
@@ -267,6 +268,7 @@ export const TimelineView = observer(
         />
 
         <Clips
+          scrollLeft={scrollLeft}
           totalWidth={totalWidth}
           measureWidth={measureWidth}
           totalMeasures={measures}

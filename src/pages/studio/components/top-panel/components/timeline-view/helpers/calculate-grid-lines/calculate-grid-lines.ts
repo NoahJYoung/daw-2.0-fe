@@ -14,11 +14,22 @@ export const subdivisionToQuarterMap: Record<string, number> = {
 };
 
 export const findSmallestSubdivision = (timeline: Timeline) => {
+  const tupletTime =
+    timeline.subdivision.split("")[timeline.subdivision.split("").length - 1];
+
   const subdivisionsToRender = Object.keys(subdivisionToQuarterMap).filter(
     (subdivision) =>
       timeline.samplesToPixels(Tone.Time(subdivision).toSamples()) >= 16 &&
-      subdivision.split("")[subdivision.split("").length - 1] === "n"
+      subdivision.split("")[subdivision.split("").length - 1] === tupletTime
   );
+
+  if (subdivisionsToRender.includes(timeline.subdivision)) {
+    return timeline.subdivision;
+  }
+
+  if (subdivisionsToRender.length === 0) {
+    return "1n";
+  }
 
   return subdivisionsToRender[subdivisionsToRender.length - 1];
 };

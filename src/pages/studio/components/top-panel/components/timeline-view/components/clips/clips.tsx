@@ -33,6 +33,7 @@ interface ClipsProps {
   startMeasure: number;
   endMeasure: number;
   scrollRef: React.RefObject<HTMLDivElement>;
+  scrollLeft: number;
   setPlayheadLeft: (pixels: number) => void;
   measureWidth: number;
   totalMeasures: number;
@@ -44,6 +45,7 @@ export const Clips = observer(
     startMeasure,
     endMeasure,
     scrollRef,
+    scrollLeft,
     setPlayheadLeft,
     totalWidth,
   }: ClipsProps) => {
@@ -169,7 +171,9 @@ export const Clips = observer(
         Tone.Time(clip.start, "samples").toBarsBeatsSixteenths().split(":")[0]
       );
       const clipEndMeasure = parseInt(
-        Tone.Time(clip.end, "samples").toBarsBeatsSixteenths().split(":")[0]
+        Tone.Time(clip.end + clip.loopSamples, "samples")
+          .toBarsBeatsSixteenths()
+          .split(":")[0]
       );
       if (clipEndMeasure >= startMeasure && clipStartMeasure <= endMeasure) {
         return true;
@@ -213,6 +217,7 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    scrollLeft={scrollLeft}
                     selectedOffset={selectedXOffset}
                     setSelectedOffset={setSelectedXOffset}
                     setPlayheadLeft={setPlayheadLeft}

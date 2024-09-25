@@ -4,10 +4,19 @@ import {
   waveformCache,
 } from "@/pages/studio/audio-engine/components/waveform-cache";
 import { useAudioEngine } from "@/pages/studio/hooks";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { normalizePeaks } from "./helpers";
+import { MAX_WAVEFORM_WIDTH } from "@/pages/studio/utils/constants";
 
-export const useWaveform = (clip: AudioClip, track: Track) => {
+interface UseWaveformOptions {
+  loop?: boolean;
+}
+
+export const useWaveform = (
+  clip: AudioClip,
+  track: Track,
+  options?: UseWaveformOptions
+) => {
   const { timeline } = useAudioEngine();
   const width = timeline.samplesToPixels(clip.length);
 
@@ -15,10 +24,9 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
 
   const waveformMagnificationValue = 1;
 
-  const maxCanvasWidth = 4000;
   const [peakChunks, setPeakChunks] = useState<Peak[][]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (clip.buffer) {
       if (!waveformCache.has(clip.id, timeline.samplesPerPixel)) {
         throw new Error("no waveform data found");
@@ -26,19 +34,39 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
       const cachedPeaks = waveformCache.get(clip.id, timeline.samplesPerPixel);
 
       if (cachedPeaks) {
+        const loopPeakLength = clip.loopSamples / timeline.samplesPerPixel;
+        let preparedPeaks: Peak[] = [];
+
+        if (options?.loop) {
+          const totalPeaks = cachedPeaks.length;
+
+          while (preparedPeaks.length < loopPeakLength) {
+            const remainingPeaks = loopPeakLength - preparedPeaks.length;
+            const sliceLength = Math.min(remainingPeaks, totalPeaks);
+
+            preparedPeaks = preparedPeaks.concat(
+              cachedPeaks.slice(0, sliceLength)
+            );
+          }
+        } else {
+          preparedPeaks = cachedPeaks;
+        }
+
         const normalizedPeaks = normalizePeaks(
-          cachedPeaks,
+          preparedPeaks,
           adjustedHeight,
           waveformMagnificationValue
         );
 
         const newPeakChunks: Peak[][] = [];
-        const totalChunks = Math.ceil(normalizedPeaks.length / maxCanvasWidth);
+        const totalChunks = Math.ceil(
+          normalizedPeaks.length / MAX_WAVEFORM_WIDTH
+        );
 
         for (let i = 0; i < totalChunks; i++) {
-          const startSamples = i * maxCanvasWidth;
+          const startSamples = i * MAX_WAVEFORM_WIDTH;
           const endSamples = Math.min(
-            startSamples + maxCanvasWidth,
+            startSamples + MAX_WAVEFORM_WIDTH,
             normalizedPeaks.length
           );
           const chunk = normalizedPeaks.slice(startSamples, endSamples);
@@ -49,6 +77,8 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
       }
     }
   }, [
+    clip.loopSamples,
+    options?.loop,
     clip.buffer,
     timeline.samplesPerPixel,
     track.laneHeight,
@@ -58,7 +88,6 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
     waveformMagnificationValue,
     adjustedHeight,
     clip.id,
-    maxCanvasWidth,
   ]);
 
   return {
@@ -66,5 +95,7 @@ export const useWaveform = (clip: AudioClip, track: Track) => {
     height: adjustedHeight,
     peakChunks,
     samplesPerPixel: timeline.samplesPerPixel,
+    loopWidth:
+      clip.loopSamples > 0 ? clip.loopSamples / timeline.samplesPerPixel : 0,
   };
 };
