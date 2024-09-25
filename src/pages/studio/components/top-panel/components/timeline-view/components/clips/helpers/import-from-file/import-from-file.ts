@@ -39,20 +39,16 @@ export const importFromFile = async (activeTracks: Track[]) => {
 
         clip.createWaveformCache(audioBuffer);
 
-        // Add the new clip to the track
         track.createAudioClip(clip);
       } else if (track.input === "midi") {
         console.log("MIDI processing not supported in this function.");
       }
     });
 
-    // Clean up the URL object to free memory
     URL.revokeObjectURL(url);
 
-    // Remove the file input element from the DOM after use
     document.body.removeChild(fileInput);
   };
 
-  // Programmatically click the file input to open the file dialog
   fileInput.click();
 };

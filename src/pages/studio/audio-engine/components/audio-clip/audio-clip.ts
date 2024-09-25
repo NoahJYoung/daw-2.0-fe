@@ -53,7 +53,6 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   play = (time: Tone.Unit.Time, seekTime?: Tone.Unit.Time) => {
     if (this.player.loaded) {
       this.player.start(time, seekTime);
-      console.log("play path");
     }
   };
 
@@ -132,10 +131,8 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const playEventId = transport.scheduleOnce((time) => {
       if (seekTime > 0) {
         this.play(time, seekTime);
-        console.log("schedule path 1");
       } else {
         this.play(time);
-        console.log("schedule path 2");
       }
     }, startTimeInSeconds);
     this.startEventId = playEventId;

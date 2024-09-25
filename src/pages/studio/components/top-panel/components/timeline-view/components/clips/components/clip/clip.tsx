@@ -71,6 +71,10 @@ interface ClipProps {
   selectedOffset: number;
   setSelectedOffset: Dispatch<SetStateAction<number>>;
   scrollLeft: number;
+  selectedLoopModifier: number;
+  setSelectedLoopModifier: Dispatch<SetStateAction<number>>;
+  isLooping: boolean;
+  setIsLooping: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Clip = observer(
@@ -86,11 +90,14 @@ export const Clip = observer(
     scrollLeft,
     selectedOffset,
     setSelectedOffset,
+    selectedLoopModifier,
+    setSelectedLoopModifier,
+    isLooping,
+    setIsLooping,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
     const { selectTrack, selectClip } = useBottomPanelViewController();
-    const [isLooping, setIsLooping] = useState(false);
     const [showClipActions, setShowClipActions] = useState(false);
 
     const selected = mixer.selectedClips.includes(clip);
@@ -157,8 +164,12 @@ export const Clip = observer(
 
         if (isLooping) {
           const newValue =
-            clip.loopSamples + timeline.pixelsToSamples(e.movementX);
-          clip.setLoopSamples(newValue >= 0 ? newValue : 0);
+            selectedLoopModifier + timeline.pixelsToSamples(e.movementX);
+
+          if (clip.loopSamples + selectedLoopModifier >= 0) {
+            setSelectedLoopModifier(Math.abs(newValue) >= 0 ? newValue : 0);
+          }
+
           return;
         }
 
@@ -200,6 +211,8 @@ export const Clip = observer(
         timeline,
         selectedOffset,
         track.laneHeight,
+        selectedLoopModifier,
+        setSelectedLoopModifier,
         clip,
         setSelectedOffset,
         selectedIndexOffset,
@@ -209,7 +222,25 @@ export const Clip = observer(
 
     const onMouseUp = useCallback(
       (e: MouseEvent) => {
+        if (isLooping) {
+          const newLoopSamples = clip.loopSamples + selectedLoopModifier;
+          clip.setLoopSamples(newLoopSamples > 0 ? newLoopSamples : 0);
+
+          const loopDifference = clip.loopSamples - selectedLoopModifier;
+
+          // mixer.selectedClips.forEach((selectedClip) => {
+          //   const newLoopSamples = clip.loopSamples + loopDifference;
+
+          //   selectedClip.setLoopSamples(
+          //     newLoopSamples > 0 ? newLoopSamples : 0
+          //   );
+          // });
+        }
+
         setIsLooping(false);
+
+        setSelectedLoopModifier(0);
+        setSelectedOffset(0);
 
         if (!dragging) {
           setDragging(false);
@@ -217,26 +248,26 @@ export const Clip = observer(
         }
 
         e.stopPropagation();
-        const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
-        const firstClipStart = clip.start + initialTimeDifference;
+        // const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
+        // const firstClipStart = clip.start + initialTimeDifference;
 
-        const quantizedFirstClipStart = Tone.Time(
-          Tone.Time(firstClipStart, "samples").quantize(timeline.subdivision),
-          "s"
-        ).toSamples();
+        // const quantizedFirstClipStart = Tone.Time(
+        //   Tone.Time(firstClipStart, "samples").quantize(timeline.subdivision),
+        //   "s"
+        // ).toSamples();
+        // console.log("FIRST START", firstClipStart);
 
-        const quantizeOffset = timeline.snapToGrid
-          ? quantizedFirstClipStart - firstClipStart
-          : 0;
+        // const quantizeOffset = timeline.snapToGrid
+        //   ? quantizedFirstClipStart - firstClipStart
+        //   : 0;
 
         mixer.selectedClips.forEach((selectedClip) => {
           const timeOffset = timeline.pixelsToSamples(selectedOffset);
-          const newStart = selectedClip.start + timeOffset + quantizeOffset;
+          const newStart = selectedClip.start + timeOffset; //+ quantizeOffset;
 
           selectedClip.setStart(newStart);
         });
 
-        setSelectedOffset(0);
         if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
           undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
             mixer.selectedClips.forEach((selectedClip) => {
@@ -264,14 +295,20 @@ export const Clip = observer(
         initialX.current = 0;
       },
       [
+        setIsLooping,
+        clip.id,
+        selectedLoopModifier,
+        isLooping,
+        setSelectedLoopModifier,
+        setSelectedOffset,
+        dragging,
         mixer,
         parentTrackIndex,
         selectedIndexOffset,
-        selectedOffset,
-        setDragging,
         setSelectedIndexOffset,
-        setSelectedOffset,
+        setDragging,
         timeline,
+        selectedOffset,
         undoManager,
       ]
     );
@@ -326,7 +363,7 @@ export const Clip = observer(
 
     const clipWidth = useMemo(
       () => timeline.samplesToPixels(clip.length),
-      [clip.length, timeline.samplesPerPixel]
+      [clip.length, timeline.samplesPerPixel, timeline]
     );
 
     const currentDragTrack =
@@ -432,7 +469,7 @@ export const Clip = observer(
                   onMouseDown={handleLoopDown}
                   style={{
                     left:
-                      (clip.length + clip.loopSamples) /
+                      (clip.length + clip.loopSamples + selectedLoopModifier) /
                         timeline.samplesPerPixel -
                       24,
                     bottom: 0,
@@ -449,20 +486,22 @@ export const Clip = observer(
           )}
         </div>
 
-        {clip?.type === "audio" && clip.loopSamples > 0 && (
-          <AudioLoop
-            scrollLeft={scrollLeft}
-            top={getTop()}
-            color={getColor()}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            track={currentDragTrack || track}
-            clip={clip}
-            clipLeft={clipLeft}
-            selected={selected}
-            isLooping={isLooping}
-          />
-        )}
+        {clip?.type === "audio" &&
+          clip.loopSamples + selectedLoopModifier > 0 && (
+            <AudioLoop
+              scrollLeft={scrollLeft}
+              top={getTop()}
+              color={getColor()}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              track={currentDragTrack || track}
+              clip={clip}
+              selectedLoopModifier={selectedLoopModifier}
+              clipLeft={clipLeft}
+              selected={selected}
+              isLooping={isLooping}
+            />
+          )}
       </>
     );
   }

@@ -53,7 +53,9 @@ export const Clips = observer(
     const { undoManager } = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
     const [selectedXOffset, setSelectedXOffset] = useState(0);
+    const [selectedLoopModifier, setSelectedLoopModifier] = useState(0);
     const [dragging, setDragging] = useState(false);
+    const [isLooping, setIsLooping] = useState(false);
 
     const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
       number | null
@@ -171,7 +173,7 @@ export const Clips = observer(
         Tone.Time(clip.start, "samples").toBarsBeatsSixteenths().split(":")[0]
       );
       const clipEndMeasure = parseInt(
-        Tone.Time(clip.end + clip.loopSamples, "samples")
+        Tone.Time(clip.end + clip.loopSamples + selectedLoopModifier, "samples")
           .toBarsBeatsSixteenths()
           .split(":")[0]
       );
@@ -217,6 +219,8 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    isLooping={isLooping}
+                    setIsLooping={setIsLooping}
                     scrollLeft={scrollLeft}
                     selectedOffset={selectedXOffset}
                     setSelectedOffset={setSelectedXOffset}
@@ -225,6 +229,8 @@ export const Clips = observer(
                     setDragging={setDragging}
                     setSelectedIndexOffset={setSelectedIndexOffset}
                     selectedIndexOffset={selectedIndexOffset}
+                    selectedLoopModifier={selectedLoopModifier}
+                    setSelectedLoopModifier={setSelectedLoopModifier}
                     scrollRef={scrollRef}
                     key={clip.id}
                     track={track}

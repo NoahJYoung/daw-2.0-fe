@@ -10,12 +10,14 @@ import { MAX_WAVEFORM_WIDTH } from "@/pages/studio/utils/constants";
 
 interface UseWaveformOptions {
   loop?: boolean;
+  selectedLoopModifier: number;
+  selected: boolean;
 }
 
 export const useWaveform = (
   clip: AudioClip,
   track: Track,
-  options?: UseWaveformOptions
+  loopOptions?: UseWaveformOptions
 ) => {
   const { timeline } = useAudioEngine();
   const width = timeline.samplesToPixels(clip.length);
@@ -26,6 +28,15 @@ export const useWaveform = (
 
   const [peakChunks, setPeakChunks] = useState<Peak[][]>([]);
 
+  const getLoopModifier = () => {
+    if (loopOptions?.selected && loopOptions.loop) {
+      return loopOptions.selectedLoopModifier;
+    }
+    return 0;
+  };
+
+  const loopModifier = getLoopModifier();
+
   useLayoutEffect(() => {
     if (clip.buffer) {
       if (!waveformCache.has(clip.id, timeline.samplesPerPixel)) {
@@ -34,10 +45,11 @@ export const useWaveform = (
       const cachedPeaks = waveformCache.get(clip.id, timeline.samplesPerPixel);
 
       if (cachedPeaks) {
-        const loopPeakLength = clip.loopSamples / timeline.samplesPerPixel;
+        const loopPeakLength =
+          (clip.loopSamples + loopModifier) / timeline.samplesPerPixel;
         let preparedPeaks: Peak[] = [];
 
-        if (options?.loop) {
+        if (loopOptions?.loop) {
           const totalPeaks = cachedPeaks.length;
 
           while (preparedPeaks.length < loopPeakLength) {
@@ -78,7 +90,6 @@ export const useWaveform = (
     }
   }, [
     clip.loopSamples,
-    options?.loop,
     clip.buffer,
     timeline.samplesPerPixel,
     track.laneHeight,
@@ -88,14 +99,24 @@ export const useWaveform = (
     waveformMagnificationValue,
     adjustedHeight,
     clip.id,
+    loopOptions?.selectedLoopModifier,
+    loopOptions?.loop,
+    loopOptions?.selected,
+    loopModifier,
   ]);
+
+  const loopWidth =
+    clip.loopSamples + loopModifier > 0
+      ? (clip.loopSamples + loopModifier) / timeline.samplesPerPixel
+      : 0;
+
+  console.log(loopWidth);
 
   return {
     width,
     height: adjustedHeight,
     peakChunks,
     samplesPerPixel: timeline.samplesPerPixel,
-    loopWidth:
-      clip.loopSamples > 0 ? clip.loopSamples / timeline.samplesPerPixel : 0,
+    loopWidth,
   };
 };

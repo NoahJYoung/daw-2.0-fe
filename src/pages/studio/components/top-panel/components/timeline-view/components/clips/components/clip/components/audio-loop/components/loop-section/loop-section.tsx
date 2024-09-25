@@ -32,7 +32,6 @@ export const LoopSection = ({
   canvasRefs,
 }: LoopSectionProps) => (
   <div
-    key={`loop-${loopIndex}`}
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
     className="h-full flex flex-col flex-shrink-0 rounded-xl absolute overflow-hidden"

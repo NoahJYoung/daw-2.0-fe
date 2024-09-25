@@ -17,6 +17,7 @@ interface AudioClipViewProps {
   scrollLeft: number;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  selectedLoopModifier: number;
 }
 
 export const AudioLoop = observer(
@@ -31,6 +32,7 @@ export const AudioLoop = observer(
     scrollLeft,
     onMouseEnter,
     onMouseLeave,
+    selectedLoopModifier,
   }: AudioClipViewProps) => {
     const {
       width: clipWidth,
@@ -38,13 +40,19 @@ export const AudioLoop = observer(
       peakChunks,
       samplesPerPixel,
       loopWidth,
-    } = useWaveform(clip, track, { loop: true });
+    } = useWaveform(clip, track, {
+      loop: true,
+      selectedLoopModifier,
+      selected,
+    });
 
     const canvasRefs = useRef<HTMLCanvasElement[][]>([]);
     const lastLoopRefs = useRef<HTMLCanvasElement[]>([]);
 
     const loops = Array.from({
-      length: Math.floor(clip.loopSamples / clip.length),
+      length: Math.floor(
+        (clip.loopSamples + (selected ? selectedLoopModifier : 0)) / clip.length
+      ),
     });
 
     if (!canvasRefs.current.length) {
@@ -90,10 +98,13 @@ export const AudioLoop = observer(
       clipWidth,
     ]);
 
+    const width = loopWidth - clipWidth * loops.length;
+
     return (
       <div className="flex flex-shrink-0 bg-transparent">
         {loops.map((_, i) => (
           <LoopSection
+            key={`${clip.id}-loop-${i}`}
             loopIndex={i}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -113,7 +124,7 @@ export const AudioLoop = observer(
           onMouseLeave={onMouseLeave}
           className="h-full flex flex-col flex-shrink-0 rounded-xl absolute overflow-hidden"
           style={{
-            width: loopWidth - clipWidth * loops.length,
+            width,
             height: height + 28,
             left: clipLeft + clipWidth + clipWidth * loops.length,
             marginTop: 2,
