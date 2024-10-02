@@ -47,4 +47,12 @@ export const SubdivisionSelectOptions = [
     label: "1/16T",
     value: "16t",
   },
+  // {
+  //   label: "1/32",
+  //   value: "32n",
+  // },
+  // {
+  //   label: "1/32T",
+  //   value: "32t",
+  // },
 ];

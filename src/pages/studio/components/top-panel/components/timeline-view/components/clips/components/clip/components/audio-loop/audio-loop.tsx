@@ -15,6 +15,7 @@ interface AudioClipViewProps {
   clipLeft: number;
   isLooping: boolean;
   scrollLeft: number;
+  loopOffset: number;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
@@ -29,6 +30,7 @@ export const AudioLoop = observer(
     selected,
     isLooping,
     scrollLeft,
+    loopOffset,
     onMouseEnter,
     onMouseLeave,
   }: AudioClipViewProps) => {
@@ -44,7 +46,7 @@ export const AudioLoop = observer(
     const lastLoopRefs = useRef<HTMLCanvasElement[]>([]);
 
     const loops = Array.from({
-      length: Math.floor(clip.loopSamples / clip.length),
+      length: Math.floor((clip.loopSamples + loopOffset) / clip.length),
     });
 
     if (!canvasRefs.current.length) {

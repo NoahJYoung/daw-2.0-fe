@@ -12,7 +12,13 @@ import {
   useRequestAnimationFrame,
   useUndoManager,
 } from "@/pages/studio/hooks";
-import { useMemo, useCallback, useEffect, useState } from "react";
+import {
+  useMemo,
+  useCallback,
+  useLayoutEffect,
+  useState,
+  useEffect,
+} from "react";
 import * as Tone from "tone";
 import {
   findSmallestSubdivision,
@@ -149,7 +155,7 @@ export const TimelineView = observer(
       }
     );
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       undoManager.withoutUndo(() => {
         timeline.setSeconds(Tone.getTransport().seconds);
         setPlayheadLeft(timeline.positionInPixels);
@@ -217,7 +223,7 @@ export const TimelineView = observer(
 
     const { startMeasure, endMeasure } = calculateVisibleRange();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       const container = scrollRef.current;
       if (container) {
         container.addEventListener("wheel", handleWheel, { passive: false });
@@ -227,7 +233,7 @@ export const TimelineView = observer(
       }
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       const pixels =
         Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
         timeline.samplesPerPixel;

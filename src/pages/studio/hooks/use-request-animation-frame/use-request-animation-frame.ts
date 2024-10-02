@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useLayoutEffect } from "react";
 
 interface UseRequestAnimationFrameOptions {
   enabled?: boolean;
@@ -12,7 +12,7 @@ export const useRequestAnimationFrame = (
   const previousTimeRef = useRef<number>();
   const { enabled } = options;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!enabled) {
       return;
     }

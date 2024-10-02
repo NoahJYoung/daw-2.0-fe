@@ -3,7 +3,6 @@ import {
   MidiClip,
   Track,
 } from "@/pages/studio/audio-engine/components";
-import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
 import { observer } from "mobx-react-lite";
 import { AudioClipView, AudioLoop } from "./components";
 import {
@@ -16,7 +15,6 @@ import {
   IoLockOpenSharp as UnlockedIcon,
 } from "react-icons/io5";
 import {
-  useCallback,
   useEffect,
   useRef,
   Dispatch,
@@ -24,40 +22,17 @@ import {
   useMemo,
   useState,
 } from "react";
-import * as Tone from "tone";
-import { moveClipToNewTrack } from "../../helpers";
 import { cn } from "@/lib/utils";
+import {
+  getClipValues,
+  getOnClick,
+  getOnMouseDown,
+  getOnMouseMove,
+  getOnMouseUp,
+  inBoundsY,
+} from "./helpers";
 
-const inBoundsX = (
-  selectedClips: ClipData[],
-  movementXInSamples: number
-): boolean => {
-  return selectedClips.every((selectedClip) => {
-    const newStart = selectedClip.start + movementXInSamples;
-    return newStart >= 0;
-  });
-};
-
-const inBoundsY = (
-  tracks: Track[],
-  selectedClips: ClipData[],
-  offset: number
-) => {
-  if (
-    selectedClips.some((selectedClip) => {
-      const parentTrackIndex = tracks.findIndex(
-        (track) => track.id === selectedClip.trackId
-      );
-      return (
-        parentTrackIndex + offset >= tracks.length ||
-        parentTrackIndex + offset < 0
-      );
-    })
-  ) {
-    return false;
-  }
-  return true;
-};
+import * as Tone from "tone";
 
 interface ClipProps {
   track: Track;
@@ -65,12 +40,16 @@ interface ClipProps {
   scrollRef: React.RefObject<HTMLDivElement>;
   selectedIndexOffset: number;
   setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
+  loopOffset: number;
+  setLoopOffset: Dispatch<SetStateAction<number>>;
   dragging: boolean;
   setDragging: Dispatch<SetStateAction<boolean>>;
-  setPlayheadLeft: (pixels: number) => void;
+  setPlayheadLeft: React.Dispatch<SetStateAction<number>>;
   selectedOffset: number;
   setSelectedOffset: Dispatch<SetStateAction<number>>;
   scrollLeft: number;
+  referenceClip: AudioClip | MidiClip | null;
+  setReferenceClip: Dispatch<SetStateAction<AudioClip | MidiClip | null>>;
 }
 
 export const Clip = observer(
@@ -86,6 +65,10 @@ export const Clip = observer(
     scrollLeft,
     selectedOffset,
     setSelectedOffset,
+    referenceClip,
+    setReferenceClip,
+    loopOffset,
+    setLoopOffset,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
@@ -99,181 +82,57 @@ export const Clip = observer(
     const initialX = useRef<number>(0);
     const parentTrackIndex = mixer.tracks.indexOf(track);
 
-    const onMouseDown = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      if (e.button !== 2) {
-        setDragging(true);
-      }
-      initialY.current = e.clientY;
-      initialX.current = e.clientX;
-
-      if (e.button !== 2) {
-        undoManager.withGroup("UNSELECT ALL AND SELECT ONE", () => {
-          if (!e.ctrlKey) {
-            mixer.unselectAllClips();
-          }
-
-          if (!clip.locked) {
-            track.selectClip(clip);
-          }
-        });
-      }
-    };
-    const handleClick = useCallback(
-      (e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (e.ctrlKey) {
-          return;
-        }
-        undoManager.withoutUndo(() => {
-          if (scrollRef.current) {
-            const xOffset = scrollRef.current.getBoundingClientRect().x;
-            const xValue = e.clientX - xOffset + scrollRef.current.scrollLeft;
-            const seconds = timeline.snapToGrid
-              ? Tone.Time(
-                  xValue * timeline.samplesPerPixel,
-                  "samples"
-                ).quantize(timeline.subdivision)
-              : Tone.Time(
-                  xValue * timeline.samplesPerPixel,
-                  "samples"
-                ).toSeconds();
-            Tone.getTransport().seconds = seconds;
-            timeline.setSeconds(seconds);
-
-            const pixels =
-              Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
-              timeline.samplesPerPixel;
-            setPlayheadLeft(pixels);
-          }
-        });
-      },
-      [scrollRef, setPlayheadLeft, timeline, undoManager]
+    const onMouseDown = getOnMouseDown(
+      initialX,
+      initialY,
+      setDragging,
+      clip,
+      track,
+      mixer,
+      undoManager,
+      setReferenceClip
     );
 
-    const onMouseMove = useCallback(
-      (e: MouseEvent) => {
-        if (!dragging || !selected) return;
-
-        if (isLooping) {
-          const newValue =
-            clip.loopSamples + timeline.pixelsToSamples(e.movementX);
-          clip.setLoopSamples(newValue >= 0 ? newValue : 0);
-          return;
-        }
-
-        if (
-          inBoundsX(
-            mixer.selectedClips,
-            timeline.pixelsToSamples(e.movementX + selectedOffset)
-          )
-        ) {
-          setSelectedOffset((prev) => prev + e.movementX);
-        }
-
-        const movementY = e.clientY - initialY?.current;
-        const threshold = track.laneHeight * 0.75;
-
-        if (Math.abs(movementY) < 20) {
-          return;
-        }
-
-        const clampedThreshold = Math.max(80, Math.min(140, threshold));
-
-        const { selectedClips, tracks } = mixer;
-
-        if (Math.abs(movementY) >= clampedThreshold) {
-          const direction = movementY > 0 ? 1 : -1;
-          const newOffset = selectedIndexOffset + direction;
-
-          if (inBoundsY(tracks, selectedClips, newOffset)) {
-            setSelectedIndexOffset(newOffset);
-            initialY.current = e.clientY;
-          }
-        }
-      },
-      [
-        dragging,
-        selected,
-        isLooping,
-        mixer,
-        timeline,
-        selectedOffset,
-        track.laneHeight,
-        clip,
-        setSelectedOffset,
-        selectedIndexOffset,
-        setSelectedIndexOffset,
-      ]
+    const onClick = getOnClick(
+      scrollRef,
+      timeline,
+      setPlayheadLeft,
+      undoManager
     );
 
-    const onMouseUp = useCallback(
-      (e: MouseEvent) => {
-        setIsLooping(false);
+    const onMouseMove = getOnMouseMove(
+      dragging,
+      selected,
+      isLooping,
+      referenceClip,
+      track,
+      timeline,
+      mixer,
+      selectedOffset,
+      setSelectedOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      initialY,
+      setLoopOffset
+    );
 
-        if (!dragging) {
-          setDragging(false);
-          return;
-        }
-
-        e.stopPropagation();
-        const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
-        const firstClipStart = clip.start + initialTimeDifference;
-
-        const quantizedFirstClipStart = Tone.Time(
-          Tone.Time(firstClipStart, "samples").quantize(timeline.subdivision),
-          "s"
-        ).toSamples();
-
-        const quantizeOffset = timeline.snapToGrid
-          ? quantizedFirstClipStart - firstClipStart
-          : 0;
-
-        mixer.selectedClips.forEach((selectedClip) => {
-          const timeOffset = timeline.pixelsToSamples(selectedOffset);
-          const newStart = selectedClip.start + timeOffset + quantizeOffset;
-
-          selectedClip.setStart(newStart);
-        });
-
-        setSelectedOffset(0);
-        if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
-          undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
-            mixer.selectedClips.forEach((selectedClip) => {
-              const selectedParentIndex = mixer.tracks.findIndex(
-                (track) => track.id === selectedClip.trackId
-              );
-              if (selectedParentIndex !== -1) {
-                moveClipToNewTrack(
-                  selectedClip,
-                  mixer,
-                  undoManager,
-                  selectedParentIndex,
-                  selectedParentIndex + selectedIndexOffset
-                );
-              } else {
-                throw new Error("No parent track found");
-              }
-            });
-          });
-        }
-
-        setSelectedIndexOffset(0);
-        setDragging(false);
-        initialY.current = 0;
-        initialX.current = 0;
-      },
-      [
-        mixer,
-        parentTrackIndex,
-        selectedIndexOffset,
-        selectedOffset,
-        setDragging,
-        setSelectedIndexOffset,
-        setSelectedOffset,
-        timeline,
-        undoManager,
-      ]
+    const onMouseUp = getOnMouseUp(
+      dragging,
+      setDragging,
+      setIsLooping,
+      selectedOffset,
+      setSelectedOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      referenceClip,
+      timeline,
+      mixer,
+      undoManager,
+      parentTrackIndex,
+      initialX,
+      initialY,
+      setReferenceClip,
+      setLoopOffset
     );
 
     const clipLeft = selected
@@ -288,34 +147,6 @@ export const Clip = observer(
         window.removeEventListener("mousemove", onMouseMove);
       };
     }, [onMouseMove, onMouseUp]);
-
-    const getTop = () => {
-      if (selected && dragging) {
-        return (
-          mixer.getCombinedLaneHeightsAtIndex(
-            parentTrackIndex + selectedIndexOffset
-          ) + 2
-        );
-      }
-
-      return mixer.getCombinedLaneHeightsAtIndex(parentTrackIndex) + 2;
-    };
-
-    const getHeight = () => {
-      if (selected && dragging) {
-        return (
-          mixer.tracks[parentTrackIndex + selectedIndexOffset]?.laneHeight - 2
-        );
-      }
-      return track.laneHeight - 2;
-    };
-
-    const getColor = () => {
-      if (selected && dragging) {
-        return mixer.tracks[parentTrackIndex + selectedIndexOffset]?.color;
-      }
-      return track.color;
-    };
 
     const clipInfoString = useMemo(() => {
       return `${track.name} | ${Tone.Time(
@@ -380,22 +211,31 @@ export const Clip = observer(
       setIsLooping(true);
     };
 
+    const { top, height, color } = getClipValues(
+      selected,
+      dragging,
+      track,
+      mixer,
+      parentTrackIndex,
+      selectedIndexOffset
+    );
+
     return (
       <>
         <div
           onMouseDown={onMouseDown}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
+          onClick={onClick}
           onDoubleClick={handleDoubleClick}
           key={clip.id}
           className=" flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
           style={{
             opacity: selected ? 0.8 : 0.6,
             marginTop: 2,
-            height: getHeight(),
-            background: getColor(),
-            top: getTop(),
+            height: height,
+            background: color,
+            top: top,
             zIndex: 9,
             position: "absolute",
             left: clipLeft,
@@ -451,9 +291,10 @@ export const Clip = observer(
 
         {clip?.type === "audio" && clip.loopSamples > 0 && (
           <AudioLoop
+            loopOffset={loopOffset}
             scrollLeft={scrollLeft}
-            top={getTop()}
-            color={getColor()}
+            top={top}
+            color={color}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             track={currentDragTrack || track}

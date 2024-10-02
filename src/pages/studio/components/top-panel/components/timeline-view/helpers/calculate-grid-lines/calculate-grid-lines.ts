@@ -11,6 +11,8 @@ export const subdivisionToQuarterMap: Record<string, number> = {
   ["8t"]: 3,
   ["16n"]: 4,
   ["16t"]: 6,
+  // ["32n"]: 8,
+  // ["32t"]: 12,
 };
 
 export const findSmallestSubdivision = (timeline: Timeline) => {

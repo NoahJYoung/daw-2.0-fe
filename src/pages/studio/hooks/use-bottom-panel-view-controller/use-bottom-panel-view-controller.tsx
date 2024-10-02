@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useRef,
   useState,
-  useEffect,
+  useLayoutEffect,
 } from "react";
 import { Track } from "../../audio-engine/components";
 import { Clip } from "../../audio-engine/components/types";
@@ -153,7 +153,7 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
     setMode("MIXER");
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.addEventListener("resize", () =>
       setWindowSize({
         height: window.innerHeight,

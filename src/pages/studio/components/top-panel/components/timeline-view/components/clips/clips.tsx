@@ -2,7 +2,7 @@ import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { Clip } from "./components";
 import { PlaceholderClip } from "./components/clip/components";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { BsFiletypeMp3 as ImportFileIcon } from "react-icons/bs";
@@ -34,7 +34,7 @@ interface ClipsProps {
   endMeasure: number;
   scrollRef: React.RefObject<HTMLDivElement>;
   scrollLeft: number;
-  setPlayheadLeft: (pixels: number) => void;
+  setPlayheadLeft: Dispatch<SetStateAction<number>>;
   measureWidth: number;
   totalMeasures: number;
   totalWidth: number;
@@ -53,6 +53,8 @@ export const Clips = observer(
     const { undoManager } = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
     const [selectedXOffset, setSelectedXOffset] = useState(0);
+    const [loopOffset, setLoopOffset] = useState<number>(0);
+    const [referenceClip, setReferenceClip] = useState<ClipData | null>(null);
     const [dragging, setDragging] = useState(false);
 
     const [placeholderClipPosition, setPlaceholderClipPosition] = useState<
@@ -217,6 +219,8 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    setLoopOffset={setLoopOffset}
+                    loopOffset={loopOffset}
                     scrollLeft={scrollLeft}
                     selectedOffset={selectedXOffset}
                     setSelectedOffset={setSelectedXOffset}
@@ -229,6 +233,8 @@ export const Clips = observer(
                     key={clip.id}
                     track={track}
                     clip={clip}
+                    referenceClip={referenceClip}
+                    setReferenceClip={setReferenceClip}
                   />
                 ) : null
               )}

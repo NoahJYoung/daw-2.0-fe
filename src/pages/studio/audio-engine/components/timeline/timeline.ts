@@ -18,7 +18,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   measures: prop(300).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
   seconds: prop(0),
-  subdivision: prop("1n").withSetter(),
+  subdivision: prop("4n").withSetter(),
   snapToGrid: prop(false).withSetter(),
 }) {
   sync() {
