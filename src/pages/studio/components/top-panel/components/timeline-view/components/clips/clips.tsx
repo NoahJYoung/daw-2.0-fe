@@ -54,6 +54,7 @@ export const Clips = observer(
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
     const [selectedXOffset, setSelectedXOffset] = useState(0);
     const [loopOffset, setLoopOffset] = useState<number>(0);
+    const [isLooping, setIsLooping] = useState(false);
     const [referenceClip, setReferenceClip] = useState<ClipData | null>(null);
     const [dragging, setDragging] = useState(false);
 
@@ -104,6 +105,7 @@ export const Clips = observer(
         label: "Split at playhead",
         onClick: () => splitSelectedClips(mixer, timeline, undoManager),
         icon: SplitIcon,
+        disabled: mixer.selectedClips.length === 0,
         shortcut: "shift+s",
       },
       {
@@ -219,6 +221,8 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    isLooping={isLooping}
+                    setIsLooping={setIsLooping}
                     setLoopOffset={setLoopOffset}
                     loopOffset={loopOffset}
                     scrollLeft={scrollLeft}

@@ -37,7 +37,7 @@ export const UndoManagerProvider: React.FC<AudioEngineProviderProps> = ({
         maxUndoLevels: MAX_UNDO_LEVELS,
         maxRedoLevels: MAX_UNDO_LEVELS,
       }),
-    [audioEngine]
+    [audioEngine, undoStore]
   );
 
   const value = { undoManager, undoStore };

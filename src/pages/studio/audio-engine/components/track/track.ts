@@ -52,6 +52,8 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     this.channel.set({ mute });
     this.channel.volume.linearRampTo(volume, 0.01);
     this.channel.pan.linearRampTo(pan, 0.01);
+    this.connectClipsToOutput();
+    this.clearAllEvents();
   }
 
   init() {
@@ -69,6 +71,22 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     this.clips.push(clip);
     clip.player.connect(this.channel);
   };
+
+  clearAllEvents() {
+    this.clips.forEach((clip) => {
+      if (clip.type === "audio") {
+        clip.clearEvents();
+      }
+    });
+  }
+
+  connectClipsToOutput() {
+    this.clips.forEach((clip) => {
+      if (clip.type === "audio") {
+        clip.player.connect(this.channel);
+      }
+    });
+  }
 
   @modelAction
   deleteClip(clip: Clip) {
@@ -176,6 +194,6 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   stop = () => {
-    this.clips.forEach((clip) => clip.stop());
+    this.clips.forEach((clip) => clip.stop(Tone.now()));
   };
 }

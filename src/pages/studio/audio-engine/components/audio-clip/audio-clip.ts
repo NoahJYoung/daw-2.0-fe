@@ -53,12 +53,11 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   play = (time: Tone.Unit.Time, seekTime?: Tone.Unit.Time) => {
     if (this.player.loaded) {
       this.player.start(time, seekTime);
-      console.log("play path");
     }
   };
 
-  stop = () => {
-    this.player.stop();
+  stop = (time: Tone.Unit.Time) => {
+    this.player.stop(time);
   };
 
   schedule = () => {
@@ -132,10 +131,8 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const playEventId = transport.scheduleOnce((time) => {
       if (seekTime > 0) {
         this.play(time, seekTime);
-        console.log("schedule path 1");
       } else {
         this.play(time);
-        console.log("schedule path 2");
       }
     }, startTimeInSeconds);
     this.startEventId = playEventId;
@@ -148,14 +145,14 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
       "samples"
     ).toSeconds();
     if (this.end) {
-      const stopEventId = transport.scheduleOnce(() => {
-        this.stop();
+      const stopEventId = transport.scheduleOnce((time) => {
+        this.stop(time);
       }, endTimeInSeconds);
       this.stopEventId = stopEventId;
     }
   };
 
-  private clearEvents = () => {
+  clearEvents = () => {
     const transport = Tone.getTransport();
     if (this.startEventId) {
       transport.clear(this.startEventId);

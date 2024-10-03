@@ -18,7 +18,8 @@ export const getOnMouseMove = (
   selectedIndexOffset: number,
   setSelectedIndexOffset: Dispatch<SetStateAction<number>>,
   initialY: MutableRefObject<number>,
-  setLoopOffset: Dispatch<SetStateAction<number>>
+  setLoopOffset: Dispatch<SetStateAction<number>>,
+  loopOffset: number
 ) => {
   const onMouseMove = (e: MouseEvent) => {
     if (!dragging || !selected || !clip) return;
@@ -29,6 +30,7 @@ export const getOnMouseMove = (
         clip,
         timeline,
         setLoopOffset,
+        loopOffset,
         selected
       );
     }

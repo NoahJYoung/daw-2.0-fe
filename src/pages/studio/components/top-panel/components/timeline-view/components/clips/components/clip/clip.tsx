@@ -5,6 +5,7 @@ import {
 } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
 import { AudioClipView, AudioLoop } from "./components";
+import { MdOutlineLoop as LoopIcon } from "react-icons/md";
 import {
   useAudioEngine,
   useBottomPanelViewController,
@@ -50,6 +51,8 @@ interface ClipProps {
   scrollLeft: number;
   referenceClip: AudioClip | MidiClip | null;
   setReferenceClip: Dispatch<SetStateAction<AudioClip | MidiClip | null>>;
+  isLooping: boolean;
+  setIsLooping: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Clip = observer(
@@ -69,11 +72,15 @@ export const Clip = observer(
     setReferenceClip,
     loopOffset,
     setLoopOffset,
+    isLooping,
+    setIsLooping,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
     const { selectTrack, selectClip } = useBottomPanelViewController();
-    const [isLooping, setIsLooping] = useState(false);
+    // const [isLooping, setIsLooping] = useState(false);
+    // const [loopOffset, setLoopOffset] = useState<number>(0);
+
     const [showClipActions, setShowClipActions] = useState(false);
 
     const selected = mixer.selectedClips.includes(clip);
@@ -113,13 +120,15 @@ export const Clip = observer(
       selectedIndexOffset,
       setSelectedIndexOffset,
       initialY,
-      setLoopOffset
+      setLoopOffset,
+      loopOffset
     );
 
     const onMouseUp = getOnMouseUp(
       dragging,
       setDragging,
       setIsLooping,
+      isLooping,
       selectedOffset,
       setSelectedOffset,
       selectedIndexOffset,
@@ -132,7 +141,8 @@ export const Clip = observer(
       initialX,
       initialY,
       setReferenceClip,
-      setLoopOffset
+      setLoopOffset,
+      loopOffset
     );
 
     const clipLeft = selected
@@ -272,38 +282,41 @@ export const Clip = observer(
                   onMouseDown={handleLoopDown}
                   style={{
                     left:
-                      (clip.length + clip.loopSamples) /
+                      (clip.length +
+                        clip.loopSamples +
+                        (selected ? loopOffset : 0)) /
                         timeline.samplesPerPixel -
                       24,
-                    bottom: 0,
+                    bottom: 4,
                   }}
                   className={cn(
-                    "absolute flex justify-center items-center w-4 h-4 border border-red-900",
+                    "absolute flex flex items-center justify-center justify-center text-xl items-center opacity-80 hover:opacity-100 w-5 h-5",
                     isLooping ? "cursor-grabbing" : "cursor-grab"
                   )}
                 >
-                  L
+                  <LoopIcon className="text-xl text-black" />
                 </button>
               )}
             </>
           )}
         </div>
 
-        {clip?.type === "audio" && clip.loopSamples > 0 && (
-          <AudioLoop
-            loopOffset={loopOffset}
-            scrollLeft={scrollLeft}
-            top={top}
-            color={color}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            track={currentDragTrack || track}
-            clip={clip}
-            clipLeft={clipLeft}
-            selected={selected}
-            isLooping={isLooping}
-          />
-        )}
+        {clip?.type === "audio" &&
+          clip.loopSamples + (selected ? loopOffset : 0) > 0 && (
+            <AudioLoop
+              loopOffset={loopOffset}
+              scrollLeft={scrollLeft}
+              top={top}
+              color={color}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              track={currentDragTrack || track}
+              clip={clip}
+              clipLeft={clipLeft}
+              selected={selected}
+              isLooping={isLooping}
+            />
+          )}
       </>
     );
   }

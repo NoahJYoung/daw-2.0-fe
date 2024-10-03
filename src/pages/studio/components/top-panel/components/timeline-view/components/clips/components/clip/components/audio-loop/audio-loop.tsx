@@ -40,13 +40,15 @@ export const AudioLoop = observer(
       peakChunks,
       samplesPerPixel,
       loopWidth,
-    } = useWaveform(clip, track, { loop: true });
+    } = useWaveform(clip, track, { loop: true, loopOffset, selected });
 
     const canvasRefs = useRef<HTMLCanvasElement[][]>([]);
     const lastLoopRefs = useRef<HTMLCanvasElement[]>([]);
 
     const loops = Array.from({
-      length: Math.floor((clip.loopSamples + loopOffset) / clip.length),
+      length: Math.floor(
+        (clip.loopSamples + (selected ? loopOffset : 0)) / clip.length
+      ),
     });
 
     if (!canvasRefs.current.length) {
@@ -90,6 +92,7 @@ export const AudioLoop = observer(
       loops,
       scrollLeft,
       clipWidth,
+      loopOffset,
     ]);
 
     return (
@@ -108,6 +111,7 @@ export const AudioLoop = observer(
             color={color}
             canvasRefs={canvasRefs}
             clip={clip}
+            key={i}
           />
         ))}
         <div

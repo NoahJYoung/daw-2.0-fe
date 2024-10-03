@@ -9,6 +9,7 @@ export const getOnMouseUp = (
   dragging: boolean,
   setDragging: Dispatch<SetStateAction<boolean>>,
   setIsLooping: Dispatch<SetStateAction<boolean>>,
+  isLooping: boolean,
   selectedOffset: number,
   setSelectedOffset: Dispatch<SetStateAction<number>>,
   selectedIndexOffset: number,
@@ -21,23 +22,42 @@ export const getOnMouseUp = (
   initialX: MutableRefObject<number>,
   initialY: MutableRefObject<number>,
   setReferenceClip: Dispatch<SetStateAction<Clip | null>>,
-  setLoopOffset: Dispatch<SetStateAction<number>>
+  setLoopOffset: Dispatch<SetStateAction<number>>,
+  loopOffset: number
 ) => {
-  const onMouseUp = (e: MouseEvent) => {
+  const resetStates = () => {
     setIsLooping(false);
-    setReferenceClip(null);
     setLoopOffset(0);
+    setReferenceClip(null);
+    setDragging(false);
+    setSelectedIndexOffset(0);
+    setSelectedOffset(0);
+    initialY.current = 0;
+    initialX.current = 0;
+  };
 
-    if (!dragging) {
-      setDragging(false);
-      return;
-    }
-
-    if (!referenceClip) {
+  const onMouseUp = (e: MouseEvent) => {
+    if (!dragging || !referenceClip) {
+      resetStates();
       return;
     }
 
     e.stopPropagation();
+
+    if (isLooping) {
+      //  const quantizedLoop = Tone.Time(
+      //    Tone.Time(firstClipStart, "samples").quantize(timeline.subdivision),
+      //    "s"
+      //  ).toSamples();
+      mixer.selectedClips.forEach((selectedClip) => {
+        const newValue = selectedClip.loopSamples + loopOffset;
+        selectedClip.setLoopSamples(newValue >= 0 ? newValue : 0);
+      });
+
+      resetStates();
+      return;
+    }
+
     const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
     const firstClipStart = referenceClip.start + initialTimeDifference;
 
@@ -57,7 +77,6 @@ export const getOnMouseUp = (
       selectedClip.setStart(newStart);
     });
 
-    setSelectedOffset(0);
     if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
       undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
         mixer.selectedClips.forEach((selectedClip) => {
@@ -79,10 +98,7 @@ export const getOnMouseUp = (
       });
     }
 
-    setSelectedIndexOffset(0);
-    setDragging(false);
-    initialY.current = 0;
-    initialX.current = 0;
+    resetStates();
   };
 
   return onMouseUp;

@@ -7,12 +7,15 @@ export const handleLoopMovement = (
   clip: Clip,
   timeline: Timeline,
   setLoopOffset: Dispatch<SetStateAction<number>>,
+  loopOffset: number,
   selected: boolean
 ) => {
-  const newValue = clip.loopSamples + timeline.pixelsToSamples(movementX);
-  // clip.setLoopSamples(newValue >= 0 ? newValue : 0);
   if (selected) {
-    setLoopOffset(newValue);
+    const newValue = loopOffset + timeline.pixelsToSamples(movementX);
+
+    if (clip.loopSamples + loopOffset >= 0) {
+      setLoopOffset(Math.abs(newValue) >= 0 ? newValue : 0);
+    }
   }
   return;
 };

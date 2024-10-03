@@ -10,12 +10,14 @@ import { MAX_WAVEFORM_WIDTH } from "@/pages/studio/utils/constants";
 
 interface UseWaveformOptions {
   loop?: boolean;
+  loopOffset: number;
+  selected: boolean;
 }
 
 export const useWaveform = (
   clip: AudioClip,
   track: Track,
-  options?: UseWaveformOptions
+  loopOptions?: UseWaveformOptions
 ) => {
   const { timeline } = useAudioEngine();
   const width = timeline.samplesToPixels(clip.length);
@@ -26,6 +28,8 @@ export const useWaveform = (
 
   const [peakChunks, setPeakChunks] = useState<Peak[][]>([]);
 
+  const loopOffset = loopOptions?.loopOffset || 0;
+
   useLayoutEffect(() => {
     if (clip.buffer) {
       if (!waveformCache.has(clip.id, timeline.samplesPerPixel)) {
@@ -34,10 +38,12 @@ export const useWaveform = (
       const cachedPeaks = waveformCache.get(clip.id, timeline.samplesPerPixel);
 
       if (cachedPeaks) {
-        const loopPeakLength = clip.loopSamples / timeline.samplesPerPixel;
+        const loopPeakLength =
+          (clip.loopSamples + (loopOptions?.selected ? loopOffset : 0)) /
+          timeline.samplesPerPixel;
         let preparedPeaks: Peak[] = [];
 
-        if (options?.loop) {
+        if (loopOptions?.loop) {
           const totalPeaks = cachedPeaks.length;
 
           while (preparedPeaks.length < loopPeakLength) {
@@ -78,7 +84,6 @@ export const useWaveform = (
     }
   }, [
     clip.loopSamples,
-    options?.loop,
     clip.buffer,
     timeline.samplesPerPixel,
     track.laneHeight,
@@ -88,14 +93,32 @@ export const useWaveform = (
     waveformMagnificationValue,
     adjustedHeight,
     clip.id,
+    loopOptions?.loop,
+    loopOptions?.selected,
+    loopOffset,
   ]);
+
+  const getLoopWidth = () => {
+    if (loopOptions?.selected) {
+      const loopWidth =
+        clip.loopSamples + loopOffset > 0
+          ? (clip.loopSamples + loopOffset) / timeline.samplesPerPixel
+          : 0;
+
+      return loopWidth;
+    }
+
+    const loopWidth =
+      clip.loopSamples > 0 ? clip.loopSamples / timeline.samplesPerPixel : 0;
+
+    return loopWidth;
+  };
 
   return {
     width,
     height: adjustedHeight,
     peakChunks,
     samplesPerPixel: timeline.samplesPerPixel,
-    loopWidth:
-      clip.loopSamples > 0 ? clip.loopSamples / timeline.samplesPerPixel : 0,
+    loopWidth: getLoopWidth(),
   };
 };
