@@ -29,7 +29,6 @@ import { Timeline } from "@/pages/studio/audio-engine/components";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
-
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
 

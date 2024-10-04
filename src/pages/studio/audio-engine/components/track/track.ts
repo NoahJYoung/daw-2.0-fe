@@ -163,6 +163,8 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     } else {
       this.laneHeight = newHeight;
     }
+    const { mixer } = getRoot(this);
+    mixer.refreshTopPanelHeight();
   }
 
   resetLaneHeight() {

@@ -78,8 +78,6 @@ export const Clip = observer(
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
     const { selectTrack, selectClip } = useBottomPanelViewController();
-    // const [isLooping, setIsLooping] = useState(false);
-    // const [loopOffset, setLoopOffset] = useState<number>(0);
 
     const [showClipActions, setShowClipActions] = useState(false);
 
@@ -249,7 +247,7 @@ export const Clip = observer(
             zIndex: 9,
             position: "absolute",
             left: clipLeft,
-            cursor: dragging ? "grabbing" : "auto",
+            cursor: dragging || isLooping ? "grabbing" : "auto",
           }}
         >
           <span className="flex items-center pl-[2px] pt-[2px]">
@@ -310,6 +308,8 @@ export const Clip = observer(
               color={color}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              onClick={onClick}
+              onMouseDown={onMouseDown}
               track={currentDragTrack || track}
               clip={clip}
               clipLeft={clipLeft}

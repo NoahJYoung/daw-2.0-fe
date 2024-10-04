@@ -6,3 +6,4 @@ export { moveClipToNewTrack } from "./move-clip-to-new-track";
 export { pasteClips } from "./paste-clips";
 export { joinClips } from "./join-clips";
 export { importFromFile } from "./import-from-file";
+export { getTimelineMenuActions } from "./getTimelineMenuActions";

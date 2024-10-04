@@ -31,6 +31,11 @@ export const useWaveform = (
   const loopOffset = loopOptions?.loopOffset || 0;
 
   useLayoutEffect(() => {
+    // TODO: Figure out how to optimize loop waveform render to not crash app on zoom in/out
+    // This is a temporary solution, but it would be great to have waveform on the loop segments
+    if (loopOptions?.loop) {
+      return;
+    }
     if (clip.buffer) {
       if (!waveformCache.has(clip.id, timeline.samplesPerPixel)) {
         throw new Error("no waveform data found");

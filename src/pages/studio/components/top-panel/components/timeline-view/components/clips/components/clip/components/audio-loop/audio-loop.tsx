@@ -1,9 +1,7 @@
 import { AudioClip, Track } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import { useLayoutEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useWaveform } from "../audio-clip-view/hooks/use-waveform";
-import { drawWaveform } from "../audio-clip-view/hooks/use-waveform/helpers";
-import { isChunkVisible } from "../../helpers";
 import { LoopSection } from "./components";
 
 interface AudioClipViewProps {
@@ -18,6 +16,8 @@ interface AudioClipViewProps {
   loopOffset: number;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  onClick: (e: React.MouseEvent) => void;
+  onMouseDown: (e: React.MouseEvent) => void;
 }
 
 export const AudioLoop = observer(
@@ -28,17 +28,19 @@ export const AudioLoop = observer(
     top,
     clipLeft,
     selected,
-    isLooping,
-    scrollLeft,
+    // isLooping,
+    // scrollLeft,
     loopOffset,
     onMouseEnter,
     onMouseLeave,
+    onClick,
+    onMouseDown,
   }: AudioClipViewProps) => {
     const {
       width: clipWidth,
       height,
       peakChunks,
-      samplesPerPixel,
+      // samplesPerPixel,
       loopWidth,
     } = useWaveform(clip, track, { loop: true, loopOffset, selected });
 
@@ -55,48 +57,52 @@ export const AudioLoop = observer(
       canvasRefs.current = loops.map(() => []);
     }
 
-    useLayoutEffect(() => {
-      peakChunks.forEach((chunk, i) => {
-        loops.forEach((_, loopIndex) => {
-          const canvas = canvasRefs.current[loopIndex][i];
-          const loopLeft = clipLeft + clipWidth * (loopIndex + 1);
+    // useLayoutEffect(() => {
+    //   peakChunks.forEach((chunk, i) => {
+    //     loops.forEach((_, loopIndex) => {
+    //       const canvas = canvasRefs.current[loopIndex][i];
+    //       const loopLeft = clipLeft + clipWidth * (loopIndex + 1);
 
-          if (
-            canvas &&
-            !track.isResizing &&
-            isChunkVisible(chunk, i, loopLeft, scrollLeft)
-          ) {
-            drawWaveform(chunk, canvas);
-          }
-        });
+    //     //   if (
+    //     //     canvas &&
+    //     //     !track.isResizing &&
+    //     //     isChunkVisible(chunk, i, loopLeft, scrollLeft)
+    //     //   ) {
+    //     //     drawWaveform(chunk, canvas);
+    //     //   }
+    //     // });
 
-        const lastCanvas = lastLoopRefs.current[i];
-        const lastLoopLeft = clipLeft + clipWidth + clipWidth * loops.length;
+    //     const lastCanvas = lastLoopRefs.current[i];
+    //     const lastLoopLeft = clipLeft + clipWidth + clipWidth * loops.length;
 
-        if (
-          lastCanvas &&
-          !track.isResizing &&
-          isChunkVisible(chunk, i, lastLoopLeft, scrollLeft)
-        ) {
-          drawWaveform(chunk, lastCanvas);
-        }
-      });
-    }, [
-      clip.id,
-      clipLeft,
-      peakChunks,
-      samplesPerPixel,
-      track.isResizing,
-      isLooping,
-      loops.length,
-      loops,
-      scrollLeft,
-      clipWidth,
-      loopOffset,
-    ]);
+    //     // if (
+    //     //   lastCanvas &&
+    //     //   !track.isResizing &&
+    //     //   isChunkVisible(chunk, i, lastLoopLeft, scrollLeft)
+    //     // ) {
+    //     //   drawWaveform(chunk, lastCanvas);
+    //     // }
+    //   });
+    // }, [
+    //   clip.id,
+    //   clipLeft,
+    //   peakChunks,
+    //   samplesPerPixel,
+    //   track.isResizing,
+    //   isLooping,
+    //   loops.length,
+    //   loops,
+    //   scrollLeft,
+    //   clipWidth,
+    //   loopOffset,
+    // ]);
 
     return (
-      <div className="flex flex-shrink-0 bg-transparent">
+      <div
+        onClick={onClick}
+        onMouseDown={onMouseDown}
+        className="flex flex-shrink-0 bg-transparent"
+      >
         {loops.map((_, i) => (
           <LoopSection
             loopIndex={i}

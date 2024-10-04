@@ -5,27 +5,8 @@ import { PlaceholderClip } from "./components/clip/components";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
-import { BsFiletypeMp3 as ImportFileIcon } from "react-icons/bs";
-import {
-  deleteSelectedClips,
-  importFromFile,
-  joinClips,
-  pasteClips,
-  selectAllClips,
-  splitSelectedClips,
-} from "./helpers";
-import { MenuItem } from "@/components/ui/custom/types";
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
-import {
-  AiOutlineSplitCells as SplitIcon,
-  AiOutlineMergeCells as JoinIcon,
-} from "react-icons/ai";
-import { FiDelete as DeleteIcon } from "react-icons/fi";
-import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
-import {
-  MdContentPasteGo as PasteIcon,
-  MdOutlineContentCopy as CopyIcon,
-} from "react-icons/md";
+import { getTimelineMenuActions } from "./helpers";
 
 import * as Tone from "tone";
 
@@ -49,7 +30,7 @@ export const Clips = observer(
     setPlayheadLeft,
     totalWidth,
   }: ClipsProps) => {
-    const { mixer, timeline, state, clipboard } = useAudioEngine();
+    const audioEngine = useAudioEngine();
     const { undoManager } = useUndoManager();
     const [selectedIndexOffset, setSelectedIndexOffset] = useState(0);
     const [selectedXOffset, setSelectedXOffset] = useState(0);
@@ -62,6 +43,8 @@ export const Clips = observer(
       number | null
     >(null);
 
+    const { state, mixer } = audioEngine;
+
     useEffect(() => {
       if (state === AudioEngineState.recording) {
         setPlaceholderClipPosition(Tone.getTransport().seconds);
@@ -69,68 +52,6 @@ export const Clips = observer(
         setPlaceholderClipPosition(null);
       }
     }, [state]);
-
-    const sameParentTrack =
-      mixer.selectedClips.length &&
-      mixer.selectedClips.every(
-        (selectedClip) =>
-          selectedClip.trackId === mixer.selectedClips[0].trackId
-      );
-
-    const timelineContextMenuItems: MenuItem[] = [
-      {
-        label: "Select all",
-        onClick: () => selectAllClips(mixer, undoManager),
-        icon: SelectAllIcon,
-        shortcut: "ctrl+a",
-      },
-      {
-        label: "Copy",
-        onClick: () => clipboard.copy(mixer.selectedClips),
-        icon: CopyIcon,
-        disabled: mixer.selectedClips.length === 0 || !sameParentTrack,
-        shortcut: "ctrl+c",
-      },
-      {
-        label: "Paste",
-        onClick: () => pasteClips(clipboard, mixer, timeline, undoManager),
-        icon: PasteIcon,
-        disabled:
-          clipboard.getClips().length === 0 ||
-          mixer.selectedTracks.length === 0,
-        shortcut: "ctrl+v",
-      },
-      { separator: true },
-      {
-        label: "Split at playhead",
-        onClick: () => splitSelectedClips(mixer, timeline, undoManager),
-        icon: SplitIcon,
-        disabled: mixer.selectedClips.length === 0,
-        shortcut: "shift+s",
-      },
-      {
-        label: "Join",
-        onClick: () => joinClips(mixer, undoManager),
-        icon: JoinIcon,
-        disabled: mixer.selectedClips.length < 2 || !sameParentTrack,
-        shortcut: "shift+j",
-      },
-
-      {
-        label: "Delete",
-        onClick: () => deleteSelectedClips(mixer, undoManager),
-        disabled: mixer.selectedClips.length < 1,
-        icon: DeleteIcon,
-        shortcut: "delete",
-      },
-      { separator: true },
-      {
-        label: "Import file",
-        disabled: mixer.selectedTracks.length < 1,
-        onClick: () => importFromFile(mixer.selectedTracks),
-        icon: ImportFileIcon,
-      },
-    ];
 
     const handleClick = (e: React.MouseEvent) => {
       if (!e.ctrlKey) {
@@ -191,7 +112,7 @@ export const Clips = observer(
           state === AudioEngineState.playing ||
           state === AudioEngineState.recording
         }
-        items={timelineContextMenuItems}
+        items={getTimelineMenuActions(audioEngine, undoManager)}
       >
         <div
           onContextMenu={(e) => {
