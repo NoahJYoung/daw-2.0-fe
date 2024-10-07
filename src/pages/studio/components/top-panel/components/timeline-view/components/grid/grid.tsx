@@ -27,7 +27,7 @@ export const Grid = observer(
   }: GridProps) => {
     const { mixer } = useAudioEngine();
     const { tracks } = mixer;
-    const height = mixer.topPanelHeight;
+    const height = mixer.topPanelHeight + 80;
     const className = "stroke-current text-surface-2";
 
     return (

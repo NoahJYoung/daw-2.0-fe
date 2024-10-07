@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { observer } from "mobx-react-lite";
-import {
-  Clips,
-  Grid,
-  Playhead,
-  TimelineHotKeysManager,
-  TopBar,
-} from "./components";
+import { Clips, Grid, Playhead, TopBar } from "./components";
 import {
   useAudioEngine,
   useRequestAnimationFrame,
@@ -282,8 +276,7 @@ export const TimelineView = observer(
           endMeasure={endMeasure}
           setPlayheadLeft={setPlayheadLeft}
         />
-        <Playhead height={mixer.topPanelHeight + 74} left={playheadLeft} />
-        <TimelineHotKeysManager />
+        <Playhead height={mixer.topPanelHeight + 154} left={playheadLeft} />
       </div>
     );
   }

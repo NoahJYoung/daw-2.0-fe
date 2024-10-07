@@ -15,8 +15,38 @@ import { changeTrackPosition, swapTrackPosition } from "./helpers";
 import { FaCaretUp, FaCaretDown, FaGuitar } from "react-icons/fa";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { inputOptions } from "@/pages/studio/audio-engine/types";
+import { cn } from "@/lib/utils";
 
 const DRAG_THRESHOLD = 24;
+
+const activeButtonClass = cn(
+  "hover:text-surface-10",
+  "shadow-none",
+  "flex",
+  "items-center",
+  "justify-center",
+  "rounded-xxs p-2 w-6 h-6 m-0 font-bold",
+  " bg-transparent",
+  "text-surface-10",
+  "hover:bg-surface-3"
+);
+
+const baseButtonClass = cn(
+  "shadow-none",
+  "hover:text-surface-6",
+  "hover:bg-surface-3",
+  "text-surface-5",
+  "flex items-center",
+  "justify-center",
+  "text-surface-5",
+  "bg-transparent",
+  "rounded-xxs",
+  "p-2",
+  "w-6",
+  "h-6",
+  "m-0",
+  "font-bold"
+);
 
 interface TrackPanelProps {
   track: Track;
@@ -199,18 +229,6 @@ export const TrackPanel = observer(
 
     const showPositionArrows = track.laneHeight > 60;
 
-    const baseButtonClass = `shadow-none hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
-
-    const activeButtonClass = `hover:text-surface-10
-      shadow-none 
-      flex 
-      items-center 
-      justify-center 
-      rounded-xxs p-2 w-6 h-6 m-0 font-bold
-      bg-transparent
-      text-surface-10 
-      hover:bg-surface-3`;
-
     return (
       <>
         {isDragging && <div style={{ height: track.laneHeight, zIndex: -1 }} />}
@@ -226,16 +244,27 @@ export const TrackPanel = observer(
         <div
           onClick={handleSelectTrack}
           onDoubleClick={handleDoubleClick}
-          className={`select-none flex rounded-xxs gap-1 pr-1 w-full flex-shrink-0 ${
-            isDragging ? "border-surface-0 border-b-1 border-r-2 border" : ""
-          } w-full bg-surface-${
-            1 + selectedBgOffset
-          } border border-surface-0  border-l-0 ${
-            !isDragging ? "border-b-0" : ""
-          }`}
+          className={cn(
+            "select-none",
+            "flex rounded-xxs",
+            "gap-1",
+            "pr-1",
+            "w-full",
+            "flex-shrink-0",
+            {
+              "border-surface-0 border-b-1 border-r-2 border": isDragging,
+            },
+            "w-full",
+            `bg-surface-${1 + selectedBgOffset}`,
+            "border",
+            "border-surface-0",
+            "border-l-0",
+            { "border-b-0": !isDragging },
+            "static",
+            { absolute: isDragging }
+          )}
           style={{
             height: track.laneHeight,
-            position: isDragging ? "absolute" : "static",
             top: mixer.getCombinedLaneHeightsAtIndex(trackNumber - 1) + yOffset,
             zIndex: isDragging ? 3 : 1,
           }}

@@ -127,7 +127,7 @@ export const Clips = observer(
           className="absolute flex flex-col"
           style={{
             width: totalWidth,
-            height: mixer.topPanelHeight,
+            height: mixer.topPanelHeight + 80,
             top: 72,
           }}
         >

@@ -95,10 +95,13 @@ export const StudioContextMenu = ({
               disabled={item.disabled}
             >
               <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
-                {Icon && <Icon className="w-[16px] h-[16px]" />}
-                <div className="w-[104px] ">{label || ""}</div>
+                <span className="flex gap-2 items-center">
+                  {Icon && <Icon className="w-[16px] h-[16px]" />}
+                  <div>{label || ""}</div>
+                </span>
+
                 {shortcut ? (
-                  <ContextMenuShortcut className="flex-grow-0 m-0 w-[40px]">
+                  <ContextMenuShortcut className="flex-grow-0 m-0 min-w-[40px]">
                     {shortcut}
                   </ContextMenuShortcut>
                 ) : (
