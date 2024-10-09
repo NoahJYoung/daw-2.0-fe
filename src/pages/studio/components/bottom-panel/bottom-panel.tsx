@@ -1,10 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { useBottomPanelViewController } from "../../hooks";
 import { PanelMode } from "../../hooks/use-bottom-panel-view-controller/use-bottom-panel-view-controller";
-import { MixerView } from "./components";
+import { KeyboardView, MixerView } from "./components";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef } from "react";
+import { cn } from "@/lib/utils";
 
 export const BottomPanel = observer(() => {
   const { mode, selectedClip, selectedTrack, setMode, windowSize } =
@@ -14,7 +15,9 @@ export const BottomPanel = observer(() => {
   const triggerClassName =
     "data-[state=active]:border-b-surface-6 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
-  const contentClassName = "w-full pt-2 h-full bg-transparent";
+  const contentClassName = cn("w-full pt-2 h-full bg-transparent", {
+    "justify-center": window.innerWidth >= 1360,
+  });
 
   return (
     <Tabs
@@ -52,13 +55,19 @@ export const BottomPanel = observer(() => {
         </TabsTrigger>
       </TabsList>
 
-      <div className="bg-transparent w-full h-full overflow-x-auto overflow-y-hidden styled-scrollbar flex ">
+      <div
+        className={cn(
+          "bg-transparent w-full h-full overflow-x-auto overflow-y-hidden styled-scrollbar flex items-center flex h-full",
+          { "justify-center": window.innerWidth > 1360 },
+          { "justify-start": window.innerWidth < 1360 }
+        )}
+      >
         <TabsContent className={contentClassName} value="MIXER">
           <MixerView />
         </TabsContent>
 
         <TabsContent className={contentClassName} value="KEYBOARD">
-          KEYBOARD
+          <KeyboardView />
         </TabsContent>
 
         <TabsContent className={contentClassName} value="TRACK_FX">

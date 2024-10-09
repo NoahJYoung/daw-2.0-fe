@@ -4,7 +4,7 @@ import {
   Track,
 } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import { AudioClipView, AudioLoop } from "./components";
+import { AudioClipView, AudioLoop, MidiClipView } from "./components";
 import { MdOutlineLoop as LoopIcon } from "react-icons/md";
 import {
   useAudioEngine,
@@ -295,6 +295,12 @@ export const Clip = observer(
                   <LoopIcon className="text-xl text-black" />
                 </button>
               )}
+            </>
+          )}
+
+          {clip?.type === "midi" && (
+            <>
+              <MidiClipView clip={clip as MidiClip} />
             </>
           )}
         </div>

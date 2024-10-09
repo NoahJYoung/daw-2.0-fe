@@ -1,11 +1,11 @@
 import { ExtendedModel, idProp, model, modelAction, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
-import * as Tone from "tone";
 import { computed, observable } from "mobx";
 import { audioBufferCache } from "../audio-buffer-cache";
 import { waveformCache } from "../waveform-cache";
 import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
 import { getPeaks } from "../audio-buffer-cache/helpers";
+import * as Tone from "tone";
 
 @model("AudioEngine/Mixer/Track/AudioClip")
 export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {

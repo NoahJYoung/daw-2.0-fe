@@ -1,15 +1,18 @@
-import { model, prop, ExtendedModel } from "mobx-keystone";
+import { model, prop, ExtendedModel, clone } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
-import { AudioClip, Mixer, Timeline, Clipboard } from "./components";
+import { AudioClip, Mixer, Timeline, Clipboard, MidiClip } from "./components";
 import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
 import { AudioEngineState } from "./types";
 import * as Tone from "tone";
+import { Keyboard } from "./components";
+import { MidiNote } from "./components/midi-note";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   timeline: prop<Timeline>(() => new Timeline({})),
   mixer: prop<Mixer>(() => new Mixer({})),
+  keyboard: prop<Keyboard>(() => new Keyboard({})),
   projectId: prop<string | undefined>().withSetter(),
   projectName: prop<string>("New Project").withSetter(),
 }) {
@@ -31,29 +34,27 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
     const transport = Tone.getTransport();
 
-    const mic = new Tone.UserMedia();
     const recorder = new Tone.Recorder();
-
-    mic.connect(recorder);
 
     activeTracks.forEach((activeTrack) => {
       if (activeTrack.input === "mic") {
-        mic.connect(activeTrack.waveform);
+        activeTrack.mic.connect(recorder);
       }
     });
 
-    try {
-      await mic.open();
-    } catch (error) {
-      console.error(error);
-    }
-
     await this.play();
-    await recorder.start();
+    const shouldRecordAudio = this.mixer
+      .getActiveTracks()
+      .some((track) => track.input === "mic");
+    if (shouldRecordAudio) {
+      await recorder.start();
+    }
     transport.once("stop", async () => {
-      const recording = await recorder.stop();
-      const url = URL.createObjectURL(recording);
-      const audioBuffer = await new Tone.ToneAudioBuffer().load(url);
+      const recording = shouldRecordAudio ? await recorder.stop() : null;
+      const url = recording ? URL.createObjectURL(recording) : null;
+      const audioBuffer = url
+        ? await new Tone.ToneAudioBuffer().load(url)
+        : null;
       activeTracks.forEach((track) => {
         if (track.input === "mic") {
           const clip = new AudioClip({
@@ -61,24 +62,40 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
             start,
           });
 
-          audioBufferCache.add(clip.id, audioBuffer.toMono());
-          clip.setBuffer(audioBuffer);
+          if (audioBuffer) {
+            audioBufferCache.add(clip.id, audioBuffer.toMono());
+            clip.setBuffer(audioBuffer);
 
-          clip.createWaveformCache(audioBuffer);
+            clip.createWaveformCache(audioBuffer);
+          }
 
           track.createAudioClip(clip);
         } else if (track.input === "midi") {
-          console.log("Starting Midi Record");
+          if (this.keyboard.events.length) {
+            const events = [...this.keyboard.events].map((event) => {
+              const clonedEvent = { ...event };
+              const { on, off, note } = { ...clonedEvent };
+              return new MidiNote({ on: on - start, off: off - start, note });
+            });
+            const clip = new MidiClip({
+              trackId: track.id,
+              start,
+              events: [...events.map((event) => clone(event))],
+              end: Tone.Time(Tone.getTransport().seconds, "s").toSamples(),
+            });
+
+            track.createMidiClip(clone(clip));
+          }
         }
+        this.keyboard.clearRecordedEvents();
       });
 
       activeTracks.forEach((activeTrack) => {
         if (activeTrack.input === "mic") {
-          mic.disconnect(activeTrack.waveform);
+          activeTrack.mic.disconnect(recorder);
         }
       });
       recorder.dispose();
-      mic.dispose();
     });
   };
 
@@ -92,6 +109,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   pause = async () => {
+    this.mixer.tracks.forEach((track) =>
+      track.instrument.releaseAll(Tone.now())
+    );
     const transport = Tone.getTransport();
     const seconds = transport.seconds;
     this.mixer.tracks.forEach((track) => track.stop());
@@ -106,6 +126,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   stop = async () => {
+    this.mixer.tracks.forEach((track) =>
+      track.instrument.releaseAll(Tone.now())
+    );
     const transport = Tone.getTransport();
     transport.stop();
     this.timeline.setSeconds(transport.seconds);

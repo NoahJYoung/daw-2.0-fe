@@ -48,6 +48,7 @@ export const ChannelStrip = observer(
     };
 
     const active =
+      track.active ||
       state === AudioEngineState.playing ||
       state === AudioEngineState.recording;
 

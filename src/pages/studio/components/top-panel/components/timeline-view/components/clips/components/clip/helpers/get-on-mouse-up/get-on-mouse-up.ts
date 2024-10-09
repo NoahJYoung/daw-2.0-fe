@@ -70,12 +70,6 @@ export const getOnMouseUp = (
         const newValue = selectedClip.loopSamples + loopOffset;
         const quantizedNewValue = newValue - quantizationDifference;
 
-        console.log(newValue, quantizedNewValue);
-        console.log(
-          timeline.samplesToPixels(newValue),
-          timeline.samplesToPixels(quantizedNewValue)
-        );
-
         if (timeline.snapToGrid) {
           selectedClip.setLoopSamples(quantizedNewValue >= 0 ? newValue : 0);
         } else {

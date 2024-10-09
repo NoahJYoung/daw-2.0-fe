@@ -19,6 +19,7 @@ import {
   MIN_LANE_HEIGHT,
 } from "../../constants";
 import { METER_SMOOTHING_VALUE } from "@/pages/studio/utils/constants";
+import { MidiClip } from "../midi-clip";
 
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -30,19 +31,22 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     Math.floor(Math.random() * 251),
     Math.floor(Math.random() * 251),
   ]).withSetter(),
-  active: prop(false).withSetter(),
+  active: prop(false),
   mute: prop(false).withSetter(),
   pan: prop(0).withSetter(),
   laneHeight: prop(INITIAL_LANE_HEIGHT),
   volume: prop(0).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
-  input: prop<string | null>("mic").withSetter(),
+  input: prop<string | null>("mic"),
 }) {
   channel = new Tone.Channel();
   waveform = new Tone.Waveform();
   meterL = new Tone.Meter(METER_SMOOTHING_VALUE);
   meterR = new Tone.Meter(METER_SMOOTHING_VALUE);
   splitter = new Tone.Split();
+  mic = new Tone.UserMedia().connect(this.waveform);
+
+  instrument = new Tone.PolySynth(Tone.AMSynth).connect(this.channel);
 
   @observable
   isResizing: boolean = false;
@@ -57,7 +61,15 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   init() {
-    this.channel.connect(this.splitter);
+    if (this.active) {
+      if (this.input === "mic") {
+        this.mic.connect(this.splitter);
+      } else {
+        this.instrument.connect(this.splitter);
+      }
+    } else {
+      this.channel.connect(this.splitter);
+    }
     this.splitter.connect(this.meterL, 0);
     this.splitter.connect(this.meterR, 1);
   }
@@ -72,17 +84,20 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     clip.player.connect(this.channel);
   };
 
+  @modelAction
+  createMidiClip = (clip: MidiClip) => {
+    this.clips.push(clip);
+  };
+
   clearAllEvents() {
     this.clips.forEach((clip) => {
-      if (clip.type === "audio") {
-        clip.clearEvents();
-      }
+      clip.clearEvents();
     });
   }
 
   connectClipsToOutput() {
     this.clips.forEach((clip) => {
-      if (clip.type === "audio") {
+      if (clip.type === "audio" && clip instanceof AudioClip) {
         clip.player.connect(this.channel);
       }
     });
@@ -94,7 +109,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     if (index >= 0) {
       this.clips.splice(index, 1);
     }
-    if (clip.type === "audio") {
+    if (clip.type === "audio" && clip instanceof AudioClip) {
       clip.player.disconnect(this.channel);
     }
 
@@ -131,6 +146,49 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 
     if (trackRefIndex >= 0) {
       this.selectedRefs.splice(trackRefIndex, 1);
+    }
+  }
+
+  async openMic() {
+    try {
+      await this.mic.open();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @modelAction
+  setActive(value: boolean) {
+    if (this.input === "mic") {
+      if (value) {
+        this.openMic();
+        this.channel.disconnect(this.splitter);
+        this.mic.connect(this.splitter);
+      } else {
+        this.mic.close();
+        this.channel.connect(this.splitter);
+        this.mic.disconnect(this.splitter);
+      }
+    } else {
+      if (value) {
+        this.channel.disconnect(this.splitter);
+        this.instrument.connect(this.splitter);
+      } else {
+        this.channel.connect(this.splitter);
+        this.instrument.disconnect(this.splitter);
+      }
+    }
+    this.active = value;
+  }
+
+  @modelAction
+  setInput(value: string) {
+    if (this.active) {
+      this.setActive(false);
+      this.input = value;
+      this.setActive(true);
+    } else {
+      this.input = value;
     }
   }
 
@@ -180,15 +238,19 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
     const transportInSamples = Tone.Time(transport.seconds, "s").toSamples();
     this.clips.forEach((clip) => {
-      const seekTime = Tone.Time(
-        transportInSamples - clip.start,
-        "samples"
-      ).toSeconds();
-      if (
-        transportInSamples > clip.start &&
-        transportInSamples < clip.end + clip.loopSamples
-      ) {
-        clip.play(Tone.now(), seekTime);
+      if (clip.type === "audio") {
+        const seekTime = Tone.Time(
+          transportInSamples - clip.start,
+          "samples"
+        ).toSeconds();
+        if (
+          transportInSamples > clip.start &&
+          transportInSamples < clip.end + clip.loopSamples
+        ) {
+          clip.play(Tone.now(), seekTime);
+        } else {
+          clip.schedule();
+        }
       } else {
         clip.schedule();
       }
