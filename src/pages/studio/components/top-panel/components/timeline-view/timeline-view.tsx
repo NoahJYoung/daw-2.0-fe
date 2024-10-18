@@ -31,7 +31,7 @@ export const TimelineView = observer(
     const audioEngine = useAudioEngine();
     const { undoManager } = useUndoManager();
     const { timeline, mixer } = audioEngine;
-    const { pixels, measures, timeSignature } = timeline;
+    const { measures, timeSignature } = timeline;
 
     const [scrollLeft, setScrollLeft] = useState(0);
     const [viewportWidth, setViewportWidth] = useState(0);
@@ -81,10 +81,6 @@ export const TimelineView = observer(
       [subdivisionsPerBeat, timeSignature, timeline.samplesPerPixel]
     );
 
-    const measureWidth = pixels / measures;
-
-    const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
-
     const generateArray = useCallback(
       (length: number) => Array.from({ length }, (_, i) => i),
       []
@@ -102,8 +98,12 @@ export const TimelineView = observer(
 
     const beatWidth = useMemo(
       () => timeline.samplesToPixels(Tone.Time("4n").toSamples()),
-      [timeline, timeline.samplesPerPixel]
+      [timeline, timeline.samplesPerPixel, timeline.bpm]
     );
+
+    const measureWidth = beatWidth * timeline.timeSignature;
+
+    const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
 
     const renderEveryFourthMeasure = beatWidth * timeSignature < 40;
 

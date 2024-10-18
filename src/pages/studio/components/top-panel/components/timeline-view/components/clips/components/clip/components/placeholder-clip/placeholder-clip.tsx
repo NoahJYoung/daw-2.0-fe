@@ -72,6 +72,15 @@ export const PlaceholderClip = observer(
       mixer.tracks.indexOf(track)
     );
 
+    const getColor = () => {
+      const [r, g, b] = track.rgb;
+      const color = `linear-gradient(
+    to bottom, 
+    rgba(${r}, ${g}, ${b}, 0.5), 
+    rgba(${r}, ${g}, ${b}, 1)`;
+      return color;
+    };
+
     return renderPlaceholderClip ? (
       <div
         className="absolute justify-end flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
@@ -81,7 +90,7 @@ export const PlaceholderClip = observer(
           left,
           marginTop: 4,
           height: track.laneHeight - 2,
-          background: track.color,
+          background: getColor(),
           opacity: 0.5,
         }}
       >

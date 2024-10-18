@@ -271,7 +271,7 @@ export const Clip = observer(
               <AudioClipView
                 scrollLeft={scrollLeft}
                 track={currentDragTrack || track}
-                clip={clip}
+                clip={clip as AudioClip}
                 clipLeft={clipLeft}
               />
 
@@ -300,7 +300,10 @@ export const Clip = observer(
 
           {clip?.type === "midi" && (
             <>
-              <MidiClipView clip={clip as MidiClip} />
+              <MidiClipView
+                track={currentDragTrack || track}
+                clip={clip as MidiClip}
+              />
             </>
           )}
         </div>
@@ -317,7 +320,7 @@ export const Clip = observer(
               onClick={onClick}
               onMouseDown={onMouseDown}
               track={currentDragTrack || track}
-              clip={clip}
+              clip={clip as AudioClip}
               clipLeft={clipLeft}
               selected={selected}
               isLooping={isLooping}

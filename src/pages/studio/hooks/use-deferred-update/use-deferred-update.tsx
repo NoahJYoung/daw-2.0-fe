@@ -6,7 +6,7 @@ export function useDeferredUpdate<T = number>(
   onCommit: (value: T) => void
 ) {
   const { undoManager } = useUndoManager();
-  const [initialValue, setInitialValue] = useState(value);
+  const [initialValue, setInitialValue] = useState<T>(value);
 
   const onValueCommit = (newValue: T) => {
     undoManager.withoutUndo(() => onCommit(initialValue));

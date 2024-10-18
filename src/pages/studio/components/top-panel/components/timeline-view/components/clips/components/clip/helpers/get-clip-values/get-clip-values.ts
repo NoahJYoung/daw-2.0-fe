@@ -31,9 +31,19 @@ export const getClipValues = (
 
   const getColor = () => {
     if (selected && dragging) {
-      return mixer.tracks[parentTrackIndex + selectedIndexOffset]?.color;
+      const [r, g, b] = mixer.tracks[parentTrackIndex + selectedIndexOffset]
+        ?.rgb || [175, 175, 175];
+      const color = `linear-gradient(
+    to bottom, 
+    rgba(${r}, ${g}, ${b}, 0.5), 
+    rgba(${r}, ${g}, ${b}, 1)`;
+      return color;
     }
-    return track.color;
+    const [r, g, b] = track.rgb;
+    return `linear-gradient(
+    to bottom, 
+    rgba(${r}, ${g}, ${b}, 0.5), 
+    rgba(${r}, ${g}, ${b}, 1)`;
   };
 
   return { top: getTop(), height: getHeight(), color: getColor() };

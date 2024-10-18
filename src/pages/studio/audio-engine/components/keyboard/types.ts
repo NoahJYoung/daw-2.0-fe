@@ -11,6 +11,7 @@ export interface EventData {
   note: PitchNameTuple;
   on: number;
   off: number;
+  velocity?: number;
 }
 
 export type OnEventData = Omit<EventData, "off">;

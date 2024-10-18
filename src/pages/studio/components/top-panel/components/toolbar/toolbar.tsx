@@ -100,7 +100,7 @@ export const Toolbar = observer(
         <StudioDropdownMenu
           triggerIcon={IoIosSettings}
           title={t("studio.toolbar.settings")}
-          onValueChange={(newValue) => timeline.setSubdivision(newValue)}
+          onValueChange={() => {}}
           options={[{ label: "Toggle Theme", onClick: toggleTheme }]}
         />
 

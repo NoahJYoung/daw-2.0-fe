@@ -92,6 +92,10 @@ export const Key = observer(({ keyData, baseOctave, left }: KeyProps) => {
       onMouseLeave={release}
       onTouchStart={attack}
       onTouchEnd={release}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
     >
       <p>{keyData.keyboardKey.toUpperCase()}</p>
     </div>

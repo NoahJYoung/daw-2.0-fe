@@ -46,7 +46,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   splitter = new Tone.Split();
   mic = new Tone.UserMedia().connect(this.waveform);
 
-  instrument = new Tone.PolySynth(Tone.AMSynth).connect(this.channel);
+  synth = new Tone.PolySynth(Tone.AMSynth).connect(this.channel);
 
   @observable
   isResizing: boolean = false;
@@ -125,6 +125,11 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   get color() {
     const [r, g, b] = this.rgb;
     return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  @computed
+  get instrument() {
+    return this.synth;
   }
 
   @modelAction

@@ -55,6 +55,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       const audioBuffer = url
         ? await new Tone.ToneAudioBuffer().load(url)
         : null;
+
       activeTracks.forEach((track) => {
         if (track.input === "mic") {
           const clip = new AudioClip({
@@ -70,17 +71,20 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           }
 
           track.createAudioClip(clip);
+          // TODO: Fix this bug that sometimes causes Midi Clip creation to fail
         } else if (track.input === "midi") {
           if (this.keyboard.events.length) {
-            const events = [...this.keyboard.events].map((event) => {
-              const clonedEvent = { ...event };
-              const { on, off, note } = { ...clonedEvent };
-              return new MidiNote({ on: on - start, off: off - start, note });
-            });
             const clip = new MidiClip({
               trackId: track.id,
               start,
-              events: [...events.map((event) => clone(event))],
+              events: this.keyboard.events.map(
+                (event) =>
+                  new MidiNote({
+                    ...event,
+                    on: event.on - start,
+                    off: event.off - start,
+                  })
+              ),
               end: Tone.Time(Tone.getTransport().seconds, "s").toSamples(),
             });
 

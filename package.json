@@ -73,9 +73,9 @@
     "tailwind-merge": "^2.5.1",
     "tailwindcss-animate": "^1.0.7",
     "tone": "^15.0.4",
+    "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0",
     "vaul": "^0.9.1",
-    "wavesurfer.js": "^7.8.6",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -63,6 +63,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   stop() {}
 
   schedule() {
+    this.clearEvents();
     const parentTrack: Track | undefined = getParent(getParent(this)!);
     if (!parentTrack) {
       throw new Error("No parent track found");

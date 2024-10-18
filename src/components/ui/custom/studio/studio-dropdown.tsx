@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CSSProperties } from "react";
 
 interface DropdownProps {
   options: { label: string; value: string }[];
@@ -14,7 +15,10 @@ interface DropdownProps {
   colorOffset?: number;
   placeholder?: string;
   label?: string;
+  size?: "sm" | "lg";
   icon?: React.ReactElement;
+  style?: CSSProperties;
+  showSelectedValue?: boolean;
 }
 
 export const StudioDropdown = ({
@@ -23,26 +27,32 @@ export const StudioDropdown = ({
   onChange,
   placeholder,
   label,
+  size = "sm",
   icon: Icon,
   colorOffset = 0,
+  showSelectedValue = true,
+  style,
 }: DropdownProps) => {
   const isPlaceholder = !value;
   return (
     <Select value={value || ""} onValueChange={onChange}>
       <SelectTrigger
+        style={style}
         className={`w-full ${
           isPlaceholder
             ? `text-surface-${4 + colorOffset}`
             : `text-surface-${6 + colorOffset}`
-        } text-sm border-surface-${
+        } ${size === "lg" ? "text-lg" : "text-sm"} border-surface-${
           2 + colorOffset
-        } rounded-xxs h-7 flex-shrink-0`}
+        } rounded-xxs ${size === "lg" ? "h-10" : "h-7"} flex-shrink-0`}
       >
         {Icon}
-        <SelectValue
-          className="text-sm text-surface-0"
-          placeholder={placeholder}
-        />
+        {showSelectedValue && (
+          <SelectValue
+            className="text-sm text-surface-0"
+            placeholder={placeholder}
+          />
+        )}
       </SelectTrigger>
       <SelectContent className="rounded-xxs bg-surface-1">
         {label && <SelectLabel>{label}</SelectLabel>}

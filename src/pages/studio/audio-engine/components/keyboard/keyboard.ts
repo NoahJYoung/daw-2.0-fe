@@ -44,7 +44,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
 
     if (state === AudioEngineState.recording) {
       const newEvents = [...this.events, event];
-      this.setOnEvents(newEvents);
+      this.setOnEvents([...newEvents]);
     }
   }
 
@@ -70,14 +70,14 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
       };
 
       if (state === AudioEngineState.recording) {
-        const newEvents = [...this.events, event];
-        this.setEvents(newEvents);
+        const newEvents = [...this.events, { ...event }];
+        this.setEvents([...newEvents]);
 
         const newOnEvents = [...this.onEvents].filter(
           (event) => event.note.join("") !== pitchTuple.join("")
         );
 
-        this.setOnEvents(newOnEvents);
+        this.setOnEvents([...newOnEvents]);
       }
     }
   }

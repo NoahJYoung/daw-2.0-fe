@@ -14,7 +14,12 @@ import {
   ImperativePanelGroupHandle,
 } from "react-resizable-panels";
 
-export type PanelMode = "MIXER" | "TRACK_FX" | "WAVEFORM_VIEW" | "PIANO_ROLL";
+export type PanelMode =
+  | "MIXER"
+  | "KEYBOARD"
+  | "TRACK_FX"
+  | "WAVEFORM_VIEW"
+  | "PIANO_ROLL";
 
 interface BottomPanelState {
   mode: PanelMode;

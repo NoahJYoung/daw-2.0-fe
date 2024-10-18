@@ -1,10 +1,15 @@
-import { MidiClip, Timeline } from "@/pages/studio/audio-engine/components";
+import {
+  MidiClip,
+  Timeline,
+  Track,
+} from "@/pages/studio/audio-engine/components";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 
 interface MidiClipViewProps {
   clip: MidiClip;
+  track: Track;
 }
 
 const getNoteXPosition = (note: MidiNote, timeline: Timeline) => {
@@ -33,17 +38,15 @@ const getNoteWidth = (note: MidiNote, timeline: Timeline) => {
   return timeline.samplesToPixels(note.length);
 };
 
-export const MidiClipView = observer(({ clip }: MidiClipViewProps) => {
-  const { timeline, mixer } = useAudioEngine();
+export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
+  const { timeline } = useAudioEngine();
 
-  const parentTrack = mixer.tracks.find((track) => track.id === clip.trackId);
-
-  const noteHeight = (parentTrack!.laneHeight - 36) / 12;
+  const noteHeight = (track!.laneHeight - 36) / 12;
 
   return (
     <svg
       width={timeline.samplesToPixels(clip.length)}
-      height={parentTrack!.laneHeight - 30}
+      height={track!.laneHeight - 30}
       className="mb-[6px]"
     >
       {clip.events.map((event) => (

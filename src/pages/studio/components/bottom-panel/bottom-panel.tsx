@@ -15,9 +15,9 @@ export const BottomPanel = observer(() => {
   const triggerClassName =
     "data-[state=active]:border-b-surface-6 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
-  const contentClassName = cn("w-full pt-2 h-full bg-transparent", {
-    "justify-center": window.innerWidth >= 1360,
-  });
+  const contentClassName = cn(
+    "w-full pt-2 h-full bg-transparent 2xl:justify-center 2xl:w-full"
+  );
 
   return (
     <Tabs
@@ -66,25 +66,41 @@ export const BottomPanel = observer(() => {
           <MixerView />
         </TabsContent>
 
-        <TabsContent className={contentClassName} value="KEYBOARD">
+        <TabsContent
+          style={mode === "KEYBOARD" ? { display: "flex" } : undefined}
+          className={contentClassName}
+          value="KEYBOARD"
+        >
           <KeyboardView />
         </TabsContent>
 
-        <TabsContent className={contentClassName} value="TRACK_FX">
+        <TabsContent
+          style={mode === "TRACK_FX" ? { display: "flex" } : undefined}
+          className={contentClassName}
+          value="TRACK_FX"
+        >
           {selectedTrack ? (
             <span>{`${selectedTrack.name}`}</span>
           ) : (
             <span>No track selected</span>
           )}
         </TabsContent>
-        <TabsContent className={contentClassName} value="WAVEFORM_VIEW">
+        <TabsContent
+          style={mode === "WAVEFORM_VIEW" ? { display: "flex" } : undefined}
+          className={contentClassName}
+          value="WAVEFORM_VIEW"
+        >
           {selectedClip ? (
             <span>{`Audio: ${selectedClip.id}`}</span>
           ) : (
             <span>No clip selected</span>
           )}
         </TabsContent>
-        <TabsContent className={contentClassName} value="PIANO_ROLL">
+        <TabsContent
+          style={mode === "PIANO_ROLL" ? { display: "flex" } : undefined}
+          className={contentClassName}
+          value="PIANO_ROLL"
+        >
           {selectedClip ? (
             <span>{`MIDI: ${selectedClip.id}`}</span>
           ) : (
