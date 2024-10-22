@@ -9,8 +9,12 @@ const timeSignatureOptions = [
   { label: "3/4", value: "3" },
   { label: "4/4", value: "4" },
   { label: "5/4", value: "5" },
+  { label: "6/4", value: "6" },
+  { label: "7/4", value: "7" },
   { label: "5/8", value: "2.5" },
   { label: "7/8", value: "3.5" },
+  { label: "9/8", value: "4.5" },
+  { label: "11/8", value: "5.5" },
 ];
 
 export const TimelineControls = observer(() => {
@@ -24,10 +28,13 @@ export const TimelineControls = observer(() => {
     4, 4,
   ];
 
+  const hiddenClassName = "hidden sm:flex mr-1";
+
   return (
     <>
-      <div className="sm:gap-5 hidden sm:flex justify-between mr-1">
-        <BpmInput />
+      {/* <div className="sm:gap-5 hidden sm:flex justify-between mr-1"> */}
+      <BpmInput className={hiddenClassName} />
+      <span className={hiddenClassName}>
         <StudioDropdown
           style={{ width: "5rem" }}
           options={timeSignatureOptions}
@@ -44,9 +51,11 @@ export const TimelineControls = observer(() => {
           colorOffset={0}
           onChange={(value) => timeline.setTimeSignature(parseFloat(value))}
         />
-      </div>
+      </span>
 
-      <div className="block sm:hidden h-full items-center flex w-6 text-surface-6 justify-center mr-2">
+      {/* </div> */}
+
+      <div className="block sm:hidden h-full items-center flex w-6 text-surface-6 text-2xl justify-center mr-2">
         <button>
           <FaEllipsis />
         </button>

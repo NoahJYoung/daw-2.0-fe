@@ -13,7 +13,7 @@ export const BottomPanel = observer(() => {
   const tabsListRef = useRef<HTMLDivElement>(null);
 
   const triggerClassName =
-    "data-[state=active]:border-b-surface-6 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
+    "data-[state=active]:border-b-surface-6 focus:ring-0 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
   const contentClassName = cn(
     "w-full pt-2 h-full bg-transparent 2xl:justify-center 2xl:w-full"

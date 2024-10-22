@@ -1,18 +1,27 @@
 import { model, prop, ExtendedModel, clone } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
-import { AudioClip, Mixer, Timeline, Clipboard, MidiClip } from "./components";
+import {
+  AudioClip,
+  Mixer,
+  Timeline,
+  Clipboard,
+  MidiClip,
+  Metronome,
+} from "./components";
 import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
 import { AudioEngineState } from "./types";
 import * as Tone from "tone";
 import { Keyboard } from "./components";
 import { MidiNote } from "./components/midi-note";
+import { EventData } from "./components/keyboard/types";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   timeline: prop<Timeline>(() => new Timeline({})),
   mixer: prop<Mixer>(() => new Mixer({})),
   keyboard: prop<Keyboard>(() => new Keyboard({})),
+  metronome: prop<Metronome>(() => new Metronome({})),
   projectId: prop<string | undefined>().withSetter(),
   projectName: prop<string>("New Project").withSetter(),
 }) {
@@ -28,7 +37,10 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   record = async () => {
-    const start = Tone.Time(Tone.getTransport().seconds, "s").toSamples();
+    const start = Tone.TransportTime(
+      Tone.getTransport().seconds,
+      "s"
+    ).toSamples();
     this.setState(AudioEngineState.recording);
     const activeTracks = this.mixer.getActiveTracks();
 
@@ -56,6 +68,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         ? await new Tone.ToneAudioBuffer().load(url)
         : null;
 
+      const stringifiedEvents = JSON.stringify(this.keyboard.events);
+
       activeTracks.forEach((track) => {
         if (track.input === "mic") {
           const clip = new AudioClip({
@@ -71,28 +85,34 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           }
 
           track.createAudioClip(clip);
-          // TODO: Fix this bug that sometimes causes Midi Clip creation to fail
         } else if (track.input === "midi") {
           if (this.keyboard.events.length) {
-            const clip = new MidiClip({
-              trackId: track.id,
-              start,
-              events: this.keyboard.events.map(
-                (event) =>
+            const events = [
+              ...JSON.parse(stringifiedEvents).map(
+                (event: EventData) =>
                   new MidiNote({
                     ...event,
                     on: event.on - start,
                     off: event.off - start,
                   })
               ),
-              end: Tone.Time(Tone.getTransport().seconds, "s").toSamples(),
+            ];
+            const clip = new MidiClip({
+              trackId: track.id,
+              start,
+              events: events.map((event) => clone(event)),
+              end: Tone.TransportTime(
+                Tone.getTransport().seconds,
+                "s"
+              ).toSamples(),
             });
 
             track.createMidiClip(clone(clip));
           }
         }
-        this.keyboard.clearRecordedEvents();
       });
+
+      this.keyboard.clearRecordedEvents();
 
       activeTracks.forEach((activeTrack) => {
         if (activeTrack.input === "mic") {
@@ -105,6 +125,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   play = async () => {
     Tone.start();
+    this.metronome.start();
     this.mixer.tracks.forEach((track) => track.play());
     Tone.getTransport().start();
     if (this.state !== AudioEngineState.recording) {
@@ -134,6 +155,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       track.instrument.releaseAll(Tone.now())
     );
     const transport = Tone.getTransport();
+    this.metronome.stop();
     transport.stop();
     this.timeline.setSeconds(transport.seconds);
     this.setState(AudioEngineState.stopped);

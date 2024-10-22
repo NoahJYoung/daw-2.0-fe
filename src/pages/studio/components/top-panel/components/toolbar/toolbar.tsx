@@ -12,7 +12,6 @@ import { PiUserList } from "react-icons/pi";
 import { PiMusicNoteSimpleFill } from "react-icons/pi";
 import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
-import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { TRACK_PANEL_EXPANDED_WIDTH } from "@/pages/studio/utils/constants";
 import { useThemeContext } from "@/hooks";
@@ -30,10 +29,8 @@ export const Toolbar = observer(
     const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
     const audioEngine = useAudioEngine();
-    const { timeline } = audioEngine;
+    const { timeline, metronome } = audioEngine;
     const { t } = useTranslation();
-
-    const [fakeMetronome, setFakeMetronome] = useState(false);
 
     return (
       <div
@@ -53,9 +50,11 @@ export const Toolbar = observer(
           icon={PiMetronomeFill}
           title={t("studio.toolbar.metronome")}
           onClick={() =>
-            undoManager.withoutUndo(() => setFakeMetronome(!fakeMetronome))
+            undoManager.withoutUndo(() =>
+              metronome.setActive(!metronome.active)
+            )
           }
-          on={fakeMetronome}
+          on={metronome.active}
           onClassName="text-surface-10"
         />
         <StudioButton

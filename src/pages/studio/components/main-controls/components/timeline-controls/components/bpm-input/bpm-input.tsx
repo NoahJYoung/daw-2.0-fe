@@ -2,7 +2,7 @@ import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { useRef } from "react";
 
-export const BpmInput = observer(() => {
+export const BpmInput = observer(({ className }: { className: string }) => {
   const { timeline } = useAudioEngine();
   const bpmRef = useRef<HTMLInputElement>(null);
 
@@ -15,7 +15,7 @@ export const BpmInput = observer(() => {
   };
 
   return (
-    <span className="w-full">
+    <span className={className}>
       <input
         name="bpm"
         id="bpm"
@@ -32,8 +32,8 @@ export const BpmInput = observer(() => {
           }
         }}
       />
-      <label className="text-surface-4 text-2xl m-0" htmlFor="bpm">
-        BPM
+      <label className="flex items-center text-surface-4 m-0" htmlFor="bpm">
+        bpm
       </label>
     </span>
   );

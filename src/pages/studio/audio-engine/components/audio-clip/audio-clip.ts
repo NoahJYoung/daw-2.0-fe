@@ -1,6 +1,6 @@
 import { ExtendedModel, idProp, model, modelAction, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
-import { computed, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import { audioBufferCache } from "../audio-buffer-cache";
 import { waveformCache } from "../waveform-cache";
 import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
@@ -19,7 +19,11 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   fadeOutSamples: prop<number>(0).withSetter(),
 }) {
   player = new Tone.Player();
+
+  @observable
   private startEventId: number | null = null;
+
+  @observable
   private stopEventId: number | null = null;
 
   @observable
@@ -135,8 +139,18 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
         this.play(time);
       }
     }, startTimeInSeconds);
-    this.startEventId = playEventId;
+    this.setStartEventId(playEventId);
   };
+
+  @action
+  setStartEventId(eventId: number | null) {
+    this.startEventId = eventId;
+  }
+
+  @action
+  setStopEventId(eventId: number | null) {
+    this.stopEventId = eventId;
+  }
 
   private scheduleStop = () => {
     const transport = Tone.getTransport();
@@ -148,7 +162,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
       const stopEventId = transport.scheduleOnce((time) => {
         this.stop(time);
       }, endTimeInSeconds);
-      this.stopEventId = stopEventId;
+      this.setStopEventId(stopEventId);
     }
   };
 
@@ -156,10 +170,12 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
     if (this.startEventId) {
       transport.clear(this.startEventId);
+      this.setStartEventId(null);
     }
 
     if (this.stopEventId) {
       transport.clear(this.stopEventId);
+      this.setStopEventId(null);
     }
   };
 

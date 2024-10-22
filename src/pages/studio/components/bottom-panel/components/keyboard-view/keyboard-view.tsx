@@ -8,7 +8,11 @@ export const KeyboardView = () => {
   const { baseOctave } = keyboard;
 
   return (
-    <div className={cn("w-[1360px] flex relative justify-start max-h-[225px]")}>
+    <div
+      className={cn(
+        "w-[1360px] flex relative justify-start max-h-[225px] mr-1"
+      )}
+    >
       {keys.map((key, i, arr) => {
         let left = 0;
 
