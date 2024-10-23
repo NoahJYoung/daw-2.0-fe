@@ -11,6 +11,16 @@ import { UndoManager } from "mobx-keystone";
 import * as Tone from "tone";
 
 export const joinClips = (mixer: Mixer, undoManager: UndoManager) => {
+  if (
+    !(
+      mixer.selectedClips.length &&
+      mixer.selectedClips.every(
+        (clip) => clip.type === mixer.selectedClips[0].type
+      )
+    )
+  ) {
+    return;
+  }
   undoManager.withGroup("JOIN SELECTED CLIPS", () => {
     const clips = mixer.selectedClips;
     if (
@@ -130,6 +140,8 @@ export const joinClips = (mixer: Mixer, undoManager: UndoManager) => {
 
         parentTrack.createMidiClip(newMidiClip);
       }
+    } else {
+      throw new Error("Selected clips must all be of same type");
     }
   });
 };

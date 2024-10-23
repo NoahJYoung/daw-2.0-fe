@@ -32,6 +32,12 @@ export const getTimelineMenuActions = (
       (selectedClip) => selectedClip.trackId === mixer.selectedClips[0].trackId
     );
 
+  const isSameClipType =
+    mixer.selectedClips.length &&
+    mixer.selectedClips.every(
+      (selectedClip) => selectedClip.type === mixer.selectedClips[0].type
+    );
+
   return [
     {
       label: "Select all",
@@ -66,7 +72,8 @@ export const getTimelineMenuActions = (
       label: "Join",
       onClick: () => joinClips(mixer, undoManager),
       icon: JoinIcon,
-      disabled: mixer.selectedClips.length < 2 || !isSameParentTrack,
+      disabled:
+        mixer.selectedClips.length < 2 || !isSameParentTrack || !isSameClipType,
       shortcut: "shift+j",
     },
 
