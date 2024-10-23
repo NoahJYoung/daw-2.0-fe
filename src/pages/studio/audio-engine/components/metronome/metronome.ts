@@ -39,20 +39,20 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   start() {
-    if (!this.eventId) {
-      const pulse = this.timeSignature % 1 === 0 ? "4n" : "8n";
-      const eventId = Tone.getTransport().scheduleRepeat((time) => {
-        this.voice.triggerAttackRelease("C5", "16n", time);
-      }, pulse);
-      this.setEventId(eventId);
-    }
+    // if (!this.eventId) {
+    //   const pulse = this.timeSignature % 1 === 0 ? "4n" : "8n";
+    //   const eventId = Tone.getTransport().scheduleRepeat((time) => {
+    //     this.voice.triggerAttackRelease("C5", "16n", time);
+    //   }, pulse);
+    //   this.setEventId(eventId);
+    // }
   }
 
   stop() {
-    if (this.eventId) {
-      Tone.getTransport().clear(this.eventId);
-      this.setEventId(null);
-    }
+    // if (this.eventId) {
+    //   Tone.getTransport().clear(this.eventId);
+    //   this.setEventId(null);
+    // }
   }
 
   @action

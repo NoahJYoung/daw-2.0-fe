@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite";
 import { useBottomPanelViewController } from "../../hooks";
 import { PanelMode } from "../../hooks/use-bottom-panel-view-controller/use-bottom-panel-view-controller";
-import { KeyboardView, MixerView } from "./components";
+import { KeyboardView, MidiClipExpandedView, MixerView } from "./components";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
+import { MidiClip } from "../../audio-engine/components";
 
 export const BottomPanel = observer(() => {
   const { mode, selectedClip, selectedTrack, setMode, windowSize } =
@@ -101,8 +102,8 @@ export const BottomPanel = observer(() => {
           className={contentClassName}
           value="PIANO_ROLL"
         >
-          {selectedClip ? (
-            <span>{`MIDI: ${selectedClip.id}`}</span>
+          {!!selectedClip && selectedClip instanceof MidiClip ? (
+            <MidiClipExpandedView clip={selectedClip} />
           ) : (
             <span>No clip selected</span>
           )}

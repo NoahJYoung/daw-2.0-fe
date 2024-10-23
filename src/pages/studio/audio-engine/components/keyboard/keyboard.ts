@@ -34,6 +34,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
       note: pitchTuple,
       on: Tone.Time(Tone.getTransport().seconds, "s").toSamples(),
     };
+
     const activeTracksWithKeyboardInput = mixer.tracks.filter(
       (track) => track.active && track.input === "midi"
     );
@@ -43,8 +44,8 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
     );
 
     if (state === AudioEngineState.recording) {
-      const newEvents = [...this.events, event];
-      this.setOnEvents([...newEvents]);
+      const newOnEvents = [...this.onEvents, event];
+      this.setOnEvents(newOnEvents);
     }
   }
 
@@ -59,25 +60,25 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
       track.instrument.triggerRelease(pitch, Tone.now())
     );
 
-    const onEvent = this.onEvents.find(
+    const onEventIndex = this.onEvents.findIndex(
       (event) => event.note.join("") === pitchTuple.join("")
     );
 
-    if (onEvent) {
+    if (onEventIndex !== -1) {
+      const onEvent = this.onEvents[onEventIndex];
       const event: EventData = {
         ...onEvent,
         off: Tone.Time(Tone.getTransport().seconds, "s").toSamples(),
       };
 
       if (state === AudioEngineState.recording) {
-        const newEvents = [...this.events, { ...event }];
-        this.setEvents([...newEvents]);
+        const newEvents = [...this.events, event];
+        this.setEvents(newEvents);
 
-        const newOnEvents = [...this.onEvents].filter(
-          (event) => event.note.join("") !== pitchTuple.join("")
+        const newOnEvents = this.onEvents.filter(
+          (_, index) => index !== onEventIndex
         );
-
-        this.setOnEvents([...newOnEvents]);
+        this.setOnEvents(newOnEvents);
       }
     }
   }

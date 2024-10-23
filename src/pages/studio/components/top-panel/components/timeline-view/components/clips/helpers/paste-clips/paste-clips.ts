@@ -2,11 +2,12 @@ import {
   audioBufferCache,
   AudioClip,
   Clipboard,
+  MidiClip,
   Mixer,
   Timeline,
   waveformCache,
 } from "@/pages/studio/audio-engine/components";
-import { UndoManager } from "mobx-keystone";
+import { clone, UndoManager } from "mobx-keystone";
 import * as Tone from "tone";
 
 export const pasteClips = (
@@ -25,9 +26,9 @@ export const pasteClips = (
       const firstClipStart = clips.length > 0 ? clips[0].start : 0;
 
       clips.forEach((clip) => {
-        if (clip.type === "audio") {
-          const relativeOffset = clip.start - firstClipStart;
-          const newStartPosition = timelinePosition + relativeOffset;
+        const relativeOffset = clip.start - firstClipStart;
+        const newStartPosition = timelinePosition + relativeOffset;
+        if (clip instanceof AudioClip) {
           const newClip = new AudioClip({
             start: newStartPosition,
             trackId: track.id,
@@ -44,6 +45,29 @@ export const pasteClips = (
           waveformCache.copy(clip.id, newClip.id);
 
           track.createAudioClip(newClip);
+        } else if (clip instanceof MidiClip) {
+          const {
+            locked,
+            start,
+            end,
+            loopSamples,
+            fadeInSamples,
+            fadeOutSamples,
+          } = clip;
+
+          const startDifference = start - newStartPosition;
+
+          const newClip = new MidiClip({
+            locked,
+            start: newStartPosition,
+            end: end - startDifference,
+            loopSamples,
+            fadeInSamples,
+            fadeOutSamples,
+            events: [...clip.events.map((event) => clone(event))],
+            trackId: track.id,
+          });
+          track.createMidiClip(newClip);
         }
       });
     });

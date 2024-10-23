@@ -13,6 +13,7 @@ import { MidiNote } from "../midi-note";
 import { PitchNameTuple } from "../midi-note/types";
 import * as Tone from "tone";
 import { Track } from "../track";
+import { EventData } from "../keyboard/types";
 
 interface EventParams {
   on: number;
@@ -109,7 +110,85 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     });
   };
 
-  split() {}
+  split(positionInSamples: number) {
+    const adjustedPosition = positionInSamples - this.start;
+
+    const difference = positionInSamples - adjustedPosition;
+    const splitEvents = JSON.parse(JSON.stringify([...this.events]))
+      .filter(
+        (event: { ["$"]: EventData }) =>
+          event["$"].on < adjustedPosition && event["$"].off > adjustedPosition
+      )
+      .map((event: { ["$"]: EventData }) => [
+        {
+          on: event["$"].on,
+          off: adjustedPosition,
+          velocity: event["$"].velocity,
+          note: [...event["$"].note],
+        },
+
+        {
+          on: adjustedPosition,
+          off: event["$"].off,
+          velocity: event["$"].velocity,
+          note: [...event["$"].note],
+        },
+      ]);
+
+    const clipOne = {
+      start: this.start,
+      end: positionInSamples,
+      trackId: this.trackId,
+      fadeInSamples: this.fadeInSamples,
+      fadeOutSamples: 0,
+      events: [
+        ...this.events
+          .concat(splitEvents.flat())
+          .filter(
+            (event) =>
+              event.on < adjustedPosition && event.off <= adjustedPosition
+          )
+          .map((event) =>
+            clone(
+              new MidiNote({
+                note: [...event.note],
+                velocity: event.velocity,
+                on: event.on,
+                off: event.off,
+              })
+            )
+          ),
+      ],
+    };
+
+    const clipTwo = {
+      start: positionInSamples,
+      end: this.end,
+      trackId: this.trackId,
+      fadeInSamples: 0,
+      fadeOutSamples: this.fadeOutSamples,
+      events: [
+        ...this.events
+          .concat(splitEvents.flat())
+          .filter((event) => event.on >= adjustedPosition)
+          .map((event) =>
+            clone(
+              new MidiNote({
+                note: [...event.note],
+                velocity: event.velocity,
+                on: event.on - positionInSamples + difference,
+                off: event.off - positionInSamples + difference,
+              })
+            )
+          ),
+      ],
+    };
+
+    return {
+      snapshots: [{ ...clipOne }, { ...clipTwo }],
+      clipIdToDelete: this.id,
+    };
+  }
 
   dispose() {
     // TODO:
