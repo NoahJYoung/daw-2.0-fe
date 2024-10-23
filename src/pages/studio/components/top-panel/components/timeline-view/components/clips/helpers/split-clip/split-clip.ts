@@ -52,7 +52,6 @@ export const splitClip = (clip: Clip, mixer: Mixer) => {
       const { snapshots, clipIdToDelete } = data;
       snapshots.forEach((snapshot) => {
         const stringifiedEvents = JSON.stringify(snapshot.events);
-        // console.log(stringifiedEvents);
 
         const clip = new MidiClip({
           trackId: snapshot.trackId,

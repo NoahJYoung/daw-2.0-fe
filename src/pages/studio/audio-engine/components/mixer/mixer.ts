@@ -2,8 +2,10 @@ import { model, prop, ExtendedModel, modelAction, Ref } from "mobx-keystone";
 import { computed } from "mobx";
 import { Track } from "../track";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
-import { trackRef } from "../refs";
+import { clipRef, trackRef } from "../refs";
 import { Master } from "../master";
+import { PanelMode } from "./types";
+import { Clip } from "../types";
 
 @model("AudioEngine/Mixer")
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -11,6 +13,9 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   selectedRefs: prop<Ref<Track>[]>(() => []),
   master: prop<Master>(() => new Master({})),
   topPanelHeight: prop<number>(window.innerHeight - 156),
+  featuredClipRef: prop<Ref<Clip> | null>(null).withSetter(),
+  featuredTrackRef: prop<Ref<Track> | null>(null).withSetter(),
+  panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
   @modelAction
   createTrack = () => {
@@ -49,6 +54,31 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     if (trackRefIndex >= 0) {
       this.selectedRefs.splice(trackRefIndex, 1);
     }
+  }
+
+  @modelAction
+  selectFeaturedTrack(track: Track | null) {
+    if (track && !this.tracks.includes(track)) throw new Error("unknown track");
+
+    this.featuredTrackRef = track ? trackRef(track) : null;
+  }
+
+  @modelAction
+  unselectFeaturedTrack() {
+    this.featuredTrackRef = null;
+  }
+
+  @modelAction
+  selectFeaturedClip(clip: Clip | null) {
+    if (clip && !this.tracks.some((track) => track.clips.includes(clip)))
+      throw new Error("unknown track");
+
+    this.featuredClipRef = clip ? clipRef(clip) : null;
+  }
+
+  @modelAction
+  unselectFeaturedClip() {
+    this.featuredClipRef = null;
   }
 
   @modelAction
@@ -99,6 +129,16 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
       (total, current) => (total += current.laneHeight),
       0
     );
+  }
+
+  @computed
+  get featuredClip() {
+    return this.featuredClipRef ? this.featuredClipRef.current : undefined;
+  }
+
+  @computed
+  get featuredTrack() {
+    return this.featuredTrackRef ? this.featuredTrackRef.current : undefined;
   }
 
   @modelAction

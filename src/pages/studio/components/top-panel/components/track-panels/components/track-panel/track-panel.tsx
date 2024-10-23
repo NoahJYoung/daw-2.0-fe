@@ -5,11 +5,7 @@ import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import {
-  useAudioEngine,
-  useBottomPanelViewController,
-  useUndoManager,
-} from "@/pages/studio/hooks";
+import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { GrPower } from "react-icons/gr";
 import { changeTrackPosition, swapTrackPosition } from "./helpers";
 import { FaCaretUp, FaCaretDown, FaGuitar } from "react-icons/fa";
@@ -64,7 +60,6 @@ export const TrackPanel = observer(
     const { t } = useTranslation();
     const dragStartYPosition = useRef<number | null>(null);
     const [newTrackIndex, setNewTrackIndex] = useState<number | null>(null);
-    const { selectTrack } = useBottomPanelViewController();
 
     const handleMouseDown = useCallback(() => {
       document.body.style.userSelect = "none";
@@ -203,7 +198,8 @@ export const TrackPanel = observer(
             track.selectClip(trackClip);
           }
         });
-        selectTrack(track);
+        mixer.selectFeaturedTrack(track);
+        mixer.setPanelMode("TRACK_FX");
       });
     };
 

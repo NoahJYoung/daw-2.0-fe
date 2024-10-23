@@ -1,16 +1,17 @@
 import { observer } from "mobx-react-lite";
-import { useBottomPanelViewController } from "../../hooks";
-import { PanelMode } from "../../hooks/use-bottom-panel-view-controller/use-bottom-panel-view-controller";
+import { useAudioEngine, useBottomPanelViewController } from "../../hooks";
 import { KeyboardView, MidiClipExpandedView, MixerView } from "./components";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { MidiClip } from "../../audio-engine/components";
+import { PanelMode } from "../../audio-engine/components/detail-view-manager/types";
 
 export const BottomPanel = observer(() => {
-  const { mode, selectedClip, selectedTrack, setMode, windowSize } =
-    useBottomPanelViewController();
+  const { windowSize } = useBottomPanelViewController();
+
+  const { mixer } = useAudioEngine();
+
   const tabsListRef = useRef<HTMLDivElement>(null);
 
   const triggerClassName =
@@ -22,8 +23,8 @@ export const BottomPanel = observer(() => {
 
   return (
     <Tabs
-      value={mode}
-      onValueChange={(e) => setMode(e as PanelMode)}
+      value={mixer.panelMode}
+      onValueChange={(e) => mixer.setPanelMode(e as PanelMode)}
       defaultValue="MIXER"
       style={{ maxHeight: Math.min(windowSize.height, 375) }}
       className="w-full h-full min-h-[300px] bg-transparent flex flex-col items-center"
@@ -40,16 +41,18 @@ export const BottomPanel = observer(() => {
         </TabsTrigger>
         <TabsTrigger
           className={triggerClassName}
-          disabled={!selectedTrack}
+          disabled={!mixer.featuredTrack}
           value="TRACK_FX"
         >
           Track
         </TabsTrigger>
         <TabsTrigger
           className={triggerClassName}
-          disabled={!selectedClip}
+          disabled={!mixer.featuredClip}
           value={
-            selectedClip?.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
+            mixer.featuredClip?.type === "audio"
+              ? "WAVEFORM_VIEW"
+              : "PIANO_ROLL"
           }
         >
           Clip
@@ -68,7 +71,9 @@ export const BottomPanel = observer(() => {
         </TabsContent>
 
         <TabsContent
-          style={mode === "KEYBOARD" ? { display: "flex" } : undefined}
+          style={
+            mixer.panelMode === "KEYBOARD" ? { display: "flex" } : undefined
+          }
           className={contentClassName}
           value="KEYBOARD"
         >
@@ -76,34 +81,42 @@ export const BottomPanel = observer(() => {
         </TabsContent>
 
         <TabsContent
-          style={mode === "TRACK_FX" ? { display: "flex" } : undefined}
+          style={
+            mixer.panelMode === "TRACK_FX" ? { display: "flex" } : undefined
+          }
           className={contentClassName}
           value="TRACK_FX"
         >
-          {selectedTrack ? (
-            <span>{`${selectedTrack.name}`}</span>
+          {mixer.featuredTrack ? (
+            <span>{`${mixer.featuredTrack.name}`}</span>
           ) : (
             <span>No track selected</span>
           )}
         </TabsContent>
         <TabsContent
-          style={mode === "WAVEFORM_VIEW" ? { display: "flex" } : undefined}
+          style={
+            mixer.panelMode === "WAVEFORM_VIEW"
+              ? { display: "flex" }
+              : undefined
+          }
           className={contentClassName}
           value="WAVEFORM_VIEW"
         >
-          {selectedClip ? (
-            <span>{`Audio: ${selectedClip.id}`}</span>
+          {mixer.featuredClip ? (
+            <span>{`Audio: ${mixer.featuredClip.id}`}</span>
           ) : (
             <span>No clip selected</span>
           )}
         </TabsContent>
         <TabsContent
-          style={mode === "PIANO_ROLL" ? { display: "flex" } : undefined}
+          style={
+            mixer.panelMode === "PIANO_ROLL" ? { display: "flex" } : undefined
+          }
           className={contentClassName}
           value="PIANO_ROLL"
         >
-          {!!selectedClip && selectedClip instanceof MidiClip ? (
-            <MidiClipExpandedView clip={selectedClip} />
+          {!!mixer.featuredClip && mixer.featuredClip instanceof MidiClip ? (
+            <MidiClipExpandedView clip={mixer.featuredClip} />
           ) : (
             <span>No clip selected</span>
           )}

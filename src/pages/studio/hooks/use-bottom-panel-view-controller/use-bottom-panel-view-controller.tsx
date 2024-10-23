@@ -1,7 +1,6 @@
 import React, {
   createContext,
   useContext,
-  useReducer,
   ReactNode,
   useRef,
   useState,
@@ -13,55 +12,10 @@ import {
   ImperativePanelHandle,
   ImperativePanelGroupHandle,
 } from "react-resizable-panels";
-
-export type PanelMode =
-  | "MIXER"
-  | "KEYBOARD"
-  | "TRACK_FX"
-  | "WAVEFORM_VIEW"
-  | "PIANO_ROLL";
-
-interface BottomPanelState {
-  mode: PanelMode;
-  selectedClip: Clip | null;
-  selectedTrack: Track | null;
-}
-
-type BottomPanelAction =
-  | { type: "SET_MODE"; payload: PanelMode }
-  | { type: "SET_SELECTED_CLIP"; payload: Clip | null }
-  | { type: "SET_SELECTED_TRACK"; payload: Track | null };
-
-const initialState: BottomPanelState = {
-  mode: "MIXER",
-  selectedClip: null,
-  selectedTrack: null,
-};
-
-const bottomPanelReducer = (
-  state: BottomPanelState,
-  action: BottomPanelAction
-): BottomPanelState => {
-  switch (action.type) {
-    case "SET_MODE":
-      return { ...state, mode: action.payload };
-    case "SET_SELECTED_CLIP":
-      return { ...state, selectedClip: action.payload };
-    case "SET_SELECTED_TRACK":
-      return { ...state, selectedTrack: action.payload };
-    default:
-      return state;
-  }
-};
+import { useAudioEngine } from "../use-audio-engine";
+import { PanelMode } from "../../audio-engine/components/detail-view-manager/types";
 
 interface BottomPanelContextProps {
-  mode: PanelMode;
-  selectedTrack: Track | null;
-  selectedClip: Clip | null;
-  setMode: (mode: PanelMode) => void;
-  selectClip: (clip: Clip) => void;
-  selectTrack: (track: Track) => void;
-  selectMixer: () => void;
   toggleBottomPanel: () => void;
   topPanelRef: React.RefObject<ImperativePanelHandle>;
   bottomPanelRef: React.RefObject<ImperativePanelHandle>;
@@ -86,7 +40,7 @@ export const useBottomPanelViewController = () => {
 export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(bottomPanelReducer, initialState);
+  const { mixer } = useAudioEngine();
 
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
@@ -128,21 +82,21 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const setMode = (mode: PanelMode) => {
-    dispatch({ type: "SET_MODE", payload: mode });
+    mixer.setPanelMode(mode);
   };
 
-  const setSelectedClip = (clip: Clip | null) => {
-    dispatch({ type: "SET_SELECTED_CLIP", payload: clip });
+  const setSelectedClip = (clip: Clip) => {
+    mixer.selectFeaturedClip(clip);
   };
 
-  const setSelectedTrack = (track: Track | null) => {
-    dispatch({ type: "SET_SELECTED_TRACK", payload: track });
+  const setSelectedTrack = (track: Track) => {
+    mixer.selectFeaturedTrack(track);
   };
 
   const selectTrack = (track: Track) => {
     setSelectedTrack(track);
-    if (state.selectedClip?.trackId !== track.id) {
-      setSelectedClip(null);
+    if (mixer.featuredClip?.trackId !== track.id) {
+      mixer.unselectFeaturedClip();
     }
     setMode("TRACK_FX");
     showBottomPanel();
@@ -175,9 +129,6 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const value = {
-    mode: state.mode,
-    selectedTrack: state.selectedTrack,
-    selectedClip: state.selectedClip,
     setMode,
     selectClip,
     selectTrack,
