@@ -171,11 +171,14 @@ export const Clip = observer(
         : track;
 
     const handleDoubleClick = (e: React.MouseEvent) => {
-      mixer.selectFeaturedTrack(track);
-      mixer.selectFeaturedClip(clip);
-      mixer.setPanelMode(
-        clip.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
-      );
+      undoManager.withoutUndo(() => {
+        mixer.selectFeaturedTrack(track);
+        mixer.selectFeaturedClip(clip);
+        mixer.setPanelMode(
+          clip.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
+        );
+      });
+
       if (!e.ctrlKey) {
         mixer.unselectAllTracks();
       }

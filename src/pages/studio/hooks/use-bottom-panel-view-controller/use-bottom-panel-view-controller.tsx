@@ -14,6 +14,7 @@ import {
 } from "react-resizable-panels";
 import { useAudioEngine } from "../use-audio-engine";
 import { PanelMode } from "../../audio-engine/components/detail-view-manager/types";
+import { useUndoManager } from "../use-undo-manager";
 
 interface BottomPanelContextProps {
   toggleBottomPanel: () => void;
@@ -41,6 +42,7 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { mixer } = useAudioEngine();
+  const { undoManager } = useUndoManager();
 
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
@@ -82,15 +84,15 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const setMode = (mode: PanelMode) => {
-    mixer.setPanelMode(mode);
+    undoManager.withoutUndo(() => mixer.setPanelMode(mode));
   };
 
   const setSelectedClip = (clip: Clip) => {
-    mixer.selectFeaturedClip(clip);
+    undoManager.withoutUndo(() => mixer.selectFeaturedClip(clip));
   };
 
   const setSelectedTrack = (track: Track) => {
-    mixer.selectFeaturedTrack(track);
+    undoManager.withoutUndo(() => mixer.selectFeaturedTrack(track));
   };
 
   const selectTrack = (track: Track) => {

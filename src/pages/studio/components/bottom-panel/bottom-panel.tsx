@@ -1,14 +1,19 @@
 import { observer } from "mobx-react-lite";
-import { useAudioEngine, useBottomPanelViewController } from "../../hooks";
+import {
+  useAudioEngine,
+  useBottomPanelViewController,
+  useUndoManager,
+} from "../../hooks";
 import { KeyboardView, MidiClipExpandedView, MixerView } from "./components";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { MidiClip } from "../../audio-engine/components";
-import { PanelMode } from "../../audio-engine/components/detail-view-manager/types";
+import { PanelMode } from "../../audio-engine/components/mixer/types";
 
 export const BottomPanel = observer(() => {
   const { windowSize } = useBottomPanelViewController();
+  const { undoManager } = useUndoManager();
 
   const { mixer } = useAudioEngine();
 
@@ -24,7 +29,9 @@ export const BottomPanel = observer(() => {
   return (
     <Tabs
       value={mixer.panelMode}
-      onValueChange={(e) => mixer.setPanelMode(e as PanelMode)}
+      onValueChange={(e) =>
+        undoManager.withoutUndo(() => mixer.setPanelMode(e as PanelMode))
+      }
       defaultValue="MIXER"
       style={{ maxHeight: Math.min(windowSize.height, 375) }}
       className="w-full h-full min-h-[300px] bg-transparent flex flex-col items-center"

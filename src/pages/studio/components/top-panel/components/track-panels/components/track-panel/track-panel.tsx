@@ -198,8 +198,10 @@ export const TrackPanel = observer(
             track.selectClip(trackClip);
           }
         });
-        mixer.selectFeaturedTrack(track);
-        mixer.setPanelMode("TRACK_FX");
+        undoManager.withoutUndo(() => {
+          mixer.selectFeaturedTrack(track);
+          mixer.setPanelMode("TRACK_FX");
+        });
       });
     };
 
