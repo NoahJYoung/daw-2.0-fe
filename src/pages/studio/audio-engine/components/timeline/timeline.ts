@@ -46,7 +46,7 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   samplesToPixels(samples: number) {
-    return Math.round(samples / this.samplesPerPixel);
+    return samples / this.samplesPerPixel;
   }
 
   pixelsToSamples(pixels: number) {
