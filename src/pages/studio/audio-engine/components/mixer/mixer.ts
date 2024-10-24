@@ -6,7 +6,6 @@ import { clipRef, trackRef } from "../refs";
 import { Master } from "../master";
 import { PanelMode } from "./types";
 import { Clip } from "../types";
-import * as Tone from "tone";
 
 @model("AudioEngine/Mixer")
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {

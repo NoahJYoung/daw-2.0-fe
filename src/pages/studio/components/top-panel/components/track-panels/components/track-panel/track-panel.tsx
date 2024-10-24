@@ -145,6 +145,7 @@ export const TrackPanel = observer(
           );
         }
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         isDragging,
         track.isResizing,

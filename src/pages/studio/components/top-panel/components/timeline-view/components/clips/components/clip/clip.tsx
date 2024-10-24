@@ -160,6 +160,7 @@ export const Clip = observer(
 
     const clipWidth = useMemo(
       () => timeline.samplesToPixels(clip.length),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [clip.length, timeline.samplesPerPixel]
     );
 

@@ -29,7 +29,10 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   state: AudioEngineState = AudioEngineState.stopped;
   clipboard = new Clipboard();
 
-  init() {}
+  async init() {
+    const start = async () => Tone.start();
+    await start();
+  }
 
   @action
   private setState(state: AudioEngineState) {
@@ -124,10 +127,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   play = async () => {
-    Tone.start();
+    Tone.getTransport().start();
     this.metronome.start();
     this.mixer.tracks.forEach((track) => track.play());
-    Tone.getTransport().start();
     if (this.state !== AudioEngineState.recording) {
       this.setState(AudioEngineState.playing);
     }
@@ -138,6 +140,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       track.instrument.releaseAll(Tone.now())
     );
     const transport = Tone.getTransport();
+    this.metronome.stop();
+
     const seconds = transport.seconds;
     this.mixer.tracks.forEach((track) => track.stop());
 
@@ -157,6 +161,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
     this.metronome.stop();
     transport.stop();
+    transport.cancel();
     this.timeline.setSeconds(transport.seconds);
     this.setState(AudioEngineState.stopped);
   };

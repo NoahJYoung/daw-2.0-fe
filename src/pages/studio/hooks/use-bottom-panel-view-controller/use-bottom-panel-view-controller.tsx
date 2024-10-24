@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, {
   createContext,
   useContext,
@@ -13,8 +14,8 @@ import {
   ImperativePanelGroupHandle,
 } from "react-resizable-panels";
 import { useAudioEngine } from "../use-audio-engine";
-import { PanelMode } from "../../audio-engine/components/detail-view-manager/types";
 import { useUndoManager } from "../use-undo-manager";
+import { PanelMode } from "../../audio-engine/components/mixer/types";
 
 interface BottomPanelContextProps {
   toggleBottomPanel: () => void;
