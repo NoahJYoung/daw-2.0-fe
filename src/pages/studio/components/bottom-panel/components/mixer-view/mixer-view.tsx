@@ -1,14 +1,14 @@
-import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { ChannelStrip, MasterFader } from "./components";
 import { useLayoutEffect, useRef, useState } from "react";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
-import { getTracksContextMenuActions } from "../../../top-panel/components/track-panels/helpers";
+import { useTracksContextMenuActions } from "../../../top-panel/components/track-panels/hooks";
 
 export const MixerView = observer(() => {
   const audioEngine = useAudioEngine();
-  const { undoManager } = useUndoManager();
+  const items = useTracksContextMenuActions();
   const { state, mixer } = audioEngine;
   const mixerRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +37,7 @@ export const MixerView = observer(() => {
         state === AudioEngineState.playing ||
         state === AudioEngineState.recording
       }
-      items={getTracksContextMenuActions(audioEngine, undoManager)}
+      items={items}
     >
       <div
         onClick={() => mixer.unselectAllTracks()}

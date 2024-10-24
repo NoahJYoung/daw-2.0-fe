@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import { useAudioEngine } from "@/pages/studio/hooks";
 import { NewTrackPanelsButton, TrackPanel } from "./components";
 import {
   SCROLLBAR_OFFSET,
@@ -7,8 +7,8 @@ import {
 } from "@/pages/studio/utils/constants";
 import { isTouchDevice } from "@/pages/studio/utils";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
-import { getTracksContextMenuActions } from "./helpers";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
+import { useTracksContextMenuActions } from "./hooks";
 
 interface TrackPanelsProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -18,7 +18,8 @@ interface TrackPanelsProps {
 export const TrackPanels = observer(
   ({ scrollRef, onScroll }: TrackPanelsProps) => {
     const audioEngine = useAudioEngine();
-    const { undoManager } = useUndoManager();
+    const items = useTracksContextMenuActions();
+
     const { mixer, state } = audioEngine;
     const { tracks } = mixer;
 
@@ -36,7 +37,7 @@ export const TrackPanels = observer(
           state === AudioEngineState.playing ||
           state === AudioEngineState.recording
         }
-        items={getTracksContextMenuActions(audioEngine, undoManager)}
+        items={items}
       >
         <div
           ref={scrollRef}

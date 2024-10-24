@@ -1,18 +1,15 @@
 import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
 import { IoMdAdd as PlusIcon } from "react-icons/io";
 import { FiDelete as DeleteIcon } from "react-icons/fi";
-import { AudioEngine } from "@/pages/studio/audio-engine";
-import { UndoManager } from "mobx-keystone";
-import { selectAllTracks } from "../select-all-tracks";
-import { IoColorPaletteSharp as ColorIcon } from "react-icons/io5";
-import { deleteSelectedTracks } from "../delete-selected-tracks";
-import { RgbColorPicker as ColorPicker } from "react-colorful";
 
-export const getTracksContextMenuActions = (
-  audioEngine: AudioEngine,
-  undoManager: UndoManager
-) => {
-  const { mixer } = audioEngine;
+import { IoColorPaletteSharp as ColorIcon } from "react-icons/io5";
+import { RgbColorPicker as ColorPicker } from "react-colorful";
+import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import { selectAllTracks, deleteSelectedTracks } from "../../helpers";
+
+export const useTracksContextMenuActions = () => {
+  const { mixer } = useAudioEngine();
+  const { undoManager } = useUndoManager();
 
   return [
     {
