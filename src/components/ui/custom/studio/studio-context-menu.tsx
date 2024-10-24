@@ -11,6 +11,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { MenuItem } from "../types";
+import { v4 } from "uuid";
 
 interface StudioContextMenuProps {
   children?: React.ReactNode;
@@ -31,17 +32,37 @@ export const StudioContextMenu = ({
     icon: Icon,
     separator,
     disabled,
+    render,
   }: MenuItem) => {
     if (separator) {
-      return <ContextMenuSeparator />;
+      return <ContextMenuSeparator key={v4()} />;
     }
+
+    if (render) {
+      return (
+        <ContextMenuItem
+          className="data-[disabled]:opacity-50"
+          key={label}
+          inset={false}
+          disabled={disabled}
+        >
+          {render()}
+        </ContextMenuItem>
+      );
+    }
+
     if (children && children.length > 0) {
       return (
         <ContextMenuSub key={label}>
-          <ContextMenuSubTrigger className="rounded-xxs" inset>
+          <ContextMenuSubTrigger
+            disabled={disabled}
+            className="hover:bg-surface-2 rounded-xxs gap-2"
+            inset={!Icon}
+          >
+            {Icon && <Icon className="w-[16px] h-[16px]" />}
             {label ?? ""}
           </ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-56 rounded-xxs">
+          <ContextMenuSubContent className="hover:bg-surface-2 w-56 rounded-xxs">
             {children.map((child) => getSubMenu(child))}
           </ContextMenuSubContent>
         </ContextMenuSub>
@@ -57,7 +78,7 @@ export const StudioContextMenu = ({
       >
         <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
           {Icon && <Icon className="w-[16px] h-[16px]" />}
-          <div className="w-[104px] ">{label || ""}</div>
+          <div className="hover:bg-surface-2 w-[104px] ">{label || ""}</div>
           {shortcut ? (
             <ContextMenuShortcut className="flex-grow-0 m-0 w-[40px]">
               {shortcut}
@@ -90,12 +111,12 @@ export const StudioContextMenu = ({
             <ContextMenuItem
               className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs p-0"
               onClick={onClick}
-              inset={!Icon}
               key={label}
+              inset={!Icon}
               disabled={item.disabled}
             >
               <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
-                <span className="flex gap-2 items-center">
+                <span className="flex hover:bg-surface-2 gap-2 items-center">
                   {Icon && <Icon className="w-[16px] h-[16px]" />}
                   <div>{label || ""}</div>
                 </span>

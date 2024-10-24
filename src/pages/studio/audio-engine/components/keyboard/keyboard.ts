@@ -9,7 +9,7 @@ import { Mixer } from "../mixer";
 
 @model("AudioEngine/Keyboard")
 export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
-  baseOctave: prop<Octave>(3),
+  baseOctave: prop<Octave>(3).withSetter(),
 }) {
   @observable
   events: EventData[] = [];

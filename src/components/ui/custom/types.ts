@@ -10,4 +10,5 @@ export interface MenuItem<T = string> {
   shortcut?: string;
   children?: MenuItem[];
   disabled?: boolean;
+  render?: () => React.ReactNode;
 }

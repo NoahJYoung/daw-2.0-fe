@@ -98,6 +98,14 @@ export const Key = observer(({ keyData, baseOctave, left }: KeyProps) => {
       }}
     >
       <p>{keyData.keyboardKey.toUpperCase()}</p>
+      {fullNoteName[0] === "C" && (
+        <span
+          style={{ bottom: active ? "-19.5%" : "-18%" }}
+          className="absolute text-2xl text-surface-4"
+        >
+          {fullNoteName.join("")}
+        </span>
+      )}
     </div>
   );
 });
