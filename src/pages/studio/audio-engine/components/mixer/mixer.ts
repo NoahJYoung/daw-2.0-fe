@@ -61,10 +61,13 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   @modelAction
-  selectFeaturedTrack(track: Track | null) {
+  selectFeaturedTrack(track: Track) {
     if (track && !this.tracks.includes(track)) throw new Error("unknown track");
 
     this.featuredTrackRef = track ? trackRef(track) : null;
+    if (this.featuredClip && this.featuredClip.trackId !== track?.id) {
+      this.unselectFeaturedClip();
+    }
   }
 
   @modelAction
@@ -73,7 +76,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   @modelAction
-  selectFeaturedClip(clip: Clip | null) {
+  selectFeaturedClip(clip: Clip) {
     if (clip && !this.tracks.some((track) => track.clips.includes(clip)))
       throw new Error("unknown track");
 
