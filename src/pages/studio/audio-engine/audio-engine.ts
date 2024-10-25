@@ -284,6 +284,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
         const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
         const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+        const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
         const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
         const loadedProjectId = fromSnapshot(settings.projectId) as string;
         const loadedProjectName = fromSnapshot(settings.projectName) as string;
@@ -304,6 +305,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setKeyboard(loadedKeyboard);
         this.setProjectId(loadedProjectId);
         this.setProjectName(loadedProjectName);
+        this.setMetronome(loadedMetronome);
       } else {
         throw new Error("No settings data found");
       }
