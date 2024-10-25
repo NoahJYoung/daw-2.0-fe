@@ -25,6 +25,19 @@ interface BottomPanelContextProps {
   windowSize: { height: number; width: number };
 }
 
+interface BottomPanelContextProps {
+  setMode: (mode: PanelMode) => void;
+  selectClip: (clip: Clip) => void;
+  selectTrack: (track: Track) => void;
+  selectMixer: () => void;
+  toggleBottomPanel: () => void;
+  expandBottomPanelIfCollapsed: () => void;
+  topPanelRef: React.RefObject<ImperativePanelHandle>;
+  bottomPanelRef: React.RefObject<ImperativePanelHandle>;
+  panelGroupRef: React.RefObject<ImperativePanelGroupHandle>;
+  windowSize: { height: number; width: number };
+}
+
 const BottomPanelContext = createContext<BottomPanelContextProps | undefined>(
   undefined
 );
@@ -70,6 +83,15 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
       if (currentLayout[1] > 0) {
         panelGroupRef.current.setLayout([100, 0]);
       } else {
+        panelGroupRef.current.setLayout(defaultExpandedDimensions);
+      }
+    }
+  };
+
+  const expandBottomPanelIfCollapsed = () => {
+    if (panelGroupRef.current) {
+      const currentLayout = panelGroupRef.current.getLayout();
+      if (currentLayout[1] === 0) {
         panelGroupRef.current.setLayout(defaultExpandedDimensions);
       }
     }
@@ -137,6 +159,7 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
     selectTrack,
     selectMixer,
     toggleBottomPanel,
+    expandBottomPanelIfCollapsed,
     topPanelRef,
     bottomPanelRef,
     panelGroupRef,

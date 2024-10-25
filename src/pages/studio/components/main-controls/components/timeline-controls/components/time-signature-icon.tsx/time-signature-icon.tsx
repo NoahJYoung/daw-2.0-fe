@@ -26,15 +26,6 @@ export const TimeSignatureIcon = ({
       {upper}
     </text>
 
-    <line
-      x1="25"
-      y1="50"
-      x2="75"
-      y2="50"
-      className="stroke-current"
-      strokeWidth="5"
-    />
-
     <text
       x="50%"
       y="80%"

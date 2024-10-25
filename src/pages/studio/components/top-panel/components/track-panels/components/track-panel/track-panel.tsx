@@ -5,7 +5,11 @@ import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useBottomPanelViewController,
+  useUndoManager,
+} from "@/pages/studio/hooks";
 import { GrPower } from "react-icons/gr";
 import { changeTrackPosition, swapTrackPosition } from "./helpers";
 import { FaCaretUp, FaCaretDown, FaGuitar } from "react-icons/fa";
@@ -60,6 +64,7 @@ export const TrackPanel = observer(
     const { t } = useTranslation();
     const dragStartYPosition = useRef<number | null>(null);
     const [newTrackIndex, setNewTrackIndex] = useState<number | null>(null);
+    const { expandBottomPanelIfCollapsed } = useBottomPanelViewController();
 
     const handleMouseDown = useCallback(() => {
       document.body.style.userSelect = "none";
@@ -188,7 +193,7 @@ export const TrackPanel = observer(
 
     const handleDoubleClick = (e: React.MouseEvent) => {
       e.preventDefault();
-      undoManager.withGroup("UNSELECT AND SELEC CLIPS OF SAME TRACK", () => {
+      undoManager.withGroup("UNSELECT AND SELECT CLIPS OF SAME TRACK", () => {
         if (!e.ctrlKey) {
           mixer.unselectAllTracks();
           mixer.unselectAllClips();
@@ -202,13 +207,24 @@ export const TrackPanel = observer(
         undoManager.withoutUndo(() => {
           mixer.selectFeaturedTrack(track);
           mixer.setPanelMode("TRACK_FX");
+          expandBottomPanelIfCollapsed();
         });
       });
     };
 
     const handleToggleActive = (e: React.MouseEvent) => {
       e.stopPropagation();
-      track.setActive(!track.active);
+      const newState = !track.active;
+      if (
+        selected &&
+        mixer.selectedTracks.every(
+          (selectedTrack) => selectedTrack.active === track.active
+        )
+      ) {
+        mixer.selectedTracks.forEach((track) => track.setActive(newState));
+      } else {
+        track.setActive(!track.active);
+      }
     };
 
     const getIndicatorPosition = () => {

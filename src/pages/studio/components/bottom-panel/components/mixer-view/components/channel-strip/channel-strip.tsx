@@ -40,7 +40,17 @@ export const ChannelStrip = observer(
 
     const handleToggleActive = (e: React.MouseEvent) => {
       e.stopPropagation();
-      track.setActive(!track.active);
+      const newState = !track.active;
+      if (
+        selected &&
+        mixer.selectedTracks.every(
+          (selectedTrack) => selectedTrack.active === track.active
+        )
+      ) {
+        mixer.selectedTracks.forEach((track) => track.setActive(newState));
+      } else {
+        track.setActive(!track.active);
+      }
     };
 
     const onVolumeChange = (value: number) => {

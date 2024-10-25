@@ -6,7 +6,11 @@ import {
 import { observer } from "mobx-react-lite";
 import { AudioClipView, AudioLoop, MidiClipView } from "./components";
 import { MdOutlineLoop as LoopIcon } from "react-icons/md";
-import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useBottomPanelViewController,
+  useUndoManager,
+} from "@/pages/studio/hooks";
 import {
   IoLockClosedSharp as LockedIcon,
   IoLockOpenSharp as UnlockedIcon,
@@ -73,7 +77,7 @@ export const Clip = observer(
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
-
+    const { expandBottomPanelIfCollapsed } = useBottomPanelViewController();
     const [showClipActions, setShowClipActions] = useState(false);
 
     const selected = mixer.selectedClips.includes(clip);
@@ -178,6 +182,7 @@ export const Clip = observer(
         mixer.setPanelMode(
           clip.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
         );
+        expandBottomPanelIfCollapsed();
       });
 
       if (!e.ctrlKey) {

@@ -5,6 +5,7 @@ import {
   PitchNameTuple,
 } from "@/pages/studio/audio-engine/components/midi-note/types";
 import { useAudioEngine } from "@/pages/studio/hooks";
+import { isTouchDevice } from "@/pages/studio/utils";
 import { observer } from "mobx-react-lite";
 import { useState, useCallback, useEffect, useMemo } from "react";
 
@@ -97,7 +98,7 @@ export const Key = observer(({ keyData, baseOctave, left }: KeyProps) => {
         e.stopPropagation();
       }}
     >
-      <p>{keyData.keyboardKey.toUpperCase()}</p>
+      {!isTouchDevice() && <p>{keyData.keyboardKey.toUpperCase()}</p>}
       {fullNoteName[0] === "C" && (
         <span
           style={{ bottom: active ? "-19.5%" : "-18%" }}

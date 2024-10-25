@@ -57,7 +57,6 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     this.channel.volume.linearRampTo(volume, 0.01);
     this.channel.pan.linearRampTo(pan, 0.01);
     this.connectClipsToOutput();
-    this.clearAllEvents();
   }
 
   init() {
@@ -88,12 +87,6 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   createMidiClip = (clip: MidiClip) => {
     this.clips.push(clip);
   };
-
-  clearAllEvents() {
-    this.clips.forEach((clip) => {
-      clip.clearEvents();
-    });
-  }
 
   connectClipsToOutput() {
     this.clips.forEach((clip) => {
