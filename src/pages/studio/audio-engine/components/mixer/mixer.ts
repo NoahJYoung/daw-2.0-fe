@@ -17,6 +17,10 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   featuredTrackRef: prop<Ref<Track> | null>(null).withSetter(),
   panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
+  init() {
+    this.sync();
+  }
+
   sync() {
     this.tracks.forEach((track) => track.channel.toDestination());
   }

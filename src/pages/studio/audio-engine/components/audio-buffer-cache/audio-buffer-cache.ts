@@ -9,7 +9,9 @@ export class AudioBufferCache {
   add(id: string, audioBuffer: Tone.ToneAudioBuffer) {
     if (this.maxCacheSize && this.cache.size >= this.maxCacheSize) {
       const oldestKey = this.cache.keys().next().value;
-      this.cache.delete(oldestKey);
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
     }
     this.cache.set(id, audioBuffer);
   }
@@ -17,7 +19,9 @@ export class AudioBufferCache {
   copy(oldId: string, newId: string) {
     if (this.maxCacheSize && this.cache.size >= this.maxCacheSize) {
       const oldestKey = this.cache.keys().next().value;
-      this.cache.delete(oldestKey);
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
     }
     const buffer = this.cache.get(oldId);
     if (buffer) {

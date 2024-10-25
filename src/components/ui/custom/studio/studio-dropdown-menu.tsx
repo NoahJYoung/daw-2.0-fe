@@ -32,7 +32,7 @@ export const StudioDropdownMenu = ({
       <DropdownMenuTrigger asChild>
         <Button
           title={title}
-          className="rounded-xxs text-xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3"
+          className="rounded-xxs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3"
         >
           {Icon && <Icon />}
           {label && label}
@@ -53,6 +53,7 @@ export const StudioDropdownMenu = ({
           }
           return (
             <DropdownMenuItem
+              disabled={option.disabled}
               key={option.label ?? i}
               className={
                 value && option?.value === value

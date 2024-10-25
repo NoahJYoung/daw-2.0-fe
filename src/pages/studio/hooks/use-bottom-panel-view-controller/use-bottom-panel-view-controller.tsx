@@ -71,7 +71,7 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
     if (windowSize.height <= 450) {
       return [0, 100];
     } else if (windowSize.height <= 800) {
-      return [35, 65];
+      return [25, 75];
     } else return windowSize.width >= 640 ? [55, 45] : [35, 65];
   };
 

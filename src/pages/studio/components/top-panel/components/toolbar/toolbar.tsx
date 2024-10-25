@@ -90,10 +90,25 @@ export const Toolbar = observer(
           onClick={() => undoManager.redo()}
         />
 
-        <StudioButton
+        <StudioDropdownMenu
+          triggerIcon={IoMdSave}
           title={t("studio.toolbar.save")}
-          icon={IoMdSave}
-          onClick={() => console.log(audioEngine.serialize())}
+          onValueChange={() => {}}
+          options={[
+            {
+              label: "Save Remotely",
+              onClick: () => console.log(audioEngine.serialize()),
+              disabled: true,
+            },
+            {
+              label: "Save Locally",
+              onClick: () => audioEngine.getProjectZip(),
+            },
+            {
+              label: "Load Project From File",
+              onClick: () => audioEngine.loadProjectData(),
+            },
+          ]}
         />
 
         <StudioDropdownMenu

@@ -64,7 +64,7 @@ export const TopBar = memo(
               );
             })}
             <p className="left-1 text-sm text-surface-4 font-bold absolute">
-              {i + 1}
+              {i}
             </p>
           </div>
         )),
@@ -102,7 +102,7 @@ export const TopBar = memo(
             }}
           >
             <p className="left-1 text-sm text-surface-4 font-bold absolute">
-              {i * 4 + 1}
+              {i * 4}
             </p>
           </span>
         ))}

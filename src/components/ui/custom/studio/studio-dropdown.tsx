@@ -19,6 +19,7 @@ interface DropdownProps {
   icon?: React.ReactElement;
   style?: CSSProperties;
   showSelectedValue?: boolean;
+  disabled?: boolean;
 }
 
 export const StudioDropdown = ({
@@ -32,10 +33,11 @@ export const StudioDropdown = ({
   colorOffset = 0,
   showSelectedValue = true,
   style,
+  disabled,
 }: DropdownProps) => {
   const isPlaceholder = !value;
   return (
-    <Select value={value || ""} onValueChange={onChange}>
+    <Select disabled={disabled} value={value || ""} onValueChange={onChange}>
       <SelectTrigger
         style={style}
         className={`w-full focus:ring-0 ${

@@ -407,8 +407,9 @@ export const TrackPanel = observer(
                 <div className="flex flex-col gap-1">
                   {showInstrumentSelector && (
                     <StudioDropdown
-                      options={[{ label: "Piano", value: "piano" }]}
-                      value={null}
+                      options={[{ label: "Synth", value: "synth" }]}
+                      value={"synth"}
+                      disabled
                       placeholder={t(
                         "studio.trackPanel.placeholders.instrument"
                       )}
