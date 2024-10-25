@@ -21,6 +21,10 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
   subdivision: prop("4n").withSetter(),
   snapToGrid: prop(false).withSetter(),
 }) {
+  init() {
+    this.sync();
+    this.setSamplesPerPixel(MAX_SAMPLES_PER_PIXEL);
+  }
   sync() {
     const transport = Tone.getTransport();
     transport.bpm.value = Math.round(this.bpm);

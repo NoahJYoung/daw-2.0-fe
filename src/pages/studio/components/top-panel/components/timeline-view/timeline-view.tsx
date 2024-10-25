@@ -216,7 +216,7 @@ export const TimelineView = observer(
 
     const { startMeasure, endMeasure } = calculateVisibleRange();
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       const container = scrollRef.current;
       if (container) {
         container.addEventListener("wheel", handleWheel, { passive: false });
@@ -224,7 +224,7 @@ export const TimelineView = observer(
           container.removeEventListener("wheel", handleWheel);
         };
       }
-    }, []);
+    }, [timeline]);
 
     useLayoutEffect(() => {
       const pixels =
