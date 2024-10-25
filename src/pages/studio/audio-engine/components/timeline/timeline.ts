@@ -23,7 +23,6 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
 }) {
   init() {
     this.sync();
-    this.setSamplesPerPixel(MAX_SAMPLES_PER_PIXEL);
   }
   sync() {
     const transport = Tone.getTransport();
