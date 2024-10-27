@@ -7,7 +7,6 @@ export const audioBufferToMp3 = async (
 ): Promise<File> => {
   return new Promise((resolve) => {
     const leftChannel = audioBuffer.getChannelData(0);
-    // const rightChannel = audioBuffer.getChannelData(1);
     const sampleRate = audioBuffer.sampleRate;
     const mp3Encoder = new lamejs.Mp3Encoder(2, sampleRate, 128);
     const mp3Data = [];
@@ -22,12 +21,10 @@ export const audioBufferToMp3 = async (
     };
 
     const leftChannelInt16 = convertBuffer(leftChannel);
-    // const rightChannelInt16 = convertBuffer(rightChannel);
 
     const blockSize = 1152;
     for (let i = 0; i < leftChannelInt16.length; i += blockSize) {
       const leftChunk = leftChannelInt16.subarray(i, i + blockSize);
-      // const rightChunk = rightChannelInt16.subarray(i, i + blockSize);
       const mp3buf = mp3Encoder.encodeBuffer(leftChunk, new Int16Array());
       if (mp3buf.length > 0) {
         mp3Data.push(new Int8Array(mp3buf));

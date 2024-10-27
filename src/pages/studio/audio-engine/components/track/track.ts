@@ -60,6 +60,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   init() {
+    this.sync();
     if (this.active) {
       if (this.input === "mic") {
         this.mic.connect(this.splitter);

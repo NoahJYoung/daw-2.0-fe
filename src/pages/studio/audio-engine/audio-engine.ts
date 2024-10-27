@@ -15,7 +15,12 @@ import * as Tone from "tone";
 import { Keyboard } from "./components";
 import { MidiNote } from "./components/midi-note";
 import { EventData } from "./components/keyboard/types";
-import { audioBufferToMp3, blobToAudioBuffer } from "./helpers";
+import {
+  audioBufferToMp3,
+  blobToJsonObject,
+  populateBufferCache,
+  unzipProjectFile,
+} from "./helpers";
 import JSZip from "jszip";
 
 @model("AudioEngine")
@@ -174,8 +179,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       .flat()
       .filter((clip) => clip instanceof AudioClip);
     const mp3Promises = clips.map(async (clip: AudioClip, i) => {
-      if (clip.buffer) {
-        return await audioBufferToMp3(clip.buffer, `${clip.id}.mp3`);
+      const buffer = audioBufferCache.get(clip.id);
+      if (buffer) {
+        const file = await audioBufferToMp3(buffer, `${clip.id}`);
+        console.log(file);
+        return file;
       }
       throw new Error(`No buffer for clip: ${clip.id} at index: ${i}`);
     });
@@ -202,42 +210,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     URL.revokeObjectURL(link.href);
   }
 
-  async getProjectDataFromZip(file: File) {
-    const unzipped = new JSZip();
-
-    const arrayBuffer = await file.arrayBuffer();
-
-    const zipContents = await unzipped.loadAsync(arrayBuffer);
-
-    const extractedFiles: { [fileName: string]: Blob } = {};
-    for (const fileName in zipContents.files) {
-      const zipEntry = zipContents.files[fileName];
-      if (!zipEntry.dir) {
-        const fileData = await zipEntry.async("blob");
-        extractedFiles[fileName] = fileData;
-      }
-    }
-
-    return extractedFiles;
-  }
-
-  async blobToJsonObject(blob: Blob): Promise<Record<string, unknown>> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const jsonObject = JSON.parse(reader.result as string);
-          resolve(jsonObject);
-        } catch (error) {
-          console.error(error);
-          reject(new Error("Failed to parse JSON"));
-        }
-      };
-      reader.onerror = () => reject(new Error("Failed to read blob"));
-      reader.readAsText(blob);
-    });
-  }
-
   async loadProjectData() {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -250,37 +222,16 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
-      const data = await this.getProjectDataFromZip(file);
+      const data = await unzipProjectFile(file);
 
-      const audioClipKeys = Object.keys(data).filter(
-        (key) => key !== "settings.json"
-      );
-
-      audioBufferCache.clear();
-
-      const audioBufferPromises = audioClipKeys.map(async (key) => {
-        if (key !== "settings.json") {
-          const blob = data[key];
-
-          const buffer = await blobToAudioBuffer(blob);
-          return { id: key, buffer };
-        }
-      });
-
-      const bufferItems = await Promise.all(audioBufferPromises);
-
-      bufferItems.forEach((bufferObject) => {
-        if (bufferObject?.id && bufferObject?.buffer) {
-          audioBufferCache.add(bufferObject.id, bufferObject.buffer);
-        }
-      });
+      await populateBufferCache(data);
 
       document.body.removeChild(fileInput);
 
       const settingsBlob = data["settings.json"];
 
       if (settingsBlob) {
-        const settings = await this.blobToJsonObject(settingsBlob);
+        const settings = await blobToJsonObject(settingsBlob);
 
         const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
         const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
@@ -295,6 +246,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
               const buffer = audioBufferCache.get(clip.id);
               if (buffer) {
                 clip.createWaveformCache(buffer);
+              } else {
+                throw new Error("no buffer found");
               }
             }
           })
