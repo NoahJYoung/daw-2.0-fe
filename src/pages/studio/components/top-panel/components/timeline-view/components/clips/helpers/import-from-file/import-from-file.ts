@@ -24,21 +24,17 @@ export const importFromFile = async (activeTracks: Track[]) => {
     const audioBuffer = await new Tone.ToneAudioBuffer().load(url);
 
     activeTracks.forEach((track) => {
-      if (track.input === "mic") {
-        const clip = new AudioClip({
-          trackId: track.id,
-          start,
-        });
+      const clip = new AudioClip({
+        trackId: track.id,
+        start,
+      });
 
-        audioBufferCache.add(clip.id, audioBuffer.toMono());
-        clip.setBuffer(audioBuffer);
+      audioBufferCache.add(clip.id, audioBuffer.toMono());
+      clip.setBuffer(audioBuffer);
 
-        clip.createWaveformCache(audioBuffer);
+      clip.createWaveformCache(audioBuffer);
 
-        track.createAudioClip(clip);
-      } else if (track.input === "midi") {
-        console.log("MIDI processing not supported in this function.");
-      }
+      track.createAudioClip(clip);
     });
 
     URL.revokeObjectURL(url);

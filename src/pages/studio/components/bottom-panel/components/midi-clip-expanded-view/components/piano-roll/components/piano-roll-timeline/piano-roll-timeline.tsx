@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
-import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 
 const renderGridLanes = (
@@ -56,13 +55,10 @@ const renderGridLanes = (
 interface PianoRollTimelineProps {
   clip: MidiClip;
   keys: PitchNameTuple[];
+  width: number;
 }
 export const PianoRollTimeline = observer(
-  ({ clip, keys }: PianoRollTimelineProps) => {
-    const { timeline } = useAudioEngine();
-
-    const width = timeline.samplesToPixels(clip.length);
-
+  ({ clip, keys, width }: PianoRollTimelineProps) => {
     return (
       <svg
         width={width}

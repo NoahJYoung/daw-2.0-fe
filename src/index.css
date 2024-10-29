@@ -112,25 +112,21 @@
 }
 
 @media screen and (min-width: 992px) {
-  .styled-scrollbar::-webkit-scrollbar-thumb,
   .styled-scrollbar::-webkit-scrollbar {
     width: 16px;
     height: 16px;
-    background: rgba(125, 125, 125, 0);
+  }
+
+  .styled-scrollbar::-webkit-scrollbar-track {
+    background: rgba(125, 125, 125, 0); /* Track background */
+  }
+
+  .styled-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(125, 125, 125, 0.25); /* Thumb color */
     border-radius: 0.06125rem;
   }
 
-  .styled-scrollbar:hover::-webkit-scrollbar-track {
-    visibility: visible;
-    display: block;
-    background: rgba(125, 125, 125, 0);
-  }
-
-  .styled-scrollbar:hover::-webkit-scrollbar-thumb {
-    background: rgba(125, 125, 125, 0.25);
-  }
-
   .styled-scrollbar::-webkit-scrollbar-corner {
-    background: rgba(125, 125, 125, 0);
+    background: rgba(125, 125, 125, 0); /* Corner color */
   }
 }

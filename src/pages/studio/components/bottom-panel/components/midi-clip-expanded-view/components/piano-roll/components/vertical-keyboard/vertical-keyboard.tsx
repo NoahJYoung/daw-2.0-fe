@@ -15,13 +15,12 @@ export const VerticalKeyboard = ({
     <div
       onScroll={onScroll}
       ref={keyboardRef}
-      // style={{ marginBottom: 16 }}
       className="flex flex-col w-[80px] flex-shrink-0 overflow-auto no-scrollbar max-h-full pt-[20px]"
     >
       {keys.map((key) => (
         <div className="relative" key={`${key[0]}-${key[1]}`}>
           {key[0].length === 1 ? (
-            <div className="w-[80px] h-[30px] bg-zinc-100 border border-zinc-300 relative z-0 flex justify-end items-center">
+            <div className="w-[80px] h-[30px] bg-zinc-100 border border-zinc-300 border-l-0 relative z-0 flex justify-end items-center">
               {key[0] === "C" && (
                 <span className="text-zinc-500">{key.join("")}</span>
               )}

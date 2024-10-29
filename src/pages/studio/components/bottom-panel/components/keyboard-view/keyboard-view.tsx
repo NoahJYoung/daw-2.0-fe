@@ -45,6 +45,7 @@ export const KeyboardView = observer(() => {
         <button className="hover:opacity-80" onClick={decrementOctave}>
           <FaMinus />
         </button>
+        <span>Octave</span>
         <button className="hover:opacity-80" onClick={incrementOctave}>
           <FaPlus />
         </button>
