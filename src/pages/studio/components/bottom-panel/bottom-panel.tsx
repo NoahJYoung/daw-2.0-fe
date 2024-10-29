@@ -23,7 +23,7 @@ export const BottomPanel = observer(() => {
     "data-[state=active]:border-b-surface-6 focus:ring-0 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
   const contentClassName = cn(
-    "w-full pt-2 h-full bg-transparent 2xl:justify-center 2xl:w-full"
+    "w-full pt-2 h-full bg-transparent 2xl:justify-center 2xl:w-full h-full"
   );
 
   return (
@@ -33,12 +33,12 @@ export const BottomPanel = observer(() => {
         undoManager.withoutUndo(() => mixer.setPanelMode(e as PanelMode))
       }
       defaultValue="MIXER"
-      style={{ maxHeight: Math.min(windowSize.height, 375) }}
       className="w-full h-full min-h-[300px] bg-transparent flex flex-col items-center"
     >
       <TabsList
         ref={tabsListRef}
         className="w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs pb-3 pt-3"
+        style={{ height: 40 }}
       >
         <TabsTrigger className={triggerClassName} value="MIXER">
           Mixer
@@ -68,9 +68,9 @@ export const BottomPanel = observer(() => {
 
       <div
         className={cn(
-          "bg-transparent w-full h-full overflow-x-auto overflow-y-hidden styled-scrollbar flex items-center flex h-full",
-          { "justify-center": window.innerWidth > 1360 },
-          { "justify-start": window.innerWidth < 1360 }
+          "bg-transparent w-full h-full  flex items-start",
+          { "justify-center": windowSize.width > 1360 },
+          { "justify-start": windowSize.width < 1360 }
         )}
       >
         <TabsContent className={contentClassName} value="MIXER">
@@ -79,7 +79,14 @@ export const BottomPanel = observer(() => {
 
         <TabsContent
           style={
-            mixer.panelMode === "KEYBOARD" ? { display: "flex" } : undefined
+            mixer.panelMode === "KEYBOARD"
+              ? {
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                  alignItems: windowSize.width > 1360 ? "center" : "start",
+                }
+              : undefined
           }
           className={contentClassName}
           value="KEYBOARD"
@@ -117,7 +124,11 @@ export const BottomPanel = observer(() => {
         </TabsContent>
         <TabsContent
           style={
-            mixer.panelMode === "PIANO_ROLL" ? { display: "flex" } : undefined
+            mixer.panelMode === "PIANO_ROLL"
+              ? {
+                  display: "flex",
+                }
+              : undefined
           }
           className={contentClassName}
           value="PIANO_ROLL"

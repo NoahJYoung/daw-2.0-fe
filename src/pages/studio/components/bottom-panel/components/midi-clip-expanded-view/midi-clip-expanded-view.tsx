@@ -1,6 +1,6 @@
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import * as Tone from "tone";
+import { PianoRoll } from "./components";
 
 interface MidiClipExpandedViewProps {
   clip: MidiClip;
@@ -9,23 +9,9 @@ interface MidiClipExpandedViewProps {
 export const MidiClipExpandedView = observer(
   ({ clip }: MidiClipExpandedViewProps) => {
     return (
-      <div className="flex flex-column gap-1">
-        {clip.events.map((event, i) => (
-          <span
-            key={event.id}
-            className="p-1 border border-surface-2 flex flex-column gap-1"
-          >
-            {i}
-            <span className="align-items-center flex gap-1">
-              <p>On:</p>
-              <p>{Tone.Time(event.on, "samples").toSeconds().toFixed(3)}</p>
-            </span>
-            <span className="align-items-center flex gap-1">
-              <p>Off:</p>
-              <p>{Tone.Time(event.off, "samples").toSeconds().toFixed(3)}</p>
-            </span>
-          </span>
-        ))}
+      <div className="flex flex-col gap-2 w-full h-full max-w-[1360px] flex-shrink-0">
+        <h1 style={{ height: 40 }}>TOOL BAR</h1>
+        <PianoRoll clip={clip} />
       </div>
     );
   }
