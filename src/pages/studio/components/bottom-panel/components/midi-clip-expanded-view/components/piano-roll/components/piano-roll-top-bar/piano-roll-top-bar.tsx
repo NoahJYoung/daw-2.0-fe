@@ -43,8 +43,8 @@ export const PianoRollTopBar = ({
               />
               <text
                 className="text-xs text-surface-5 stroke-current"
-                y={15}
-                x={measureWidth * i + 6}
+                y={12.5}
+                x={measureWidth * i + 4}
               >
                 {i + startMeasure}
               </text>

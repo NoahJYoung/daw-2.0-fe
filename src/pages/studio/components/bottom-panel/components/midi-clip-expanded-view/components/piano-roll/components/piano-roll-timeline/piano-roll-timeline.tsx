@@ -39,10 +39,8 @@ export const renderGrid = (
           className="z-20 stroke-current text-surface-0"
           key={`subdivision-${startMeasure + i}-${j}`}
           strokeWidth={1}
-          x1={
-            startMeasure === 0 ? 1 + subdivisionWidth * j : subdivisionWidth * j
-          }
-          x2={subdivisionWidth * j}
+          x1={subdivisionWidth * j + 1}
+          x2={subdivisionWidth * j + 1}
           y1={0}
           y2={height}
         />

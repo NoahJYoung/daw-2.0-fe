@@ -60,8 +60,6 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
     [generateArray, clip.measures, clip.samplesPerPixel, clip.startMeasure]
   );
 
-  console.log("measures", clip.measures);
-
   const subdivisionsArray = useMemo(
     () => generateArray(subdivisionsPerMeasure),
     [
@@ -81,8 +79,6 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
 
   const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
 
-  // const renderEveryFourthMeasure = beatWidth * timeSignature < 40;
-
   return (
     <div
       style={{ height: "calc(85% - 40px)" }}
@@ -95,10 +91,10 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
         keyboardRef={keyboardRef}
       />
       <div
-        className="flex flex-col overflow-auto flex-shrink-o styled-scrollbar max-h-full "
+        className="flex flex-col overflow-auto flex-shrink-0 h-full styled-scrollbar max-h-full relative"
         onScroll={handleVerticalTimelineScroll}
         ref={timelineRef}
-        style={{ width: "calc(100% - 80px)", height: "100%" }}
+        style={{ width: "calc(100% - 80px)" }}
       >
         <PianoRollTopBar
           renderEveryFourthMeasure={false}
