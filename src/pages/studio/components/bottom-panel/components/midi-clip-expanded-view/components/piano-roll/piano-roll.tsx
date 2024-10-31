@@ -62,7 +62,12 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
       );
       setPlayheadLeft(pixels);
     });
-  }, [audioEngine.state, timeline.positionInPixels]);
+  }, [
+    audioEngine.state,
+    timeline.positionInPixels,
+    clip.samplesPerPixel,
+    clip,
+  ]);
 
   const handleVerticalKeyboardScroll = () => {
     if (keyboardRef.current && timelineRef.current) {

@@ -140,11 +140,11 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
-  selectAllClips() {
+  selectAllNotes() {
     this.events.forEach((note) => this.selectNote(note));
   }
 
-  unselectAllClips() {
+  unselectAllNotes() {
     this.events.forEach((note) => this.unselectNote(note));
   }
 

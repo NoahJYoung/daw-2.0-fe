@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
 import { observer } from "mobx-react-lite";
+import { MidiNoteView } from "./components";
 
 export const renderGrid = (
   measuresArray: number[],
@@ -120,6 +121,7 @@ export const PianoRollTimeline = observer(
     subdivisionWidth,
     renderEveryFourthMeasure,
     startMeasure,
+    clip,
   }: PianoRollTimelineProps) => {
     return (
       <div className="relative">
@@ -139,6 +141,9 @@ export const PianoRollTimeline = observer(
             startMeasure
           )}
         </svg>
+        {clip.events.map((note) => (
+          <MidiNoteView note={note} clip={clip} />
+        ))}
       </div>
     );
   }
