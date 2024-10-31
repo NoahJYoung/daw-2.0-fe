@@ -18,6 +18,8 @@ import { useThemeContext } from "@/hooks";
 import { useTranslation } from "react-i18next";
 import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
 import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
+import { FaFileExport as SaveLocalIcon } from "react-icons/fa";
+import { FaFileImport as ImportIcon } from "react-icons/fa";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -96,16 +98,19 @@ export const Toolbar = observer(
           onValueChange={() => {}}
           options={[
             {
-              label: "Save Remotely",
+              label: "Save",
+              icon: IoMdSave,
               onClick: () => console.log(audioEngine.serialize()),
               disabled: true,
             },
             {
-              label: "Save Locally",
+              label: "Export Project",
+              icon: SaveLocalIcon,
               onClick: () => audioEngine.getProjectZip(),
             },
             {
-              label: "Load Project From File",
+              label: "Import Project",
+              icon: ImportIcon,
               onClick: () => audioEngine.loadProjectData(),
             },
           ]}

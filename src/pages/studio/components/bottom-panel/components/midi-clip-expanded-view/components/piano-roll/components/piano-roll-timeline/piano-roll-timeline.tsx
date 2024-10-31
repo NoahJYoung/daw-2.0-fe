@@ -3,6 +3,54 @@ import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
 import { observer } from "mobx-react-lite";
 
+export const renderGrid = (
+  measuresArray: number[],
+  measureWidth: number,
+  subdivisionsArray: number[],
+  subdivisionWidth: number,
+  height: number,
+  renderEveryFourthMeasure: boolean,
+  startMeasure: number
+) => {
+  if (renderEveryFourthMeasure) {
+    return measuresArray.map((_, i) => {
+      const measureIndex = startMeasure + i * 4;
+      return (
+        <line
+          className="z-20 stroke-current text-surface-2"
+          key={`measure-${measureIndex}`}
+          strokeWidth={1}
+          x1={measureWidth * measureIndex}
+          x2={measureWidth * measureIndex}
+          y1={0}
+          y2={height}
+        />
+      );
+    });
+  }
+
+  return measuresArray.map((_, i) => (
+    <g
+      key={`measure-${startMeasure + i}`}
+      transform={`translate(${measureWidth * (startMeasure + i)}, 0)`}
+    >
+      {subdivisionsArray.map((_, j) => (
+        <line
+          className="z-20 stroke-current text-surface-0"
+          key={`subdivision-${startMeasure + i}-${j}`}
+          strokeWidth={1}
+          x1={
+            startMeasure === 0 ? 1 + subdivisionWidth * j : subdivisionWidth * j
+          }
+          x2={subdivisionWidth * j}
+          y1={0}
+          y2={height}
+        />
+      ))}
+    </g>
+  ));
+};
+
 const renderGridLanes = (
   width: number,
   laneHeight: number,
@@ -29,7 +77,7 @@ const renderGridLanes = (
   };
 
   return Array.from({ length: numKeys }).map((_, i) => (
-    <>
+    <g key={i}>
       <rect
         x={0}
         y={i * laneHeight - 1}
@@ -48,7 +96,7 @@ const renderGridLanes = (
         className="stroke-current stroke-surface-2"
         strokeWidth={1}
       />
-    </>
+    </g>
   ));
 };
 
@@ -56,17 +104,44 @@ interface PianoRollTimelineProps {
   clip: MidiClip;
   keys: PitchNameTuple[];
   width: number;
+  subdivisionWidth: number;
+  subdivisionsArray: number[];
+  renderEveryFourthMeasure: boolean;
+  measuresArray: number[];
+  measureWidth: number;
+  startMeasure: number;
+  endMeasure: number;
 }
 export const PianoRollTimeline = observer(
-  ({ clip, keys, width }: PianoRollTimelineProps) => {
+  ({
+    keys,
+    width,
+    measuresArray,
+    measureWidth,
+    subdivisionsArray,
+    subdivisionWidth,
+    renderEveryFourthMeasure,
+    startMeasure,
+  }: PianoRollTimelineProps) => {
     return (
-      <svg
-        width={width}
-        className="flex-shrink-0 overflow-x-auto"
-        height="1890px"
-      >
-        {renderGridLanes(width, 17.5, keys.length)}
-      </svg>
+      <div className="relative">
+        <svg
+          width={width}
+          className="flex-shrink-0 overflow-x-auto"
+          height="1890px"
+        >
+          {renderGridLanes(width, 17.5, keys.length)}
+          {renderGrid(
+            measuresArray,
+            measureWidth,
+            subdivisionsArray,
+            subdivisionWidth,
+            1890,
+            renderEveryFourthMeasure,
+            startMeasure
+          )}
+        </svg>
+      </div>
     );
   }
 );

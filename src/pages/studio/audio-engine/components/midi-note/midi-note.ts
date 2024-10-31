@@ -6,10 +6,10 @@ import { PitchNameTuple } from "./types";
 @model("AudioEngine/Mixer/Track/MidiClip/MidiNote")
 export class MidiNote extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
-  note: prop<PitchNameTuple>(),
-  on: prop<number>(),
-  off: prop<number>(),
-  velocity: prop<number>(65),
+  note: prop<PitchNameTuple>().withSetter(),
+  on: prop<number>().withSetter(),
+  off: prop<number>().withSetter(),
+  velocity: prop<number>(65).withSetter(),
 }) {
   startEventId: number | null = null;
   stopEventId: number | null = null;

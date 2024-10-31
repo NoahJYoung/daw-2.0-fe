@@ -6,6 +6,7 @@ import {
   model,
   modelAction,
   prop,
+  Ref,
 } from "mobx-keystone";
 import { computed } from "mobx";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
@@ -14,6 +15,8 @@ import { PitchNameTuple } from "../midi-note/types";
 import * as Tone from "tone";
 import { Track } from "../track";
 import { EventData } from "../keyboard/types";
+import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
+import { noteRef } from "../refs";
 
 interface EventParams {
   on: number;
@@ -34,6 +37,10 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   locked: prop<boolean>(false).withSetter(),
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
+  samplesPerPixel: prop<number>(256).withSetter(),
+  subdivision: prop("8n").withSetter(),
+  selectedNoteRefs: prop<Ref<MidiNote>[]>(() => []),
+  quantizePercentage: prop<number>(100),
 }) {
   getRefId() {
     return this.id;
@@ -45,9 +52,119 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     this.setEvents([...this.events, clone(newEvent)]);
   }
 
+  samplesToPixels(samples: number) {
+    return samples / this.samplesPerPixel;
+  }
+
+  pixelsToSamples(pixels: number) {
+    return pixels * this.samplesPerPixel;
+  }
+
   @computed
   get length(): number {
     return this.end - this.start;
+  }
+
+  @computed
+  get startMeasure(): number {
+    return parseInt(
+      Tone.Time(this.start, "samples").toBarsBeatsSixteenths().split(":")[0]
+    );
+  }
+
+  @computed
+  get endMeasure(): number {
+    return parseInt(
+      Tone.Time(this.end, "samples").toBarsBeatsSixteenths().split(":")[0]
+    );
+  }
+
+  @computed
+  get measures() {
+    return this.endMeasure - this.startMeasure + 1;
+  }
+
+  @computed
+  get zoomWidth() {
+    return this.samplesToPixels(Tone.Time(this.measures, "m").toSamples());
+  }
+
+  @computed
+  get selectedNotes() {
+    return this.selectedNoteRefs.map((r) => r.current);
+  }
+
+  @computed
+  get canZoomIn(): boolean {
+    return this.samplesPerPixel > MIN_SAMPLES_PER_PIXEL;
+  }
+
+  @computed
+  get canZoomOut(): boolean {
+    return this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL;
+  }
+
+  zoomIn() {
+    const newSPP = this.samplesPerPixel / 2;
+    if (this.canZoomIn) {
+      this.setSamplesPerPixel(newSPP);
+    }
+  }
+
+  zoomOut() {
+    const newSPP = this.samplesPerPixel * 2;
+    if (this.canZoomOut) {
+      this.setSamplesPerPixel(newSPP);
+    }
+  }
+
+  @modelAction
+  selectNote(note: MidiNote) {
+    if (!this.events.includes(note)) throw new Error("unknown midi note");
+
+    if (!this.selectedNotes.includes(note)) {
+      this.selectedNoteRefs.push(noteRef(note));
+    }
+  }
+
+  @modelAction
+  unselectNote(note: MidiNote) {
+    if (!this.events.includes(note)) throw new Error("unknown midi note");
+
+    const trackRefIndex = this.selectedNoteRefs.findIndex(
+      (noteRef) => noteRef.maybeCurrent === note
+    );
+
+    if (trackRefIndex >= 0) {
+      this.selectedNoteRefs.splice(trackRefIndex, 1);
+    }
+  }
+
+  selectAllClips() {
+    this.events.forEach((note) => this.selectNote(note));
+  }
+
+  unselectAllClips() {
+    this.events.forEach((note) => this.unselectNote(note));
+  }
+
+  @modelAction
+  setQuantizePercentage(percentage: number) {
+    if (percentage >= 0 && percentage <= 100) {
+      this.quantizePercentage = percentage;
+    }
+  }
+
+  quantize() {
+    this.selectedNotes.forEach((note) => {
+      const globalPosition = this.start + note.on;
+      const quantizedGlobalPosition = Tone.Time(
+        globalPosition,
+        "samples"
+      ).quantize(this.subdivision, this.quantizePercentage);
+      const newOn = quantizedGlobalPosition - this.start;
+      note.setOn(newOn);
+    });
   }
 
   @modelAction

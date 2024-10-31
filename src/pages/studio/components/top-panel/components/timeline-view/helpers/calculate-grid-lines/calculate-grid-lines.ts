@@ -1,4 +1,4 @@
-import { Timeline } from "@/pages/studio/audio-engine/components";
+import { MidiClip, Timeline } from "@/pages/studio/audio-engine/components";
 import * as Tone from "tone";
 
 export const subdivisionToQuarterMap: Record<string, number> = {
@@ -15,7 +15,7 @@ export const subdivisionToQuarterMap: Record<string, number> = {
   // ["32t"]: 12,
 };
 
-export const findSmallestSubdivision = (timeline: Timeline) => {
+export const findSmallestSubdivision = (timeline: Timeline | MidiClip) => {
   const tupletTime =
     timeline.subdivision.split("")[timeline.subdivision.split("").length - 1];
 

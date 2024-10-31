@@ -68,7 +68,10 @@ export const StudioDropdownMenu = ({
                 }
               }}
             >
-              {option.label}
+              <span className="flex items-center gap-2">
+                {option.icon && <option.icon />}
+                {option.label}
+              </span>
             </DropdownMenuItem>
           );
         })}
