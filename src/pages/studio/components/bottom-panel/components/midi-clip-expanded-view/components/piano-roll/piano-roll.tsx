@@ -1,16 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import { PianoRollTopBar, VerticalKeyboard } from "./components";
+import {
+  PianoRollPlayhead,
+  PianoRollTopBar,
+  VerticalKeyboard,
+} from "./components";
 import { PianoRollTimeline } from "./components/piano-roll-timeline";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getKeys } from "./helpers";
 import {
   findSmallestSubdivision,
   subdivisionToQuarterMap,
 } from "@/pages/studio/components/top-panel/components/timeline-view/helpers/calculate-grid-lines/calculate-grid-lines";
-import { useAudioEngine } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useRequestAnimationFrame,
+  useUndoManager,
+} from "@/pages/studio/hooks";
 import * as Tone from "tone";
+import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 
 interface PianoRollProps {
   clip: MidiClip;
@@ -19,9 +28,41 @@ interface PianoRollProps {
 export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const keyboardRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
-  const { timeline } = useAudioEngine();
-  const { timeSignature, bpm } = timeline;
+  const audioEngine = useAudioEngine();
+  const { undoManager } = useUndoManager();
+
+  const { timeline } = audioEngine;
+  const startPosition = clip.samplesToPixels(
+    timeline.positionInSamples - clip.start
+  );
+  const [playheadLeft, setPlayheadLeft] = useState(startPosition);
+
+  const { timeSignature } = timeline;
   const keys = getKeys();
+
+  useRequestAnimationFrame(
+    () => {
+      const pixels = clip.samplesToPixels(
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples() - clip.start
+      );
+      setPlayheadLeft(pixels);
+    },
+    {
+      enabled:
+        audioEngine.state === AudioEngineState.playing ||
+        audioEngine.state === AudioEngineState.recording,
+    }
+  );
+
+  useLayoutEffect(() => {
+    undoManager.withoutUndo(() => {
+      timeline.setSeconds(Tone.getTransport().seconds);
+      const pixels = clip.samplesToPixels(
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples() - clip.start
+      );
+      setPlayheadLeft(pixels);
+    });
+  }, [audioEngine.state, timeline.positionInPixels]);
 
   const handleVerticalKeyboardScroll = () => {
     if (keyboardRef.current && timelineRef.current) {
@@ -55,11 +96,6 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
     []
   );
 
-  const measuresArray = useMemo(
-    () => generateArray(clip.measures),
-    [generateArray, clip.measures, clip.samplesPerPixel, clip.startMeasure]
-  );
-
   const subdivisionsArray = useMemo(
     () => generateArray(subdivisionsPerMeasure),
     [
@@ -70,14 +106,22 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
     ]
   );
 
-  const beatWidth = useMemo(
-    () => clip.samplesToPixels(Tone.Time("4n").toSamples()),
-    [clip, clip, clip.samplesPerPixel, bpm]
-  );
+  const beatWidth = clip.samplesToPixels(Tone.Time("4n").toSamples());
 
   const measureWidth = beatWidth * timeSignature;
 
   const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
+
+  const containerWidth =
+    timelineRef.current?.getBoundingClientRect().width || 0;
+
+  const width = Math.max(clip.zoomWidth, containerWidth + 16);
+
+  const maxMeasures = Math.ceil(width / measureWidth);
+
+  const measures = Math.max(clip.measures, maxMeasures);
+
+  const measuresArray = generateArray(maxMeasures);
 
   return (
     <div
@@ -100,7 +144,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
           renderEveryFourthMeasure={false}
           measureWidth={measureWidth}
           measuresArray={measuresArray}
-          width={clip.zoomWidth}
+          width={width}
           startMeasure={clip.startMeasure}
         />
         <PianoRollTimeline
@@ -110,11 +154,12 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
           measureWidth={measureWidth}
           measuresArray={measuresArray}
           startMeasure={0}
-          endMeasure={clip.measures + 1}
-          width={clip.zoomWidth}
+          endMeasure={measures + 1}
+          width={width}
           keys={keys}
           clip={clip}
         />
+        <PianoRollPlayhead left={playheadLeft} />
       </div>
     </div>
   );

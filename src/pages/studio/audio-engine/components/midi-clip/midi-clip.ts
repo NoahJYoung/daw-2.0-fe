@@ -101,7 +101,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get canZoomOut(): boolean {
-    return this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL;
+    return this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL / 2;
   }
 
   zoomIn() {

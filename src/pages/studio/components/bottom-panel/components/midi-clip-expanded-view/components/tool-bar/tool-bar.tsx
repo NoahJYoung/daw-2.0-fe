@@ -13,18 +13,20 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
   const { undoManager } = useUndoManager();
   return (
     <div className="flex items-center gap-1">
-      <StudioButton
-        title={t("studio.toolbar.zoomOut")}
-        disabled={!clip.canZoomOut}
-        icon={CiZoomOut}
-        onClick={() => undoManager.withoutUndo(() => clip.zoomOut())}
-      />
-      <StudioButton
-        title={t("studio.toolbar.zoomIn")}
-        disabled={!clip.canZoomIn}
-        icon={CiZoomIn}
-        onClick={() => undoManager.withoutUndo(() => clip.zoomIn())}
-      />
+      <span className="flex items-center gap-1 w-[80px] justify-evenly">
+        <StudioButton
+          title={t("studio.toolbar.zoomOut")}
+          disabled={!clip.canZoomOut}
+          icon={CiZoomOut}
+          onClick={() => undoManager.withoutUndo(() => clip.zoomOut())}
+        />
+        <StudioButton
+          title={t("studio.toolbar.zoomIn")}
+          disabled={!clip.canZoomIn}
+          icon={CiZoomIn}
+          onClick={() => undoManager.withoutUndo(() => clip.zoomIn())}
+        />
+      </span>
     </div>
   );
 });
