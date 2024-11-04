@@ -43,7 +43,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   useRequestAnimationFrame(
     () => {
       const pixels = clip.samplesToPixels(
-        Tone.Time(Tone.getTransport().seconds, "s").toSamples() - clip.start
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples()
       );
       setPlayheadLeft(pixels);
     },
@@ -58,13 +58,14 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
     undoManager.withoutUndo(() => {
       timeline.setSeconds(Tone.getTransport().seconds);
       const pixels = clip.samplesToPixels(
-        Tone.Time(Tone.getTransport().seconds, "s").toSamples() - clip.start
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples()
       );
       setPlayheadLeft(pixels);
     });
   }, [
     audioEngine.state,
     timeline.positionInPixels,
+    clip.start,
     clip.samplesPerPixel,
     clip,
   ]);

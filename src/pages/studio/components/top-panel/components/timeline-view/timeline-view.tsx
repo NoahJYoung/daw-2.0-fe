@@ -20,7 +20,6 @@ import {
 } from "./helpers/calculate-grid-lines/calculate-grid-lines";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { Timeline } from "@/pages/studio/audio-engine/components";
-import { TOOLBAR_HEIGHT } from "@/pages/studio/utils/constants";
 
 interface TimelineViewProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -243,16 +242,8 @@ export const TimelineView = observer(
         onScroll={onScroll}
         ref={scrollRef}
         style={{ width: totalWidth }}
-        className="h-full bg-surface-0 pt-[2px] z-10 styled-scrollbar overflow-auto relative"
+        className="h-full bg-surface-0 z-10 styled-scrollbar overflow-auto relative"
       >
-        <div
-          className="z-10 fixed bg-surface-0"
-          style={{
-            top: 0,
-            width: totalWidth,
-            height: TOOLBAR_HEIGHT + 2,
-          }}
-        />
         <TopBar
           totalWidth={totalWidth}
           renderEveryFourthMeasure={renderEveryFourthMeasure}

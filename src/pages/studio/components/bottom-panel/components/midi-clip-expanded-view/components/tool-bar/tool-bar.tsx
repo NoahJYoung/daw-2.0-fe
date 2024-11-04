@@ -13,7 +13,7 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
   const { undoManager } = useUndoManager();
   return (
     <div className="flex items-center gap-1">
-      <span className="flex items-center gap-1 w-[80px] justify-evenly">
+      <span className="flex items-center gap-1 w-[80px] justify-between">
         <StudioButton
           title={t("studio.toolbar.zoomOut")}
           disabled={!clip.canZoomOut}

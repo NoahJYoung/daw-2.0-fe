@@ -79,7 +79,7 @@ export const TopBar = memo(
 
     return renderEveryFourthMeasure ? (
       <div
-        className="flex sticky top-0 bg-surface-1 select-none"
+        className="flex sticky top-0 bg-surface-0 select-none"
         style={{
           zIndex: 10,
           width: totalWidth,
@@ -109,7 +109,7 @@ export const TopBar = memo(
       </div>
     ) : (
       <div
-        className="flex sticky top-0 bg-surface-1 select-none"
+        className="flex sticky top-0 bg-surface-0 select-none"
         style={{
           zIndex: 10,
           width: totalWidth,
