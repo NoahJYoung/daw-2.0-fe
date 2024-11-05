@@ -52,7 +52,7 @@ export const KeyboardView = observer(() => {
       </span>
       <div
         className={cn(
-          "w-[1360px] max-w-full p-1 pb-4 overflow-x-auto styled-scrollbar flex relative h-full justify-start max-h-[275px] mr-1"
+          "w-[1376px] max-w-full p-1 pb-4 overflow-x-auto styled-scrollbar flex relative h-full justify-start max-h-[275px] mr-1"
         )}
       >
         {keys.map((key, i, arr) => {

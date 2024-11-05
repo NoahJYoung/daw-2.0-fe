@@ -16,6 +16,12 @@ import { FaCaretUp, FaCaretDown, FaGuitar } from "react-icons/fa";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { inputOptions } from "@/pages/studio/audio-engine/types";
 import { cn } from "@/lib/utils";
+import { PiCaretUpDownFill } from "react-icons/pi";
+import {
+  INITIAL_LANE_HEIGHT,
+  MAX_LANE_HEIGHT,
+  MIN_LANE_HEIGHT,
+} from "@/pages/studio/audio-engine/constants";
 
 const DRAG_THRESHOLD = 24;
 
@@ -237,6 +243,19 @@ export const TrackPanel = observer(
       return 0;
     };
 
+    const handleToggleExpand = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      undoManager.withoutUndo(() => {
+        if (track.laneHeight < INITIAL_LANE_HEIGHT) {
+          track.setLaneHeight(INITIAL_LANE_HEIGHT);
+        } else if (track.laneHeight < MAX_LANE_HEIGHT) {
+          track.setLaneHeight(MAX_LANE_HEIGHT);
+        } else {
+          track.setLaneHeight(MIN_LANE_HEIGHT);
+        }
+      });
+    };
+
     const selectedBgOffset = selected ? 1 : 0;
 
     const showExpandedOptions = track.laneHeight > 75;
@@ -400,6 +419,12 @@ export const TrackPanel = observer(
                   S
                 </Button>
               </span>
+              <button
+                className="w-5 h-5 text-surface-3 text-md z-10 top-0 right-0 hover:opacity-80"
+                onClick={handleToggleExpand}
+              >
+                <PiCaretUpDownFill />
+              </button>
             </div>
 
             <span className="flex flex-col">

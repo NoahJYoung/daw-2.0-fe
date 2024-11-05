@@ -125,7 +125,7 @@ export const PianoRollTimeline = observer(
     clip,
   }: PianoRollTimelineProps) => {
     const clipStartOffsetPx = clip.samplesToPixels(
-      clip.start - Tone.Time(startMeasure, "m").toSamples()
+      clip.start - Tone.Time(clip.startMeasure, "m").toSamples()
     );
 
     return (

@@ -23,10 +23,11 @@ export const MidiNoteView = observer(
     };
 
     const handleClick = (e: React.MouseEvent) => {
+      const initialState = selected;
       if (!e.ctrlKey) {
         clip.unselectAllNotes();
       }
-      if (selected) {
+      if (initialState) {
         clip.unselectNote(note);
       } else {
         clip.selectNote(note);
@@ -34,17 +35,6 @@ export const MidiNoteView = observer(
     };
 
     return (
-      // <span
-      //   onClick={handleClick}
-      // style={{
-      //   width,
-      //   left,
-      //   top,
-      //   background: generateRGBWithAlias(selected ? 0.7 : 0.3),
-      //   border: `1px solid ${generateRGBWithAlias(selected ? 0.7 : 0.5)}`,
-      // }}
-      //   className="h-[17.5px] absolute rounded-xs"
-      // />
       <rect
         onClick={handleClick}
         x={left}

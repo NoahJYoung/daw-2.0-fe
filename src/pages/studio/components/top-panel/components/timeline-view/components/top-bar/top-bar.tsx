@@ -51,7 +51,7 @@ export const TopBar = memo(
               return (
                 <span
                   key={j}
-                  className="border-surface-2"
+                  className=""
                   style={{
                     width: subdivisionWidth,
                     zIndex: 10,
@@ -83,8 +83,8 @@ export const TopBar = memo(
         style={{
           zIndex: 10,
           width: totalWidth,
-          height: TOOLBAR_HEIGHT,
-          marginBottom: 3,
+          height: TOOLBAR_HEIGHT - 2,
+          marginBottom: 5,
           paddingTop: 2,
         }}
       >
@@ -92,11 +92,11 @@ export const TopBar = memo(
           <span
             key={i}
             id={`measure-${i}`}
-            className="border-surface-2 border relative"
+            className="border relative"
             style={{
               width: measureWidth * 4,
               flexShrink: 0,
-              height: 69,
+              height: 68,
               marginTop: 0,
               borderLeftWidth: i === 0 ? 1 : 0,
             }}
@@ -113,8 +113,9 @@ export const TopBar = memo(
         style={{
           zIndex: 10,
           width: totalWidth,
-          height: TOOLBAR_HEIGHT - 4,
+          height: TOOLBAR_HEIGHT - 2,
           marginBottom: 5,
+          paddingTop: 2,
         }}
       >
         {measuresToRender}

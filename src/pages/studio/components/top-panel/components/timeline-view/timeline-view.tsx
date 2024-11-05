@@ -101,7 +101,9 @@ export const TimelineView = observer(
       [timeline, timeline.samplesPerPixel, timeline.bpm]
     );
 
-    const measureWidth = beatWidth * timeline.timeSignature;
+    const measureWidth =
+      Math.round((beatWidth * timeline.timeSignature + Number.EPSILON) * 100) /
+      100;
 
     const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
 

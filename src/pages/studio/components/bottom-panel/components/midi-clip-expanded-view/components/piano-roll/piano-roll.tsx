@@ -40,36 +40,6 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const { timeSignature } = timeline;
   const keys = getKeys();
 
-  useRequestAnimationFrame(
-    () => {
-      const pixels = clip.samplesToPixels(
-        Tone.Time(Tone.getTransport().seconds, "s").toSamples()
-      );
-      setPlayheadLeft(pixels);
-    },
-    {
-      enabled:
-        audioEngine.state === AudioEngineState.playing ||
-        audioEngine.state === AudioEngineState.recording,
-    }
-  );
-
-  useLayoutEffect(() => {
-    undoManager.withoutUndo(() => {
-      timeline.setSeconds(Tone.getTransport().seconds);
-      const pixels = clip.samplesToPixels(
-        Tone.Time(Tone.getTransport().seconds, "s").toSamples()
-      );
-      setPlayheadLeft(pixels);
-    });
-  }, [
-    audioEngine.state,
-    timeline.positionInPixels,
-    clip.start,
-    clip.samplesPerPixel,
-    clip,
-  ]);
-
   const handleVerticalKeyboardScroll = () => {
     if (keyboardRef.current && timelineRef.current) {
       timelineRef.current.scrollTop = keyboardRef.current.scrollTop;
@@ -112,6 +82,10 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
     ]
   );
 
+  const startOffsetPx = clip.samplesToPixels(
+    Tone.Time(clip.startMeasure, "m").toSamples()
+  );
+
   const beatWidth = clip.samplesToPixels(Tone.Time("4n").toSamples());
 
   const measureWidth = beatWidth * timeSignature;
@@ -128,6 +102,43 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const measures = Math.max(clip.measures, maxMeasures);
 
   const measuresArray = generateArray(maxMeasures);
+
+  useLayoutEffect(() => {
+    undoManager.withoutUndo(() => {
+      const pixels = clip.samplesToPixels(
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples()
+      );
+      setPlayheadLeft(pixels - startOffsetPx);
+    });
+  }, [
+    audioEngine.state,
+    timeline.positionInPixels,
+    clip.start,
+    clip.samplesPerPixel,
+    clip,
+  ]);
+
+  useRequestAnimationFrame(
+    () => {
+      const pixels = clip.samplesToPixels(
+        Tone.Time(Tone.getTransport().seconds, "s").toSamples()
+      );
+      setPlayheadLeft(pixels - startOffsetPx);
+    },
+    {
+      enabled:
+        audioEngine.state === AudioEngineState.playing ||
+        audioEngine.state === AudioEngineState.recording,
+    }
+  );
+
+  const transportMeasure = parseInt(
+    Tone.getTransport().position.toString().split(":")[0]
+  );
+
+  const renderPlayhead =
+    transportMeasure >= clip.startMeasure &&
+    transportMeasure <= clip.endMeasure;
 
   return (
     <div
@@ -165,7 +176,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
           keys={keys}
           clip={clip}
         />
-        <PianoRollPlayhead left={playheadLeft} />
+        {renderPlayhead && <PianoRollPlayhead left={playheadLeft} />}
       </div>
     </div>
   );
