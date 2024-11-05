@@ -1,20 +1,46 @@
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
-import { getColorFromVelocity, getTopValueFromPitch } from "./helpers";
+import {
+  getColorFromVelocity,
+  getOnMouseDown,
+  getOnMouseMove,
+  getOnMouseUp,
+  getTopValueFromPitch,
+} from "./helpers";
 import { observer } from "mobx-react-lite";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useUndoManager } from "@/pages/studio/hooks";
 
 interface MidiNoteViewProps {
   note: MidiNote;
   clip: MidiClip;
   clipStartOffsetPx: number;
+  dragging: boolean;
+  setDragging: React.Dispatch<SetStateAction<boolean>>;
+  selectedNotesPositionOffset: number;
+  setSelectedNotesPositionOffset: Dispatch<SetStateAction<number>>;
+  selectedNotesDragOffset: number;
+  setSelectedNotesDragOffset: Dispatch<SetStateAction<number>>;
 }
 
 export const MidiNoteView = observer(
-  ({ note, clip, clipStartOffsetPx }: MidiNoteViewProps) => {
+  ({
+    note,
+    clip,
+    clipStartOffsetPx,
+    dragging,
+    setDragging,
+    selectedNotesPositionOffset,
+    setSelectedNotesPositionOffset,
+    selectedNotesDragOffset,
+    setSelectedNotesDragOffset,
+  }: MidiNoteViewProps) => {
     const width = clip.samplesToPixels(note.off - note.on);
     const left = clip.samplesToPixels(note.on) + clipStartOffsetPx;
     const top = getTopValueFromPitch(note.note);
     const selected = clip.selectedNotes.includes(note);
+
+    const { undoManager } = useUndoManager();
 
     const generateRGBWithAlias = (alias: number) => {
       const rgb = getColorFromVelocity(note.velocity);
@@ -22,25 +48,60 @@ export const MidiNoteView = observer(
       return `rgba(${[...rgb, alias].join(", ")})`;
     };
 
-    const handleClick = (e: React.MouseEvent) => {
-      const initialState = selected;
-      if (!e.ctrlKey) {
-        clip.unselectAllNotes();
-      }
-      if (initialState) {
-        clip.unselectNote(note);
-      } else {
-        clip.selectNote(note);
-      }
-    };
+    const initialX = useRef(0);
+    const initialY = useRef(0);
+
+    const onMouseUp = getOnMouseUp(
+      dragging,
+      setDragging,
+      selectedNotesPositionOffset,
+      setSelectedNotesPositionOffset,
+      selectedNotesDragOffset,
+      setSelectedNotesDragOffset,
+      note,
+      clip,
+      undoManager,
+      initialX,
+      initialY
+    );
+    const onMouseMove = getOnMouseMove(
+      dragging,
+      selected,
+      note,
+      clip,
+      selectedNotesPositionOffset,
+      setSelectedNotesPositionOffset,
+      selectedNotesDragOffset,
+      setSelectedNotesDragOffset,
+      initialY,
+      clipStartOffsetPx
+    );
+
+    const onMouseDown = getOnMouseDown(
+      initialX,
+      initialY,
+      setDragging,
+      clip,
+      note,
+      undoManager
+    );
+
+    useEffect(() => {
+      window.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      return () => {
+        window.removeEventListener("mouseup", onMouseUp);
+        window.removeEventListener("mousemove", onMouseMove);
+      };
+    }, [onMouseMove, onMouseUp]);
 
     return (
       <rect
-        onClick={handleClick}
-        x={left}
+        onMouseDown={onMouseDown}
+        x={selected ? selectedNotesPositionOffset + left : left}
         width={width}
         height={17.5}
-        y={top}
+        y={selected ? selectedNotesDragOffset * 17.5 + top : top}
         rx={2}
         style={{
           border: `1px solid ${generateRGBWithAlias(selected ? 0.7 : 0.5)}`,

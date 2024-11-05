@@ -39,6 +39,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   fadeOutSamples: prop<number>(0).withSetter(),
   samplesPerPixel: prop<number>(256).withSetter(),
   subdivision: prop("8n").withSetter(),
+  snapToGrid: prop(false).withSetter(),
   selectedNoteRefs: prop<Ref<MidiNote>[]>(() => []),
   quantizePercentage: prop<number>(100),
 }) {

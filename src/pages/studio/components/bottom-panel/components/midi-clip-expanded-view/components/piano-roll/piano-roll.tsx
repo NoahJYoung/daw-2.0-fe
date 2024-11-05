@@ -30,7 +30,6 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const timelineRef = useRef<HTMLDivElement>(null);
   const audioEngine = useAudioEngine();
   const { undoManager } = useUndoManager();
-
   const { timeline } = audioEngine;
   const startPosition = clip.samplesToPixels(
     timeline.positionInSamples - clip.start

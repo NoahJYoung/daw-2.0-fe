@@ -4,6 +4,7 @@ import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note
 import { observer } from "mobx-react-lite";
 import { MidiNoteView } from "./components";
 import * as Tone from "tone";
+import { useState } from "react";
 
 export const renderGrid = (
   measuresArray: number[],
@@ -124,6 +125,11 @@ export const PianoRollTimeline = observer(
     startMeasure,
     clip,
   }: PianoRollTimelineProps) => {
+    const [selectedNotesDragOffset, setSelectedNoteDragOffset] = useState(0);
+    const [selectedNotesPositionOffset, setSelectedNotePositionOffset] =
+      useState(0);
+    const [dragging, setDragging] = useState(false);
+
     const clipStartOffsetPx = clip.samplesToPixels(
       clip.start - Tone.Time(clip.startMeasure, "m").toSamples()
     );
@@ -147,6 +153,12 @@ export const PianoRollTimeline = observer(
           )}
           {clip.events.map((note) => (
             <MidiNoteView
+              dragging={dragging}
+              setDragging={setDragging}
+              selectedNotesDragOffset={selectedNotesDragOffset}
+              setSelectedNotesDragOffset={setSelectedNoteDragOffset}
+              selectedNotesPositionOffset={selectedNotesPositionOffset}
+              setSelectedNotesPositionOffset={setSelectedNotePositionOffset}
               clipStartOffsetPx={clipStartOffsetPx}
               note={note}
               clip={clip}
