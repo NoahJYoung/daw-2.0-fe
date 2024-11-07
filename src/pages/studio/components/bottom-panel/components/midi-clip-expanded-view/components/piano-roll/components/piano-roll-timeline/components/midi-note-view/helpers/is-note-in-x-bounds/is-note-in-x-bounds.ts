@@ -1,5 +1,6 @@
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
+import * as Tone from "tone";
 
 export const isNoteInXBounds = (
   selectedNotes: MidiNote[],
@@ -9,6 +10,9 @@ export const isNoteInXBounds = (
   return selectedNotes.every((selectedNote) => {
     const newOn = selectedNote.on + movementXInSamples;
     const newOff = selectedNote.off + movementXInSamples;
-    return newOn >= clip.start && newOff <= clip.end;
+    const offsetSamples =
+      clip.start - Tone.Time(clip.startMeasure, "m").toSamples();
+
+    return newOn - offsetSamples >= 0 && newOff - offsetSamples <= clip.length;
   });
 };

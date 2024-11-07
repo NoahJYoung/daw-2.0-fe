@@ -102,7 +102,8 @@ export const MidiNoteView = observer(
         ref={firstNoteRef}
         id={note.id}
         onMouseDown={onMouseDown}
-        x={selected ? selectedNotesPositionOffset + left : left}
+        onClick={(e) => e.stopPropagation()}
+        x={(selected ? selectedNotesPositionOffset + left : left) + 1}
         width={width}
         height={17.5}
         y={selected ? selectedNotesDragOffset * 17.5 + top : top}

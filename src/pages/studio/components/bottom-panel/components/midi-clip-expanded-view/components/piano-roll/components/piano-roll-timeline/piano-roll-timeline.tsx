@@ -136,7 +136,7 @@ export const PianoRollTimeline = observer(
       useState(0);
     const [dragging, setDragging] = useState(false);
     const audioEngine = useAudioEngine();
-    const { timeline } = audioEngine;
+    const { timeline, mixer } = audioEngine;
     const { undoManager } = useUndoManager();
     const menuActions = usePianoRollMenuActions(clip);
 
@@ -154,20 +154,22 @@ export const PianoRollTimeline = observer(
 
         // TODO: Find a better way to fix this "TABS SCROLL OFFSCREEN" bug
         if (firstNoteElement && window.innerHeight > 568) {
-          firstNoteElement.scrollIntoView({
-            inline: "center",
-            block: "center",
-          });
+          // firstNoteElement.scrollIntoView({
+          //   inline: "center",
+          //   block: "center",
+          // });
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [clip]);
 
     const handleClick = (e: React.MouseEvent) => {
+      if (!e.ctrlKey) {
+        undoManager.withGroup("UNSELECT ALL NOTES", () => {
+          clip.unselectAllNotes();
+        });
+      }
       undoManager.withoutUndo(() => {
-        if (e.ctrlKey) {
-          return;
-        }
         if (timelineRef.current) {
           const xOffset = timelineRef.current.getBoundingClientRect().x;
           const xValue = e.clientX - xOffset + timelineRef.current.scrollLeft;
@@ -186,6 +188,14 @@ export const PianoRollTimeline = observer(
         }
       });
     };
+
+    const clipWidthPx = clip.samplesToPixels(clip.length);
+    const parentTrack = mixer.tracks.find((track) => track.id === clip.trackId);
+
+    const [r, g, b] = parentTrack?.rgb ?? [175, 175, 175];
+
+    const fill = `rgba(${r}, ${g}, ${b}, 0.1)`;
+    const stroke = `rgba(${r}, ${g}, ${b}, 0.2)`;
 
     return (
       <StudioContextMenu
@@ -212,6 +222,15 @@ export const PianoRollTimeline = observer(
             renderEveryFourthMeasure,
             startMeasure
           )}
+          <rect
+            rx={4}
+            stroke={stroke}
+            fill={fill}
+            x={clipStartOffsetPx}
+            y={0}
+            height={1890}
+            width={clipWidthPx}
+          />
           {clip.events.map((note, i) => (
             <MidiNoteView
               firstNoteRef={i === 0 ? firstNoteRef : undefined}

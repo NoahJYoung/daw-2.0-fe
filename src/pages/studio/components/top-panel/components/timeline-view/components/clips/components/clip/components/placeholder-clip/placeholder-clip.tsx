@@ -119,7 +119,7 @@ export const PlaceholderClip = observer(
 
     return renderPlaceholderClip ? (
       <div
-        className="absolute justify-end flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
+        className="absolute justify-end flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px] pt-[24px]"
         style={{
           top,
           width,

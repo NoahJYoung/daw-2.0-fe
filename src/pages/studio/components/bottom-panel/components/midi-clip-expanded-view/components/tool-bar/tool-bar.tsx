@@ -104,7 +104,7 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
 
       <span className="flex items-center gap-1 min-w-[220px]">
         <Slider
-          className="max-w-[52px] text-surface-5"
+          className="max-w-[80px] text-surface-5 flex-shrink-0"
           value={[clip.quantizePercentage]}
           onValueChange={onValueChange}
           onValueCommit={commitValueChange}
