@@ -137,20 +137,21 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
     setMode("MIXER");
   };
 
+  const updateDimensions = () => {
+    setWindowSize({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    });
+  };
+
   useLayoutEffect(() => {
-    window.addEventListener("resize", () =>
-      setWindowSize({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      })
-    );
-    return () =>
-      window.removeEventListener("resize", () =>
-        setWindowSize({
-          height: window.innerHeight,
-          width: window.innerWidth,
-        })
-      );
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
+
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      window.removeEventListener("orientationchange", updateDimensions);
+    };
   }, []);
 
   const value = {

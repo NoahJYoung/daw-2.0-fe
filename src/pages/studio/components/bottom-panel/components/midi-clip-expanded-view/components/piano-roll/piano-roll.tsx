@@ -140,10 +140,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
     transportMeasure <= clip.endMeasure;
 
   return (
-    <div
-      style={{ height: "calc(85% - 40px)" }}
-      className="border border-surface-2 flex flex-shrink-0 md:max-h-[400px]"
-    >
+    <div className="border border-surface-2 h-full flex flex-shrink-0 md:max-h-[400px]">
       <VerticalKeyboard
         clip={clip}
         onScroll={handleVerticalKeyboardScroll}
@@ -174,6 +171,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
           width={width}
           keys={keys}
           clip={clip}
+          setPlayheadLeft={setPlayheadLeft}
         />
         {renderPlayhead && <PianoRollPlayhead left={playheadLeft} />}
       </div>

@@ -15,12 +15,15 @@
   },
   "studio": {
     "toolbar": {
+      "action": "Cursor action",
       "metronome": "Metronome",
       "snapToGrid": "Snap to grid",
       "expand": "Expand",
       "collapse": "Collapse",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
+      "selectAll": "Select all",
+      "delete": "Delete",
       "copy": "Copy",
       "paste": "Paste",
       "settings": "Settings",
@@ -29,7 +32,10 @@
       "download": "Download",
       "save": "Save",
       "userMenu": "User menu",
-      "subdivision": "Subdivision"
+      "subdivision": "Subdivision",
+      "quantize": "Quantize",
+      "quantizeStart": "Quantize start",
+      "quantizeEnd": "Quantize end"
     },
     "trackPanel": {
       "placeholders": {

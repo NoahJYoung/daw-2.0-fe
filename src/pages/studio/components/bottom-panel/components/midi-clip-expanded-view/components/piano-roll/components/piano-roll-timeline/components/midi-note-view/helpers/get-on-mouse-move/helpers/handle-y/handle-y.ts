@@ -1,6 +1,6 @@
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
-import { inBoundsY } from "../../../in-bounds-y";
 import { MidiClip } from "@/pages/studio/audio-engine/components";
+import { isNoteInYBounds } from "../../../is-note-in-y-bounds.ts";
 
 export const handleY = (
   e: MouseEvent,
@@ -18,7 +18,7 @@ export const handleY = (
     const direction = movementY > 0 ? 1 : -1;
     const newOffset = selectedNotesDragOffset + direction;
 
-    if (inBoundsY(selectedNotes, newOffset)) {
+    if (isNoteInYBounds(selectedNotes, newOffset)) {
       setSelectedNotesDragOffset(newOffset);
       initialY.current = e.clientY;
     }

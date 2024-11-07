@@ -1,7 +1,7 @@
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 
-export const inBoundsX = (
+export const isNoteInXBounds = (
   selectedNotes: MidiNote[],
   movementXInSamples: number,
   clip: MidiClip

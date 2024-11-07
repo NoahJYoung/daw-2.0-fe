@@ -17,6 +17,7 @@ interface ToolbarMenuProps {
   triggerIcon?: IconType;
   label?: string;
   title?: string;
+  disabled?: boolean;
 }
 
 export const StudioDropdownMenu = ({
@@ -26,10 +27,11 @@ export const StudioDropdownMenu = ({
   triggerIcon: Icon,
   label,
   title,
+  disabled,
 }: ToolbarMenuProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger disabled={disabled} asChild>
         <Button
           title={title}
           className="rounded-xxs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3"
@@ -38,7 +40,7 @@ export const StudioDropdownMenu = ({
           {label && label}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="rounded-xxs bg-surface-1">
+      <DropdownMenuContent className="rounded-xxs bg-surface-1 max-h-48 md:max-h-96 overflow-y-auto">
         {options.map((option, i) => {
           if (option?.separator) {
             return <DropdownMenuSeparator key={option.label ?? i} />;

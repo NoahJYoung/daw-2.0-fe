@@ -4,7 +4,11 @@ import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note
 import { observer } from "mobx-react-lite";
 import { MidiNoteView } from "./components";
 import * as Tone from "tone";
-import { useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
+import { usePianoRollMenuActions } from "../../hooks";
+import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
+import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 
 export const renderGrid = (
   measuresArray: number[],
@@ -112,6 +116,7 @@ interface PianoRollTimelineProps {
   measureWidth: number;
   startMeasure: number;
   endMeasure: number;
+  setPlayheadLeft: React.Dispatch<SetStateAction<number>>;
 }
 export const PianoRollTimeline = observer(
   ({
@@ -124,22 +129,78 @@ export const PianoRollTimeline = observer(
     renderEveryFourthMeasure,
     startMeasure,
     clip,
+    setPlayheadLeft,
   }: PianoRollTimelineProps) => {
     const [selectedNotesDragOffset, setSelectedNoteDragOffset] = useState(0);
     const [selectedNotesPositionOffset, setSelectedNotePositionOffset] =
       useState(0);
     const [dragging, setDragging] = useState(false);
+    const audioEngine = useAudioEngine();
+    const { timeline } = audioEngine;
+    const { undoManager } = useUndoManager();
+    const menuActions = usePianoRollMenuActions(clip);
+
+    const timelineRef = useRef<SVGSVGElement>(null);
 
     const clipStartOffsetPx = clip.samplesToPixels(
       clip.start - Tone.Time(clip.startMeasure, "m").toSamples()
     );
 
+    const firstNoteRef = useRef<SVGRectElement>(null);
+
+    useEffect(() => {
+      if (clip.events.length && firstNoteRef.current) {
+        const firstNoteElement = firstNoteRef.current;
+
+        // TODO: Find a better way to fix this "TABS SCROLL OFFSCREEN" bug
+        if (firstNoteElement && window.innerHeight > 568) {
+          firstNoteElement.scrollIntoView({
+            inline: "center",
+            block: "center",
+          });
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [clip]);
+
+    const handleClick = (e: React.MouseEvent) => {
+      undoManager.withoutUndo(() => {
+        if (e.ctrlKey) {
+          return;
+        }
+        if (timelineRef.current) {
+          const xOffset = timelineRef.current.getBoundingClientRect().x;
+          const xValue = e.clientX - xOffset + timelineRef.current.scrollLeft;
+          const seconds = clip.snapToGrid
+            ? Tone.Time(xValue * clip.samplesPerPixel, "samples").quantize(
+                clip.subdivision
+              )
+            : Tone.Time(xValue * clip.samplesPerPixel, "samples").toSeconds();
+          Tone.getTransport().seconds = seconds;
+          timeline.setSeconds(seconds);
+
+          const pixels =
+            Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
+            clip.samplesPerPixel;
+          setPlayheadLeft(pixels);
+        }
+      });
+    };
+
     return (
-      <div className="relative">
+      <StudioContextMenu
+        disabled={
+          audioEngine.state === AudioEngineState.playing ||
+          audioEngine.state === AudioEngineState.recording
+        }
+        items={menuActions}
+      >
         <svg
+          ref={timelineRef}
           width={width}
-          className="flex-shrink-0 overflow-x-auto"
+          className="flex-shrink-0 overflow-x-auto relative"
           height="1890px"
+          onClick={handleClick}
         >
           {renderGridLanes(width, 17.5, keys.length)}
           {renderGrid(
@@ -151,8 +212,9 @@ export const PianoRollTimeline = observer(
             renderEveryFourthMeasure,
             startMeasure
           )}
-          {clip.events.map((note) => (
+          {clip.events.map((note, i) => (
             <MidiNoteView
+              firstNoteRef={i === 0 ? firstNoteRef : undefined}
               dragging={dragging}
               setDragging={setDragging}
               selectedNotesDragOffset={selectedNotesDragOffset}
@@ -165,7 +227,7 @@ export const PianoRollTimeline = observer(
             />
           ))}
         </svg>
-      </div>
+      </StudioContextMenu>
     );
   }
 );

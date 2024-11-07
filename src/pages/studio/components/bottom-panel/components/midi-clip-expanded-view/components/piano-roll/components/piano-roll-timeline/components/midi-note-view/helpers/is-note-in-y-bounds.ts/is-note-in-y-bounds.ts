@@ -3,7 +3,7 @@ import { getKeys } from "../../../../../../helpers";
 
 const notes = getKeys().map((pitchTuple) => pitchTuple.join("-"));
 
-export const inBoundsY = (selectedNotes: MidiNote[], offset: number) => {
+export const isNoteInYBounds = (selectedNotes: MidiNote[], offset: number) => {
   return selectedNotes.every((selectedNote) => {
     const noteIndex = notes.indexOf(selectedNote.note.join("-"));
     const newIndex = noteIndex + offset;

@@ -1,5 +1,5 @@
 import { MidiClip } from "@/pages/studio/audio-engine/components";
-import { inBoundsX } from "../in-bounds-x";
+import { isNoteInXBounds } from "../is-note-in-x-bounds";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { handleY } from "./helpers/handle-y";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
@@ -23,7 +23,7 @@ export const getOnMouseMove = (
     }
 
     if (
-      inBoundsX(
+      isNoteInXBounds(
         clip.selectedNotes,
         clip.pixelsToSamples(
           e.movementX + selectedNotesPositionOffset + clipStartOffsetPx

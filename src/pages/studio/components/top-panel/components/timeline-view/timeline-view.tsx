@@ -153,9 +153,12 @@ export const TimelineView = observer(
     useLayoutEffect(() => {
       undoManager.withoutUndo(() => {
         timeline.setSeconds(Tone.getTransport().seconds);
-        setPlayheadLeft(timeline.positionInPixels);
       });
     }, [audioEngine.state]);
+
+    useLayoutEffect(() => {
+      setPlayheadLeft(timeline.positionInPixels);
+    }, [timeline.positionInPixels]);
 
     const adjustScrollToZoomChange = (
       timeline: Timeline,

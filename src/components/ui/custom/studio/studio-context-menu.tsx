@@ -93,7 +93,9 @@ export const StudioContextMenu = ({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger disabled={disabled}>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger className="h-full" disabled={disabled}>
+        {children}
+      </ContextMenuTrigger>
       <ContextMenuContent
         onClick={(e) => e.stopPropagation()}
         className="w-56 bg-surface-1 rounded-xxs text-surface-6"

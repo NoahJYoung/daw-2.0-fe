@@ -9,7 +9,7 @@ interface MidiClipExpandedViewProps {
 export const MidiClipExpandedView = observer(
   ({ clip }: MidiClipExpandedViewProps) => {
     return (
-      <div className="flex flex-col gap-2 w-full h-full max-w-[1360px] flex-shrink-0 relative">
+      <div className="flex flex-col gap-1 w-full h-[calc(100%-80px)] max-w-[1360px] flex-shrink-0 relative">
         <ToolBar clip={clip} />
         <PianoRoll clip={clip} />
       </div>

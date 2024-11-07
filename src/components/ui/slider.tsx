@@ -26,13 +26,13 @@ const Slider = React.forwardRef<
     >
       <SliderPrimitive.Range
         className={cn(
-          "absolute bg-primary",
+          "absolute bg-surface-5",
           "data-[orientation='horizontal']:h-full",
           "data-[orientation='vertical']:w-full"
         )}
       />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-4 w-4 cursor-grab rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:h-5 hover:w-5 active:cursor-grabbing" />
+    <SliderPrimitive.Thumb className="block h-4 w-4 cursor-grab rounded-full border-2 border-surface-5 bg-surface-0 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:h-5 hover:w-5 active:cursor-grabbing" />
   </SliderPrimitive.Root>
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;

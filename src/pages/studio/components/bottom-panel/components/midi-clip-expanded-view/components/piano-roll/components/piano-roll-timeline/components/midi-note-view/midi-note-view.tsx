@@ -21,6 +21,7 @@ interface MidiNoteViewProps {
   setSelectedNotesPositionOffset: Dispatch<SetStateAction<number>>;
   selectedNotesDragOffset: number;
   setSelectedNotesDragOffset: Dispatch<SetStateAction<number>>;
+  firstNoteRef?: React.RefObject<SVGRectElement>;
 }
 
 export const MidiNoteView = observer(
@@ -34,6 +35,7 @@ export const MidiNoteView = observer(
     setSelectedNotesPositionOffset,
     selectedNotesDragOffset,
     setSelectedNotesDragOffset,
+    firstNoteRef,
   }: MidiNoteViewProps) => {
     const width = clip.samplesToPixels(note.off - note.on);
     const left = clip.samplesToPixels(note.on) + clipStartOffsetPx;
@@ -97,6 +99,8 @@ export const MidiNoteView = observer(
 
     return (
       <rect
+        ref={firstNoteRef}
+        id={note.id}
         onMouseDown={onMouseDown}
         x={selected ? selectedNotesPositionOffset + left : left}
         width={width}

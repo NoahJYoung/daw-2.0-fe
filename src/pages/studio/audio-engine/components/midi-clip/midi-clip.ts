@@ -41,16 +41,25 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   subdivision: prop("8n").withSetter(),
   snapToGrid: prop(false).withSetter(),
   selectedNoteRefs: prop<Ref<MidiNote>[]>(() => []),
-  quantizePercentage: prop<number>(100),
+  quantizePercentage: prop<number>(1),
+  action: prop<"select" | "create">("select").withSetter(),
 }) {
   getRefId() {
     return this.id;
   }
 
   @modelAction
-  createEvent(event: EventParams) {
+  createEvent = (event: EventParams) => {
     const newEvent = new MidiNote({ ...event });
     this.setEvents([...this.events, clone(newEvent)]);
+  };
+
+  deleteNote(event: MidiNote) {
+    this.setEvents([...this.events].filter((current) => current !== event));
+  }
+
+  deleteSelectedNotes() {
+    this.selectedNotes.forEach((note) => this.deleteNote(note));
   }
 
   samplesToPixels(samples: number) {
@@ -105,6 +114,18 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     return this.samplesPerPixel < MAX_SAMPLES_PER_PIXEL / 2;
   }
 
+  @computed
+  get velocity(): number {
+    if (this.selectedNotes.length) {
+      return this.selectedNotes[0].velocity;
+    }
+    return 64;
+  }
+
+  setVelocity(velocity: number) {
+    this.selectedNotes.forEach((note) => note.setVelocity(velocity));
+  }
+
   zoomIn() {
     const newSPP = this.samplesPerPixel / 2;
     if (this.canZoomIn) {
@@ -156,18 +177,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
-  quantize() {
-    this.selectedNotes.forEach((note) => {
-      const globalPosition = this.start + note.on;
-      const quantizedGlobalPosition = Tone.Time(
-        globalPosition,
-        "samples"
-      ).quantize(this.subdivision, this.quantizePercentage);
-      const newOn = quantizedGlobalPosition - this.start;
-      note.setOn(newOn);
-    });
-  }
-
   @modelAction
   setStart(newStart: number) {
     const difference = newStart - this.start;
@@ -180,6 +189,24 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   play = () => {};
 
   stop() {}
+
+  quantizeSelectedNotes() {
+    this.selectedNotes.forEach((note) =>
+      note.quantize(this.start, this.subdivision, this.quantizePercentage)
+    );
+  }
+
+  quantizeSelectedOn() {
+    this.selectedNotes.forEach((note) =>
+      note.quantizeOn(this.start, this.subdivision, this.quantizePercentage)
+    );
+  }
+
+  quantizeSelectedOff() {
+    this.selectedNotes.forEach((note) =>
+      note.quantizeOff(this.start, this.subdivision, this.quantizePercentage)
+    );
+  }
 
   schedule() {
     this.clearEvents();
