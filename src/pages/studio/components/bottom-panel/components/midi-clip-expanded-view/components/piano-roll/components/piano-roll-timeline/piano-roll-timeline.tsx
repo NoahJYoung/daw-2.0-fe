@@ -177,8 +177,13 @@ export const PianoRollTimeline = observer(
             ? Tone.Time(xValue * clip.samplesPerPixel, "samples").quantize(
                 clip.subdivision
               )
-            : Tone.Time(xValue * clip.samplesPerPixel, "samples").toSeconds();
+            : Tone.Time(
+                xValue * clip.samplesPerPixel +
+                  Tone.Time(clip.startMeasure, "m").toSamples(),
+                "samples"
+              ).toSeconds();
           Tone.getTransport().seconds = seconds;
+
           timeline.setSeconds(seconds);
 
           const pixels =

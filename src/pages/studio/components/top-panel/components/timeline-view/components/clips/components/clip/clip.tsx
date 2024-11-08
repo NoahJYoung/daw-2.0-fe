@@ -30,10 +30,14 @@ import {
   getOnMouseDown,
   getOnMouseMove,
   getOnMouseUp,
+  getOnTouchEnd,
+  getOnTouchStart,
   inBoundsY,
 } from "./helpers";
 
 import * as Tone from "tone";
+import { getOnTouchMove } from "./helpers/get-on-touch-move";
+import { isTouchDevice } from "@/pages/studio/utils";
 
 interface ClipProps {
   track: Track;
@@ -78,7 +82,7 @@ export const Clip = observer(
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
     const { expandBottomPanelIfCollapsed } = useBottomPanelViewController();
-    const [showClipActions, setShowClipActions] = useState(false);
+    const [hovering, setHovering] = useState(false);
 
     const selected = mixer.selectedClips.includes(clip);
 
@@ -87,6 +91,17 @@ export const Clip = observer(
     const parentTrackIndex = mixer.tracks.indexOf(track);
 
     const onMouseDown = getOnMouseDown(
+      initialX,
+      initialY,
+      setDragging,
+      clip,
+      track,
+      mixer,
+      undoManager,
+      setReferenceClip
+    );
+
+    const onTouchStart = getOnTouchStart(
       initialX,
       initialY,
       setDragging,
@@ -142,18 +157,84 @@ export const Clip = observer(
       loopOffset
     );
 
+    const onTouchMove = getOnTouchMove(
+      dragging,
+      selected,
+      isLooping,
+      referenceClip,
+      track,
+      timeline,
+      mixer,
+      selectedOffset,
+      setSelectedOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      initialX,
+      initialY,
+      setLoopOffset,
+      loopOffset
+    );
+
+    const onTouchEnd = getOnTouchEnd(
+      dragging,
+      setDragging,
+      setIsLooping,
+      isLooping,
+      selectedOffset,
+      setSelectedOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      referenceClip,
+      timeline,
+      mixer,
+      undoManager,
+      parentTrackIndex,
+      initialX,
+      initialY,
+      setReferenceClip,
+      setLoopOffset,
+      loopOffset
+    );
+
     const clipLeft = selected
       ? timeline.samplesToPixels(clip.start) + selectedOffset
       : timeline.samplesToPixels(clip.start);
 
     useEffect(() => {
+      const preventScroll = (e: Event) => {
+        if (e.cancelable) e.preventDefault();
+      };
+
+      if (dragging) {
+        // Prevent scrolling when dragging
+        document.addEventListener("wheel", preventScroll, { passive: false });
+        document.addEventListener("touchmove", preventScroll, {
+          passive: false,
+        });
+      }
+
       window.addEventListener("mouseup", onMouseUp);
       window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("touchmove", onTouchMove);
+      window.addEventListener("touchend", onTouchEnd);
+
       return () => {
+        document.removeEventListener("wheel", preventScroll);
+        document.removeEventListener("touchmove", preventScroll);
         window.removeEventListener("mouseup", onMouseUp);
         window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchend", onTouchEnd);
       };
-    }, [onMouseMove, onMouseUp]);
+    }, [dragging, onMouseMove, onMouseUp, onTouchEnd, onTouchMove]);
+
+    useEffect(() => {
+      if (dragging) {
+        document.body.classList.add("touch-none");
+      } else {
+        document.body.classList.remove("touch-none");
+      }
+    }, [dragging]);
 
     const clipInfoString = useMemo(() => {
       return `${track.name} | ${Tone.Time(
@@ -219,8 +300,8 @@ export const Clip = observer(
       }
     };
 
-    const handleMouseEnter = () => setShowClipActions(true);
-    const handleMouseLeave = () => setShowClipActions(false);
+    const handleMouseEnter = () => setHovering(true);
+    const handleMouseLeave = () => setHovering(false);
 
     const handleLoopDown = () => {
       setIsLooping(true);
@@ -235,14 +316,26 @@ export const Clip = observer(
       selectedIndexOffset
     );
 
+    const showClipActions = hovering || selected;
+
     return (
       <>
         <div
           onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+          onScroll={(e) => {
+            if (dragging) {
+              e.preventDefault();
+            }
+          }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onClick={onClick}
           onDoubleClick={handleDoubleClick}
+          onDrag={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
           key={clip.id}
           className=" flex flex-col flex-shrink-0 rounded-xl gap-1 pb-[4px]"
           style={{
@@ -285,6 +378,7 @@ export const Clip = observer(
               {showClipActions && (
                 <button
                   onMouseDown={handleLoopDown}
+                  onTouchStart={handleLoopDown}
                   style={{
                     left:
                       (clip.length +

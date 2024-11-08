@@ -6,3 +6,6 @@ export { getOnClick } from "./get-on-click";
 export { getOnMouseMove } from "./get-on-mouse-move";
 export { getOnMouseUp } from "./get-on-mouse-up";
 export { getClipValues } from "./get-clip-values";
+export { getOnTouchStart } from "./get-on-touch-start";
+export { getOnTouchEnd } from "./get-on-touch-end";
+export { getOnTouchMove } from "./get-on-touch-move";
