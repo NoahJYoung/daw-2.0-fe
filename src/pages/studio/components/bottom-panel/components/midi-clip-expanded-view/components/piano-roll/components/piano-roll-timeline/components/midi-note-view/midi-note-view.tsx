@@ -8,7 +8,7 @@ import {
   getTopValueFromPitch,
 } from "./helpers";
 import { observer } from "mobx-react-lite";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { useUndoManager } from "@/pages/studio/hooks";
 
 interface MidiNoteViewProps {
@@ -21,6 +21,14 @@ interface MidiNoteViewProps {
   setSelectedNotesPositionOffset: Dispatch<SetStateAction<number>>;
   selectedNotesDragOffset: number;
   setSelectedNotesDragOffset: Dispatch<SetStateAction<number>>;
+  selectedNotesStartExpandingOffset: number;
+  setSelectedNotesStartExpandingOffset: Dispatch<SetStateAction<number>>;
+  selectedNotesEndExpandingOffset: number;
+  setSelectedNotesEndExpandingOffset: Dispatch<SetStateAction<number>>;
+  startExpanding: boolean;
+  setStartExpanding: Dispatch<SetStateAction<boolean>>;
+  endExpanding: boolean;
+  setEndExpanding: Dispatch<SetStateAction<boolean>>;
   firstNoteRef?: React.RefObject<SVGRectElement>;
 }
 
@@ -35,6 +43,14 @@ export const MidiNoteView = observer(
     setSelectedNotesPositionOffset,
     selectedNotesDragOffset,
     setSelectedNotesDragOffset,
+    selectedNotesStartExpandingOffset,
+    setSelectedNotesStartExpandingOffset,
+    selectedNotesEndExpandingOffset,
+    setSelectedNotesEndExpandingOffset,
+    startExpanding,
+    setStartExpanding,
+    endExpanding,
+    setEndExpanding,
     firstNoteRef,
   }: MidiNoteViewProps) => {
     const width = clip.samplesToPixels(note.off - note.on);
@@ -60,6 +76,14 @@ export const MidiNoteView = observer(
       setSelectedNotesPositionOffset,
       selectedNotesDragOffset,
       setSelectedNotesDragOffset,
+      startExpanding,
+      setStartExpanding,
+      endExpanding,
+      setEndExpanding,
+      selectedNotesStartExpandingOffset,
+      setSelectedNotesStartExpandingOffset,
+      selectedNotesEndExpandingOffset,
+      setSelectedNotesEndExpandingOffset,
       note,
       clip,
       undoManager,
@@ -75,6 +99,12 @@ export const MidiNoteView = observer(
       setSelectedNotesPositionOffset,
       selectedNotesDragOffset,
       setSelectedNotesDragOffset,
+      selectedNotesStartExpandingOffset,
+      setSelectedNotesStartExpandingOffset,
+      selectedNotesEndExpandingOffset,
+      setSelectedNotesEndExpandingOffset,
+      startExpanding,
+      endExpanding,
       initialY,
       clipStartOffsetPx
     );
@@ -88,6 +118,16 @@ export const MidiNoteView = observer(
       undoManager
     );
 
+    const expandStart = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setStartExpanding(true);
+    };
+
+    const expandEnd = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setEndExpanding(true);
+    };
+
     useEffect(() => {
       window.addEventListener("mouseup", onMouseUp);
       window.addEventListener("mousemove", onMouseMove);
@@ -97,22 +137,70 @@ export const MidiNoteView = observer(
       };
     }, [onMouseMove, onMouseUp]);
 
+    const getAdjustedWidth = () => {
+      if (selected) {
+        if (startExpanding) {
+          return width - selectedNotesStartExpandingOffset;
+        } else if (endExpanding) {
+          return width + selectedNotesEndExpandingOffset;
+        }
+      }
+
+      return width;
+    };
+
+    const getAdjustedX = () => {
+      if (selected) {
+        if (startExpanding) {
+          return left + selectedNotesStartExpandingOffset + 1;
+        }
+        return left + selectedNotesPositionOffset + 1;
+      }
+      return left + 1;
+    };
+
+    const adjustedWidth = getAdjustedWidth();
+    const adjustedX = getAdjustedX();
+
     return (
-      <rect
-        ref={firstNoteRef}
-        id={note.id}
-        onMouseDown={onMouseDown}
-        onClick={(e) => e.stopPropagation()}
-        x={(selected ? selectedNotesPositionOffset + left : left) + 1}
-        width={width}
-        height={17.5}
-        y={selected ? selectedNotesDragOffset * 17.5 + top : top}
-        rx={2}
-        style={{
-          border: `1px solid ${generateRGBWithAlias(selected ? 0.7 : 0.5)}`,
-        }}
-        fill={generateRGBWithAlias(selected ? 0.7 : 0.3)}
-      />
+      <g>
+        <rect
+          ref={firstNoteRef}
+          id={note.id}
+          onMouseDown={onMouseDown}
+          onClick={(e) => e.stopPropagation()}
+          x={adjustedX}
+          width={adjustedWidth}
+          height={17.5}
+          y={selected ? selectedNotesDragOffset * 17.5 + top : top}
+          rx={2}
+          style={{
+            border: `1px solid ${generateRGBWithAlias(selected ? 0.7 : 0.5)}`,
+          }}
+          fill={generateRGBWithAlias(selected ? 0.7 : 0.3)}
+        />
+
+        <rect
+          onMouseDown={expandStart}
+          className="cursor-col-resize"
+          width={Math.min(8, adjustedWidth)}
+          x={adjustedX}
+          height={17.5}
+          y={selected ? selectedNotesDragOffset * 17.5 + top : top}
+          stroke="transparent"
+          fill="transparent"
+        />
+        <rect
+          onMouseDown={expandEnd}
+          className="cursor-col-resize"
+          width={Math.min(8, adjustedWidth)}
+          stroke="transparent"
+          fill="transparent"
+          x={adjustedX + adjustedWidth}
+          height={17.5}
+          y={selected ? selectedNotesDragOffset * 17.5 + top : top}
+        />
+      </g>
     );
   }
 );

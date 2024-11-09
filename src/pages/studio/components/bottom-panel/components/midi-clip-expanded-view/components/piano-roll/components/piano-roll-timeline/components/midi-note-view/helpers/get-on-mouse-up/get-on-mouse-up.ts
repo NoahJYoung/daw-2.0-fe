@@ -12,6 +12,14 @@ export const getOnMouseUp = (
   setSelectedNotesPositionOffset: Dispatch<SetStateAction<number>>,
   selectedNotesDragOffset: number,
   setSelectedNotesDragOffset: Dispatch<SetStateAction<number>>,
+  startExpanding: boolean,
+  setStartExpanding: Dispatch<SetStateAction<boolean>>,
+  endExpanding: boolean,
+  setEndExpanding: Dispatch<SetStateAction<boolean>>,
+  selectedNotesStartExpandingOffset: number,
+  setSelectedNotesStartExpandingOffset: Dispatch<SetStateAction<number>>,
+  selectedNotesEndExpandingOffset: number,
+  setSelectedNotesEndExpandingOffset: Dispatch<SetStateAction<number>>,
   note: MidiNote,
   clip: MidiClip,
   undoManager: UndoManager,
@@ -20,18 +28,86 @@ export const getOnMouseUp = (
 ) => {
   const resetStates = () => {
     setDragging(false);
+    setStartExpanding(false);
+    setEndExpanding(false);
+    setSelectedNotesStartExpandingOffset(0);
+    setSelectedNotesEndExpandingOffset(0);
     setSelectedNotesDragOffset(0);
     setSelectedNotesPositionOffset(0);
     initialY.current = 0;
     initialX.current = 0;
   };
+
+  const expanding = startExpanding || endExpanding;
+
   const onMouseUp = (e: MouseEvent) => {
-    if (!dragging) {
+    if (!dragging && !expanding) {
       resetStates();
       return;
     }
     e.stopPropagation();
 
+    //Expand from start
+    if (startExpanding) {
+      const initialStartDifference = clip.pixelsToSamples(
+        selectedNotesStartExpandingOffset
+      );
+      const firstNoteExpandedStart = note.on + initialStartDifference;
+      const quantizedFirstNoteExpandedStart = Tone.Time(
+        Tone.Time(firstNoteExpandedStart, "samples").quantize(clip.subdivision),
+        "s"
+      ).toSamples();
+      undoManager.withGroup("HANDLE NOTE START EXPANDING", () => {
+        const quantizeExpandingStartOffset = clip.snapToGrid
+          ? quantizedFirstNoteExpandedStart - firstNoteExpandedStart
+          : 0;
+        clip.selectedNotes.forEach((selectedNote) => {
+          const timeOffset = clip.pixelsToSamples(
+            selectedNotesStartExpandingOffset
+          );
+          const newOn =
+            selectedNote.on + timeOffset + quantizeExpandingStartOffset;
+
+          undoManager.withGroup("SET NOTE ON", () => {
+            selectedNote.setOn(newOn);
+          });
+        });
+
+        resetStates();
+      });
+    }
+
+    //Expand from end
+    if (endExpanding) {
+      const initialEndDifference = clip.pixelsToSamples(
+        selectedNotesEndExpandingOffset
+      );
+      const firstNoteExpandedEnd = note.off + initialEndDifference;
+      const quantizedFirstNoteExpandedEnd = Tone.Time(
+        Tone.Time(firstNoteExpandedEnd, "samples").quantize(clip.subdivision),
+        "s"
+      ).toSamples();
+      undoManager.withGroup("HANDLE NOTE START EXPANDING", () => {
+        const quantizeExpandingEndOffset = clip.snapToGrid
+          ? quantizedFirstNoteExpandedEnd - firstNoteExpandedEnd
+          : 0;
+        clip.selectedNotes.forEach((selectedNote) => {
+          const timeOffset = clip.pixelsToSamples(
+            selectedNotesEndExpandingOffset
+          );
+          const newOff =
+            selectedNote.off + timeOffset + quantizeExpandingEndOffset;
+
+          undoManager.withGroup("SET NOTE ON", () => {
+            selectedNote.setOff(newOff);
+          });
+        });
+
+        resetStates();
+      });
+    }
+
+    // X Movement
     const initialTimeDifference = clip.pixelsToSamples(
       selectedNotesPositionOffset
     );
@@ -54,6 +130,7 @@ export const getOnMouseUp = (
           selectedNote.setOff(newOff);
         });
       });
+      // Y Movement
       if (selectedNotesDragOffset !== 0) {
         undoManager.withGroup("MOVE NOTES TO NEW LANE", () => {
           clip.selectedNotes.forEach((selectedNote) => {

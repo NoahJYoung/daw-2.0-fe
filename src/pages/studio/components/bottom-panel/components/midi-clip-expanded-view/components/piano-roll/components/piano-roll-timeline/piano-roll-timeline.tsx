@@ -134,7 +134,18 @@ export const PianoRollTimeline = observer(
     const [selectedNotesDragOffset, setSelectedNoteDragOffset] = useState(0);
     const [selectedNotesPositionOffset, setSelectedNotePositionOffset] =
       useState(0);
+    const [
+      selectedNotesStartExpandingOffset,
+      setSelectedNotesStartExpandingOffset,
+    ] = useState(0);
+    const [
+      selectedNotesEndExpandingOffset,
+      setSelectedNotesEndExpandingOffset,
+    ] = useState(0);
     const [dragging, setDragging] = useState(false);
+    const [startExpanding, setStartExpanding] = useState(false);
+    const [endExpanding, setEndExpanding] = useState(false);
+
     const audioEngine = useAudioEngine();
     const { timeline, mixer } = audioEngine;
     const { undoManager } = useUndoManager();
@@ -245,6 +256,20 @@ export const PianoRollTimeline = observer(
               setSelectedNotesDragOffset={setSelectedNoteDragOffset}
               selectedNotesPositionOffset={selectedNotesPositionOffset}
               setSelectedNotesPositionOffset={setSelectedNotePositionOffset}
+              selectedNotesStartExpandingOffset={
+                selectedNotesStartExpandingOffset
+              }
+              setSelectedNotesStartExpandingOffset={
+                setSelectedNotesStartExpandingOffset
+              }
+              selectedNotesEndExpandingOffset={selectedNotesEndExpandingOffset}
+              setSelectedNotesEndExpandingOffset={
+                setSelectedNotesEndExpandingOffset
+              }
+              startExpanding={startExpanding}
+              setStartExpanding={setStartExpanding}
+              endExpanding={endExpanding}
+              setEndExpanding={setEndExpanding}
               clipStartOffsetPx={clipStartOffsetPx}
               note={note}
               clip={clip}

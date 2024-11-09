@@ -37,7 +37,6 @@ import {
 
 import * as Tone from "tone";
 import { getOnTouchMove } from "./helpers/get-on-touch-move";
-import { isTouchDevice } from "@/pages/studio/utils";
 
 interface ClipProps {
   track: Track;

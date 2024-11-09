@@ -10,6 +10,7 @@ export const isNoteInXBounds = (
   return selectedNotes.every((selectedNote) => {
     const newOn = selectedNote.on + movementXInSamples;
     const newOff = selectedNote.off + movementXInSamples;
+
     const offsetSamples =
       clip.start - Tone.Time(clip.startMeasure, "m").toSamples();
 
