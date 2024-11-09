@@ -10,7 +10,7 @@ export const getOnMouseMove = (
   selected: boolean,
   isLooping: boolean,
   clip: Clip | null,
-  track: Track,
+  track: Track | null,
   timeline: Timeline,
   mixer: Mixer,
   selectedOffset: number,
@@ -44,14 +44,16 @@ export const getOnMouseMove = (
       setSelectedOffset((prev) => prev + e.movementX);
     }
 
-    return handleYMovement(
-      e,
-      initialY,
-      track,
-      mixer,
-      selectedIndexOffset,
-      setSelectedIndexOffset
-    );
+    if (track) {
+      return handleYMovement(
+        e,
+        initialY,
+        track,
+        mixer,
+        selectedIndexOffset,
+        setSelectedIndexOffset
+      );
+    }
   };
 
   return onMouseMove;

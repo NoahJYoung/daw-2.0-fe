@@ -2,13 +2,19 @@ import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { Clip } from "./components";
 import { PlaceholderClip } from "./components/clip/components";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
 import { getTimelineMenuActions } from "./helpers";
 
 import * as Tone from "tone";
+import {
+  getOnMouseMove,
+  getOnMouseUp,
+  getOnTouchEnd,
+  getOnTouchMove,
+} from "./components/clip/helpers";
 
 interface ClipsProps {
   startMeasure: number;
@@ -43,7 +49,7 @@ export const Clips = observer(
       number | null
     >(null);
 
-    const { state, mixer } = audioEngine;
+    const { state, mixer, timeline } = audioEngine;
 
     useEffect(() => {
       if (state === AudioEngineState.recording) {
@@ -106,6 +112,131 @@ export const Clips = observer(
       return false;
     };
 
+    const initialY = useRef<number>(0);
+    const initialX = useRef<number>(0);
+    const referenceClipParentTrack = referenceClip
+      ? mixer.tracks.find((track) => track.id === referenceClip.trackId) ?? null
+      : null;
+    const referenceClipParentTrackIndex = referenceClipParentTrack
+      ? mixer.tracks.indexOf(referenceClipParentTrack)
+      : -1;
+
+    const onTouchEnd = getOnTouchEnd(
+      dragging,
+      setDragging,
+      setIsLooping,
+      isLooping,
+      selectedXOffset,
+      setSelectedXOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      referenceClip,
+      timeline,
+      mixer,
+      undoManager,
+      referenceClipParentTrackIndex,
+      initialX,
+      initialY,
+      setReferenceClip,
+      setLoopOffset,
+      loopOffset
+    );
+
+    const selected =
+      !!referenceClip && mixer.selectedClips.includes(referenceClip);
+
+    const onMouseMove = getOnMouseMove(
+      dragging,
+      selected,
+      isLooping,
+      referenceClip,
+      referenceClipParentTrack,
+      timeline,
+      mixer,
+      selectedXOffset,
+      setSelectedXOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      initialY,
+      setLoopOffset,
+      loopOffset
+    );
+
+    const onMouseUp = getOnMouseUp(
+      dragging,
+      setDragging,
+      setIsLooping,
+      isLooping,
+      selectedXOffset,
+      setSelectedXOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      referenceClip,
+      timeline,
+      mixer,
+      undoManager,
+      referenceClipParentTrackIndex,
+      initialX,
+      initialY,
+      setReferenceClip,
+      setLoopOffset,
+      loopOffset
+    );
+
+    const onTouchMove = getOnTouchMove(
+      dragging,
+      selected,
+      isLooping,
+      referenceClip,
+      referenceClipParentTrack,
+      timeline,
+      mixer,
+      selectedXOffset,
+      setSelectedXOffset,
+      selectedIndexOffset,
+      setSelectedIndexOffset,
+      initialX,
+      initialY,
+      setLoopOffset,
+      loopOffset
+    );
+
+    useEffect(() => {
+      const preventScroll = (e: Event) => {
+        if (e.cancelable) e.preventDefault();
+      };
+
+      if (dragging) {
+        // Prevent scrolling when dragging
+        document.addEventListener("wheel", preventScroll, { passive: false });
+        document.addEventListener("touchmove", preventScroll, {
+          passive: false,
+        });
+      }
+
+      window.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("touchmove", onTouchMove);
+      window.addEventListener("touchend", onTouchEnd);
+
+      return () => {
+        document.removeEventListener("wheel", preventScroll);
+        document.removeEventListener("touchmove", preventScroll);
+        window.removeEventListener("mouseup", onMouseUp);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchend", onTouchEnd);
+      };
+    }, [dragging, onMouseMove, onMouseUp, onTouchEnd, onTouchMove]);
+
+    useEffect(() => {
+      if (dragging) {
+        document.body.classList.add("touch-none");
+      } else {
+        document.body.classList.remove("touch-none");
+      }
+    }, [dragging]);
+
     return (
       <StudioContextMenu
         disabled={
@@ -142,23 +273,21 @@ export const Clips = observer(
               {track.clips.map((clip) =>
                 shouldRenderClip(clip) ? (
                   <Clip
+                    initialX={initialX}
+                    initialY={initialY}
                     isLooping={isLooping}
                     setIsLooping={setIsLooping}
-                    setLoopOffset={setLoopOffset}
                     loopOffset={loopOffset}
                     scrollLeft={scrollLeft}
                     selectedOffset={selectedXOffset}
-                    setSelectedOffset={setSelectedXOffset}
                     setPlayheadLeft={setPlayheadLeft}
                     dragging={dragging}
                     setDragging={setDragging}
-                    setSelectedIndexOffset={setSelectedIndexOffset}
                     selectedIndexOffset={selectedIndexOffset}
                     scrollRef={scrollRef}
                     key={clip.id}
                     track={track}
                     clip={clip}
-                    referenceClip={referenceClip}
                     setReferenceClip={setReferenceClip}
                   />
                 ) : null

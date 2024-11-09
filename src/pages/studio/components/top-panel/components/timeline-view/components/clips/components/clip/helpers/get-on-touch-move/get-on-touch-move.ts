@@ -10,7 +10,7 @@ export const getOnTouchMove = (
   selected: boolean,
   isLooping: boolean,
   clip: Clip | null,
-  track: Track,
+  track: Track | null,
   timeline: Timeline,
   mixer: Mixer,
   selectedOffset: number,
@@ -54,17 +54,19 @@ export const getOnTouchMove = (
 
     initialX.current = touch.clientX;
 
-    return handleYMovement(
-      {
-        clientX: touch.clientX,
-        clientY: touch.clientY,
-      } as MouseEvent,
-      initialY,
-      track,
-      mixer,
-      selectedIndexOffset,
-      setSelectedIndexOffset
-    );
+    if (track) {
+      return handleYMovement(
+        {
+          clientX: touch.clientX,
+          clientY: touch.clientY,
+        } as MouseEvent,
+        initialY,
+        track,
+        mixer,
+        selectedIndexOffset,
+        setSelectedIndexOffset
+      );
+    }
   };
 
   return onTouchMove;

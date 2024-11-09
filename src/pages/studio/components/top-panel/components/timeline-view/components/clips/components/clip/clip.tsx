@@ -15,47 +15,34 @@ import {
   IoLockClosedSharp as LockedIcon,
   IoLockOpenSharp as UnlockedIcon,
 } from "react-icons/io5";
-import {
-  useEffect,
-  useRef,
-  Dispatch,
-  SetStateAction,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   getClipValues,
   getOnClick,
   getOnMouseDown,
-  getOnMouseMove,
-  getOnMouseUp,
-  getOnTouchEnd,
   getOnTouchStart,
   inBoundsY,
 } from "./helpers";
 
 import * as Tone from "tone";
-import { getOnTouchMove } from "./helpers/get-on-touch-move";
 
 interface ClipProps {
   track: Track;
   clip: AudioClip | MidiClip;
   scrollRef: React.RefObject<HTMLDivElement>;
   selectedIndexOffset: number;
-  setSelectedIndexOffset: Dispatch<SetStateAction<number>>;
   loopOffset: number;
-  setLoopOffset: Dispatch<SetStateAction<number>>;
   dragging: boolean;
   setDragging: Dispatch<SetStateAction<boolean>>;
   setPlayheadLeft: React.Dispatch<SetStateAction<number>>;
   selectedOffset: number;
-  setSelectedOffset: Dispatch<SetStateAction<number>>;
   scrollLeft: number;
-  referenceClip: AudioClip | MidiClip | null;
   setReferenceClip: Dispatch<SetStateAction<AudioClip | MidiClip | null>>;
   isLooping: boolean;
   setIsLooping: Dispatch<SetStateAction<boolean>>;
+  initialX: React.MutableRefObject<number>;
+  initialY: React.MutableRefObject<number>;
 }
 
 export const Clip = observer(
@@ -63,20 +50,18 @@ export const Clip = observer(
     clip,
     track,
     selectedIndexOffset,
-    setSelectedIndexOffset,
     scrollRef,
     dragging,
     setDragging,
     setPlayheadLeft,
     scrollLeft,
     selectedOffset,
-    setSelectedOffset,
-    referenceClip,
     setReferenceClip,
     loopOffset,
-    setLoopOffset,
     isLooping,
     setIsLooping,
+    initialX,
+    initialY,
   }: ClipProps) => {
     const { timeline, mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
@@ -85,8 +70,6 @@ export const Clip = observer(
 
     const selected = mixer.selectedClips.includes(clip);
 
-    const initialY = useRef<number>(0);
-    const initialX = useRef<number>(0);
     const parentTrackIndex = mixer.tracks.indexOf(track);
 
     const onMouseDown = getOnMouseDown(
@@ -118,122 +101,9 @@ export const Clip = observer(
       undoManager
     );
 
-    const onMouseMove = getOnMouseMove(
-      dragging,
-      selected,
-      isLooping,
-      referenceClip,
-      track,
-      timeline,
-      mixer,
-      selectedOffset,
-      setSelectedOffset,
-      selectedIndexOffset,
-      setSelectedIndexOffset,
-      initialY,
-      setLoopOffset,
-      loopOffset
-    );
-
-    const onMouseUp = getOnMouseUp(
-      dragging,
-      setDragging,
-      setIsLooping,
-      isLooping,
-      selectedOffset,
-      setSelectedOffset,
-      selectedIndexOffset,
-      setSelectedIndexOffset,
-      referenceClip,
-      timeline,
-      mixer,
-      undoManager,
-      parentTrackIndex,
-      initialX,
-      initialY,
-      setReferenceClip,
-      setLoopOffset,
-      loopOffset
-    );
-
-    const onTouchMove = getOnTouchMove(
-      dragging,
-      selected,
-      isLooping,
-      referenceClip,
-      track,
-      timeline,
-      mixer,
-      selectedOffset,
-      setSelectedOffset,
-      selectedIndexOffset,
-      setSelectedIndexOffset,
-      initialX,
-      initialY,
-      setLoopOffset,
-      loopOffset
-    );
-
-    const onTouchEnd = getOnTouchEnd(
-      dragging,
-      setDragging,
-      setIsLooping,
-      isLooping,
-      selectedOffset,
-      setSelectedOffset,
-      selectedIndexOffset,
-      setSelectedIndexOffset,
-      referenceClip,
-      timeline,
-      mixer,
-      undoManager,
-      parentTrackIndex,
-      initialX,
-      initialY,
-      setReferenceClip,
-      setLoopOffset,
-      loopOffset
-    );
-
     const clipLeft = selected
       ? timeline.samplesToPixels(clip.start) + selectedOffset
       : timeline.samplesToPixels(clip.start);
-
-    useEffect(() => {
-      const preventScroll = (e: Event) => {
-        if (e.cancelable) e.preventDefault();
-      };
-
-      if (dragging) {
-        // Prevent scrolling when dragging
-        document.addEventListener("wheel", preventScroll, { passive: false });
-        document.addEventListener("touchmove", preventScroll, {
-          passive: false,
-        });
-      }
-
-      window.addEventListener("mouseup", onMouseUp);
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("touchmove", onTouchMove);
-      window.addEventListener("touchend", onTouchEnd);
-
-      return () => {
-        document.removeEventListener("wheel", preventScroll);
-        document.removeEventListener("touchmove", preventScroll);
-        window.removeEventListener("mouseup", onMouseUp);
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("touchmove", onTouchMove);
-        window.removeEventListener("touchend", onTouchEnd);
-      };
-    }, [dragging, onMouseMove, onMouseUp, onTouchEnd, onTouchMove]);
-
-    useEffect(() => {
-      if (dragging) {
-        document.body.classList.add("touch-none");
-      } else {
-        document.body.classList.remove("touch-none");
-      }
-    }, [dragging]);
 
     const clipInfoString = useMemo(() => {
       return `${track.name} | ${Tone.Time(

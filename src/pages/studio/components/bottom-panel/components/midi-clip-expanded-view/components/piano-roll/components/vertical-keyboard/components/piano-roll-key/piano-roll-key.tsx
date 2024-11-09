@@ -47,8 +47,8 @@ export const PianoRollKey = ({
       ) : (
         <div
           className={cn(
-            "w-[50px] h-[17.5px] bg-zinc-900 border border-zinc-100 absolute top-[-10px] z-10",
-            { "bg-zinc-700": active }
+            "w-[50px] h-[17.5px] bg-zinc-800 border border-zinc-100 absolute top-[-10px] z-10",
+            { "bg-zinc-600": active }
           )}
         />
       )}
