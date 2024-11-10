@@ -207,7 +207,6 @@ export const Clips = observer(
       };
 
       if (dragging) {
-        // Prevent scrolling when dragging
         document.addEventListener("wheel", preventScroll, { passive: false });
         document.addEventListener("touchmove", preventScroll, {
           passive: false,
@@ -224,8 +223,8 @@ export const Clips = observer(
         document.removeEventListener("touchmove", preventScroll);
         window.removeEventListener("mouseup", onMouseUp);
         window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("touchmove", onTouchMove);
         window.removeEventListener("touchend", onTouchEnd);
+        window.removeEventListener("touchmove", onTouchMove);
       };
     }, [dragging, onMouseMove, onMouseUp, onTouchEnd, onTouchMove]);
 

@@ -1,114 +1,16 @@
-import { cn } from "@/lib/utils";
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
 import { observer } from "mobx-react-lite";
 import { MidiNoteView } from "./components";
 import * as Tone from "tone";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef } from "react";
 import { usePianoRollMenuActions } from "../../hooks";
-import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
+import { useAudioEngine } from "@/pages/studio/hooks";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
-import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
-import {
-  getOnMouseUp,
-  getOnMouseMove,
-} from "./components/midi-note-view/helpers";
-
-export const renderGrid = (
-  measuresArray: number[],
-  measureWidth: number,
-  subdivisionsArray: number[],
-  subdivisionWidth: number,
-  height: number,
-  renderEveryFourthMeasure: boolean,
-  startMeasure: number
-) => {
-  if (renderEveryFourthMeasure) {
-    return measuresArray.map((_, i) => {
-      const measureIndex = startMeasure + i * 4;
-      return (
-        <line
-          className="z-20 stroke-current text-surface-2"
-          key={`measure-${measureIndex}`}
-          strokeWidth={1}
-          x1={measureWidth * measureIndex}
-          x2={measureWidth * measureIndex}
-          y1={0}
-          y2={height}
-        />
-      );
-    });
-  }
-
-  return measuresArray.map((_, i) => (
-    <g
-      key={`measure-${startMeasure + i}`}
-      transform={`translate(${measureWidth * (startMeasure + i)}, 0)`}
-    >
-      {subdivisionsArray.map((_, j) => (
-        <line
-          className="z-20 stroke-current text-surface-0"
-          key={`subdivision-${startMeasure + i}-${j}`}
-          strokeWidth={1}
-          x1={subdivisionWidth * j + 1}
-          x2={subdivisionWidth * j + 1}
-          y1={0}
-          y2={height}
-        />
-      ))}
-    </g>
-  ));
-};
-
-const renderGridLanes = (
-  width: number,
-  laneHeight: number,
-  numKeys: number
-) => {
-  const isBlackKey = (index: number) => {
-    const octavePosition = index % 12;
-    return [1, 3, 5, 8, 10].includes(octavePosition);
-  };
-
-  const isLastKey = (index: number) => {
-    return index === numKeys - 1;
-  };
-
-  const getRectHeight = (index: number) => {
-    if (isBlackKey(index)) {
-      return laneHeight - 1;
-    }
-    if (isLastKey(index)) {
-      return laneHeight + 1;
-    }
-
-    return laneHeight;
-  };
-
-  return Array.from({ length: numKeys }).map((_, i) => (
-    <g key={i}>
-      <rect
-        x={0}
-        y={i * laneHeight - 1}
-        height={getRectHeight(i)}
-        width={width}
-        className={cn(
-          "fill-current opacity-20",
-          isBlackKey(i) ? "text-zinc-600" : "text-zinc-400"
-        )}
-      />
-      <line
-        x1={0}
-        x2={width}
-        y1={i * laneHeight - 1}
-        y2={i * laneHeight - 1}
-        className="stroke-current stroke-surface-2"
-        strokeWidth={1}
-      />
-    </g>
-  ));
-};
+import { usePianoRollEventHandlers, usePianoRollTimeline } from "./hooks";
+import { renderGridLanes } from "./components/midi-note-view/helpers/render-grid-lanes";
+import { renderGrid } from "./components/midi-note-view/helpers";
 
 interface PianoRollTimelineProps {
   clip: MidiClip;
@@ -136,29 +38,21 @@ export const PianoRollTimeline = observer(
     clip,
     setPlayheadLeft,
   }: PianoRollTimelineProps) => {
-    const [referenceNote, setReferenceNote] = useState<MidiNote | null>(null);
-
-    const [selectedNotesDragOffset, setSelectedNotesDragOffset] = useState(0);
-    const [selectedNotesPositionOffset, setSelectedNotesPositionOffset] =
-      useState(0);
-    const [
-      selectedNotesStartExpandingOffset,
-      setSelectedNotesStartExpandingOffset,
-    ] = useState(0);
-    const [
-      selectedNotesEndExpandingOffset,
-      setSelectedNotesEndExpandingOffset,
-    ] = useState(0);
-    const [dragging, setDragging] = useState(false);
-    const [startExpanding, setStartExpanding] = useState(false);
-    const [endExpanding, setEndExpanding] = useState(false);
+    const {
+      referenceNote,
+      setReferenceNote,
+      offsets,
+      setOffset,
+      state,
+      setStateFlag,
+      initialX,
+      initialY,
+      timelineRef,
+    } = usePianoRollTimeline();
 
     const audioEngine = useAudioEngine();
-    const { timeline, mixer } = audioEngine;
-    const { undoManager } = useUndoManager();
+    const { mixer } = audioEngine;
     const menuActions = usePianoRollMenuActions(clip);
-
-    const timelineRef = useRef<SVGSVGElement>(null);
 
     const clipStartOffsetPx = clip.samplesToPixels(
       clip.start - Tone.Time(clip.startMeasure, "m").toSamples()
@@ -166,105 +60,73 @@ export const PianoRollTimeline = observer(
 
     const firstNoteRef = useRef<SVGRectElement>(null);
 
-    useEffect(() => {
-      if (clip.events.length && firstNoteRef.current) {
-        const firstNoteElement = firstNoteRef.current;
-
-        // TODO: Find a better way to fix this "TABS SCROLL OFFSCREEN" bug
-        if (firstNoteElement && window.innerHeight > 568) {
-          // firstNoteElement.scrollIntoView({
-          //   inline: "center",
-          //   block: "center",
-          // });
-        }
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [clip]);
-
-    const handleClick = (e: React.MouseEvent) => {
-      if (!e.ctrlKey) {
-        undoManager.withGroup("UNSELECT ALL NOTES", () => {
-          clip.unselectAllNotes();
-        });
-      }
-      undoManager.withoutUndo(() => {
-        if (timelineRef.current) {
-          const xOffset = timelineRef.current.getBoundingClientRect().x;
-          const xValue = e.clientX - xOffset + timelineRef.current.scrollLeft;
-          const seconds = clip.snapToGrid
-            ? Tone.Time(xValue * clip.samplesPerPixel, "samples").quantize(
-                clip.subdivision
-              )
-            : Tone.Time(
-                xValue * clip.samplesPerPixel +
-                  Tone.Time(clip.startMeasure, "m").toSamples(),
-                "samples"
-              ).toSeconds();
-          Tone.getTransport().seconds = seconds;
-
-          timeline.setSeconds(seconds);
-
-          const pixels =
-            Tone.Time(Tone.getTransport().seconds, "s").toSamples() /
-            clip.samplesPerPixel;
-          setPlayheadLeft(pixels);
-        }
-      });
-    };
     const selected =
       !!referenceNote && clip.selectedNotes.includes(referenceNote);
-    const initialX = useRef(0);
-    const initialY = useRef(0);
 
-    const onMouseUp = getOnMouseUp(
-      dragging,
-      setDragging,
-      selectedNotesPositionOffset,
-      setSelectedNotesPositionOffset,
-      selectedNotesDragOffset,
-      setSelectedNotesDragOffset,
-      startExpanding,
-      setStartExpanding,
-      endExpanding,
-      setEndExpanding,
-      selectedNotesStartExpandingOffset,
-      setSelectedNotesStartExpandingOffset,
-      selectedNotesEndExpandingOffset,
-      setSelectedNotesEndExpandingOffset,
-      referenceNote,
-      clip,
-      undoManager,
-      setReferenceNote,
-      initialX,
-      initialY
-    );
-    const onMouseMove = getOnMouseMove(
-      dragging,
-      selected,
-      referenceNote,
-      clip,
-      selectedNotesPositionOffset,
-      setSelectedNotesPositionOffset,
-      selectedNotesDragOffset,
-      setSelectedNotesDragOffset,
-      selectedNotesStartExpandingOffset,
-      setSelectedNotesStartExpandingOffset,
-      selectedNotesEndExpandingOffset,
-      setSelectedNotesEndExpandingOffset,
-      startExpanding,
-      endExpanding,
-      initialY,
-      clipStartOffsetPx
-    );
+    const { onMouseUp, onTouchEnd, onMouseMove, onTouchMove, onClick } =
+      usePianoRollEventHandlers({
+        setPlayheadLeft,
+        timelineRef,
+        offsets,
+        setOffset,
+        state,
+        setStateFlag,
+        selected,
+        referenceNote,
+        setReferenceNote,
+        clip,
+        initialX,
+        initialY,
+        clipStartOffsetPx,
+      });
+
+    const { dragging, startExpanding, endExpanding } = state;
+    const expanding = startExpanding || endExpanding;
 
     useEffect(() => {
+      const preventScroll = (e: Event) => {
+        if (e.cancelable) e.preventDefault();
+      };
+
+      if (dragging || expanding) {
+        document.addEventListener("wheel", preventScroll, {
+          passive: false,
+        });
+        document.addEventListener("touchmove", preventScroll, {
+          passive: false,
+        });
+      }
+
       window.addEventListener("mouseup", onMouseUp);
       window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("touchend", onTouchEnd);
+
       return () => {
+        document.removeEventListener("wheel", preventScroll);
+        document.removeEventListener("touchmove", preventScroll);
         window.removeEventListener("mouseup", onMouseUp);
         window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("touchend", onTouchEnd);
+        window.addEventListener("touchmove", onTouchMove);
       };
-    }, [onMouseMove, onMouseUp]);
+    }, [
+      dragging,
+      expanding,
+      onMouseMove,
+      onMouseUp,
+      onTouchEnd,
+      onTouchMove,
+      state,
+    ]);
+
+    useEffect(() => {
+      const expanding = startExpanding || endExpanding;
+      if (dragging || expanding) {
+        document.body.classList.add("touch-none");
+      } else {
+        document.body.classList.remove("touch-none");
+      }
+    }, [dragging, endExpanding, startExpanding]);
 
     const clipWidthPx = clip.samplesToPixels(clip.length);
     const parentTrack = mixer.tracks.find((track) => track.id === clip.trackId);
@@ -287,7 +149,7 @@ export const PianoRollTimeline = observer(
           width={width}
           className="flex-shrink-0 overflow-x-auto relative"
           height="1890px"
-          onClick={handleClick}
+          onClick={onClick}
         >
           {renderGridLanes(width, 17.5, keys.length)}
           {renderGrid(
@@ -310,30 +172,14 @@ export const PianoRollTimeline = observer(
           />
           {clip.events.map((note, i) => (
             <MidiNoteView
+              key={note.id}
+              offsets={offsets}
+              state={state}
+              setStateFlag={setStateFlag}
               setReferenceNote={setReferenceNote}
               initialX={initialX}
               initialY={initialY}
               firstNoteRef={i === 0 ? firstNoteRef : undefined}
-              dragging={dragging}
-              setDragging={setDragging}
-              selectedNotesDragOffset={selectedNotesDragOffset}
-              setSelectedNotesDragOffset={setSelectedNotesDragOffset}
-              selectedNotesPositionOffset={selectedNotesPositionOffset}
-              setSelectedNotesPositionOffset={setSelectedNotesPositionOffset}
-              selectedNotesStartExpandingOffset={
-                selectedNotesStartExpandingOffset
-              }
-              setSelectedNotesStartExpandingOffset={
-                setSelectedNotesStartExpandingOffset
-              }
-              selectedNotesEndExpandingOffset={selectedNotesEndExpandingOffset}
-              setSelectedNotesEndExpandingOffset={
-                setSelectedNotesEndExpandingOffset
-              }
-              startExpanding={startExpanding}
-              setStartExpanding={setStartExpanding}
-              endExpanding={endExpanding}
-              setEndExpanding={setEndExpanding}
               clipStartOffsetPx={clipStartOffsetPx}
               note={note}
               clip={clip}

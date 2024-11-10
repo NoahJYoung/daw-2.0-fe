@@ -3,13 +3,13 @@ import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { UndoManager } from "mobx-keystone";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
-import { setNoteFromIndex } from "./helpers";
+import { setNoteFromIndex } from "../get-on-mouse-up/helpers";
 import {
   Offsets,
   StateFlags,
 } from "../../../../hooks/use-piano-roll-timeline/types";
 
-export const getOnMouseUp = (
+export const getOnTouchEnd = (
   offsets: Offsets,
   setOffset: (key: keyof Offsets, value: number) => void,
   state: StateFlags,
@@ -38,14 +38,14 @@ export const getOnMouseUp = (
 
   const expanding = startExpanding || endExpanding;
 
-  const onMouseUp = (e: MouseEvent) => {
+  const onTouchEnd = (e: TouchEvent) => {
     if ((!dragging && !expanding) || !note) {
       resetStates();
       return;
     }
     e.stopPropagation();
 
-    //Expand from start
+    // Expand from start
     if (startExpanding) {
       const initialStartDifference = clip.pixelsToSamples(
         offsets.startExpanding
@@ -69,11 +69,11 @@ export const getOnMouseUp = (
           });
         });
 
-        resetStates();
+        return resetStates();
       });
     }
 
-    //Expand from end
+    // Expand from end
     if (endExpanding) {
       const initialEndDifference = clip.pixelsToSamples(offsets.endExpanding);
       const firstNoteExpandedEnd = note.off + initialEndDifference;
@@ -81,7 +81,7 @@ export const getOnMouseUp = (
         Tone.Time(firstNoteExpandedEnd, "samples").quantize(clip.subdivision),
         "s"
       ).toSamples();
-      undoManager.withGroup("HANDLE NOTE START EXPANDING", () => {
+      undoManager.withGroup("HANDLE NOTE END EXPANDING", () => {
         const quantizeExpandingEndOffset = clip.snapToGrid
           ? quantizedFirstNoteExpandedEnd - firstNoteExpandedEnd
           : 0;
@@ -90,12 +90,12 @@ export const getOnMouseUp = (
           const newOff =
             selectedNote.off + timeOffset + quantizeExpandingEndOffset;
 
-          undoManager.withGroup("SET NOTE ON", () => {
+          undoManager.withGroup("SET NOTE OFF", () => {
             selectedNote.setOff(newOff);
           });
         });
 
-        resetStates();
+        return resetStates();
       });
     }
 
@@ -120,7 +120,6 @@ export const getOnMouseUp = (
           selectedNote.setOff(newOff);
         });
       });
-
       // Y Movement
       if (offsets.drag !== 0) {
         undoManager.withGroup("MOVE NOTES TO NEW LANE", () => {
@@ -132,5 +131,5 @@ export const getOnMouseUp = (
       resetStates();
     });
   };
-  return onMouseUp;
+  return onTouchEnd;
 };

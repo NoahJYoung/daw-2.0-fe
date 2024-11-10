@@ -8,20 +8,15 @@ import {
 import { observer } from "mobx-react-lite";
 import React, { Dispatch, SetStateAction } from "react";
 import { useUndoManager } from "@/pages/studio/hooks";
+import { Offsets, StateFlags } from "../../hooks/use-piano-roll-timeline/types";
 
 interface MidiNoteViewProps {
+  offsets: Offsets;
+  state: StateFlags;
+  setStateFlag: (key: keyof StateFlags, value: boolean) => void;
   note: MidiNote;
   clip: MidiClip;
   clipStartOffsetPx: number;
-  setDragging: React.Dispatch<SetStateAction<boolean>>;
-  selectedNotesPositionOffset: number;
-  selectedNotesDragOffset: number;
-  selectedNotesStartExpandingOffset: number;
-  selectedNotesEndExpandingOffset: number;
-  startExpanding: boolean;
-  setStartExpanding: Dispatch<SetStateAction<boolean>>;
-  endExpanding: boolean;
-  setEndExpanding: Dispatch<SetStateAction<boolean>>;
   firstNoteRef?: React.RefObject<SVGRectElement>;
   setReferenceNote: Dispatch<SetStateAction<MidiNote | null>>;
   initialX: React.MutableRefObject<number>;
@@ -30,18 +25,12 @@ interface MidiNoteViewProps {
 
 export const MidiNoteView = observer(
   ({
+    offsets,
+    state,
+    setStateFlag,
     note,
     clip,
     clipStartOffsetPx,
-    setDragging,
-    selectedNotesPositionOffset,
-    selectedNotesDragOffset,
-    selectedNotesStartExpandingOffset,
-    selectedNotesEndExpandingOffset,
-    startExpanding,
-    setStartExpanding,
-    endExpanding,
-    setEndExpanding,
     firstNoteRef,
     setReferenceNote,
     initialX,
@@ -63,7 +52,7 @@ export const MidiNoteView = observer(
     const onMouseDown = getOnMouseDown(
       initialX,
       initialY,
-      setDragging,
+      setStateFlag,
       clip,
       note,
       undoManager,
@@ -73,21 +62,21 @@ export const MidiNoteView = observer(
     const expandStart = (e: React.MouseEvent) => {
       e.stopPropagation();
       setReferenceNote(note);
-      setStartExpanding(true);
+      setStateFlag("startExpanding", true);
     };
 
     const expandEnd = (e: React.MouseEvent) => {
       e.stopPropagation();
       setReferenceNote(note);
-      setEndExpanding(true);
+      setStateFlag("endExpanding", true);
     };
 
     const getAdjustedWidth = () => {
       if (selected) {
-        if (startExpanding) {
-          return width - selectedNotesStartExpandingOffset;
-        } else if (endExpanding) {
-          return width + selectedNotesEndExpandingOffset;
+        if (state.startExpanding) {
+          return width - offsets.startExpanding;
+        } else if (state.endExpanding) {
+          return width + offsets.endExpanding;
         }
       }
 
@@ -96,10 +85,10 @@ export const MidiNoteView = observer(
 
     const getAdjustedX = () => {
       if (selected) {
-        if (startExpanding) {
-          return left + selectedNotesStartExpandingOffset + 1;
+        if (state.startExpanding) {
+          return left + offsets.startExpanding + 1;
         }
-        return left + selectedNotesPositionOffset + 1;
+        return left + offsets.position + 1;
       }
       return left + 1;
     };
@@ -117,7 +106,7 @@ export const MidiNoteView = observer(
           x={adjustedX}
           width={adjustedWidth}
           height={17.5}
-          y={selected ? selectedNotesDragOffset * 17.5 + top : top}
+          y={selected ? offsets.drag * 17.5 + top : top}
           rx={2}
           style={{
             border: `1px solid ${generateRGBWithAlias(selected ? 0.7 : 0.5)}`,
@@ -131,7 +120,7 @@ export const MidiNoteView = observer(
           width={Math.min(8, adjustedWidth)}
           x={adjustedX}
           height={17.5}
-          y={selected ? selectedNotesDragOffset * 17.5 + top : top}
+          y={selected ? offsets.drag * 17.5 + top : top}
           stroke="transparent"
           fill="transparent"
         />
@@ -143,7 +132,7 @@ export const MidiNoteView = observer(
           fill="transparent"
           x={adjustedX + adjustedWidth}
           height={17.5}
-          y={selected ? selectedNotesDragOffset * 17.5 + top : top}
+          y={selected ? offsets.drag * 17.5 + top : top}
         />
       </g>
     );

@@ -2,11 +2,13 @@ import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import { UndoManager } from "mobx-keystone";
 import { Dispatch, SetStateAction } from "react";
+import { StateFlags } from "../../../../hooks/use-piano-roll-timeline/types";
 
 export const getOnMouseDown = (
   initialX: React.MutableRefObject<number>,
   initialY: React.MutableRefObject<number>,
-  setDragging: React.Dispatch<SetStateAction<boolean>>,
+  setStateFlag: (key: keyof StateFlags, value: boolean) => void,
+
   clip: MidiClip,
   note: MidiNote,
   undoManager: UndoManager,
@@ -15,10 +17,9 @@ export const getOnMouseDown = (
   const onMouseDown = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (e.button !== 2) {
-      setDragging(true);
+      setStateFlag("dragging", true);
     }
     setReferenceNote(note);
-
     initialY.current = e.clientY;
     initialX.current = e.clientX;
 

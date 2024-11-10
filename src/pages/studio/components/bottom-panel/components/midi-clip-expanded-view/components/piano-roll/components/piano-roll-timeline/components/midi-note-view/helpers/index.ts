@@ -4,3 +4,6 @@ export { getOnMouseMove } from "./get-on-mouse-move";
 export { getOnMouseDown } from "./get-on-mouse-down";
 export { getOnMouseUp } from "./get-on-mouse-up";
 export { getOnClick } from "./get-on-click";
+export { getOnTouchMove } from "./get-on-touch-move";
+export { getOnTouchEnd } from "./get-on-touch-end";
+export { renderGrid } from "./render-grid";
