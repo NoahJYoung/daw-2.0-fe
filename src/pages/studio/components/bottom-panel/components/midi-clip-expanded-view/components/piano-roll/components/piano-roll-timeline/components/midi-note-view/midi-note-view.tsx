@@ -3,33 +3,29 @@ import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import {
   getColorFromVelocity,
   getOnMouseDown,
-  getOnMouseMove,
-  getOnMouseUp,
   getTopValueFromPitch,
 } from "./helpers";
 import { observer } from "mobx-react-lite";
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useUndoManager } from "@/pages/studio/hooks";
 
 interface MidiNoteViewProps {
   note: MidiNote;
   clip: MidiClip;
   clipStartOffsetPx: number;
-  dragging: boolean;
   setDragging: React.Dispatch<SetStateAction<boolean>>;
   selectedNotesPositionOffset: number;
-  setSelectedNotesPositionOffset: Dispatch<SetStateAction<number>>;
   selectedNotesDragOffset: number;
-  setSelectedNotesDragOffset: Dispatch<SetStateAction<number>>;
   selectedNotesStartExpandingOffset: number;
-  setSelectedNotesStartExpandingOffset: Dispatch<SetStateAction<number>>;
   selectedNotesEndExpandingOffset: number;
-  setSelectedNotesEndExpandingOffset: Dispatch<SetStateAction<number>>;
   startExpanding: boolean;
   setStartExpanding: Dispatch<SetStateAction<boolean>>;
   endExpanding: boolean;
   setEndExpanding: Dispatch<SetStateAction<boolean>>;
   firstNoteRef?: React.RefObject<SVGRectElement>;
+  setReferenceNote: Dispatch<SetStateAction<MidiNote | null>>;
+  initialX: React.MutableRefObject<number>;
+  initialY: React.MutableRefObject<number>;
 }
 
 export const MidiNoteView = observer(
@@ -37,21 +33,19 @@ export const MidiNoteView = observer(
     note,
     clip,
     clipStartOffsetPx,
-    dragging,
     setDragging,
     selectedNotesPositionOffset,
-    setSelectedNotesPositionOffset,
     selectedNotesDragOffset,
-    setSelectedNotesDragOffset,
     selectedNotesStartExpandingOffset,
-    setSelectedNotesStartExpandingOffset,
     selectedNotesEndExpandingOffset,
-    setSelectedNotesEndExpandingOffset,
     startExpanding,
     setStartExpanding,
     endExpanding,
     setEndExpanding,
     firstNoteRef,
+    setReferenceNote,
+    initialX,
+    initialY,
   }: MidiNoteViewProps) => {
     const width = clip.samplesToPixels(note.off - note.on);
     const left = clip.samplesToPixels(note.on) + clipStartOffsetPx;
@@ -66,76 +60,27 @@ export const MidiNoteView = observer(
       return `rgba(${[...rgb, alias].join(", ")})`;
     };
 
-    const initialX = useRef(0);
-    const initialY = useRef(0);
-
-    const onMouseUp = getOnMouseUp(
-      dragging,
-      setDragging,
-      selectedNotesPositionOffset,
-      setSelectedNotesPositionOffset,
-      selectedNotesDragOffset,
-      setSelectedNotesDragOffset,
-      startExpanding,
-      setStartExpanding,
-      endExpanding,
-      setEndExpanding,
-      selectedNotesStartExpandingOffset,
-      setSelectedNotesStartExpandingOffset,
-      selectedNotesEndExpandingOffset,
-      setSelectedNotesEndExpandingOffset,
-      note,
-      clip,
-      undoManager,
-      initialX,
-      initialY
-    );
-    const onMouseMove = getOnMouseMove(
-      dragging,
-      selected,
-      note,
-      clip,
-      selectedNotesPositionOffset,
-      setSelectedNotesPositionOffset,
-      selectedNotesDragOffset,
-      setSelectedNotesDragOffset,
-      selectedNotesStartExpandingOffset,
-      setSelectedNotesStartExpandingOffset,
-      selectedNotesEndExpandingOffset,
-      setSelectedNotesEndExpandingOffset,
-      startExpanding,
-      endExpanding,
-      initialY,
-      clipStartOffsetPx
-    );
-
     const onMouseDown = getOnMouseDown(
       initialX,
       initialY,
       setDragging,
       clip,
       note,
-      undoManager
+      undoManager,
+      setReferenceNote
     );
 
     const expandStart = (e: React.MouseEvent) => {
       e.stopPropagation();
+      setReferenceNote(note);
       setStartExpanding(true);
     };
 
     const expandEnd = (e: React.MouseEvent) => {
       e.stopPropagation();
+      setReferenceNote(note);
       setEndExpanding(true);
     };
-
-    useEffect(() => {
-      window.addEventListener("mouseup", onMouseUp);
-      window.addEventListener("mousemove", onMouseMove);
-      return () => {
-        window.removeEventListener("mouseup", onMouseUp);
-        window.removeEventListener("mousemove", onMouseMove);
-      };
-    }, [onMouseMove, onMouseUp]);
 
     const getAdjustedWidth = () => {
       if (selected) {

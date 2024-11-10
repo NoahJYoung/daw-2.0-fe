@@ -20,13 +20,15 @@ export const getOnMouseUp = (
   setSelectedNotesStartExpandingOffset: Dispatch<SetStateAction<number>>,
   selectedNotesEndExpandingOffset: number,
   setSelectedNotesEndExpandingOffset: Dispatch<SetStateAction<number>>,
-  note: MidiNote,
+  note: MidiNote | null,
   clip: MidiClip,
   undoManager: UndoManager,
+  setReferenceNote: Dispatch<SetStateAction<MidiNote | null>>,
   initialX: MutableRefObject<number>,
   initialY: MutableRefObject<number>
 ) => {
   const resetStates = () => {
+    setReferenceNote(null);
     setDragging(false);
     setStartExpanding(false);
     setEndExpanding(false);
@@ -37,6 +39,9 @@ export const getOnMouseUp = (
     initialY.current = 0;
     initialX.current = 0;
   };
+  if (!note) {
+    return;
+  }
 
   const expanding = startExpanding || endExpanding;
 

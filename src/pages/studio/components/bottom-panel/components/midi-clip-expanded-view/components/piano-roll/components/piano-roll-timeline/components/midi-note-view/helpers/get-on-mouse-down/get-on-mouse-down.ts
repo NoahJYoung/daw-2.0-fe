@@ -1,7 +1,7 @@
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import { UndoManager } from "mobx-keystone";
-import { SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 export const getOnMouseDown = (
   initialX: React.MutableRefObject<number>,
@@ -9,13 +9,15 @@ export const getOnMouseDown = (
   setDragging: React.Dispatch<SetStateAction<boolean>>,
   clip: MidiClip,
   note: MidiNote,
-  undoManager: UndoManager
+  undoManager: UndoManager,
+  setReferenceNote: Dispatch<SetStateAction<MidiNote | null>>
 ) => {
   const onMouseDown = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (e.button !== 2) {
       setDragging(true);
     }
+    setReferenceNote(note);
 
     initialY.current = e.clientY;
     initialX.current = e.clientX;

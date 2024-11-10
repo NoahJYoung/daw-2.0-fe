@@ -9,6 +9,11 @@ import { usePianoRollMenuActions } from "../../hooks";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
+import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
+import {
+  getOnMouseUp,
+  getOnMouseMove,
+} from "./components/midi-note-view/helpers";
 
 export const renderGrid = (
   measuresArray: number[],
@@ -131,8 +136,10 @@ export const PianoRollTimeline = observer(
     clip,
     setPlayheadLeft,
   }: PianoRollTimelineProps) => {
-    const [selectedNotesDragOffset, setSelectedNoteDragOffset] = useState(0);
-    const [selectedNotesPositionOffset, setSelectedNotePositionOffset] =
+    const [referenceNote, setReferenceNote] = useState<MidiNote | null>(null);
+
+    const [selectedNotesDragOffset, setSelectedNotesDragOffset] = useState(0);
+    const [selectedNotesPositionOffset, setSelectedNotesPositionOffset] =
       useState(0);
     const [
       selectedNotesStartExpandingOffset,
@@ -204,6 +211,60 @@ export const PianoRollTimeline = observer(
         }
       });
     };
+    const selected =
+      !!referenceNote && clip.selectedNotes.includes(referenceNote);
+    const initialX = useRef(0);
+    const initialY = useRef(0);
+
+    const onMouseUp = getOnMouseUp(
+      dragging,
+      setDragging,
+      selectedNotesPositionOffset,
+      setSelectedNotesPositionOffset,
+      selectedNotesDragOffset,
+      setSelectedNotesDragOffset,
+      startExpanding,
+      setStartExpanding,
+      endExpanding,
+      setEndExpanding,
+      selectedNotesStartExpandingOffset,
+      setSelectedNotesStartExpandingOffset,
+      selectedNotesEndExpandingOffset,
+      setSelectedNotesEndExpandingOffset,
+      referenceNote,
+      clip,
+      undoManager,
+      setReferenceNote,
+      initialX,
+      initialY
+    );
+    const onMouseMove = getOnMouseMove(
+      dragging,
+      selected,
+      referenceNote,
+      clip,
+      selectedNotesPositionOffset,
+      setSelectedNotesPositionOffset,
+      selectedNotesDragOffset,
+      setSelectedNotesDragOffset,
+      selectedNotesStartExpandingOffset,
+      setSelectedNotesStartExpandingOffset,
+      selectedNotesEndExpandingOffset,
+      setSelectedNotesEndExpandingOffset,
+      startExpanding,
+      endExpanding,
+      initialY,
+      clipStartOffsetPx
+    );
+
+    useEffect(() => {
+      window.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      return () => {
+        window.removeEventListener("mouseup", onMouseUp);
+        window.removeEventListener("mousemove", onMouseMove);
+      };
+    }, [onMouseMove, onMouseUp]);
 
     const clipWidthPx = clip.samplesToPixels(clip.length);
     const parentTrack = mixer.tracks.find((track) => track.id === clip.trackId);
@@ -249,13 +310,16 @@ export const PianoRollTimeline = observer(
           />
           {clip.events.map((note, i) => (
             <MidiNoteView
+              setReferenceNote={setReferenceNote}
+              initialX={initialX}
+              initialY={initialY}
               firstNoteRef={i === 0 ? firstNoteRef : undefined}
               dragging={dragging}
               setDragging={setDragging}
               selectedNotesDragOffset={selectedNotesDragOffset}
-              setSelectedNotesDragOffset={setSelectedNoteDragOffset}
+              setSelectedNotesDragOffset={setSelectedNotesDragOffset}
               selectedNotesPositionOffset={selectedNotesPositionOffset}
-              setSelectedNotesPositionOffset={setSelectedNotePositionOffset}
+              setSelectedNotesPositionOffset={setSelectedNotesPositionOffset}
               selectedNotesStartExpandingOffset={
                 selectedNotesStartExpandingOffset
               }
