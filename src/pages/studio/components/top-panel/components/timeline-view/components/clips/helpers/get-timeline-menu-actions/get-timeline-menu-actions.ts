@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 import { BsFiletypeMp3 as ImportFileIcon } from "react-icons/bs";
 import {
+  createEmptyMidiClip,
   deleteSelectedClips,
   importFromFile,
   joinClips,
@@ -18,6 +19,7 @@ import {
   splitSelectedClips,
 } from "..";
 import { AudioEngine } from "@/pages/studio/audio-engine";
+import { BsAlignStart as QuantizeStartIcon } from "react-icons/bs";
 import { UndoManager } from "mobx-keystone";
 
 export const getTimelineMenuActions = (
@@ -90,6 +92,12 @@ export const getTimelineMenuActions = (
       disabled: mixer.selectedTracks.length < 1,
       onClick: () => importFromFile(mixer.selectedTracks),
       icon: ImportFileIcon,
+    },
+    {
+      label: "Create midi clip",
+      disabled: mixer.selectedTracks.length < 1,
+      onClick: () => createEmptyMidiClip(mixer),
+      icon: QuantizeStartIcon,
     },
   ];
 };

@@ -7,3 +7,4 @@ export { pasteClips } from "./paste-clips";
 export { joinClips } from "./join-clips";
 export { importFromFile } from "./import-from-file";
 export { getTimelineMenuActions } from "./get-timeline-menu-actions";
+export { createEmptyMidiClip } from "./create-empty-midi-clip";

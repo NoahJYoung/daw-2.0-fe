@@ -196,7 +196,7 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
 
         <StudioButton
           title={t("studio.toolbar.selectAll")}
-          disabled={clip.selectedNotes.length < 1}
+          disabled={clip.events.length < 1}
           icon={SelectAllIcon}
           onClick={() =>
             undoManager.withGroup("SELECT ALL NOTES", () => {

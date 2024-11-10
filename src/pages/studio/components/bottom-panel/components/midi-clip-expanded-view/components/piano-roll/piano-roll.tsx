@@ -53,17 +53,17 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
 
   const smallestSubdivision = useMemo(
     () => findSmallestSubdivision(clip),
-    [clip, clip.samplesPerPixel, clip.subdivision]
+    [clip, clip.samplesPerPixel, clip.subdivision, timeline.bpm]
   );
 
   const subdivisionsPerBeat = useMemo(
     () => subdivisionToQuarterMap[smallestSubdivision],
-    [smallestSubdivision, clip.samplesPerPixel]
+    [smallestSubdivision, clip.samplesPerPixel, timeline.bpm]
   );
 
   const subdivisionsPerMeasure = useMemo(
     () => subdivisionsPerBeat * timeSignature,
-    [subdivisionsPerBeat, timeSignature, clip.samplesPerPixel]
+    [subdivisionsPerBeat, timeSignature, clip.samplesPerPixel, timeline.bpm]
   );
 
   const generateArray = useCallback(
@@ -78,6 +78,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
       subdivisionsPerMeasure,
       clip.samplesPerPixel,
       clip.startMeasure,
+      timeline.bpm,
     ]
   );
 

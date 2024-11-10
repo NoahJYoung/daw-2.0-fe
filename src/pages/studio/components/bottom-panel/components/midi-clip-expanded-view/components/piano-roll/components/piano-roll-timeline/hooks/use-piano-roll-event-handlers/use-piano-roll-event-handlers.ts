@@ -10,7 +10,6 @@ import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { Offsets, StateFlags } from "../use-piano-roll-timeline/types";
 import * as Tone from "tone";
-import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
 import { getKeys } from "../../../../helpers";
 
 interface usePianoRollEventHandlers {
@@ -48,7 +47,7 @@ export const usePianoRollEventHandlers = ({
   clipStartOffsetPx,
 }: usePianoRollEventHandlers) => {
   const { undoManager } = useUndoManager();
-  const { timeline } = useAudioEngine();
+  const { timeline, mixer } = useAudioEngine();
 
   const onMouseUp = getOnMouseUp(
     offsets,
@@ -104,6 +103,9 @@ export const usePianoRollEventHandlers = ({
       if (clip.action === "create") {
         if (!timelineRef.current) return;
         const keys = getKeys();
+        const parentTrack = mixer.tracks.find(
+          (track) => track.id === clip.trackId
+        );
 
         const svgRect = timelineRef.current.getBoundingClientRect();
         const relativeX =
@@ -128,7 +130,7 @@ export const usePianoRollEventHandlers = ({
           note,
           velocity: 65,
         };
-
+        parentTrack?.instrument.triggerAttackRelease(note.join(""), "16n");
         return clip.createEvent(eventData);
       }
     }
