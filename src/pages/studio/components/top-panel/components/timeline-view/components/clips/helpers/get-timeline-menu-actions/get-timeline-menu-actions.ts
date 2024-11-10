@@ -19,7 +19,7 @@ import {
   splitSelectedClips,
 } from "..";
 import { AudioEngine } from "@/pages/studio/audio-engine";
-import { BsAlignStart as QuantizeStartIcon } from "react-icons/bs";
+import { SiMidi as MidiIcon } from "react-icons/si";
 import { UndoManager } from "mobx-keystone";
 
 export const getTimelineMenuActions = (
@@ -97,7 +97,7 @@ export const getTimelineMenuActions = (
       label: "Create midi clip",
       disabled: mixer.selectedTracks.length < 1,
       onClick: () => createEmptyMidiClip(mixer),
-      icon: QuantizeStartIcon,
+      icon: MidiIcon,
     },
   ];
 };
