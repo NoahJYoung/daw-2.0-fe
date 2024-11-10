@@ -10,7 +10,10 @@ import {
 
 export const getOnTouchMove = (
   offsets: Offsets,
-  setOffset: (key: keyof Offsets, value: number) => void,
+  setOffset: (
+    key: keyof Offsets,
+    value: number | ((x: number) => number)
+  ) => void,
   state: StateFlags,
   selected: boolean,
   note: MidiNote | null,
@@ -39,7 +42,7 @@ export const getOnTouchMove = (
           clip
         )
       ) {
-        setOffset("startExpanding", offsets.startExpanding + movementX);
+        setOffset("startExpanding", (prev) => prev + movementX);
         initialX.current = touch.clientX;
         return;
       }
@@ -55,7 +58,7 @@ export const getOnTouchMove = (
           clip
         )
       ) {
-        setOffset("endExpanding", offsets.endExpanding + movementX);
+        setOffset("endExpanding", (prev) => prev + movementX);
         initialX.current = touch.clientX;
         return;
       }
@@ -71,7 +74,7 @@ export const getOnTouchMove = (
           clip
         )
       ) {
-        setOffset("position", offsets.position + movementX);
+        setOffset("position", (prev) => prev + movementX);
       }
 
       initialX.current = touch.clientX;

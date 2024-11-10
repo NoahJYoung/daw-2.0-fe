@@ -3,6 +3,7 @@ import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import {
   getColorFromVelocity,
   getOnMouseDown,
+  getOnTouchStart,
   getTopValueFromPitch,
 } from "./helpers";
 import { observer } from "mobx-react-lite";
@@ -59,13 +60,35 @@ export const MidiNoteView = observer(
       setReferenceNote
     );
 
-    const expandStart = (e: React.MouseEvent) => {
+    const onTouchStart = getOnTouchStart(
+      initialX,
+      initialY,
+      setStateFlag,
+      clip,
+      note,
+      undoManager,
+      setReferenceNote
+    );
+
+    const handleExpandStartClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       setReferenceNote(note);
       setStateFlag("startExpanding", true);
     };
 
-    const expandEnd = (e: React.MouseEvent) => {
+    const handleExpandEndClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setReferenceNote(note);
+      setStateFlag("endExpanding", true);
+    };
+
+    const handleExpandStartTouch = (e: React.TouchEvent) => {
+      e.stopPropagation();
+      setReferenceNote(note);
+      setStateFlag("startExpanding", true);
+    };
+
+    const handleExpandEndTouch = (e: React.TouchEvent) => {
       e.stopPropagation();
       setReferenceNote(note);
       setStateFlag("endExpanding", true);
@@ -102,6 +125,7 @@ export const MidiNoteView = observer(
           ref={firstNoteRef}
           id={note.id}
           onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
           onClick={(e) => e.stopPropagation()}
           x={adjustedX}
           width={adjustedWidth}
@@ -115,7 +139,8 @@ export const MidiNoteView = observer(
         />
 
         <rect
-          onMouseDown={expandStart}
+          onMouseDown={handleExpandStartClick}
+          onTouchStart={handleExpandStartTouch}
           className="cursor-col-resize"
           width={Math.min(8, adjustedWidth)}
           x={adjustedX}
@@ -125,7 +150,8 @@ export const MidiNoteView = observer(
           fill="transparent"
         />
         <rect
-          onMouseDown={expandEnd}
+          onMouseDown={handleExpandEndClick}
+          onTouchStart={handleExpandEndTouch}
           className="cursor-col-resize"
           width={Math.min(8, adjustedWidth)}
           stroke="transparent"

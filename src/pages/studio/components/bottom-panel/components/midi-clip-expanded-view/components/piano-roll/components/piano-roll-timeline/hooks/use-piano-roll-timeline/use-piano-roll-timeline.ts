@@ -23,8 +23,15 @@ export const usePianoRollTimeline = () => {
   const initialX = useRef(0);
   const initialY = useRef(0);
 
-  const setOffset = (key: keyof typeof offsets, value: number) => {
-    setOffsets((prev) => ({ ...prev, [key]: value }));
+  const setOffset = (
+    key: keyof typeof offsets,
+    value: number | ((x: number) => number)
+  ) => {
+    if (typeof value === "function") {
+      setOffsets((prev) => ({ ...prev, [key]: value(prev[key]) }));
+    } else {
+      setOffsets((prev) => ({ ...prev, [key]: value }));
+    }
   };
 
   const setStateFlag = (key: keyof typeof state, value: boolean) => {

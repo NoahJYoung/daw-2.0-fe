@@ -10,10 +10,15 @@ import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { Offsets, StateFlags } from "../use-piano-roll-timeline/types";
 import * as Tone from "tone";
+import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
+import { getKeys } from "../../../../helpers";
 
 interface usePianoRollEventHandlers {
   offsets: Offsets;
-  setOffset: (key: keyof Offsets, value: number) => void;
+  setOffset: (
+    key: keyof Offsets,
+    value: number | ((x: number) => number)
+  ) => void;
   state: StateFlags;
   setStateFlag: (key: keyof StateFlags, value: boolean) => void;
   selected: boolean;
@@ -95,6 +100,39 @@ export const usePianoRollEventHandlers = ({
   );
 
   const onClick = (e: React.MouseEvent) => {
+    if (clip.action === "create") {
+      if (clip.action === "create") {
+        if (!timelineRef.current) return;
+        const keys = getKeys();
+
+        const svgRect = timelineRef.current.getBoundingClientRect();
+        const relativeX =
+          e.clientX - svgRect.left + timelineRef.current.scrollLeft;
+        const relativeY =
+          e.clientY - svgRect.top + timelineRef.current.scrollTop;
+
+        const on = clip.pixelsToSamples(relativeX - clipStartOffsetPx);
+
+        const quantizedNoteOn = Tone.Time(
+          Tone.Time(on, "samples").quantize(clip.subdivision),
+          "s"
+        ).toSamples();
+
+        const note = keys[Math.round(relativeY / 17.5)];
+
+        const off = quantizedNoteOn + Tone.Time(clip.subdivision).toSamples();
+
+        const eventData = {
+          on: quantizedNoteOn,
+          off,
+          note,
+          velocity: 65,
+        };
+
+        return clip.createEvent(eventData);
+      }
+    }
+
     if (!e.ctrlKey) {
       undoManager.withGroup("UNSELECT ALL NOTES", () => {
         clip.unselectAllNotes();

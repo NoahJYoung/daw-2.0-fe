@@ -63,7 +63,7 @@ export const PianoRollTimeline = observer(
     const selected =
       !!referenceNote && clip.selectedNotes.includes(referenceNote);
 
-    const { onMouseUp, onTouchEnd, onMouseMove, onTouchMove, onClick } =
+    const { onMouseUp, onTouchEnd, onTouchMove, onMouseMove, onClick } =
       usePianoRollEventHandlers({
         setPlayheadLeft,
         timelineRef,

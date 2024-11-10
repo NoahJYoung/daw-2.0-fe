@@ -4,7 +4,7 @@ import { UndoManager } from "mobx-keystone";
 import { Dispatch, SetStateAction } from "react";
 import { StateFlags } from "../../../../hooks/use-piano-roll-timeline/types";
 
-export const getOnMouseDown = (
+export const getOnTouchStart = (
   initialX: React.MutableRefObject<number>,
   initialY: React.MutableRefObject<number>,
   setStateFlag: (key: keyof StateFlags, value: boolean) => void,
@@ -13,24 +13,20 @@ export const getOnMouseDown = (
   undoManager: UndoManager,
   setReferenceNote: Dispatch<SetStateAction<MidiNote | null>>
 ) => {
-  const onMouseDown = (e: React.MouseEvent) => {
+  const onOnTouchStart = (e: React.TouchEvent) => {
     e.stopPropagation();
-    if (e.button !== 2) {
-      setStateFlag("dragging", true);
-    }
+    setStateFlag("dragging", true);
     setReferenceNote(note);
-    initialY.current = e.clientY;
-    initialX.current = e.clientX;
 
-    if (e.button !== 2) {
-      undoManager.withGroup("UNSELECT ALL AND SELECT ONE", () => {
-        if (!e.ctrlKey) {
-          clip.unselectAllNotes();
-        }
+    initialY.current = e.touches[0].clientY;
+    initialX.current = e.touches[0].clientX;
 
-        clip.selectNote(note);
-      });
-    }
+    undoManager.withGroup("UNSELECT ALL AND SELECT ONE", () => {
+      if (!e.ctrlKey) {
+        clip.unselectAllNotes();
+      }
+      clip.selectNote(note);
+    });
   };
-  return onMouseDown;
+  return onOnTouchStart;
 };

@@ -10,7 +10,10 @@ import {
 
 export const getOnMouseMove = (
   offsets: Offsets,
-  setOffset: (key: keyof Offsets, value: number) => void,
+  setOffset: (
+    key: keyof Offsets,
+    value: number | ((x: number) => number)
+  ) => void,
   state: StateFlags,
   selected: boolean,
   note: MidiNote | null,
@@ -35,7 +38,7 @@ export const getOnMouseMove = (
           clip
         )
       ) {
-        setOffset("startExpanding", offsets.startExpanding + e.movementX);
+        setOffset("startExpanding", (prev) => prev + e.movementX);
         return;
       }
     }
@@ -50,7 +53,7 @@ export const getOnMouseMove = (
           clip
         )
       ) {
-        setOffset("endExpanding", offsets.endExpanding + e.movementX);
+        setOffset("endExpanding", (prev) => prev + e.movementX);
         return;
       }
     }
@@ -65,7 +68,7 @@ export const getOnMouseMove = (
           clip
         )
       ) {
-        setOffset("position", offsets.position + e.movementX);
+        setOffset("position", (prev) => prev + e.movementX);
       }
 
       return handleY(e, initialY, clip, offsets, setOffset);
