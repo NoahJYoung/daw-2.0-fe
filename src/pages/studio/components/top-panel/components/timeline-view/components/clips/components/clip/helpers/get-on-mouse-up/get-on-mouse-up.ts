@@ -45,40 +45,28 @@ export const getOnMouseUp = (
     e.stopPropagation();
 
     if (isLooping) {
-      //  const quantizedLoopEnd = Tone.Time(
-      //    Tone.Time(loopEnd, "samples").quantize(timeline.subdivision),
-      //    "s"
-      //  ).toSamples();
-
-      const timeLineRelativeDifference =
-        referenceClip.start + referenceClip.length;
-
-      const timelineRelativeLoopEnd =
-        timeLineRelativeDifference + referenceClip.loopSamples;
-
-      const quantizedtimelineRelativeLoopEnd = Tone.Time(
-        Tone.Time(timelineRelativeLoopEnd, "samples").quantize(
-          timeline.subdivision
-        ),
-        "s"
-      ).toSamples();
-
-      const quantizationDifference =
-        timelineRelativeLoopEnd - quantizedtimelineRelativeLoopEnd;
+      const globalOffset = referenceClip.start + referenceClip.length;
 
       mixer.selectedClips.forEach((selectedClip) => {
         const newValue = selectedClip.loopSamples + loopOffset;
-        const quantizedNewValue = newValue - quantizationDifference;
+        const quantizedNewValue =
+          Tone.Time(
+            Tone.Time(globalOffset + newValue, "samples").quantize(
+              timeline.subdivision
+            ),
+            "s"
+          ).toSamples() - globalOffset;
 
         if (timeline.snapToGrid) {
-          selectedClip.setLoopSamples(quantizedNewValue >= 0 ? newValue : 0);
+          selectedClip.setLoopSamples(
+            quantizedNewValue >= 0 ? quantizedNewValue : 0
+          );
         } else {
           selectedClip.setLoopSamples(newValue >= 0 ? newValue : 0);
         }
       });
 
-      resetStates();
-      return;
+      return resetStates();
     }
 
     const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
