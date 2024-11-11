@@ -42,6 +42,7 @@
     --surface-3: 240, 5%, 84%;
     --surface-2: 240, 6%, 90%;
     --surface-1: 240, 5%, 96%;
+    --surface-mid: 120, 2.5%, 97%;
     --surface-0: 0, 0%, 98%;
 
     /* brand colors */
@@ -77,6 +78,7 @@
     /* surface layers dark */
 
     --surface-0: 240, 10%, 4%;
+    --surface-mid: 240, 8%, 7%;
     --surface-1: 240, 6%, 10%;
     --surface-2: 240, 4%, 16%;
     --surface-3: 240, 5%, 26%;

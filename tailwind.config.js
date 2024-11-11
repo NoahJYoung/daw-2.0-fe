@@ -60,6 +60,7 @@ export default {
         },
         surface: {
           0: "hsl(var(--surface-0))",
+          mid: "hsl(var(--surface-mid))",
           1: "hsl(var(--surface-1))",
           2: "hsl(var(--surface-2))",
           3: "hsl(var(--surface-3))",

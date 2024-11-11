@@ -9,3 +9,6 @@ export { getClipValues } from "./get-clip-values";
 export { getOnTouchStart } from "./get-on-touch-start";
 export { getOnTouchEnd } from "./get-on-touch-end";
 export { getOnTouchMove } from "./get-on-touch-move";
+export { getNoteWidth } from "./get-note-width";
+export { getNoteYPosition } from "./get-note-y-position";
+export { getNoteXPosition } from "./get-note-x-position";

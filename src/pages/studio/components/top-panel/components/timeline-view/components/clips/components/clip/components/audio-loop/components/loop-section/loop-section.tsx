@@ -41,7 +41,7 @@ export const LoopSection = ({
       height: height + 28,
       left: clipLeft + clipWidth * (loopIndex + 1),
       marginTop: 2,
-      opacity: selected ? 0.5 : 0.4,
+      opacity: selected ? 0.4 : 0.3,
       background: color,
       top,
     }}

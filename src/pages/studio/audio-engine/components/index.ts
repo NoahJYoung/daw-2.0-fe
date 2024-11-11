@@ -2,6 +2,7 @@ export { Timeline } from "./timeline";
 export { Track } from "./track";
 export { AudioClip } from "./audio-clip";
 export { MidiClip } from "./midi-clip";
+export { MidiNote } from "./midi-note";
 export { Mixer } from "./mixer";
 export { Clipboard } from "./clipboard";
 export { Keyboard } from "./keyboard";

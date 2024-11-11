@@ -39,7 +39,7 @@ export const TransportControls = observer(() => {
 
   return (
     <span
-      className="flex h-full bg-surface-1 border-surface-1 border"
+      className="flex h-full bg-surface-mid border-surface-mid border"
       style={{ gap: 1 }}
     >
       <StudioButton

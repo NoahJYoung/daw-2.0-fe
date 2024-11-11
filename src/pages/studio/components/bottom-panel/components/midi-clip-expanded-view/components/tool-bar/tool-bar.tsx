@@ -159,7 +159,7 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
           max={128}
           disabled={clip.selectedNotes.length < 1}
           type="number"
-          className="text-surface-4 w-[56px] h-[32px] text-md bg-surface-1 focus:bg-surface-3 focus:select-text p-1 text-ellipsis focus:outline-none"
+          className="text-surface-4 w-[56px] h-[32px] text-md bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
           value={clip.velocity}
           onChange={handleVelocityChange}
           onWheel={handleWheel}

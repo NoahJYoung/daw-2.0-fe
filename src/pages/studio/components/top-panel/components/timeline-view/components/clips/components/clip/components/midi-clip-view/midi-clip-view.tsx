@@ -1,42 +1,16 @@
-import {
-  MidiClip,
-  Timeline,
-  Track,
-} from "@/pages/studio/audio-engine/components";
-import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
+import { MidiClip, Track } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
+import {
+  getNoteWidth,
+  getNoteXPosition,
+  getNoteYPosition,
+} from "../../helpers";
 
 interface MidiClipViewProps {
   clip: MidiClip;
   track: Track;
 }
-
-const getNoteXPosition = (note: MidiNote, timeline: Timeline) => {
-  return timeline.samplesToPixels(note.on);
-};
-
-const getNoteYPosition = (note: MidiNote, noteHeight: number) => {
-  const notes = [
-    "B",
-    "Bb",
-    "A",
-    "Ab",
-    "G",
-    "Gb",
-    "F",
-    "E",
-    "Eb",
-    "D",
-    "Db",
-    "C",
-  ];
-  return notes.indexOf(note.note[0]) * noteHeight;
-};
-
-const getNoteWidth = (note: MidiNote, timeline: Timeline) => {
-  return timeline.samplesToPixels(note.length);
-};
 
 export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
   const { timeline } = useAudioEngine();

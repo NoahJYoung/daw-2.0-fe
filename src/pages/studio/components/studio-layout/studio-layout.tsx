@@ -52,9 +52,9 @@ export const StudioLayout = observer(
           </Panel>
           <PanelResizeHandle
             style={{ borderTopWidth: 1 }}
-            className="z-20 h-2 ml-[2px] bg-surface-1 border-0 border-surface-0"
+            className="z-20 h-2 ml-[2px] bg-surface-mid border-0 border-surface-0"
           />
-          <div className="z-20 flex bg-surface-1 ml-[2px] pl-[4px] w-full items-start h-[48px] sm:gap-5 justify-between md:justify-start">
+          <div className="z-20 flex bg-surface-mid ml-[2px] pl-[4px] w-full items-start h-[48px] sm:gap-5 justify-between md:justify-start">
             <StudioButton
               className="rounded-xxs shadow-none text-xl relative flex items-center justify-centers p-1 w-10 h-10 bg-transparent text-surface-3 hover:text-surface-4 hover:bg-transparent"
               icon={PiCaretUpDownFill}
@@ -63,7 +63,7 @@ export const StudioLayout = observer(
             {middlePanel}
           </div>
           <Panel
-            className="z-20 bg-surface-1 ml-[2px] w-full lg:px-12"
+            className="z-20 bg-surface-mid ml-[2px] w-full lg:px-12"
             order={2}
             ref={bottomPanelRef}
             defaultSize={45}

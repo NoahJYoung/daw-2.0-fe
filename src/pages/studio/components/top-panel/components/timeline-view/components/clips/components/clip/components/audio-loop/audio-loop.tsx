@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { useWaveform } from "../audio-clip-view/hooks/use-waveform";
 import { LoopSection } from "./components";
 
-interface AudioClipViewProps {
+interface AudioLoopProps {
   clip: AudioClip;
   track: Track;
   color: string;
@@ -35,7 +35,7 @@ export const AudioLoop = observer(
     onMouseLeave,
     onClick,
     onMouseDown,
-  }: AudioClipViewProps) => {
+  }: AudioLoopProps) => {
     const {
       width: clipWidth,
       height,
@@ -129,7 +129,7 @@ export const AudioLoop = observer(
             height: height + 28,
             left: clipLeft + clipWidth + clipWidth * loops.length,
             marginTop: 2,
-            opacity: selected ? 0.5 : 0.4,
+            opacity: selected ? 0.4 : 0.3,
             background: color,
             top,
           }}

@@ -4,7 +4,7 @@ import {
   Track,
 } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import { AudioClipView, AudioLoop, MidiClipView } from "./components";
+import { AudioClipView, AudioLoop, MidiClipView, MidiLoop } from "./components";
 import { MdOutlineLoop as LoopIcon } from "react-icons/md";
 import {
   useAudioEngine,
@@ -274,11 +274,33 @@ export const Clip = observer(
                 track={currentDragTrack || track}
                 clip={clip as MidiClip}
               />
+
+              {showClipActions && (
+                <button
+                  onMouseDown={handleLoopDown}
+                  onTouchStart={handleLoopDown}
+                  style={{
+                    left:
+                      (clip.length +
+                        clip.loopSamples +
+                        (selected ? loopOffset : 0)) /
+                        timeline.samplesPerPixel -
+                      24,
+                    bottom: 4,
+                  }}
+                  className={cn(
+                    "absolute flex flex items-center justify-center justify-center text-xl items-center opacity-80 hover:opacity-100 w-5 h-5",
+                    isLooping ? "cursor-grabbing" : "cursor-grab"
+                  )}
+                >
+                  <LoopIcon className="text-xl text-black" />
+                </button>
+              )}
             </>
           )}
         </div>
 
-        {clip?.type === "audio" &&
+        {clip instanceof AudioClip &&
           clip.loopSamples + (selected ? loopOffset : 0) > 0 && (
             <AudioLoop
               loopOffset={loopOffset}
@@ -291,6 +313,25 @@ export const Clip = observer(
               onMouseDown={onMouseDown}
               track={currentDragTrack || track}
               clip={clip as AudioClip}
+              clipLeft={clipLeft}
+              selected={selected}
+              isLooping={isLooping}
+            />
+          )}
+
+        {clip instanceof MidiClip &&
+          clip.loopSamples + (selected ? loopOffset : 0) > 0 && (
+            <MidiLoop
+              loopOffset={loopOffset}
+              scrollLeft={scrollLeft}
+              top={top}
+              color={color}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={onClick}
+              onMouseDown={onMouseDown}
+              track={currentDragTrack || track}
+              clip={clip}
               clipLeft={clipLeft}
               selected={selected}
               isLooping={isLooping}

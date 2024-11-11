@@ -33,7 +33,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   start: prop<number>(),
   end: prop<number>().withSetter(),
   events: prop<MidiNote[]>(() => []).withSetter(),
-  loopSamples: prop<number>(0),
+  loopSamples: prop<number>(0).withSetter(),
   locked: prop<boolean>(false).withSetter(),
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
@@ -184,8 +184,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     this.start = newStart;
   }
 
-  setLoopSamples() {}
-
   play = () => {};
 
   stop() {}
@@ -214,31 +212,40 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     if (!parentTrack) {
       throw new Error("No parent track found");
     }
+
+    const loopEnd = this.start + this.length + this.loopSamples;
+
     this.events.forEach((event) => {
-      const startTimeInSeconds = Tone.Time(
-        event.on + this.start,
-        "samples"
-      ).toSeconds();
+      let eventStart = event.on + this.start;
+      let eventEnd = event.off + this.start;
 
-      const endTimeInSeconds = Tone.Time(
-        event.off + this.start,
-        "samples"
-      ).toSeconds();
+      while (eventStart < loopEnd) {
+        const startTimeInSeconds = Tone.Time(
+          Math.min(eventStart, loopEnd),
+          "samples"
+        ).toSeconds();
 
-      const startEventId = Tone.getTransport().scheduleOnce(
-        (time) =>
-          parentTrack.instrument.triggerAttack(event.note.join(""), time),
-        startTimeInSeconds
-      );
+        const effectiveEnd = Math.min(eventEnd, loopEnd);
+        const endTimeInSeconds = Tone.Time(effectiveEnd, "samples").toSeconds();
 
-      const stopEventId = Tone.getTransport().scheduleOnce(
-        (time) =>
-          parentTrack.instrument.triggerRelease(event.note.join(""), time),
-        endTimeInSeconds
-      );
+        const startEventId = Tone.getTransport().scheduleOnce(
+          (time) =>
+            parentTrack.instrument.triggerAttack(event.note.join(""), time),
+          startTimeInSeconds
+        );
 
-      event.startEventId = startEventId;
-      event.stopEventId = stopEventId;
+        const stopEventId = Tone.getTransport().scheduleOnce(
+          (time) =>
+            parentTrack.instrument.triggerRelease(event.note.join(""), time),
+          endTimeInSeconds
+        );
+
+        event.startEventId = startEventId;
+        event.stopEventId = stopEventId;
+
+        eventStart += this.length;
+        eventEnd += this.length;
+      }
     });
   }
 
