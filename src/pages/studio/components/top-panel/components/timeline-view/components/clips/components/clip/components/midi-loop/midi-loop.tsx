@@ -70,7 +70,7 @@ export const MidiLoop = observer(
 
     const loopWidth = getLoopWidth();
 
-    const noteHeight = (track!.laneHeight - 36) / 12;
+    const noteHeight = (track.laneHeight - 36 - 20) / 12;
 
     return (
       <div

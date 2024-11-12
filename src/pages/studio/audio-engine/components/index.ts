@@ -8,5 +8,7 @@ export { Clipboard } from "./clipboard";
 export { Keyboard } from "./keyboard";
 export { Master } from "./master";
 export { Metronome } from "./metronome";
+export { Synthesizer } from "./synthesizer";
+export { Oscillator } from "./oscillator";
 export { audioBufferCache } from "./audio-buffer-cache";
 export { waveformCache } from "./waveform-cache";

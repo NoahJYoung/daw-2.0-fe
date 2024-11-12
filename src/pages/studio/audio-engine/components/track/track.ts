@@ -20,6 +20,7 @@ import {
 } from "../../constants";
 import { METER_SMOOTHING_VALUE } from "@/pages/studio/utils/constants";
 import { MidiClip } from "../midi-clip";
+import { Synthesizer } from "../synthesizer";
 
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -38,6 +39,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   volume: prop(0).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
   input: prop<string | null>("mic"),
+  synth: prop<Synthesizer>(() => new Synthesizer({})),
 }) {
   channel = new Tone.Channel();
   waveform = new Tone.Waveform();
@@ -46,13 +48,12 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   splitter = new Tone.Split();
   mic = new Tone.UserMedia().connect(this.waveform);
 
-  synth = new Tone.PolySynth(Tone.AMSynth).connect(this.channel);
-
   @observable
   isResizing: boolean = false;
 
   sync() {
     const { volume, pan, mute } = this;
+    this.synth.connect(this.channel);
     this.channel.set({ mute });
     this.channel.volume.linearRampTo(volume, 0.01);
     this.channel.pan.linearRampTo(pan, 0.01);

@@ -16,12 +16,12 @@ import { Keyboard } from "./components";
 import { MidiNote } from "./components/midi-note";
 import { EventData } from "./components/keyboard/types";
 import {
-  audioBufferToMp3,
   blobToJsonObject,
   populateBufferCache,
   unzipProjectFile,
 } from "./helpers";
 import JSZip from "jszip";
+import { bufferToWav } from "../utils";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -181,8 +181,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const mp3Promises = clips.map(async (clip: AudioClip, i) => {
       const buffer = audioBufferCache.get(clip.id);
       if (buffer) {
-        const file = await audioBufferToMp3(buffer, `${clip.id}`);
-        console.log(file);
+        // const file = await audioBufferToMp3(buffer, `${clip.id}`);
+        const file = await bufferToWav(buffer, `${clip.id}`);
+
         return file;
       }
       throw new Error(`No buffer for clip: ${clip.id} at index: ${i}`);

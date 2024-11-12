@@ -8,7 +8,7 @@ export const audioBufferToMp3 = async (
   return new Promise((resolve) => {
     const leftChannel = audioBuffer.getChannelData(0);
     const sampleRate = audioBuffer.sampleRate;
-    const mp3Encoder = new lamejs.Mp3Encoder(2, sampleRate, 128);
+    const mp3Encoder = new lamejs.Mp3Encoder(1, sampleRate, 128);
     const mp3Data = [];
 
     const convertBuffer = (input: Float32Array): Int16Array => {

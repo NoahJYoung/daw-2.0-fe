@@ -40,13 +40,13 @@ export const StudioDropdown = ({
     <Select disabled={disabled} value={value || ""} onValueChange={onChange}>
       <SelectTrigger
         style={style}
-        className={`w-full focus:ring-0 ${
+        className={`max-w-full focus:ring-0 ${
           isPlaceholder
             ? `text-surface-${4 + colorOffset}`
             : `text-surface-${6 + colorOffset}`
         } ${size === "lg" ? "text-lg" : "text-sm"} border-surface-${
           2 + colorOffset
-        } rounded-xxs ${size === "lg" ? "h-10" : "h-7"} flex-shrink-0`}
+        } rounded-xxs ${size === "lg" ? "h-10" : "h-7"} `}
       >
         {Icon}
         {showSelectedValue && (

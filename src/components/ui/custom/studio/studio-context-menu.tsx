@@ -56,7 +56,7 @@ export const StudioContextMenu = ({
         <ContextMenuSub key={label}>
           <ContextMenuSubTrigger
             disabled={disabled}
-            className="hover:bg-surface-2 rounded-xxs gap-2"
+            className="hover:bg-surface-2 rounded-xxs gap-2 data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
             inset={!Icon}
           >
             {Icon && <Icon className="w-[16px] h-[16px]" />}

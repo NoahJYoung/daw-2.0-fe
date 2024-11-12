@@ -1,9 +1,9 @@
 export const getColorFromVelocity = (
   velocity: number
 ): [number, number, number] => {
-  velocity = Math.max(0, Math.min(128, velocity));
+  velocity = Math.max(0, Math.min(127, velocity));
 
-  const normalizedVelocity = velocity / 128;
+  const normalizedVelocity = velocity / 127;
 
   if (normalizedVelocity < 0.5) {
     const grayToYellow = normalizedVelocity * 2;

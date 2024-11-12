@@ -128,9 +128,14 @@ export const usePianoRollEventHandlers = ({
           on: quantizedNoteOn,
           off,
           note,
-          velocity: 65,
+          velocity: 64,
         };
-        parentTrack?.instrument.triggerAttackRelease(note.join(""), "16n");
+        parentTrack?.instrument.triggerAttackRelease(
+          note.join(""),
+          "16n",
+          Tone.now(),
+          64
+        );
         return clip.createEvent(eventData);
       }
     }

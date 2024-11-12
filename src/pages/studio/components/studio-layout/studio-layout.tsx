@@ -52,7 +52,7 @@ export const StudioLayout = observer(
           </Panel>
           <PanelResizeHandle
             style={{ borderTopWidth: 1 }}
-            className="z-20 h-2 ml-[2px] bg-surface-mid border-0 border-surface-0"
+            className="z-20 h-2 ml-[2px] bg-surface-mid border-0 border-surface-1"
           />
           <div className="z-20 flex bg-surface-mid ml-[2px] pl-[4px] w-full items-start h-[48px] sm:gap-5 justify-between md:justify-start">
             <StudioButton

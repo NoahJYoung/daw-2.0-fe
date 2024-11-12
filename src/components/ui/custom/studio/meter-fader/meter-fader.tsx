@@ -37,7 +37,7 @@ export const MeterFader = ({
   return (
     <div
       className={`h-full w-full flex justify-center h-full items-center items-center ${
-        selected ? "bg-surface-3" : "bg-surface-2"
+        selected ? "bg-transparent" : "bg-transparent"
       } relative`}
     >
       <div

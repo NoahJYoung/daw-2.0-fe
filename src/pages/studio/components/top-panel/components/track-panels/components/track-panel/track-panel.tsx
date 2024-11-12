@@ -5,6 +5,7 @@ import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { IoIosSettings as SettingsIcon } from "react-icons/io";
 import {
   useAudioEngine,
   useBottomPanelViewController,
@@ -22,6 +23,7 @@ import {
   MAX_LANE_HEIGHT,
   MIN_LANE_HEIGHT,
 } from "@/pages/studio/audio-engine/constants";
+import { SynthSettingsModal } from "./components";
 
 const DRAG_THRESHOLD = 24;
 
@@ -52,6 +54,25 @@ const baseButtonClass = cn(
   "h-6",
   "m-0",
   "font-bold"
+);
+
+const settingsButtonClassName = cn(
+  "rounded-xxs",
+  "focus-visible:ring-0",
+  "shadow-none",
+  "border-0",
+  "text-2xl",
+  "relative",
+  "flex",
+  "items-center",
+  "justify-center",
+  "p-1",
+  "w-7",
+  "h-7",
+  "bg-transparent",
+  "text-surface-5",
+  "hover:text-surface-6",
+  "hover:bg-transparent"
 );
 
 interface TrackPanelProps {
@@ -431,30 +452,45 @@ export const TrackPanel = observer(
               {showExpandedOptions && (
                 <div className="flex flex-col gap-1">
                   {showInstrumentSelector && (
-                    <StudioDropdown
-                      options={[{ label: "Synth", value: "synth" }]}
-                      value={"synth"}
-                      disabled
-                      placeholder={t(
-                        "studio.trackPanel.placeholders.instrument"
-                      )}
-                      colorOffset={selectedBgOffset}
-                      icon={<FaGuitar />}
-                      onChange={() => {}}
-                    />
+                    <span className="flex items-center gap-1">
+                      <StudioDropdown
+                        options={[{ label: "Synth", value: "synth" }]}
+                        value={"synth"}
+                        disabled
+                        placeholder={t(
+                          "studio.trackPanel.placeholders.instrument"
+                        )}
+                        colorOffset={selectedBgOffset}
+                        icon={<FaGuitar />}
+                        onChange={() => {}}
+                      />
+                      <SynthSettingsModal
+                        triggerClassName={settingsButtonClassName}
+                        triggerIcon={SettingsIcon}
+                        track={track}
+                      />
+                    </span>
                   )}
 
-                  <StudioDropdown
-                    options={inputOptions.map((option) => ({
-                      label: t(`studio.trackPanel.inputOptions.${option}`),
-                      value: option,
-                    }))}
-                    value={track.input}
-                    colorOffset={selectedBgOffset}
-                    placeholder={t("studio.trackPanel.placeholders.input")}
-                    icon={<MdOutlineSettingsInputComponent />}
-                    onChange={(input) => track.setInput(input)}
-                  />
+                  <span className="flex items-center gap-1">
+                    <StudioDropdown
+                      options={inputOptions.map((option) => ({
+                        label: t(`studio.trackPanel.inputOptions.${option}`),
+                        value: option,
+                      }))}
+                      value={track.input}
+                      colorOffset={selectedBgOffset}
+                      placeholder={t("studio.trackPanel.placeholders.input")}
+                      icon={<MdOutlineSettingsInputComponent />}
+                      onChange={(input) => track.setInput(input)}
+                    />
+                    <StudioButton
+                      className={settingsButtonClassName}
+                      icon={SettingsIcon}
+                      // Disabled until input manager implementation is complete
+                      disabled
+                    />
+                  </span>
                 </div>
               )}
 

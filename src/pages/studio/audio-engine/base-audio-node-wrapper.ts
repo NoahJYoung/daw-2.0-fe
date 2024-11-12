@@ -11,7 +11,9 @@ export class BaseAudioNodeWrapper extends Model({}) {
 
   protected sync(): void {}
 
-  protected init(): void {}
+  protected init(): void {
+    this.sync();
+  }
 
   public serialize() {
     return getSnapshot(this);

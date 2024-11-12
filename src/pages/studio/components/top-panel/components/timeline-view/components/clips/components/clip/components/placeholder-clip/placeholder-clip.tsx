@@ -115,7 +115,7 @@ export const PlaceholderClip = observer(
       return color;
     };
 
-    const noteHeight = (track!.laneHeight - 36) / 12;
+    const noteHeight = (track.laneHeight - 36 - 20) / 12;
 
     return renderPlaceholderClip ? (
       <div

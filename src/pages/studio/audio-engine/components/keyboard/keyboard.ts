@@ -40,7 +40,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
     );
 
     activeTracksWithKeyboardInput.forEach((track) =>
-      track.instrument.triggerAttack(pitch, Tone.now())
+      track.instrument.triggerAttack(pitch, Tone.now(), 64)
     );
 
     if (state === AudioEngineState.recording) {
@@ -57,7 +57,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
     );
 
     activeTracksWithKeyboardInput.forEach((track) =>
-      track.instrument.triggerRelease(pitch, Tone.now())
+      track.instrument.triggerRelease(pitch, Tone.now(), 64)
     );
 
     const onEventIndex = this.onEvents.findIndex(

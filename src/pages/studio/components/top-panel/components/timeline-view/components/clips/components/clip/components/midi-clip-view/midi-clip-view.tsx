@@ -15,7 +15,7 @@ interface MidiClipViewProps {
 export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
   const { timeline } = useAudioEngine();
 
-  const noteHeight = (track!.laneHeight - 36) / 12;
+  const noteHeight = (track.laneHeight - 36 - 20) / 12;
 
   return (
     <svg

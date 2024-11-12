@@ -36,7 +36,7 @@ export const LoopSection = observer(
     clip,
   }: MidiLoopSectionProps) => {
     const { timeline } = useAudioEngine();
-    const noteHeight = (track!.laneHeight - 36) / 12;
+    const noteHeight = (track.laneHeight - 36 - 20) / 12;
 
     return (
       <div

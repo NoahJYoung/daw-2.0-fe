@@ -2,7 +2,7 @@ import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note
 import { PianoRollKey } from "./components";
 import { MidiClip } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine } from "@/pages/studio/hooks";
-
+import * as Tone from "tone";
 interface VerticalKeyboardProps {
   keyboardRef: React.RefObject<HTMLDivElement>;
   keys: PitchNameTuple[];
@@ -23,14 +23,14 @@ export const VerticalKeyboard = ({
   const triggerAttack = (noteString: string) => {
     if (parentTrack) {
       const { instrument } = parentTrack;
-      instrument.triggerAttack(noteString);
+      instrument.triggerAttack(noteString, Tone.now(), 64);
     }
   };
 
   const triggerRelease = (noteString: string) => {
     if (parentTrack) {
       const { instrument } = parentTrack;
-      instrument.triggerRelease(noteString);
+      instrument.triggerRelease(noteString, Tone.now(), 64);
     }
   };
 

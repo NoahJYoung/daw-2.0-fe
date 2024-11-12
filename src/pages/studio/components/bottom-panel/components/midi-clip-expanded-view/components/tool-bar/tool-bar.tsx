@@ -31,7 +31,7 @@ import { PiPencilSimpleDuotone as PencilIcon } from "react-icons/pi";
 import { useRef } from "react";
 
 const MIN_VELOCITY = 0;
-const MAX_VELOCITY = 128;
+const MAX_VELOCITY = 127;
 
 interface ToolBarProps {
   clip: MidiClip;
@@ -155,8 +155,8 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
         />
         <input
           ref={velocityRef}
-          min={0}
-          max={128}
+          min={MIN_VELOCITY}
+          max={MAX_VELOCITY}
           disabled={clip.selectedNotes.length < 1}
           type="number"
           className="text-surface-4 w-[56px] h-[32px] text-md bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
