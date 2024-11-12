@@ -31,9 +31,6 @@ export const OscillatorControls = observer(
 
     return (
       <div className="w-[220px] flex gap-2 items-start justify-between text-surface-6 p-1 shadow-sm border rounded-md">
-        {/* <span className="w-full"> */}
-        {/* <Icon className="text-2xl h-8 w-8" /> */}
-        {/* </span> */}
         <div className="w-[116px] h-[148px]">
           <MeterFader
             faderHeight={148}

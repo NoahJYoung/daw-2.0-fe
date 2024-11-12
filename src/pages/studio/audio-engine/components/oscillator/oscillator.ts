@@ -22,6 +22,7 @@ export class Oscillator extends ExtendedModel(BaseAudioNodeWrapper, {
 
   init() {
     this.synth.connect(this.meter);
+    this.sync();
   }
 
   sync() {
