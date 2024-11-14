@@ -23,6 +23,7 @@ interface PianoRollTimelineProps {
   measureWidth: number;
   startMeasure: number;
   endMeasure: number;
+  timelineContainerRef: React.RefObject<HTMLDivElement>;
   setPlayheadLeft: React.Dispatch<SetStateAction<number>>;
 }
 export const PianoRollTimeline = observer(
@@ -35,6 +36,7 @@ export const PianoRollTimeline = observer(
     subdivisionWidth,
     renderEveryFourthMeasure,
     startMeasure,
+    timelineContainerRef,
     clip,
     setPlayheadLeft,
   }: PianoRollTimelineProps) => {
@@ -48,7 +50,9 @@ export const PianoRollTimeline = observer(
       initialX,
       initialY,
       timelineRef,
-    } = usePianoRollTimeline();
+      setScrollLeft,
+      isNoteVisible,
+    } = usePianoRollTimeline(timelineContainerRef);
 
     const audioEngine = useAudioEngine();
     const { mixer } = audioEngine;
@@ -136,6 +140,12 @@ export const PianoRollTimeline = observer(
     const fill = `rgba(${r}, ${g}, ${b}, 0.1)`;
     const stroke = `rgba(${r}, ${g}, ${b}, 0.2)`;
 
+    const handleScroll = () => {
+      if (timelineRef.current) {
+        setScrollLeft(timelineRef.current.scrollLeft);
+      }
+    };
+
     return (
       <StudioContextMenu
         disabled={
@@ -150,6 +160,7 @@ export const PianoRollTimeline = observer(
           className="flex-shrink-0 overflow-x-auto relative"
           height="1890px"
           onClick={onClick}
+          onScroll={handleScroll}
         >
           {renderGridLanes(width, 17.5, keys.length)}
           {renderGrid(
@@ -170,21 +181,23 @@ export const PianoRollTimeline = observer(
             height={1890}
             width={clipWidthPx}
           />
-          {clip.events.map((note, i) => (
-            <MidiNoteView
-              key={note.id}
-              offsets={offsets}
-              state={state}
-              setStateFlag={setStateFlag}
-              setReferenceNote={setReferenceNote}
-              initialX={initialX}
-              initialY={initialY}
-              firstNoteRef={i === 0 ? firstNoteRef : undefined}
-              clipStartOffsetPx={clipStartOffsetPx}
-              note={note}
-              clip={clip}
-            />
-          ))}
+          {clip.events.map((note, i) =>
+            isNoteVisible(note, clip) ? (
+              <MidiNoteView
+                key={note.id}
+                offsets={offsets}
+                state={state}
+                setStateFlag={setStateFlag}
+                setReferenceNote={setReferenceNote}
+                initialX={initialX}
+                initialY={initialY}
+                firstNoteRef={i === 0 ? firstNoteRef : undefined}
+                clipStartOffsetPx={clipStartOffsetPx}
+                note={note}
+                clip={clip}
+              />
+            ) : null
+          )}
         </svg>
       </StudioContextMenu>
     );

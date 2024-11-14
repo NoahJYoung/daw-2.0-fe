@@ -39,7 +39,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   volume: prop(0).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
   input: prop<string | null>("mic"),
-  synth: prop<Synthesizer>(() => new Synthesizer({})),
+  synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
 }) {
   channel = new Tone.Channel();
   waveform = new Tone.Waveform();

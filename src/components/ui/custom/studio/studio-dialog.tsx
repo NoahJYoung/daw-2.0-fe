@@ -34,7 +34,7 @@ export const StudioDialog = ({
     </DialogTrigger>
     <DialogContent
       onInteractOutside={(e) => e.preventDefault()}
-      className="w-full h-full max-h-[400px] flex flex-col bg-surface-mid p-4"
+      className="w-full h-[calc(100%-8px)] max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 overflow-auto"
     >
       {title && (
         <DialogHeader className="h-[24px]">

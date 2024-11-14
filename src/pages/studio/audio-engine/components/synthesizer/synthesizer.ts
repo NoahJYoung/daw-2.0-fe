@@ -6,7 +6,7 @@ import { computed } from "mobx";
 
 @model("AudioEngine/Synthesizer")
 export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
-  volume: prop(-10).withSetter(),
+  volume: prop(0).withSetter(),
   triangle: prop<Oscillator>(() => new Oscillator({ type: "triangle" })),
   square: prop<Oscillator>(() => new Oscillator({ type: "square" })),
   sine: prop<Oscillator>(() => new Oscillator({ type: "sine" })),
@@ -19,6 +19,8 @@ export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
     this.square.connect(this.output);
     this.sine.connect(this.output);
     this.sawtooth.connect(this.output);
+
+    this.sync();
   }
 
   sync() {
@@ -54,6 +56,10 @@ export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   disconnect(node: Tone.ToneAudioNode) {
     this.output.disconnect(node);
+  }
+
+  randomize() {
+    this.oscillators.forEach((osc) => osc.randomize());
   }
 
   @computed

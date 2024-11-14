@@ -40,7 +40,7 @@ export const StudioDropdown = ({
     <Select disabled={disabled} value={value || ""} onValueChange={onChange}>
       <SelectTrigger
         style={style}
-        className={`max-w-full focus:ring-0 ${
+        className={`max-w-full flex items-center gap-1 focus:ring-0 ${
           isPlaceholder
             ? `text-surface-${4 + colorOffset}`
             : `text-surface-${6 + colorOffset}`

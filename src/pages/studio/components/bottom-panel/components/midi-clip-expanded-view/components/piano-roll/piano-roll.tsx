@@ -27,7 +27,7 @@ interface PianoRollProps {
 
 export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const keyboardRef = useRef<HTMLDivElement>(null);
-  const timelineRef = useRef<HTMLDivElement>(null);
+  const timelineContainerRef = useRef<HTMLDivElement>(null);
   const audioEngine = useAudioEngine();
   const { undoManager } = useUndoManager();
   const { timeline } = audioEngine;
@@ -40,14 +40,14 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const keys = getKeys();
 
   const handleVerticalKeyboardScroll = () => {
-    if (keyboardRef.current && timelineRef.current) {
-      timelineRef.current.scrollTop = keyboardRef.current.scrollTop;
+    if (keyboardRef.current && timelineContainerRef.current) {
+      timelineContainerRef.current.scrollTop = keyboardRef.current.scrollTop;
     }
   };
 
   const handleVerticalTimelineScroll = () => {
-    if (keyboardRef.current && timelineRef.current) {
-      keyboardRef.current.scrollTop = timelineRef.current.scrollTop;
+    if (keyboardRef.current && timelineContainerRef.current) {
+      keyboardRef.current.scrollTop = timelineContainerRef.current.scrollTop;
     }
   };
 
@@ -93,7 +93,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const subdivisionWidth = measureWidth / subdivisionsPerMeasure;
 
   const containerWidth =
-    timelineRef.current?.getBoundingClientRect().width || 0;
+    timelineContainerRef.current?.getBoundingClientRect().width || 0;
 
   const width = Math.max(clip.zoomWidth, containerWidth + 16);
 
@@ -151,7 +151,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
       <div
         className="flex flex-col overflow-auto flex-shrink-0 h-full styled-scrollbar max-h-full relative"
         onScroll={handleVerticalTimelineScroll}
-        ref={timelineRef}
+        ref={timelineContainerRef}
         style={{ width: "calc(100% - 80px)" }}
       >
         <PianoRollTopBar
@@ -162,6 +162,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
           startMeasure={clip.startMeasure}
         />
         <PianoRollTimeline
+          timelineContainerRef={timelineContainerRef}
           subdivisionWidth={subdivisionWidth}
           subdivisionsArray={subdivisionsArray}
           renderEveryFourthMeasure={false}

@@ -1,6 +1,6 @@
 import { MidiClip, Track } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useCallback } from "react";
 import { LoopSection } from "./components";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import {
@@ -33,7 +33,7 @@ export const MidiLoop = observer(
     top,
     clipLeft,
     selected,
-    // isLooping,
+    isLooping,
     // scrollLeft,
     loopOffset,
     onMouseEnter,
@@ -72,6 +72,31 @@ export const MidiLoop = observer(
 
     const noteHeight = (track.laneHeight - 36 - 20) / 12;
 
+    const renderLoopSVG = useCallback(
+      () => (
+        <svg
+          width={timeline.samplesToPixels(clip.length)}
+          height={track!.laneHeight - 30}
+          className="mb-[6px]"
+        >
+          <g>
+            {clip.events.map((event) => (
+              <rect
+                key={event.id}
+                fill="black"
+                height={noteHeight}
+                width={getNoteWidth(event, timeline)}
+                x={getNoteXPosition(event, timeline)}
+                rx="2px"
+                y={getNoteYPosition(event, noteHeight)}
+              />
+            ))}
+          </g>
+        </svg>
+      ),
+      [clip.events, clip.length, noteHeight, timeline, track]
+    );
+
     return (
       <div
         onClick={onClick}
@@ -80,6 +105,7 @@ export const MidiLoop = observer(
       >
         {loops.map((_, i) => (
           <LoopSection
+            isLooping={isLooping}
             track={track}
             loopIndex={i}
             onMouseEnter={onMouseEnter}
@@ -90,8 +116,8 @@ export const MidiLoop = observer(
             clipLeft={clipLeft}
             top={top}
             color={color}
-            clip={clip}
             key={i}
+            renderLoopSVG={renderLoopSVG}
           />
         ))}
 
@@ -117,25 +143,7 @@ export const MidiLoop = observer(
               Loop
             </p>
           </span>
-          <svg
-            width={timeline.samplesToPixels(clip.length)}
-            height={track!.laneHeight - 30}
-            className="mb-[6px]"
-          >
-            <g>
-              {clip.events.map((event) => (
-                <rect
-                  key={event.id}
-                  fill="black"
-                  height={noteHeight}
-                  width={getNoteWidth(event, timeline)}
-                  x={getNoteXPosition(event, timeline)}
-                  rx="2px"
-                  y={getNoteYPosition(event, noteHeight)}
-                />
-              ))}
-            </g>
-          </svg>
+          {/* {!isLooping && renderLoopSVG()} */}
         </div>
       </div>
     );

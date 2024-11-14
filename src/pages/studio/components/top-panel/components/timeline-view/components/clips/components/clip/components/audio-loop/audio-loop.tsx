@@ -28,7 +28,7 @@ export const AudioLoop = observer(
     top,
     clipLeft,
     selected,
-    // isLooping,
+    isLooping,
     // scrollLeft,
     loopOffset,
     onMouseEnter,
@@ -105,6 +105,7 @@ export const AudioLoop = observer(
       >
         {loops.map((_, i) => (
           <LoopSection
+            isLooping={isLooping}
             loopIndex={i}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -143,19 +144,20 @@ export const AudioLoop = observer(
             </p>
           </span>
           <div className="flex">
-            {peakChunks.map((chunk, i) => (
-              <canvas
-                key={`loop-${clip.id}-${i}-last`}
-                ref={(el) => {
-                  if (el) {
-                    lastLoopRefs.current[i] = el;
-                  }
-                }}
-                className="rounded-xl"
-                width={chunk.length}
-                height={height}
-              />
-            ))}
+            {!isLooping &&
+              peakChunks.map((chunk, i) => (
+                <canvas
+                  key={`loop-${clip.id}-${i}-last`}
+                  ref={(el) => {
+                    if (el) {
+                      lastLoopRefs.current[i] = el;
+                    }
+                  }}
+                  className="rounded-xl"
+                  width={chunk.length}
+                  height={height}
+                />
+              ))}
           </div>
         </div>
       </div>

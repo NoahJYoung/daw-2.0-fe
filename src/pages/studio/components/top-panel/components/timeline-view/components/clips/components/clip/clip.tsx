@@ -315,7 +315,7 @@ export const Clip = observer(
               clip={clip as AudioClip}
               clipLeft={clipLeft}
               selected={selected}
-              isLooping={isLooping}
+              isLooping={isLooping && selected}
             />
           )}
 
@@ -334,7 +334,7 @@ export const Clip = observer(
               clip={clip}
               clipLeft={clipLeft}
               selected={selected}
-              isLooping={isLooping}
+              isLooping={isLooping && selected}
             />
           )}
       </>

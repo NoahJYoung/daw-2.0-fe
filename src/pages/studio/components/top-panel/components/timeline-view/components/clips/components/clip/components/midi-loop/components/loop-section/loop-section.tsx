@@ -1,22 +1,17 @@
-import { MidiClip, Track } from "@/pages/studio/audio-engine/components";
-import { useAudioEngine } from "@/pages/studio/hooks";
+import { Track } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import {
-  getNoteWidth,
-  getNoteXPosition,
-  getNoteYPosition,
-} from "../../../../helpers";
 
 interface MidiLoopSectionProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  renderLoopSVG: () => React.ReactNode;
   clipWidth: number;
   height: number;
   clipLeft: number;
   loopIndex: number;
   top: number;
-  clip: MidiClip;
   track: Track;
+  isLooping: boolean;
   selected: boolean;
   color: string;
 }
@@ -25,19 +20,18 @@ export const LoopSection = observer(
   ({
     onMouseEnter,
     onMouseLeave,
+    renderLoopSVG,
     loopIndex,
+    isLooping,
+    track,
     clipWidth,
     height,
     clipLeft,
-    track,
     selected,
     color,
     top,
-    clip,
   }: MidiLoopSectionProps) => {
-    const { timeline } = useAudioEngine();
-    const noteHeight = (track.laneHeight - 36 - 20) / 12;
-
+    const shouldRenderSVG = !track.isResizing && !isLooping;
     return (
       <div
         key={`loop-${loopIndex}`}
@@ -63,25 +57,7 @@ export const LoopSection = observer(
           </p>
         </span>
 
-        <svg
-          width={timeline.samplesToPixels(clip.length)}
-          height={track!.laneHeight - 30}
-          className="mb-[6px]"
-        >
-          <g>
-            {clip.events.map((event) => (
-              <rect
-                key={event.id}
-                fill="black"
-                height={noteHeight}
-                width={getNoteWidth(event, timeline)}
-                x={getNoteXPosition(event, timeline)}
-                rx="2px"
-                y={getNoteYPosition(event, noteHeight)}
-              />
-            ))}
-          </g>
-        </svg>
+        {/* {shouldRenderSVG && renderLoopSVG()} */}
       </div>
     );
   }

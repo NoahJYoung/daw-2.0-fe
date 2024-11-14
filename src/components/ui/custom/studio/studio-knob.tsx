@@ -13,6 +13,7 @@ interface KnobProps {
   color?: string;
   double?: boolean;
   showValue?: boolean;
+  valuePosition?: "top" | "bottom";
   minLabel?: string;
   maxLabel?: string;
 }
@@ -30,6 +31,7 @@ export const Knob = ({
   color,
   double,
   showValue = true,
+  valuePosition = "bottom",
   minLabel,
   maxLabel,
 }: KnobProps) => {
@@ -227,7 +229,11 @@ export const Knob = ({
       </svg>
       {showValue && isDragging && (
         <span
-          style={{ top: size * 1.3, left: -5, zIndex: 2 }}
+          style={
+            valuePosition === "bottom"
+              ? { top: size * 1.3, left: -5, zIndex: 2 }
+              : { bottom: size * 1.3, left: -5, zIndex: 2 }
+          }
           className="absolute w-full flex items-center justify-center"
         >
           <span className="text-xs p-1 bg-surface-2 border border-surface-3">

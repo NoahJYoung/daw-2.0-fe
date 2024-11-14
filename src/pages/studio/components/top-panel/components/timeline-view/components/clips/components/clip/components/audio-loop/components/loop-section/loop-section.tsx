@@ -5,6 +5,7 @@ import { MutableRefObject } from "react";
 interface LoopSectionProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  isLooping: boolean;
   clipWidth: number;
   height: number;
   clipLeft: number;
@@ -20,6 +21,7 @@ interface LoopSectionProps {
 export const LoopSection = ({
   onMouseEnter,
   onMouseLeave,
+  isLooping,
   loopIndex,
   clipWidth,
   height,
@@ -55,22 +57,23 @@ export const LoopSection = ({
       </p>
     </span>
     <div className="flex">
-      {peakChunks.map((chunk, j) => (
-        <canvas
-          key={`loop-${clip.id}-${j}-${loopIndex}`}
-          ref={(el) => {
-            if (el) {
-              if (!canvasRefs.current[loopIndex]) {
-                canvasRefs.current[loopIndex] = [];
+      {isLooping &&
+        peakChunks.map((chunk, j) => (
+          <canvas
+            key={`loop-${clip.id}-${j}-${loopIndex}`}
+            ref={(el) => {
+              if (el) {
+                if (!canvasRefs.current[loopIndex]) {
+                  canvasRefs.current[loopIndex] = [];
+                }
+                canvasRefs.current[loopIndex][j] = el;
               }
-              canvasRefs.current[loopIndex][j] = el;
-            }
-          }}
-          className="rounded-xl"
-          width={chunk.length}
-          height={height}
-        />
-      ))}
+            }}
+            className="rounded-xl"
+            width={chunk.length}
+            height={height}
+          />
+        ))}
     </div>
   </div>
 );
