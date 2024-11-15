@@ -28,8 +28,6 @@ export const usePianoRollTimeline = (
   const initialX = useRef(0);
   const initialY = useRef(0);
 
-  console.log(viewportWidth);
-
   useEffect(() => {
     const updateViewportWidth = () => {
       if (timelineContainerRef.current) {

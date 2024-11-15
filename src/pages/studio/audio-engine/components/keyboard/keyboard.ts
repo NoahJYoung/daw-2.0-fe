@@ -57,7 +57,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
     );
 
     activeTracksWithKeyboardInput.forEach((track) =>
-      track.instrument.triggerRelease(pitch, Tone.now(), 64)
+      track.instrument.triggerRelease(pitch, Tone.now())
     );
 
     const onEventIndex = this.onEvents.findIndex(

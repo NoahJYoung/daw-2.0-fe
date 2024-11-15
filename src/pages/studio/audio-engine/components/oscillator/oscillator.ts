@@ -50,11 +50,15 @@ export class Oscillator extends ExtendedModel(BaseAudioNodeWrapper, {
     this.channel.set({ mute: this.mute });
   }
 
-  triggerAttack(note: string, time: Tone.Unit.Time, velocity: number) {
-    this.synth.triggerAttack(note, time);
+  normalizeVelocity(velocity: number) {
+    return velocity / 127;
   }
 
-  triggerRelease(note: string, time: Tone.Unit.Time, velocity: number) {
+  triggerAttack(note: string, time: Tone.Unit.Time, velocity: number) {
+    this.synth.triggerAttack(note, time, this.normalizeVelocity(velocity));
+  }
+
+  triggerRelease(note: string, time: Tone.Unit.Time) {
     this.synth.triggerRelease(note, time);
   }
 
@@ -64,7 +68,12 @@ export class Oscillator extends ExtendedModel(BaseAudioNodeWrapper, {
     time: Tone.Unit.Time,
     velocity: number
   ) {
-    this.synth.triggerAttackRelease(note, duration, time);
+    this.synth.triggerAttackRelease(
+      note,
+      duration,
+      time,
+      this.normalizeVelocity(velocity)
+    );
   }
 
   releaseAll(time: Tone.Unit.Time) {

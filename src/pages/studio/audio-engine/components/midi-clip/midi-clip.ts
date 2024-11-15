@@ -240,11 +240,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
         const stopEventId = Tone.getTransport().scheduleOnce(
           (time) =>
-            parentTrack.instrument.triggerRelease(
-              event.note.join(""),
-              time,
-              event.velocity
-            ),
+            parentTrack.instrument.triggerRelease(event.note.join(""), time),
           endTimeInSeconds
         );
 

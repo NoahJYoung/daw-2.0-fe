@@ -31,8 +31,8 @@ export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
     this.oscillators.forEach((osc) => osc.triggerAttack(note, time, velocity));
   }
 
-  triggerRelease(note: string, time: Tone.Unit.Time, velocity: number) {
-    this.oscillators.forEach((osc) => osc.triggerRelease(note, time, velocity));
+  triggerRelease(note: string, time: Tone.Unit.Time) {
+    this.oscillators.forEach((osc) => osc.triggerRelease(note, time));
   }
 
   triggerAttackRelease(

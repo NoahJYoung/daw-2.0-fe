@@ -30,7 +30,7 @@ export const VerticalKeyboard = ({
   const triggerRelease = (noteString: string) => {
     if (parentTrack) {
       const { instrument } = parentTrack;
-      instrument.triggerRelease(noteString, Tone.now(), 64);
+      instrument.triggerRelease(noteString, Tone.now());
     }
   };
 

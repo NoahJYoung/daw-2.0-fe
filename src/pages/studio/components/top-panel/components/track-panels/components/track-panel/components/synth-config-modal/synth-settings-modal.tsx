@@ -65,7 +65,7 @@ export const SynthSettingsModal = observer(
 
     return (
       <StudioDialog
-        title={`${track.name} - Synthesizer`}
+        title={`${track.name} - ${activePreset?.name || "Synthesizer"}`}
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
       >
@@ -85,7 +85,7 @@ export const SynthSettingsModal = observer(
                 disabled={menuOptions.length < 1}
                 icon={<MdOutlineSettingsInputComponent />}
                 onChange={(preset) => selectPreset(preset)}
-                colorOffset={2}
+                colorOffset={1}
               />
               <StudioButton
                 onClick={handleDelete}
@@ -96,7 +96,7 @@ export const SynthSettingsModal = observer(
               <input
                 type="text"
                 placeholder="Enter a preset name"
-                className="border border-surface-3 text-surface-6 w-1/3 bg-transparent focus:bg-surface-3 focus:select-text p-1 text-ellipsis focus:outline-none text-sm h-7"
+                className="placeholder:text-surface-4 border border-surface-3 text-surface-7 w-1/3 bg-transparent focus:select-text p-1 text-ellipsis focus:outline-none text-sm h-7"
                 value={inputState}
                 onClick={(e) => e.stopPropagation()}
                 onFocus={(e) => e.stopPropagation()}
