@@ -7,12 +7,44 @@ import { useRef } from "react";
 import { GrPower } from "react-icons/gr";
 import { MeterFader } from "@/components/ui/custom/studio/meter-fader";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
+import { cn } from "@/lib/utils";
 
 interface ChannelStripProps {
   track: Track;
   trackNumber: number;
   mixerHeight: number;
 }
+
+const activeButtonClass = cn(
+  "hover:text-surface-10",
+  "shadow-none",
+  "flex",
+  "items-center",
+  "justify-center",
+  "rounded-sm p-2 w-6 h-6 m-0 font-bold",
+  "border border-primary",
+  " bg-transparent",
+  "text-surface-10",
+  "hover:bg-surface-3"
+);
+
+const baseButtonClass = cn(
+  "shadow-none",
+  "hover:text-surface-6",
+  "hover:bg-surface-3",
+  "text-surface-5",
+  "flex items-center",
+  "justify-center",
+  "text-surface-5",
+  "bg-transparent",
+  "rounded-sm",
+  "border border-surface-5",
+  "p-2",
+  "w-6",
+  "h-6",
+  "m-0",
+  "font-bold"
+);
 
 export const ChannelStrip = observer(
   ({ track, trackNumber, mixerHeight }: ChannelStripProps) => {
@@ -75,18 +107,6 @@ export const ChannelStrip = observer(
 
       mixer.selectTrack(track);
     };
-
-    const baseButtonClass = `shadow-none hover:text-surface-6 hover:bg-surface-3 text-surface-5 flex items-center justify-center text-surface-5 bg-transparent rounded-xxs p-2 w-6 h-6 m-0 font-bold`;
-
-    const activeButtonClass = `hover:text-surface-10
-      shadow-none 
-      flex 
-      items-center 
-      justify-center 
-      rounded-xxs p-2 w-6 h-6 m-0 font-bold
-      bg-transparent
-      text-surface-10 
-      hover:bg-surface-3`;
 
     return (
       <div
