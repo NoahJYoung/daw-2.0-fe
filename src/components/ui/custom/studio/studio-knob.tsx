@@ -193,7 +193,7 @@ export const Knob = ({
         }`}
       >
         <circle
-          className="fill-current text-surface-4"
+          className="fill-current text-surface-5"
           cx={size / 2}
           cy={size / 2}
           r={size / 2}
@@ -210,7 +210,7 @@ export const Knob = ({
           <path
             d={arcPath}
             stroke={color}
-            className={color ? "" : "stroke-current text-surface-6"}
+            className={color ? "" : "stroke-current text-surface-8"}
             strokeWidth={3}
             fill="none"
           />
@@ -222,7 +222,7 @@ export const Knob = ({
           x2={size / 2}
           y2={1}
           stroke={color}
-          className={color ? "" : "stroke-current text-surface-6"}
+          className={color ? "" : "stroke-current text-surface-8"}
           strokeWidth={2}
           transform={`rotate(${endAngle}, ${size / 2}, ${size / 2})`}
         />
