@@ -1,12 +1,11 @@
 import { Timeline } from "@/pages/studio/audio-engine/components";
 import { UndoManager } from "mobx-keystone";
-import { SetStateAction } from "react";
 import * as Tone from "tone";
 
 export const getOnClick = (
   scrollRef: React.RefObject<HTMLDivElement>,
   timeline: Timeline,
-  setPlayheadLeft: React.Dispatch<SetStateAction<number>>,
+  setPlayheadLeft: (value: number) => void,
   undoManager: UndoManager
 ) => {
   const onClick = (e: React.MouseEvent) => {

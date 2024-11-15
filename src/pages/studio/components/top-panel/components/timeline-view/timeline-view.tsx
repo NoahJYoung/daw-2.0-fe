@@ -12,6 +12,7 @@ import {
   useLayoutEffect,
   useState,
   useEffect,
+  useRef,
 } from "react";
 import * as Tone from "tone";
 import {
@@ -35,7 +36,13 @@ export const TimelineView = observer(
 
     const [scrollLeft, setScrollLeft] = useState(0);
     const [viewportWidth, setViewportWidth] = useState(0);
-    const [playheadLeft, setPlayheadLeft] = useState(timeline.positionInPixels);
+
+    const playheadRef = useRef<HTMLDivElement>(null);
+    const setPlayheadLeft = (pixels: number) => {
+      if (playheadRef.current) {
+        playheadRef.current.style.transform = `translateX(${pixels}px)`;
+      }
+    };
 
     useEffect(() => {
       const updateViewportWidth = () => {
@@ -281,7 +288,7 @@ export const TimelineView = observer(
           endMeasure={endMeasure}
           setPlayheadLeft={setPlayheadLeft}
         />
-        <Playhead height={mixer.topPanelHeight + 154} left={playheadLeft} />
+        <Playhead ref={playheadRef} height={mixer.topPanelHeight + 154} />
       </div>
     );
   }

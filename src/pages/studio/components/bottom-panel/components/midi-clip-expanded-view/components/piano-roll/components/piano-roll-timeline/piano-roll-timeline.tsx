@@ -3,7 +3,7 @@ import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note
 import { observer } from "mobx-react-lite";
 import { MidiNoteView } from "./components";
 import * as Tone from "tone";
-import { SetStateAction, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { usePianoRollMenuActions } from "../../hooks";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
@@ -24,7 +24,7 @@ interface PianoRollTimelineProps {
   startMeasure: number;
   endMeasure: number;
   timelineContainerRef: React.RefObject<HTMLDivElement>;
-  setPlayheadLeft: React.Dispatch<SetStateAction<number>>;
+  setPlayheadLeft: (pixels: number) => void;
 }
 export const PianoRollTimeline = observer(
   ({

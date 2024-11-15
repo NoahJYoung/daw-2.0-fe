@@ -2,7 +2,7 @@ import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { Clip } from "./components";
 import { PlaceholderClip } from "./components/clip/components";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { Clip as ClipData } from "@/pages/studio/audio-engine/components/types";
@@ -21,7 +21,7 @@ interface ClipsProps {
   endMeasure: number;
   scrollRef: React.RefObject<HTMLDivElement>;
   scrollLeft: number;
-  setPlayheadLeft: Dispatch<SetStateAction<number>>;
+  setPlayheadLeft: (value: number) => void;
   measureWidth: number;
   totalMeasures: number;
   totalWidth: number;

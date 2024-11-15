@@ -35,7 +35,7 @@ interface ClipProps {
   loopOffset: number;
   dragging: boolean;
   setDragging: Dispatch<SetStateAction<boolean>>;
-  setPlayheadLeft: React.Dispatch<SetStateAction<number>>;
+  setPlayheadLeft: (value: number) => void;
   selectedOffset: number;
   scrollLeft: number;
   setReferenceClip: Dispatch<SetStateAction<AudioClip | MidiClip | null>>;

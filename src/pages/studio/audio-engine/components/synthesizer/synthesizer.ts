@@ -1,4 +1,4 @@
-import { model, ExtendedModel, prop } from "mobx-keystone";
+import { model, ExtendedModel, prop, idProp } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { Oscillator } from "../oscillator";
 import * as Tone from "tone";
@@ -6,6 +6,7 @@ import { computed } from "mobx";
 
 @model("AudioEngine/Synthesizer")
 export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
+  id: idProp,
   volume: prop(0).withSetter(),
   triangle: prop<Oscillator>(() => new Oscillator({ type: "triangle" })),
   square: prop<Oscillator>(() => new Oscillator({ type: "square" })),

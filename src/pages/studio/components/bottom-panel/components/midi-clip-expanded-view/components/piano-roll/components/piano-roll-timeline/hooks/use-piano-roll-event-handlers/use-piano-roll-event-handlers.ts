@@ -23,7 +23,7 @@ interface usePianoRollEventHandlers {
   selected: boolean;
   referenceNote: MidiNote | null;
   setReferenceNote: Dispatch<SetStateAction<MidiNote | null>>;
-  setPlayheadLeft: Dispatch<SetStateAction<number>>;
+  setPlayheadLeft: (pixels: number) => void;
   clip: MidiClip;
   initialX: React.MutableRefObject<number>;
   initialY: React.MutableRefObject<number>;

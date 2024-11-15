@@ -113,7 +113,11 @@ export const SynthSettingsModal = observer(
 
           <div className="flex flex-wrap align-between justify-evenly gap-2 h-[288px]">
             {track.synth.oscillators.map((osc) => (
-              <OscillatorControls active={active} oscillator={osc} />
+              <OscillatorControls
+                key={osc.id}
+                active={active}
+                oscillator={osc}
+              />
             ))}
           </div>
         </div>

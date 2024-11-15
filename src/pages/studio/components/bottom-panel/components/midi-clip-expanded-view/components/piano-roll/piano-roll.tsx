@@ -7,7 +7,7 @@ import {
   VerticalKeyboard,
 } from "./components";
 import { PianoRollTimeline } from "./components/piano-roll-timeline";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { getKeys } from "./helpers";
 import {
   findSmallestSubdivision,
@@ -34,7 +34,12 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const startPosition = clip.samplesToPixels(
     timeline.positionInSamples - clip.start
   );
-  const [playheadLeft, setPlayheadLeft] = useState(startPosition);
+  const playheadRef = useRef<HTMLDivElement>(null);
+  const setPlayheadLeft = (pixels: number) => {
+    if (playheadRef.current) {
+      playheadRef.current.style.transform = `translateX(${pixels}px)`;
+    }
+  };
 
   const { timeSignature } = timeline;
   const keys = getKeys();
@@ -175,7 +180,9 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
           clip={clip}
           setPlayheadLeft={setPlayheadLeft}
         />
-        {renderPlayhead && <PianoRollPlayhead left={playheadLeft} />}
+        {renderPlayhead && (
+          <PianoRollPlayhead ref={playheadRef} startPosition={startPosition} />
+        )}
       </div>
     </div>
   );
