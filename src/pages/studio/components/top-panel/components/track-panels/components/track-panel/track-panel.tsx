@@ -434,8 +434,11 @@ export const TrackPanel = observer(
                   M
                 </Button>
                 <Button
-                  onClick={(e) => e.stopPropagation()}
-                  className={baseButtonClass}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    track.setSolo(!track.solo);
+                  }}
+                  className={track.solo ? activeButtonClass : baseButtonClass}
                 >
                   S
                 </Button>

@@ -162,4 +162,19 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   getActiveTracks() {
     return this.tracks.filter((track) => track.active);
   }
+
+  setVolumeOnUnsoloedTracks() {
+    if (this.tracks.some((track) => track.solo)) {
+      this.tracks.forEach((track) => {
+        if (!track.solo) {
+          track.channel.volume.value = -Infinity;
+          return;
+        }
+      });
+    } else {
+      this.tracks.forEach(
+        (track) => (track.channel.volume.value = track.volume)
+      );
+    }
+  }
 }

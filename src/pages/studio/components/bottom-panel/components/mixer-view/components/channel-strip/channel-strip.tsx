@@ -154,8 +154,11 @@ export const ChannelStrip = observer(
             maxLabel="R"
           />
           <Button
-            onClick={(e) => e.stopPropagation()}
-            className={baseButtonClass}
+            onClick={(e) => {
+              e.stopPropagation();
+              track.setSolo(!track.solo);
+            }}
+            className={track.solo ? activeButtonClass : baseButtonClass}
           >
             S
           </Button>
