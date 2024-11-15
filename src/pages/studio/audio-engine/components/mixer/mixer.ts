@@ -18,6 +18,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
   init() {
+    this.setVolumeOnUnsoloedTracks();
     this.sync();
   }
 
