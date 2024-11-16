@@ -73,8 +73,8 @@ export const OscillatorControls = observer(
               on={oscillator.mute}
               onClick={() => oscillator.setMute(!oscillator.mute)}
               label="M"
-              onClassName="text-surface-10 border border-primary rounded-md "
-              className="rounded-md focus-visible:ring-0 shadow-none text-sm relative flex items-center justify-center w-8 h-8 bg-transparent border border-surface-5 text-surface-5 hover:opacity-80 hover:bg-transparent"
+              onClassName="p-0 text-surface-10 border border-primary rounded-sm "
+              className="p-0 rounded-sm focus-visible:ring-0 shadow-none text-sm relative flex items-center justify-center w-6 h-6 bg-transparent border border-surface-5 text-surface-5 hover:opacity-80 hover:bg-transparent"
             />
             <Icon className="text-2xl h-8 w-8" />
           </span>
