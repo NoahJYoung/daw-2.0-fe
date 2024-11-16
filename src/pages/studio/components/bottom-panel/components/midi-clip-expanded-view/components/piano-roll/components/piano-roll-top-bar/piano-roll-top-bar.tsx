@@ -16,7 +16,7 @@ export const PianoRollTopBar = ({
   return (
     <svg
       style={{ width }}
-      className="border-r-0 border-t-0 border-surface-1 border h-[20px] max-h-full flex sticky top-0 bg-surface-4 select-none flex-shrink-0 z-30"
+      className="border-r-0 border-t-0 border-surface-1 border h-[20px] max-h-full flex sticky top-0 bg-surface-2 select-none flex-shrink-0 z-30"
     >
       {renderEveryFourthMeasure
         ? measuresArray.slice(0, measuresArray.length / 4).map((_, i) => (
