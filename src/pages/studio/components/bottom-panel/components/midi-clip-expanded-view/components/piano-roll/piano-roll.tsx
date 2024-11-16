@@ -7,7 +7,7 @@ import {
   VerticalKeyboard,
 } from "./components";
 import { PianoRollTimeline } from "./components/piano-roll-timeline";
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getKeys } from "./helpers";
 import {
   findSmallestSubdivision,
@@ -31,11 +31,22 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   const audioEngine = useAudioEngine();
   const { undoManager } = useUndoManager();
   const { timeline } = audioEngine;
+  const [renderPlayhead, setRenderPlayhead] = useState(false);
   const startPosition = clip.samplesToPixels(
     timeline.positionInSamples - clip.start
   );
   const playheadRef = useRef<HTMLDivElement>(null);
   const setPlayheadLeft = (pixels: number) => {
+    if (!renderPlayhead && pixels >= 0) {
+      setRenderPlayhead(true);
+    }
+    if (
+      timelineContainerRef.current &&
+      renderPlayhead &&
+      pixels > timelineContainerRef.current.getBoundingClientRect().width
+    ) {
+      setRenderPlayhead(false);
+    }
     if (playheadRef.current) {
       playheadRef.current.style.transform = `translateX(${pixels}px)`;
     }
@@ -136,14 +147,6 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
         audioEngine.state === AudioEngineState.recording,
     }
   );
-
-  const transportMeasure = parseInt(
-    Tone.getTransport().position.toString().split(":")[0]
-  );
-
-  const renderPlayhead =
-    transportMeasure >= clip.startMeasure &&
-    transportMeasure <= clip.endMeasure;
 
   return (
     <div className="border border-surface-2 h-full flex flex-shrink-0 md:max-h-[400px]">
