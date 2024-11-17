@@ -270,7 +270,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   getBounceEndFromLastClip = (samplesPerPixel: number) => {
     const duration = this.mixer.getLastClipEndSamples() / samplesPerPixel;
-    console.log(duration);
     return duration;
   };
 

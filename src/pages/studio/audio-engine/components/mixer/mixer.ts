@@ -185,8 +185,6 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
       return 0;
     }
 
-    console.log(reducedClipEnds);
-
     return reducedClipEnds.reduce((maxEnd, end) => {
       return end > maxEnd ? end : maxEnd;
     }, -Infinity);

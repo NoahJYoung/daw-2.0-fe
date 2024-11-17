@@ -277,8 +277,10 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
       return 0;
     }
 
-    return this.clips.reduce((maxEnd, obj) => {
-      return obj.end > maxEnd ? obj.end : maxEnd;
+    return this.clips.reduce((maxEnd, clip) => {
+      return clip.end + clip.loopSamples > maxEnd
+        ? clip.end + clip.loopSamples
+        : maxEnd;
     }, -Infinity);
   }
 }

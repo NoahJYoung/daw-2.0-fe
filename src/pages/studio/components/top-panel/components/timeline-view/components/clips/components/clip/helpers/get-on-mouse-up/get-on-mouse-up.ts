@@ -63,7 +63,6 @@ export const getOnMouseUp = (
           );
         } else {
           selectedClip.setLoopSamples(newValue >= 0 ? newValue : 0);
-          console.log(selectedClip.loopSamples);
         }
       });
 
