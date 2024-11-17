@@ -17,6 +17,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   locked: prop<boolean>(false).withSetter(),
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
+  bufferCacheKey: prop<string | null>(null).withSetter(),
 }) {
   player = new Tone.Player();
 
@@ -77,7 +78,10 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   init() {
-    const cachedBuffer = audioBufferCache.get(this.id);
+    if (!this.bufferCacheKey) {
+      this.setBufferCacheKey(this.id);
+    }
+    const cachedBuffer = audioBufferCache.get(this.bufferCacheKey || this.id);
     if (cachedBuffer) {
       this.setBuffer(cachedBuffer);
     }

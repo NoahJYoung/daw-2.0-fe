@@ -178,4 +178,17 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
       );
     }
   }
+
+  getLastClipEndSamples() {
+    const reducedClipEnds = this.tracks.map((track) => track.findLargestEnd());
+    if (reducedClipEnds.length === 0) {
+      return 0;
+    }
+
+    console.log(reducedClipEnds);
+
+    return reducedClipEnds.reduce((maxEnd, end) => {
+      return end > maxEnd ? end : maxEnd;
+    }, -Infinity);
+  }
 }

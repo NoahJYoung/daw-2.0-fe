@@ -267,4 +267,27 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
     fileInput.click();
   }
+
+  getBounceEndFromLastClip = (samplesPerPixel: number) => {
+    const duration = this.mixer.getLastClipEndSamples() / samplesPerPixel;
+    console.log(duration);
+    return duration;
+  };
+
+  async getOfflineBounce() {
+    const duration = this.getBounceEndFromLastClip(44100);
+
+    const buffer = await Tone.Offline(() => {
+      const clonedEngine = clone(this);
+      clonedEngine.play();
+    }, duration);
+
+    const wav = await bufferToWav(buffer, this.projectName);
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(wav);
+    link.download = `${this.projectName}.wav`;
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+  }
 }

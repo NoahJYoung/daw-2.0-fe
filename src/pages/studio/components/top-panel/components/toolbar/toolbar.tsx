@@ -21,6 +21,7 @@ import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components
 import { FaFileExport as ExportIcon } from "react-icons/fa";
 import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
+import { pasteClips } from "../timeline-view/components/clips/helpers";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -32,7 +33,7 @@ export const Toolbar = observer(
     const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
     const audioEngine = useAudioEngine();
-    const { timeline, metronome } = audioEngine;
+    const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
 
     return (
@@ -147,19 +148,23 @@ export const Toolbar = observer(
         <StudioButton
           title={t("studio.toolbar.copy")}
           icon={MdContentCopy}
-          onClick={() => {}}
+          onClick={() => clipboard.copy(mixer.selectedClips)}
         />
 
         <StudioButton
           title={t("studio.toolbar.paste")}
           icon={MdContentPasteGo}
-          onClick={() => {}}
+          onClick={() => pasteClips(clipboard, mixer, timeline, undoManager)}
+          disabled={
+            clipboard.getClips().length === 0 ||
+            mixer.selectedTracks.length === 0
+          }
         />
 
         <StudioButton
           title={t("studio.toolbar.download")}
           icon={IoDownloadOutline}
-          onClick={() => {}}
+          onClick={async () => audioEngine.getOfflineBounce()}
         />
 
         <StudioButton

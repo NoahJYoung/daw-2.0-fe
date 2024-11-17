@@ -271,4 +271,14 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     const { mixer } = getRoot<AudioEngine>(this);
     mixer.setVolumeOnUnsoloedTracks();
   }
+
+  findLargestEnd() {
+    if (this.clips.length === 0) {
+      return 0;
+    }
+
+    return this.clips.reduce((maxEnd, obj) => {
+      return obj.end > maxEnd ? obj.end : maxEnd;
+    }, -Infinity);
+  }
 }
