@@ -53,8 +53,8 @@ export const OscillatorControls = observer(
     const Icon = useMemo(() => icons[oscillator.type], [oscillator.type]);
 
     return (
-      <div className="w-[220px]  flex gap-2 items-start justify-between text-surface-6 py-1 px-2 shadow-sm border rounded-md">
-        <div className="w-[128px] h-[128px]">
+      <div className="w-[220px]  flex gap-2 items-start justify-between text-surface-6 py-1 px-2 shadow-sm border rounded-md z-20">
+        <div className="w-[128px] h-[128px] z-20">
           <MeterFader
             faderHeight={128}
             onChange={onVolumeChange}
@@ -67,7 +67,7 @@ export const OscillatorControls = observer(
             active={active}
           />
         </div>
-        <div className="flex flex-col w-[calc(100%-116px)] gap-0  justify-start">
+        <div className="z-20 flex flex-col w-[calc(100%-116px)] gap-0 justify-start">
           <span className="w-full flex items-center justify-between">
             <StudioButton
               on={oscillator.mute}

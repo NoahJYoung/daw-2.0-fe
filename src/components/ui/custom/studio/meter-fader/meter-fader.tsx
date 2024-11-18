@@ -36,13 +36,13 @@ export const MeterFader = ({
 
   return (
     <div
-      className={`h-full w-full flex justify-center h-full items-center items-center ${
+      className={`h-full w-full flex justify-center h-full z-20 items-center items-center ${
         selected ? "bg-transparent" : "bg-transparent"
       } relative`}
     >
       <div
         style={{ height: faderHeight }}
-        className="w-full flex absolute justify-center"
+        className="w-full flex absolute justify-center z-20"
       >
         <LevelView height={Math.max(faderHeight, 0)} />
         <MeterView
@@ -54,6 +54,7 @@ export const MeterFader = ({
         />
 
         <StudioSlider
+          className="z-20"
           onValueChange={onValueChange}
           orientation="vertical"
           onValueCommit={commitValueChange}

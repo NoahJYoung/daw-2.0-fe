@@ -254,7 +254,7 @@ export const TimelineView = observer(
         onScroll={onScroll}
         ref={scrollRef}
         style={{ width: totalWidth }}
-        className="h-full bg-surface-0 z-10 styled-scrollbar overflow-auto relative"
+        className="h-full bg-surface-0 z-20 styled-scrollbar overflow-auto relative"
       >
         <TopBar
           totalWidth={totalWidth}

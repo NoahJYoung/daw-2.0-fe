@@ -4,7 +4,12 @@ import {
   useBottomPanelViewController,
   useUndoManager,
 } from "../../hooks";
-import { KeyboardView, MidiClipExpandedView, MixerView } from "./components";
+import {
+  KeyboardView,
+  MidiClipExpandedView,
+  MixerView,
+  TrackEffectsView,
+} from "./components";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
@@ -28,6 +33,7 @@ export const BottomPanel = observer(() => {
 
   return (
     <Tabs
+      activationMode="manual"
       value={mixer.panelMode}
       onValueChange={(e) =>
         undoManager.withoutUndo(() => mixer.setPanelMode(e as PanelMode))
@@ -73,7 +79,20 @@ export const BottomPanel = observer(() => {
           { "justify-start": windowSize.width < 1360 }
         )}
       >
-        <TabsContent className={contentClassName} value="MIXER">
+        <TabsContent
+          style={
+            mixer.panelMode === "MIXER"
+              ? {
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                  alignItems: windowSize.width >= 1360 ? "center" : "start",
+                }
+              : undefined
+          }
+          className={contentClassName}
+          value="MIXER"
+        >
           <MixerView />
         </TabsContent>
 
@@ -84,11 +103,11 @@ export const BottomPanel = observer(() => {
                   display: "flex",
                   flexDirection: "column",
                   gap: 12,
-                  alignItems: windowSize.width > 1360 ? "center" : "start",
+                  alignItems: windowSize.width >= 1360 ? "center" : "start",
                 }
               : undefined
           }
-          className={contentClassName}
+          className={cn(contentClassName)}
           value="KEYBOARD"
         >
           <KeyboardView />
@@ -102,7 +121,7 @@ export const BottomPanel = observer(() => {
           value="TRACK_FX"
         >
           {mixer.featuredTrack ? (
-            <span>{`${mixer.featuredTrack.name}`}</span>
+            <TrackEffectsView track={mixer.featuredTrack} />
           ) : (
             <span>No track selected</span>
           )}

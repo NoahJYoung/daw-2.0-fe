@@ -9,12 +9,11 @@ export const clipRef = customRef<Clip>("AudioEngine/ClipRef", {
       ref,
       (n) => n instanceof Track || n instanceof Mixer
     );
-    if (!parent) return undefined;
+    if (!parent) return;
     if (parent instanceof Track) {
       return parent.clips.find((clip) => clip.id === ref.id);
     }
     if (parent instanceof Mixer) {
-      // return parent.clips.find((clip) => clip.id === ref.id);
       return parent.tracks
         .find((track) => track.clips.find((clip) => clip.id === ref.id))
         ?.clips.find((clip) => clip.id === ref.id);

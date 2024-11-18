@@ -17,12 +17,14 @@ interface StudioContextMenuProps {
   children?: React.ReactNode;
   items?: MenuItem[];
   disabled?: boolean;
+  className?: string;
 }
 
 export const StudioContextMenu = ({
   children,
   items,
   disabled,
+  className,
 }: StudioContextMenuProps) => {
   const getSubMenu = ({
     children,
@@ -93,7 +95,7 @@ export const StudioContextMenu = ({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="h-full" disabled={disabled}>
+      <ContextMenuTrigger className={className || "h-full"} disabled={disabled}>
         {children}
       </ContextMenuTrigger>
       <ContextMenuContent

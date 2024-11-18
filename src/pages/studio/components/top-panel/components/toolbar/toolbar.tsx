@@ -149,6 +149,7 @@ export const Toolbar = observer(
           title={t("studio.toolbar.copy")}
           icon={MdContentCopy}
           onClick={() => clipboard.copy(mixer.selectedClips)}
+          disabled={mixer.selectedClips.length === 0}
         />
 
         <StudioButton

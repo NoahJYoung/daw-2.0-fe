@@ -231,10 +231,10 @@ export const Knob = ({
         <span
           style={
             valuePosition === "bottom"
-              ? { top: size * 1.3, left: -5, zIndex: 2 }
-              : { bottom: size * 1.3, left: -5, zIndex: 2 }
+              ? { top: size * 1.3, left: -5 }
+              : { bottom: size * 1.3, left: -5 }
           }
-          className="absolute w-full flex items-center justify-center"
+          className="absolute w-full flex items-center justify-center z-30"
         >
           <span className="text-xs p-1 bg-surface-2 border border-surface-3">
             {renderValue

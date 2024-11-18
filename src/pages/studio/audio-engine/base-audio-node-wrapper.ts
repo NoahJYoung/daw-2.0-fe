@@ -9,6 +9,10 @@ export class BaseAudioNodeWrapper extends Model({}) {
     this.init();
   }
 
+  // protected onAttachedToRootStore(rootStore: object): (() => void) | void {
+  //   console.log(this, rootStore);
+  // }
+
   protected sync(): void {}
 
   protected init(): void {

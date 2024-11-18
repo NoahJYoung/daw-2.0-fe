@@ -9,7 +9,7 @@ export const LevelView = ({ height }: LevelViewProps) => {
     <svg
       height={height}
       width={100}
-      style={{ position: "absolute", left: 0, top: 0, zIndex: 1 }}
+      style={{ position: "absolute", left: 0, top: 0, zIndex: 10 }}
     >
       {renderSixDbValues && (
         <text className="fill-current text-surface-5" x="7" y="9" fontSize="12">

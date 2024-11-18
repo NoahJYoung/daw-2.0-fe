@@ -1,4 +1,11 @@
-import { model, prop, ExtendedModel, modelAction, Ref } from "mobx-keystone";
+import {
+  model,
+  prop,
+  ExtendedModel,
+  modelAction,
+  Ref,
+  idProp,
+} from "mobx-keystone";
 import { computed } from "mobx";
 import { Track } from "../track";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
@@ -6,15 +13,18 @@ import { clipRef, trackRef } from "../refs";
 import { Master } from "../master";
 import { PanelMode } from "./types";
 import { Clip } from "../types";
+import { AuxSendManager } from "../aux-send-manager";
 
 @model("AudioEngine/Mixer")
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
+  id: idProp,
   tracks: prop<Track[]>(() => []),
   selectedRefs: prop<Ref<Track>[]>(() => []),
   master: prop<Master>(() => new Master({})),
   topPanelHeight: prop<number>(window.innerHeight - 156),
   featuredClipRef: prop<Ref<Clip> | null>(null).withSetter(),
   featuredTrackRef: prop<Ref<Track> | null>(null).withSetter(),
+  auxSendManager: prop<AuxSendManager>(() => new AuxSendManager({})),
   panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
   init() {
@@ -22,8 +32,14 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     this.sync();
   }
 
+  getRefId() {
+    return this.id;
+  }
+
   sync() {
-    this.tracks.forEach((track) => track.channel.toDestination());
+    this.tracks.forEach((track) => {
+      track.channel.toDestination();
+    });
   }
 
   @modelAction
@@ -83,7 +99,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   @modelAction
   selectFeaturedClip(clip: Clip) {
     if (clip && !this.tracks.some((track) => track.clips.includes(clip)))
-      throw new Error("unknown track");
+      throw new Error("unknown clip");
 
     this.featuredClipRef = clip ? clipRef(clip) : null;
   }

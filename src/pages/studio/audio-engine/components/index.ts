@@ -10,5 +10,7 @@ export { Master } from "./master";
 export { Metronome } from "./metronome";
 export { Synthesizer } from "./synthesizer";
 export { Oscillator } from "./oscillator";
+export { AuxSend } from "./aux-send";
+export { AuxSendManager } from "./aux-send-manager";
 export { audioBufferCache } from "./audio-buffer-cache";
 export { waveformCache } from "./waveform-cache";

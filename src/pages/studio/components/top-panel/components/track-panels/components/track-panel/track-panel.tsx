@@ -323,7 +323,7 @@ export const TrackPanel = observer(
           style={{
             height: track.laneHeight,
             top: mixer.getCombinedLaneHeightsAtIndex(trackNumber - 1) + yOffset,
-            zIndex: isDragging ? 3 : 1,
+            zIndex: isDragging ? 30 : 20,
           }}
         >
           <span

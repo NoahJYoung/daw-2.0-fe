@@ -1,4 +1,12 @@
-import { model, prop, ExtendedModel, clone, fromSnapshot } from "mobx-keystone";
+import {
+  model,
+  prop,
+  ExtendedModel,
+  clone,
+  fromSnapshot,
+  idProp,
+  createContext,
+} from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
 import {
   AudioClip,
@@ -23,8 +31,11 @@ import {
 import JSZip from "jszip";
 import { bufferToWav } from "../utils";
 
+export const mixerCtx = createContext<Mixer>();
+
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
+  id: idProp,
   timeline: prop<Timeline>(() => new Timeline({})).withSetter(),
   mixer: prop<Mixer>(() => new Mixer({})).withSetter(),
   keyboard: prop<Keyboard>(() => new Keyboard({})).withSetter(),
@@ -37,8 +48,13 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   clipboard = new Clipboard();
 
   async init() {
+    mixerCtx.setDefaultComputed(() => this.mixer);
     const start = async () => Tone.start();
     await start();
+  }
+
+  getRefId() {
+    return this.id;
   }
 
   @action
