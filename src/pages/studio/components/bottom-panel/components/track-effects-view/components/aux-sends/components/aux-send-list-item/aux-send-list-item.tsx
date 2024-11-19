@@ -99,7 +99,7 @@ export const AuxSendListItem = observer(
             onDoubleClick={resetVolume}
             value={send.volume}
             step={0.01}
-            min={-100}
+            min={-20}
             max={6}
             size={26}
           />

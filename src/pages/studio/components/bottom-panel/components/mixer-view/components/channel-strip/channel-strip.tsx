@@ -199,7 +199,7 @@ export const ChannelStrip = observer(
           />
         </div>
         <div className="border-t-2 h-[48px] border-t-surface-1 w-full text-center flex justify-center relative">
-          <p className="font-bold text-surface-5">{trackNumber}</p>
+          <p className="text-sm font-bold text-surface-5">{trackNumber}</p>
           <span
             className="absolute border border-surface-1"
             style={{
