@@ -10,9 +10,9 @@ import { useAudioEngine } from "@/pages/studio/hooks";
 
 const btnClassName = `rounded-xxs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-1/5 h-7 bg-surface-2 text-surface-5 hover:bg-surface-3`;
 
-interface AuxSendsProps {
+interface AuxRoutesProps {
   title: string;
-  sends: AuxSend[];
+  routes: AuxSend[];
   existingRouteOptions: Track[];
   newRouteOptions: Track[];
   onCreate: (selectedTrack: Track) => void;
@@ -20,16 +20,16 @@ interface AuxSendsProps {
   mode?: "send" | "receive";
 }
 
-export const AuxSends = observer(
+export const AuxRoutes = observer(
   ({
-    sends,
+    routes,
     existingRouteOptions,
     newRouteOptions,
     onCreate,
     onDelete,
     title,
     mode = "send",
-  }: AuxSendsProps) => {
+  }: AuxRoutesProps) => {
     const [selectedSend, setSelectedSend] = useState<Track | null>(null);
     const { mixer } = useAudioEngine();
 
@@ -42,7 +42,7 @@ export const AuxSends = observer(
 
     return (
       <div className="flex flex-col gap-2 w-full h-full max-h-[275px] p-1 border rounded-sm border-surface-2">
-        <h5 className="text-surface-5 font-bold ">{title}</h5>
+        <h5 className="text-surface-5 font-bold px-1">{title}</h5>
         <span className="px-1 flex w-full items-center gap-2 justify-between">
           <span className="w-4/5">
             <StudioDropdown
@@ -72,9 +72,9 @@ export const AuxSends = observer(
           />
         </span>
         <ul className="w-full flex flex-col p-1 pr-1 gap-1 h-full max-h-[182px] overflow-y-auto styled-scrollbar">
-          {sends.map((send, i) => (
+          {routes.map((send, i) => (
             <AuxSendListItem
-              isLastItem={i === sends.length - 1}
+              isLastItem={i === routes.length - 1}
               onDelete={onDelete}
               key={send.id}
               send={send}
