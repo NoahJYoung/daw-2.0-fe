@@ -13,13 +13,23 @@ const btnClassName = `rounded-xxs focus-visible:ring-0 text-2xl relative flex it
 interface AuxSendsProps {
   title: string;
   sends: AuxSend[];
-  options: Track[];
+  existingRouteOptions: Track[];
+  newRouteOptions: Track[];
   onCreate: (selectedTrack: Track) => void;
   onDelete: (id: string) => void;
+  mode?: "send" | "receive";
 }
 
 export const AuxSends = observer(
-  ({ sends, options, onCreate, onDelete, title }: AuxSendsProps) => {
+  ({
+    sends,
+    existingRouteOptions,
+    newRouteOptions,
+    onCreate,
+    onDelete,
+    title,
+    mode = "send",
+  }: AuxSendsProps) => {
     const [selectedSend, setSelectedSend] = useState<Track | null>(null);
     const { mixer } = useAudioEngine();
 
@@ -36,7 +46,8 @@ export const AuxSends = observer(
         <span className="px-1 flex w-full items-center gap-2 justify-between">
           <span className="w-4/5">
             <StudioDropdown
-              options={options.map((track) => ({
+              disabled={newRouteOptions.length === 0}
+              options={newRouteOptions.map((track) => ({
                 label: track.name,
                 value: track.id,
               }))}
@@ -60,14 +71,15 @@ export const AuxSends = observer(
             onClick={handleCreate}
           />
         </span>
-        <ul className="w-full flex flex-col p-1 pr-2 gap-1 h-full max-h-[182px] overflow-y-auto styled-scrollbar">
+        <ul className="w-full flex flex-col p-1 pr-1 gap-1 h-full max-h-[182px] overflow-y-auto styled-scrollbar">
           {sends.map((send, i) => (
             <AuxSendListItem
               isLastItem={i === sends.length - 1}
               onDelete={onDelete}
               key={send.id}
               send={send}
-              options={options}
+              options={existingRouteOptions}
+              mode={mode}
             />
           ))}
         </ul>

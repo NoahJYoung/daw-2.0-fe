@@ -49,10 +49,17 @@ interface AuxSendListItemProps {
   options: Track[];
   onDelete: (sendId: string) => void;
   isLastItem: boolean;
+  mode?: "send" | "receive";
 }
 
 export const AuxSendListItem = observer(
-  ({ send, options, onDelete, isLastItem }: AuxSendListItemProps) => {
+  ({
+    send,
+    options,
+    onDelete,
+    isLastItem,
+    mode = "send",
+  }: AuxSendListItemProps) => {
     const { onValueChange: onVolumeChange, onValueCommit: commitVolumeChange } =
       useDeferredUpdate<number>(send.volume, (value) => send.setVolume(value));
 
@@ -67,17 +74,17 @@ export const AuxSendListItem = observer(
     return (
       <li
         className={cn(
-          "flex w-full items-center gap-1 justify-between border-surface-2",
+          "flex w-full items-center gap-0.5 justify-between border-surface-2",
           { "pb-1 border-b": !isLastItem }
         )}
       >
-        <span className="w-full max-w-[175px]">
+        <span className="w-1/2 md: w-2/2 max-w-full ">
           <StudioDropdown
             options={options.map((track) => ({
               label: track.name,
               value: track.id,
             }))}
-            value={send.to.id}
+            value={mode === "send" ? send.to.id : send.from.id}
             colorOffset={0}
             placeholder="Aux Send"
             icon={<MdOutlineSettingsInputComponent />}
@@ -85,7 +92,7 @@ export const AuxSendListItem = observer(
           />
         </span>
 
-        <span className="flex items-center gap-1">
+        <span className="flex items-center justify-evenly gap-0.5 w-1/2 md:w-1/3 max-w-full">
           <Knob
             onValueChange={onVolumeChange}
             onValueCommit={commitVolumeChange}
@@ -94,7 +101,7 @@ export const AuxSendListItem = observer(
             step={0.01}
             min={-100}
             max={6}
-            size={28}
+            size={26}
           />
           <Button
             onClick={(e) => {

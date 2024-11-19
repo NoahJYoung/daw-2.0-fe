@@ -38,7 +38,6 @@ export class AuxSend extends ExtendedModel(BaseAudioNodeWrapper, {
 
   disconnect() {
     this.channel.disconnect();
-    // this.channel.disconnect(this.to.channel);
   }
 
   @computed

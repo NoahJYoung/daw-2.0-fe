@@ -3,6 +3,7 @@ import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 
 import { AuxSends } from "./components";
+import { isCircular, isSameTrack, isValidSend } from "./helpers";
 
 interface TrackEffectsViewProps {
   track: Track;
@@ -27,39 +28,47 @@ export const TrackEffectsView = observer(({ track }: TrackEffectsViewProps) => {
     auxSendManager.removeAuxSend(id);
   };
 
-  const sendOptions = mixer.tracks.filter(
+  const newSendOptions = mixer.tracks.filter((mixerTrack) =>
+    isValidSend(track, mixerTrack, auxSendManager.sends)
+  );
+  const existingSendOptions = mixer.tracks.filter(
     (mixerTrack) =>
-      mixerTrack.id !== track.id &&
-      !receives.some(
-        (receive) =>
-          receive.from?.id !== track.id && receive.to?.id !== track.id
-      )
+      !isSameTrack(track, mixerTrack) &&
+      !isCircular(track, mixerTrack, auxSendManager.sends)
   );
 
-  const receiveOptions = mixer.tracks.filter(
-    (mixerTrack) => mixerTrack.id !== track.id
+  const newReceiveOptions = mixer.tracks.filter((mixerTrack) =>
+    isValidSend(mixerTrack, track, auxSendManager.sends)
+  );
+  const existingReceiveOptions = mixer.tracks.filter(
+    (mixerTrack) =>
+      !isSameTrack(track, mixerTrack) &&
+      !isCircular(mixerTrack, track, auxSendManager.sends)
   );
 
   return (
     <div className="w-[99%] max-w-[1360px] flex flex-col sm:flex-row justify-evenly gap-2">
-      <div className="flex flex-col gap-2 w-full h-full max-h-[275px] p-1 border rounded-sm border-surface-2">
-        <h5 className="font-bold text-surface-5">{`${track.name} Track Effects`}</h5>
-      </div>
-
       <AuxSends
         title="Aux Receives"
         onCreate={createReceive}
         onDelete={onDelete}
+        mode="receive"
         sends={receives}
-        options={sendOptions}
+        existingRouteOptions={existingReceiveOptions}
+        newRouteOptions={newReceiveOptions}
       />
+
+      <div className="flex flex-col gap-2 w-full h-full max-h-[275px] p-1 border rounded-sm border-surface-2">
+        <h5 className="font-bold text-surface-5">{`${track.name} Track Effects`}</h5>
+      </div>
 
       <AuxSends
         title="Aux Sends"
         onCreate={createSend}
         onDelete={onDelete}
         sends={sends}
-        options={receiveOptions}
+        existingRouteOptions={existingSendOptions}
+        newRouteOptions={newSendOptions}
       />
     </div>
   );
