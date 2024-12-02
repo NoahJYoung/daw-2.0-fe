@@ -2,7 +2,7 @@ import { Track } from "@/pages/studio/audio-engine/components";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 
-import { AuxRoutes } from "./components";
+import { AuxRoutes, EffectsChainView } from "./components";
 import { isCircular, isSameTrack, isValidSend } from "./helpers";
 
 interface TrackEffectsViewProps {
@@ -49,7 +49,7 @@ export const TrackEffectsView = observer(({ track }: TrackEffectsViewProps) => {
   return (
     <div className="w-[99%] max-w-[1360px] flex flex-col sm:flex-row justify-evenly gap-2">
       <AuxRoutes
-        title="Aux Receives"
+        title={`${track.name} - Aux Receives`}
         onCreate={createReceive}
         onDelete={onDelete}
         mode="receive"
@@ -58,12 +58,10 @@ export const TrackEffectsView = observer(({ track }: TrackEffectsViewProps) => {
         newRouteOptions={newReceiveOptions}
       />
 
-      <div className="flex flex-col gap-2 w-full h-full max-h-[275px] p-1 border rounded-sm border-surface-2">
-        <h5 className="px-1 font-bold text-surface-5">{`${track.name} Track Effects`}</h5>
-      </div>
+      <EffectsChainView track={track} />
 
       <AuxRoutes
-        title="Aux Sends"
+        title={`${track.name} - Aux Sends`}
         onCreate={createSend}
         onDelete={onDelete}
         routes={sends}

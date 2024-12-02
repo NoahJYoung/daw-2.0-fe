@@ -1,6 +1,6 @@
 import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { StudioSlider } from "@/components/ui/custom/studio/studio-slider";
-import { LevelView, MeterView } from "./components";
+import { MonoLevelView, MonoMeterView } from "./components";
 import * as Tone from "tone";
 
 interface MeterFaderProps {
@@ -10,28 +10,28 @@ interface MeterFaderProps {
   min: number;
   max: number;
   faderHeight: number;
-  meters: Tone.Meter[];
+  meter: Tone.Meter;
   active?: boolean;
   selected?: boolean;
   stopDelayMs?: number;
+  orientation?: "left" | "right";
 }
 
-export const MeterFader = ({
+export const MonoMeterFader = ({
   onChange,
   value,
   min,
   max,
   step,
-  meters,
+  meter,
   active,
   selected,
   stopDelayMs,
   faderHeight,
+  orientation = "left",
 }: MeterFaderProps) => {
   const { onValueChange: onValueChange, onValueCommit: commitValueChange } =
     useDeferredUpdate<number[]>([value], (values) => onChange(values[0]));
-
-  const [left, right] = meters;
 
   return (
     <div
@@ -41,21 +41,25 @@ export const MeterFader = ({
     >
       <div
         style={{ height: faderHeight }}
-        className="w-full flex absolute justify-center z-20"
+        className="w-[54px] flex absolute justify-center z-20"
       >
-        <LevelView height={Math.max(faderHeight, 0)} />
-        <MeterView
+        <MonoLevelView
+          orientation={orientation}
+          height={Math.max(faderHeight, 0)}
+        />
+        <MonoMeterView
           height={faderHeight}
           width={20}
           stopDelayMs={stopDelayMs}
           active={active}
-          meter={left}
+          meter={meter}
         />
 
         <StudioSlider
           className="z-20"
           onValueChange={onValueChange}
           orientation="vertical"
+          thumbSize="sm"
           onValueCommit={commitValueChange}
           style={{ height: faderHeight }}
           step={step}
@@ -63,14 +67,6 @@ export const MeterFader = ({
           max={max}
           value={[value]}
           showTrack={false}
-        />
-
-        <MeterView
-          height={faderHeight}
-          width={20}
-          stopDelayMs={stopDelayMs}
-          active={active}
-          meter={right}
         />
       </div>
     </div>

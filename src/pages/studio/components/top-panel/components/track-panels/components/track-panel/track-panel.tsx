@@ -210,14 +210,16 @@ export const TrackPanel = observer(
 
     const handleSelectTrack = (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (track.isResizing || isDragging) {
-        return;
-      }
-      if (!e.ctrlKey) {
-        mixer.unselectAllTracks();
-      }
+      undoManager.withoutUndo(() => {
+        if (track.isResizing || isDragging) {
+          return;
+        }
+        if (!e.ctrlKey) {
+          mixer.unselectAllTracks();
+        }
 
-      mixer.selectTrack(track);
+        mixer.selectTrack(track);
+      });
     };
 
     const handleDoubleClick = (e: React.MouseEvent) => {

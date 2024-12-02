@@ -11,8 +11,9 @@ import { IconType } from "react-icons/lib";
 
 interface StudioDialogProps {
   triggerClassName: string;
-  triggerIcon: IconType;
   children: React.ReactNode;
+  triggerIcon?: IconType;
+  label?: string;
   title?: string;
   disabled?: boolean;
 }
@@ -23,6 +24,7 @@ export const StudioDialog = ({
   triggerIcon: TriggerIcon,
   disabled,
   children,
+  label,
 }: StudioDialogProps) => (
   <Dialog modal={false}>
     <DialogTrigger disabled={disabled} asChild>
@@ -30,6 +32,7 @@ export const StudioDialog = ({
         disabled={disabled}
         className={triggerClassName}
         icon={TriggerIcon}
+        label={label}
       />
     </DialogTrigger>
     <DialogContent

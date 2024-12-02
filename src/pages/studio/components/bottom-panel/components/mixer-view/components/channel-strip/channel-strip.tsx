@@ -1,7 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { Button } from "@/components/ui/button";
 import type { Track } from "@/pages/studio/audio-engine/components";
-import { useAudioEngine, useDeferredUpdate } from "@/pages/studio/hooks";
+import {
+  useAudioEngine,
+  useDeferredUpdate,
+  useUndoManager,
+} from "@/pages/studio/hooks";
 import { Knob } from "@/components/ui/custom/studio/studio-knob";
 import { useRef } from "react";
 import { GrPower } from "react-icons/gr";
@@ -50,6 +54,7 @@ export const ChannelStrip = observer(
   ({ track, trackNumber, mixerHeight }: ChannelStripProps) => {
     const { mixer, state } = useAudioEngine();
     const trackNameRef = useRef<HTMLInputElement>(null);
+    const { undoManager } = useUndoManager();
 
     const { onValueChange: onPanChange, onValueCommit: commitPanChange } =
       useDeferredUpdate<number>(track.pan, (value) => track.setPan(value));
@@ -100,12 +105,13 @@ export const ChannelStrip = observer(
 
     const handleSelectTrack = (e: React.MouseEvent) => {
       e.stopPropagation();
+      undoManager.withoutUndo(() => {
+        if (!e.ctrlKey) {
+          mixer.unselectAllTracks();
+        }
 
-      if (!e.ctrlKey) {
-        mixer.unselectAllTracks();
-      }
-
-      mixer.selectTrack(track);
+        mixer.selectTrack(track);
+      });
     };
 
     return (

@@ -111,6 +111,17 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .no-arrows {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+
+  .no-arrows::-webkit-inner-spin-button,
+  .no-arrows::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 
 @media screen and (min-width: 992px) {

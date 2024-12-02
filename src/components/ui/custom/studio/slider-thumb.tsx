@@ -1,16 +1,21 @@
 interface SliderThumbProps {
   orientation: "vertical" | "horizontal";
   className?: string;
+  size?: "sm" | "lg";
 }
 
-export const SliderThumb = ({ orientation, className }: SliderThumbProps) => {
+export const SliderThumb = ({
+  orientation,
+  className,
+  size = "lg",
+}: SliderThumbProps) => {
   return (
     <svg
       className={className}
       xmlns="http://www.w3.org/2000/svg"
-      width="54" // SVG width increased by 4 pixels
+      width={size === "lg" ? "54" : "32"}
       height="8"
-      viewBox="0 0 102 16" // viewBox width updated from 96 to 100
+      viewBox="0 0 102 16"
       fill="none"
       transform={orientation === "horizontal" ? "rotate(90)" : undefined}
     >
@@ -19,8 +24,7 @@ export const SliderThumb = ({ orientation, className }: SliderThumbProps) => {
         className="fill-current"
         points="90,8 102,0 102,16"
         fill="black"
-      />{" "}
-      {/* Adjusted to account for the extra width */}
+      />
       <line
         className="stroke-current"
         x1="8"

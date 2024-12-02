@@ -133,12 +133,11 @@ export const Clip = observer(
           clip.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
         );
         expandBottomPanelIfCollapsed();
+        if (!e.ctrlKey) {
+          mixer.unselectAllTracks();
+        }
+        mixer.selectTrack(track);
       });
-
-      if (!e.ctrlKey) {
-        mixer.unselectAllTracks();
-      }
-      mixer.selectTrack(track);
     };
 
     const handleLockClick = (e: React.MouseEvent) => {

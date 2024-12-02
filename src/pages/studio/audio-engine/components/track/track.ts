@@ -22,12 +22,14 @@ import { METER_SMOOTHING_VALUE } from "@/pages/studio/utils/constants";
 import { MidiClip } from "../midi-clip";
 import { Synthesizer } from "../synthesizer";
 import { AudioEngine } from "../../audio-engine";
+import { EffectsChain } from "../effects-chain";
 
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   name: prop<string>("New Track").withSetter(),
   clips: prop<Clip[]>(() => []),
+  effectsChain: prop<EffectsChain>(() => new EffectsChain({})),
   rgb: prop<[number, number, number]>(() => [
     Math.floor(Math.random() * 251),
     Math.floor(Math.random() * 251),
@@ -44,6 +46,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
 }) {
   channel = new Tone.Channel();
+  output = new Tone.Channel();
   waveform = new Tone.Waveform();
   meterL = new Tone.Meter(METER_SMOOTHING_VALUE);
   meterR = new Tone.Meter(METER_SMOOTHING_VALUE);
@@ -100,6 +103,10 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
         clip.player.connect(this.channel);
       }
     });
+    this.effectsChain.disconnectRoutes();
+    this.channel.connect(this.effectsChain.input);
+    this.effectsChain.connectRoutes();
+    this.effectsChain.output.connect(this.output);
   }
 
   @modelAction

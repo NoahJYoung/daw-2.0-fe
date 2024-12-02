@@ -38,7 +38,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   sync() {
     this.tracks.forEach((track) => {
-      track.channel.toDestination();
+      track.output.toDestination();
     });
   }
 
@@ -47,7 +47,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     const track = new Track({});
     this.tracks.push(track);
     this.refreshTopPanelHeight();
-    track.channel.toDestination();
+    track.output.toDestination();
   };
 
   @modelAction

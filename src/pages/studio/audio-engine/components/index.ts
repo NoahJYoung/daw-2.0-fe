@@ -12,5 +12,8 @@ export { Synthesizer } from "./synthesizer";
 export { Oscillator } from "./oscillator";
 export { AuxSend } from "./aux-send";
 export { AuxSendManager } from "./aux-send-manager";
+export { Effect } from "./effect";
+export { EffectsChain } from "./effects-chain";
+
 export { audioBufferCache } from "./audio-buffer-cache";
 export { waveformCache } from "./waveform-cache";

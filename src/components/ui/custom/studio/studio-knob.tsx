@@ -182,7 +182,9 @@ export const Knob = ({
     <span
       onMouseDown={handleMouseDown}
       onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
-      className={`relative ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+      className={`flex justify-center relative ${
+        isDragging ? "cursor-grabbing" : "cursor-grab"
+      }`}
     >
       <svg
         ref={knobRef}
@@ -244,7 +246,7 @@ export const Knob = ({
         </span>
       )}
       <span
-        style={{ width: size * 1.2, left: -size * 0.1, top: size - size * 0.1 }}
+        style={{ width: size * 1.2, top: size - size * 0.1 }}
         className="flex justify-between absolute"
       >
         {minLabel && (

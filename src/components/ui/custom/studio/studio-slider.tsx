@@ -7,12 +7,13 @@ import { cn } from "@/lib/utils";
 interface StudioSliderProps
   extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
   showTrack?: boolean;
+  thumbSize?: "sm" | "lg";
 }
 
 const StudioSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   StudioSliderProps
->(({ className, showTrack = true, ...props }, ref) => (
+>(({ className, showTrack = true, thumbSize, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
     className={cn(
@@ -41,8 +42,9 @@ const StudioSlider = React.forwardRef<
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb className="block cursor-grab rounded-none border-none">
       <SliderThumb
-        className="cursor-grab text-surface-6 disabled:pointer-events-none  opacity-100 disabled:opacity-50 hover:scale-105 active:cursor-grabbing"
+        className="cursor-grab text-surface-6 disabled:pointer-events-none opacity-100 disabled:opacity-50 hover:scale-105 active:cursor-grabbing"
         orientation={props.orientation ?? "vertical"}
+        size={thumbSize}
       />
     </SliderPrimitive.Thumb>
   </SliderPrimitive.Root>
