@@ -3,7 +3,7 @@ import { Effect } from "../../effect/effect";
 import { Band } from "./components";
 import { ToneAudioNode } from "tone";
 
-@model("AudioEngine/GraphicEQ")
+@model("AudioEngine/Effects/GraphicEQ")
 export class GraphicEQ extends ExtendedModel(Effect, {
   bands: prop<Band[]>(() => [
     new Band({ frequency: 20, gain: 0, Q: 1, type: "highpass" }),
@@ -46,14 +46,18 @@ export class GraphicEQ extends ExtendedModel(Effect, {
   }
 
   chain() {
-    this.input.chain(...this.bands.map((band) => band.filter), this.output);
+    this.input.chain(
+      ...this.bands.map((band) => band.filter),
+      this.output,
+      this.outputMeter
+    );
   }
 
-  connect(node?: ToneAudioNode): void {
+  connect(): void {
     this.chain();
   }
 
-  disconnect(node?: ToneAudioNode): void {
+  disconnect(): void {
     super.disconnect();
     this.disconnectBands();
   }

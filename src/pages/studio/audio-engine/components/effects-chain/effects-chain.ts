@@ -13,6 +13,7 @@ export class EffectsChain extends ExtendedModel(BaseAudioNodeWrapper, {
   output = new Tone.Channel();
 
   private isInputConnectedToOutput = false;
+  private previousLastEffect: Effect | null = null;
 
   sync() {
     this.disconnectRoutes();
@@ -28,9 +29,18 @@ export class EffectsChain extends ExtendedModel(BaseAudioNodeWrapper, {
       this.input.connect(this.effects[0].input);
       this.input.connect(this.effects[0].bypass);
 
-      this.effects.forEach((effect) => effect.connect());
-      this.effects[this.effects.length - 1].output.connect(this.output);
-      this.effects[this.effects.length - 1].bypass.connect(this.output);
+      this.effects.forEach((effect, i) => {
+        effect.connect();
+        if (i < this.effects.length - 1) {
+          const nextEffect = this.effects[i + 1];
+          effect.output.connect(nextEffect.input);
+          effect.output.connect(nextEffect.bypass);
+        } else {
+          effect.output.connect(this.output);
+          effect.bypass.connect(this.output);
+          this.previousLastEffect = effect;
+        }
+      });
     } else {
       this.input.connect(this.output);
       this.isInputConnectedToOutput = true;
@@ -38,6 +48,9 @@ export class EffectsChain extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   disconnectRoutes() {
+    if (this.previousLastEffect) {
+      this.previousLastEffect.output.disconnect();
+    }
     if (this.isInputConnectedToOutput) {
       this.input.disconnect(this.output);
       this.isInputConnectedToOutput = false;

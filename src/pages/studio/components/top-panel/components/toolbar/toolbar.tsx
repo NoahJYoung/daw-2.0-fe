@@ -103,7 +103,7 @@ export const Toolbar = observer(
               label: "Save",
               icon: IoMdSave,
               onClick: () => console.log(audioEngine.serialize()),
-              disabled: true,
+              // disabled: true,
             },
             {
               label: "Save As",

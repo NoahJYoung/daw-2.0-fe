@@ -29,8 +29,6 @@ export class Effect
   }
 
   sync() {
-    this.input.connect(this.inputMeter);
-    this.output.connect(this.outputMeter);
     this.disconnect();
     this.connect();
     if (this.mute) {
@@ -44,15 +42,20 @@ export class Effect
   }
 
   init() {
+    this.input.connect(this.inputMeter);
+    this.output.connect(this.outputMeter);
     this.sync();
   }
 
-  connect(node?: Tone.ToneAudioNode) {
-    throw new Error('Effect must provide implementation for method "Connect"');
+  connect() {
+    this.input.connect(this.bypass);
+    this.bypass.connect(this.output);
+    this.output.connect(this.outputMeter);
   }
 
-  disconnect(node?: Tone.ToneAudioNode) {
+  disconnect() {
     this.bypass.disconnect();
+    this.output.disconnect();
   }
 }
 

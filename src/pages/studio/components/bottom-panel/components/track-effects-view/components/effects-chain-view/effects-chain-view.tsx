@@ -56,6 +56,7 @@ export const EffectsChainView = observer(({ track }: EffectsChainViewProps) => {
       <ul className="w-full flex flex-col p-1 pr-1 gap-1 h-full max-h-[182px] overflow-y-auto styled-scrollbar">
         {effects.map((effect, i) => (
           <EffectsChainListItem
+            key={effect.id}
             onDelete={onDelete}
             isLastItem={i === effects.length - 1}
             track={track}
