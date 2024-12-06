@@ -1,7 +1,6 @@
 import { ExtendedModel, model, prop } from "mobx-keystone";
 import { Effect } from "../../effect/effect";
 import { Band } from "./components";
-import { ToneAudioNode } from "tone";
 
 @model("AudioEngine/Effects/GraphicEQ")
 export class GraphicEQ extends ExtendedModel(Effect, {
