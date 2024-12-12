@@ -26,12 +26,12 @@ import { MidiNote } from "./components/midi-note";
 import { EventData } from "./components/keyboard/types";
 import {
   blobToJsonObject,
+  generateOfflineSends,
   populateBufferCache,
   unzipProjectFile,
 } from "./helpers";
 import JSZip from "jszip";
 import { bufferToWav } from "../utils";
-
 export const mixerCtx = createContext<Mixer>();
 
 @model("AudioEngine")
@@ -303,20 +303,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const duration = this.getBounceEndFromLastClip(44100);
 
     const buffer = await Tone.Offline(() => {
-      const clonedEngine = clone(this);
-      const offlineAuxSendManager = new AuxSendManager({});
-      clonedEngine.auxSendManager.sends.forEach((send) => {
-        const from = clonedEngine.mixer.tracks.find(
-          (track) => track.onlineId === send.onlineFromId
-        );
-        const to = clonedEngine.mixer.tracks.find(
-          (track) => track.onlineId === send.onlineToId
-        );
-        if (from && to) {
-          offlineAuxSendManager.createAuxSend(from, to);
-        }
-      });
-      clonedEngine.setAuxSendManager(offlineAuxSendManager);
+      const clonedEngine = clone(this, { generateNewIds: false });
+      generateOfflineSends(clonedEngine);
       clonedEngine.play();
     }, duration);
 
