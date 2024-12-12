@@ -11,8 +11,20 @@ import {
   TopPanel,
   MainControls,
 } from "./components";
+import { useEffect } from "react";
+import { useApi } from "@/api";
+import { initBufferCache } from "./utils";
 
 export const Studio = observer(() => {
+  const api = useApi();
+
+  useEffect(() => {
+    const init = async () => {
+      await initBufferCache(api);
+    };
+    init();
+  }, [api]);
+
   return (
     <AudioEngineProvider>
       <UndoManagerProvider>

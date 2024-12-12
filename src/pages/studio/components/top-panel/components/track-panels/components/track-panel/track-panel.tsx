@@ -485,11 +485,11 @@ export const TrackPanel = observer(
                         label: t(`studio.trackPanel.inputOptions.${option}`),
                         value: option,
                       }))}
-                      value={track.input}
+                      value={track.inputType}
                       colorOffset={selectedBgOffset}
                       placeholder={t("studio.trackPanel.placeholders.input")}
                       icon={<MdOutlineSettingsInputComponent />}
-                      onChange={(input) => track.setInput(input)}
+                      onChange={(input) => track.setInputType(input)}
                     />
                     <StudioButton
                       className={settingsButtonClassName}

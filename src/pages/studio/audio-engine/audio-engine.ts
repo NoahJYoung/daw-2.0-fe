@@ -15,6 +15,7 @@ import {
   Clipboard,
   MidiClip,
   Metronome,
+  AuxSendManager,
 } from "./components";
 import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
@@ -38,6 +39,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   timeline: prop<Timeline>(() => new Timeline({})).withSetter(),
   mixer: prop<Mixer>(() => new Mixer({})).withSetter(),
+  auxSendManager: prop<AuxSendManager>(
+    () => new AuxSendManager({})
+  ).withSetter(),
   keyboard: prop<Keyboard>(() => new Keyboard({})).withSetter(),
   metronome: prop<Metronome>(() => new Metronome({})).withSetter(),
   projectId: prop<string | undefined>().withSetter(),
@@ -75,7 +79,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const recorder = new Tone.Recorder();
 
     activeTracks.forEach((activeTrack) => {
-      if (activeTrack.input === "mic") {
+      if (activeTrack.inputType === "mic") {
         activeTrack.mic.connect(recorder);
       }
     });
@@ -83,7 +87,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     await this.play();
     const shouldRecordAudio = this.mixer
       .getActiveTracks()
-      .some((track) => track.input === "mic");
+      .some((track) => track.inputType === "mic");
     if (shouldRecordAudio) {
       await recorder.start();
     }
@@ -97,7 +101,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       const stringifiedEvents = JSON.stringify(this.keyboard.events);
 
       activeTracks.forEach((track) => {
-        if (track.input === "mic") {
+        if (track.inputType === "mic") {
           const clip = new AudioClip({
             trackId: track.id,
             start,
@@ -111,7 +115,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           }
 
           track.createAudioClip(clip);
-        } else if (track.input === "midi") {
+        } else if (track.inputType === "midi") {
           if (this.keyboard.events.length) {
             const events = [
               ...JSON.parse(stringifiedEvents).map(
@@ -141,7 +145,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       this.keyboard.clearRecordedEvents();
 
       activeTracks.forEach((activeTrack) => {
-        if (activeTrack.input === "mic") {
+        if (activeTrack.inputType === "mic") {
           activeTrack.mic.disconnect(recorder);
         }
       });
@@ -252,6 +256,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
         const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
         const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+
         const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
         const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
         const loadedProjectId = fromSnapshot(settings.projectId) as string;
@@ -276,6 +281,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setProjectId(loadedProjectId);
         this.setProjectName(loadedProjectName);
         this.setMetronome(loadedMetronome);
+        const loadedAuxSendManager = fromSnapshot(
+          settings.auxSendManager
+        ) as AuxSendManager;
+
+        this.setAuxSendManager(loadedAuxSendManager);
       } else {
         throw new Error("No settings data found");
       }
@@ -294,6 +304,19 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
     const buffer = await Tone.Offline(() => {
       const clonedEngine = clone(this);
+      const offlineAuxSendManager = new AuxSendManager({});
+      clonedEngine.auxSendManager.sends.forEach((send) => {
+        const from = clonedEngine.mixer.tracks.find(
+          (track) => track.onlineId === send.onlineFromId
+        );
+        const to = clonedEngine.mixer.tracks.find(
+          (track) => track.onlineId === send.onlineToId
+        );
+        if (from && to) {
+          offlineAuxSendManager.createAuxSend(from, to);
+        }
+      });
+      clonedEngine.setAuxSendManager(offlineAuxSendManager);
       clonedEngine.play();
     }, duration);
 

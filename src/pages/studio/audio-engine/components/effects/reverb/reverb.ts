@@ -2,10 +2,11 @@ import { ExtendedModel, model, prop } from "mobx-keystone";
 import { Effect } from "../../effect/effect";
 import { action, observable } from "mobx";
 import * as Tone from "tone";
+import { audioBufferCache } from "../../audio-buffer-cache";
 
 @model("AudioEngine/Effects/Reverb")
 export class Reverb extends ExtendedModel(Effect, {
-  url: prop<string | undefined>(undefined).withSetter(),
+  selectedReverb: prop<string | null>(null).withSetter(),
 }) {
   convolver = new Tone.Convolver();
   private hasConnected = false;
@@ -23,14 +24,11 @@ export class Reverb extends ExtendedModel(Effect, {
       this.disconnect();
     }
     this.connect();
-    if (this.url) {
-      this.convolver.load(this.url);
-      this.convolver.set({
-        onload: () => {
-          alert("LOADED");
-          this.setLoading(false);
-        },
-      });
+    if (this.selectedReverb) {
+      if (!audioBufferCache.has(this.selectedReverb)) {
+        throw new Error("Convolution file not in Audio Cache");
+      }
+      this.convolver.buffer = audioBufferCache.get(this.selectedReverb);
     }
   }
 
@@ -42,11 +40,6 @@ export class Reverb extends ExtendedModel(Effect, {
   @action
   setLoading(state: boolean) {
     this.loading = state;
-  }
-
-  loadFile(url: string) {
-    this.setLoading(true);
-    this.setUrl(url);
   }
 
   connect(): void {

@@ -1,24 +1,25 @@
-import React from "react";
 import { Reverb } from "@/pages/studio/audio-engine/components/effects";
 import { EffectViewComponentObject, EffectViewProps } from "../../types";
 import { observer } from "mobx-react-lite";
+import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
+import { reverbSelectItems } from "@/pages/studio/audio-engine/components/effects/reverb/types";
 
 const ReverbTopView = () => <div>Reverb Top View</div>;
 
 const ReverbBottomView = observer(
   ({ effect: reverb }: EffectViewProps<Reverb>) => {
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const objectUrl = URL.createObjectURL(file);
-        reverb.loadFile(objectUrl);
-      }
+    const handleChange = (value: string) => {
+      reverb.setSelectedReverb(value);
     };
 
     return (
-      <div className="flex flex-col gap-1 h-full w-full">
-        <input type="file" onChange={handleFileChange} accept="audio/*" />
-      </div>
+      <StudioDropdown
+        options={reverbSelectItems}
+        value={reverb.selectedReverb}
+        placeholder="Select a reverb type"
+        // icon={<FaGuitar />}
+        onChange={handleChange}
+      />
     );
   }
 );

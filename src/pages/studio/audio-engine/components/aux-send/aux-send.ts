@@ -9,6 +9,8 @@ export class AuxSend extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   fromRef: prop<Ref<Track>>().withSetter(),
   toRef: prop<Ref<Track>>().withSetter(),
+  onlineFromId: prop<string | null>(null).withSetter(),
+  onlineToId: prop<string | null>(null).withSetter(),
   volume: prop(0).withSetter(),
   mute: prop(false).withSetter(),
 }) {
@@ -29,11 +31,17 @@ export class AuxSend extends ExtendedModel(BaseAudioNodeWrapper, {
 
   init() {
     this.sync();
+    this.setOnlineFromId(this.from.id);
+    this.setOnlineToId(this.to.id);
   }
 
   connect() {
-    this.from.channel.connect(this.channel);
-    this.channel.connect(this.to.channel);
+    try {
+      this.from.channel.connect(this.channel);
+      this.channel.connect(this.to.channel);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   disconnect() {

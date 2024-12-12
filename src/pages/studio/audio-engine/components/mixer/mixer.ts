@@ -13,7 +13,6 @@ import { clipRef, trackRef } from "../refs";
 import { Master } from "../master";
 import { PanelMode } from "./types";
 import { Clip } from "../types";
-import { AuxSendManager } from "../aux-send-manager";
 
 @model("AudioEngine/Mixer")
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -24,7 +23,6 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   topPanelHeight: prop<number>(window.innerHeight - 156),
   featuredClipRef: prop<Ref<Clip> | null>(null).withSetter(),
   featuredTrackRef: prop<Ref<Track> | null>(null).withSetter(),
-  auxSendManager: prop<AuxSendManager>(() => new AuxSendManager({})),
   panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
   init() {

@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import { routes } from "./routes";
 import { useThemeContext } from "./hooks";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./i18n";
 
 const queryClient = new QueryClient();
@@ -13,10 +14,12 @@ function App() {
 
   return (
     <div className={`w-full ${theme}`}>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </QueryClientProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </GoogleOAuthProvider>
+      <Toaster />
     </div>
   );
 }

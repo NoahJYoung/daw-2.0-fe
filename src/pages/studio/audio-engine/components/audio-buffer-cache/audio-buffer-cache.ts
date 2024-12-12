@@ -1,4 +1,10 @@
 import * as Tone from "tone";
+
+interface clearCacheOptions {
+  only?: string[];
+  except?: string[];
+}
+
 export class AudioBufferCache {
   private cache: Map<string, Tone.ToneAudioBuffer>;
 
@@ -41,8 +47,27 @@ export class AudioBufferCache {
     this.cache.delete(id);
   }
 
-  clear() {
-    this.cache.clear();
+  clear(options?: clearCacheOptions) {
+    if (!options) {
+      this.cache.clear();
+      return;
+    }
+
+    const { only, except } = options;
+
+    if (only && only.length > 0) {
+      for (const key of only) {
+        this.cache.delete(key);
+      }
+    } else if (except && except.length > 0) {
+      for (const key of Array.from(this.cache.keys())) {
+        if (!except.includes(key)) {
+          this.cache.delete(key);
+        }
+      }
+    } else {
+      this.cache.clear();
+    }
   }
 
   size() {

@@ -27,6 +27,7 @@ import { EffectsChain } from "../effects-chain";
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
+  onlineId: prop<string | null>(null).withSetter(),
   name: prop<string>("New Track").withSetter(),
   clips: prop<Clip[]>(() => []),
   effectsChain: prop<EffectsChain>(() => new EffectsChain({})),
@@ -42,7 +43,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   laneHeight: prop(INITIAL_LANE_HEIGHT),
   volume: prop(0).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
-  input: prop<string | null>("mic"),
+  inputType: prop<string | null>("mic"),
   synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
 }) {
   channel = new Tone.Channel();
@@ -59,25 +60,27 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   sync() {
     const { volume, pan, mute } = this;
     this.synth.connect(this.channel);
-    this.channel.volume.linearRampTo(volume, 0.01);
-    this.channel.pan.linearRampTo(pan, 0.01);
+    this.output.volume.linearRampTo(volume, 0.01);
+    this.output.pan.linearRampTo(pan, 0.01);
     if (mute) {
       this.channel.volume.value = -Infinity;
+    } else {
+      this.channel.volume.value = 0;
+    }
+    if (this.active) {
+      if (this.inputType === "mic") {
+        this.mic.connect(this.splitter);
+      } else {
+        this.instrument.connect(this.splitter);
+      }
+    } else {
+      this.output.connect(this.splitter);
     }
     this.connectClipsToOutput();
   }
 
   init() {
     this.sync();
-    if (this.active) {
-      if (this.input === "mic") {
-        this.mic.connect(this.splitter);
-      } else {
-        this.instrument.connect(this.splitter);
-      }
-    } else {
-      this.channel.connect(this.splitter);
-    }
     this.splitter.connect(this.meterL, 0);
     this.splitter.connect(this.meterR, 1);
   }
@@ -170,22 +173,22 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   setActive(value: boolean) {
-    if (this.input === "mic") {
+    if (this.inputType === "mic") {
       if (value) {
         this.openMic();
-        this.channel.disconnect(this.splitter);
+        this.output.disconnect(this.splitter);
         this.mic.connect(this.splitter);
       } else {
         this.mic.close();
-        this.channel.connect(this.splitter);
+        this.output.connect(this.splitter);
         this.mic.disconnect(this.splitter);
       }
     } else {
       if (value) {
-        this.channel.disconnect(this.splitter);
+        this.output.disconnect(this.splitter);
         this.instrument.connect(this.splitter);
       } else {
-        this.channel.connect(this.splitter);
+        this.output.connect(this.splitter);
         this.instrument.disconnect(this.splitter);
       }
     }
@@ -193,13 +196,13 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   @modelAction
-  setInput(value: string) {
+  setInputType(value: string) {
     if (this.active) {
       this.setActive(false);
-      this.input = value;
+      this.inputType = value;
       this.setActive(true);
     } else {
-      this.input = value;
+      this.inputType = value;
     }
   }
 

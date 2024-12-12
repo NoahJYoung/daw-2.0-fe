@@ -10,8 +10,7 @@ interface TrackEffectsViewProps {
 }
 
 export const TrackEffectsView = observer(({ track }: TrackEffectsViewProps) => {
-  const { mixer } = useAudioEngine();
-  const { auxSendManager } = mixer;
+  const { auxSendManager, mixer } = useAudioEngine();
 
   const sends = auxSendManager.getSendsByTrack(track);
   const receives = auxSendManager.getReceivesByTrack(track);
