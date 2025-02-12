@@ -256,7 +256,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
         const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
         const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
-
         const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
         const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
         const loadedProjectId = fromSnapshot(settings.projectId) as string;

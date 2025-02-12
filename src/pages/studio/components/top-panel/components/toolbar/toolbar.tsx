@@ -14,7 +14,7 @@ import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
 import { observer } from "mobx-react-lite";
 import { TRACK_PANEL_EXPANDED_WIDTH } from "@/pages/studio/utils/constants";
-import { useThemeContext } from "@/hooks";
+import { useThemeContext, useUser } from "@/hooks";
 import { useTranslation } from "react-i18next";
 import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
 import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
@@ -22,6 +22,7 @@ import { FaFileExport as ExportIcon } from "react-icons/fa";
 import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
+import { useParams } from "react-router-dom";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -30,6 +31,8 @@ interface ToolbarProps {
 
 export const Toolbar = observer(
   ({ panelExpanded, togglePanelView }: ToolbarProps) => {
+    const { user } = useUser();
+    const { projectId } = useParams();
     const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
     const audioEngine = useAudioEngine();
@@ -103,13 +106,13 @@ export const Toolbar = observer(
               label: "Save",
               icon: IoMdSave,
               onClick: () => console.log(audioEngine.serialize()),
-              // disabled: true,
+              disabled: !user,
             },
             {
               label: "Save As",
               icon: SaveAsIcon,
               onClick: () => console.log(audioEngine.serialize()),
-              disabled: true,
+              disabled: !projectId,
             },
             { separator: true },
             {
@@ -125,11 +128,10 @@ export const Toolbar = observer(
           ]}
         />
 
-        <StudioDropdownMenu
-          triggerIcon={IoIosSettings}
-          title={t("studio.toolbar.settings")}
-          onValueChange={() => {}}
-          options={[{ label: "Toggle Theme", onClick: toggleTheme }]}
+        <StudioButton
+          title={t("studio.toolbar.userMenu")}
+          icon={PiUserList}
+          onClick={() => {}}
         />
 
         <StudioButton
@@ -168,10 +170,11 @@ export const Toolbar = observer(
           onClick={async () => audioEngine.getOfflineBounce()}
         />
 
-        <StudioButton
-          title={t("studio.toolbar.userMenu")}
-          icon={PiUserList}
-          onClick={() => {}}
+        <StudioDropdownMenu
+          triggerIcon={IoIosSettings}
+          title={t("studio.toolbar.settings")}
+          onValueChange={() => {}}
+          options={[{ label: "Toggle Theme", onClick: toggleTheme }]}
         />
       </div>
     );

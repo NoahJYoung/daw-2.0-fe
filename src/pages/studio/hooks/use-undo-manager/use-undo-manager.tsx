@@ -8,25 +8,25 @@ interface UseUndoManagerContextValue {
   undoStore: UndoStore;
 }
 
-const AudioEngineContext = createContext<UseUndoManagerContextValue | null>(
+const UndoManagerContext = createContext<UseUndoManagerContextValue | null>(
   null
 );
 
 export const useUndoManager = (): UseUndoManagerContextValue => {
-  const context = useContext(AudioEngineContext);
+  const context = useContext(UndoManagerContext);
   if (!context) {
     throw new Error(
-      "useAudioEngine must be used within an ActionHistoryProvider"
+      "useUndoManager must be used within an ActionHistoryProvider"
     );
   }
   return context;
 };
 
-interface AudioEngineProviderProps {
+interface UndoManagerProviderProps {
   children: React.ReactNode;
 }
 
-export const UndoManagerProvider: React.FC<AudioEngineProviderProps> = ({
+export const UndoManagerProvider: React.FC<UndoManagerProviderProps> = ({
   children,
 }) => {
   const audioEngine = useAudioEngine();
@@ -43,8 +43,8 @@ export const UndoManagerProvider: React.FC<AudioEngineProviderProps> = ({
   const value = { undoManager, undoStore };
 
   return (
-    <AudioEngineContext.Provider value={value}>
+    <UndoManagerContext.Provider value={value}>
       {children}
-    </AudioEngineContext.Provider>
+    </UndoManagerContext.Provider>
   );
 };

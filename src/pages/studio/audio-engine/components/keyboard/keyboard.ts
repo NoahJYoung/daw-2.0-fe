@@ -36,7 +36,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
     };
 
     const activeTracksWithKeyboardInput = mixer.tracks.filter(
-      (track) => track.active && track.input === "midi"
+      (track) => track.active && track.inputType === "midi"
     );
 
     activeTracksWithKeyboardInput.forEach((track) =>
@@ -53,7 +53,7 @@ export class Keyboard extends ExtendedModel(BaseAudioNodeWrapper, {
     const pitch = pitchTuple.join("");
 
     const activeTracksWithKeyboardInput = mixer.tracks.filter(
-      (track) => track.active && track.input === "midi"
+      (track) => track.active && track.inputType === "midi"
     );
 
     activeTracksWithKeyboardInput.forEach((track) =>
