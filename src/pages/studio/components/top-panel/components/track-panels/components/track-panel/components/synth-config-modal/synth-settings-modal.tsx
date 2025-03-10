@@ -43,7 +43,7 @@ export const SynthSettingsModal = observer(
     };
 
     const active =
-      (track.input === "midi" && track.active) ||
+      (track.inputType === "midi" && track.active) ||
       state === AudioEngineState.playing ||
       state === AudioEngineState.recording;
 

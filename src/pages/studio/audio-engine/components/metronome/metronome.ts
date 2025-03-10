@@ -41,9 +41,19 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   start() {
     const pulse = this.timeSignature % 1 === 0 ? "4n" : "8n";
     Tone.getTransport().cancel();
+    const position = Tone.getTransport().position.toString();
+    const [bars, beats] = position.split(":");
+
+    let barCounter = beats === "0" ? -1 : parseInt(bars);
+
     const eventId = Tone.getTransport().scheduleRepeat(
       (time) => {
-        this.voice.triggerAttackRelease("C5", "8n", time);
+        const position = Tone.getTransport().position.toString();
+        const [bars] = position.split(":");
+        const currentBars = parseInt(bars);
+        const isFirstBeat = barCounter !== currentBars;
+        this.voice.triggerAttackRelease(isFirstBeat ? "G5" : "C5", "8n", time);
+        barCounter = currentBars;
       },
       pulse,
       "0m"
