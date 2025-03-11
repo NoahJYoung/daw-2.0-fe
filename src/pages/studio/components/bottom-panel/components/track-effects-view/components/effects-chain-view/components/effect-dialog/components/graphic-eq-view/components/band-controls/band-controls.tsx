@@ -3,12 +3,14 @@ import { Band } from "@/pages/studio/audio-engine/components/effects/graphic-eq/
 import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { NumberInput } from "./components";
+import { Track } from "@/pages/studio/audio-engine/components";
 
 interface BandControlsProps {
   band: Band;
+  track: Track;
 }
 
-export const BandControls = observer(({ band }: BandControlsProps) => {
+export const BandControls = observer(({ band, track }: BandControlsProps) => {
   const { onValueChange: onGainChange, onValueCommit: onGainCommit } =
     useDeferredUpdate<number>(band.gain, (value) => band.setGain(value));
 
@@ -36,6 +38,9 @@ export const BandControls = observer(({ band }: BandControlsProps) => {
     return (Math.log(frequency) - logMin) / (logMax - logMin);
   };
 
+  const [r, g, b] = track.rgb;
+  const trackColor = `rgb(${r}, ${g}, ${b})`;
+
   return (
     <div className="w-full h-full flex items-center justify-evenly shadow-sm border rounded-md z-20 mt-1">
       <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
@@ -47,6 +52,7 @@ export const BandControls = observer(({ band }: BandControlsProps) => {
           min={0}
           max={1}
           step={0.01}
+          color={trackColor}
           size={48}
           showValue={false}
         />
@@ -59,28 +65,32 @@ export const BandControls = observer(({ band }: BandControlsProps) => {
         />
       </span>
 
-      <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
-        <span className="font-bold text-xs w-full">Gain</span>
-        <Knob
-          onValueChange={(value) => onGainChange(value)}
-          onValueCommit={(value) => onGainCommit(value)}
-          value={band.gain}
-          min={-10}
-          max={10}
-          step={0.01}
-          size={48}
-          double={true}
-          showValue={false}
-        />
-        <NumberInput
-          min={-10.0}
-          max={10.0}
-          step={0.01}
-          value={band.gain}
-          onCommit={onGainCommit}
-          suffix="dB"
-        />
-      </span>
+      {band.type !== "highpass" && (
+        <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
+          <span className="font-bold text-xs w-full">Gain</span>
+          <Knob
+            onValueChange={(value) => onGainChange(value)}
+            onValueCommit={(value) => onGainCommit(value)}
+            value={band.gain}
+            min={-10}
+            max={10}
+            color={trackColor}
+            step={0.01}
+            size={48}
+            double={true}
+            showValue={false}
+          />
+          <NumberInput
+            min={-10.0}
+            max={10.0}
+            step={0.01}
+            value={band.gain}
+            allowDecimal
+            onCommit={onGainCommit}
+            suffix="dB"
+          />
+        </span>
+      )}
 
       <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
         <span className="font-bold text-xs w-full">Q</span>
@@ -91,6 +101,7 @@ export const BandControls = observer(({ band }: BandControlsProps) => {
           min={0.01}
           max={10}
           step={0.01}
+          color={trackColor}
           size={48}
           double={true}
           showValue={false}
@@ -100,6 +111,7 @@ export const BandControls = observer(({ band }: BandControlsProps) => {
           min={0.01}
           max={10}
           value={band.Q}
+          allowDecimal
           onCommit={onQCommit}
         />
       </span>

@@ -6,6 +6,6 @@ export interface EffectViewProps<T = Effect> {
 }
 
 export interface EffectViewComponentObject<T = Effect> {
-  Upper: () => React.ReactNode;
+  Upper: ({ track, effect }: EffectViewProps<T>) => React.ReactNode;
   Lower: ({ track, effect }: EffectViewProps<T>) => React.ReactNode;
 }

@@ -41,8 +41,8 @@ export const EffectDialog = observer(
         triggerClassName={triggerClassName}
       >
         <div className="h-full flex flex-col gap-1 p-1">
-          <div className="w-full h-1/2 shadow-sm border rounded-md p-2">
-            {<Effect.Upper />}
+          <div className="w-full h-1/2 shadow-sm border rounded-md">
+            {<Effect.Upper effect={effect} track={track} />}
           </div>
           <div className="flex items-center justify-between w-full h-1/2 p-1">
             <div className="w-[58px]">
