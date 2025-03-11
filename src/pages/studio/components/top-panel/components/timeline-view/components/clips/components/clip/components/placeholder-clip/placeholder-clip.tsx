@@ -4,7 +4,6 @@ import { useAudioEngine, useRequestAnimationFrame } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import * as Tone from "tone";
-import { usePlaceholderWaveform } from "./hooks";
 import { EventData } from "@/pages/studio/audio-engine/components/keyboard/types";
 interface PlaceholderClipProps {
   startPosition: number | null;
@@ -45,25 +44,10 @@ export const getPlaceholderNoteWidth = (
   return timeline.samplesToPixels(note.off - note.on);
 };
 
-function concatenateFloat32Arrays(arrays: Float32Array[]) {
-  const totalLength = arrays.reduce((acc, array) => acc + array.length, 0);
-
-  const result = new Float32Array(totalLength);
-
-  let offset = 0;
-  arrays.forEach((array) => {
-    result.set(array, offset);
-    offset += array.length;
-  });
-
-  return result;
-}
-
 export const PlaceholderClip = observer(
   ({ startPosition, track }: PlaceholderClipProps) => {
     const [width, setWidth] = useState(0);
-    const { canvasRef, height, setWaveformData, waveformData } =
-      usePlaceholderWaveform(track);
+
     const audioEngine = useAudioEngine();
     const { timeline, mixer, keyboard } = audioEngine;
 
@@ -81,16 +65,6 @@ export const PlaceholderClip = observer(
           );
           const newWidth = timelinePosition - startPixels;
           setWidth(newWidth);
-          if (waveformData) {
-            setWaveformData(
-              concatenateFloat32Arrays([
-                waveformData,
-                track.waveform.getValue(),
-              ])
-            );
-          } else {
-            setWaveformData(track.waveform.getValue());
-          }
         }
       },
       {
@@ -130,15 +104,7 @@ export const PlaceholderClip = observer(
           opacity: 0.5,
         }}
       >
-        {track.input === "mic" ? (
-          <canvas
-            style={{ background: "transparent" }}
-            className="rounded-xl flex-shrink-0"
-            ref={canvasRef}
-            width={width}
-            height={height}
-          />
-        ) : (
+        {track.inputType === "mic" ? null : (
           <svg
             width={width}
             height={track!.laneHeight - 30}

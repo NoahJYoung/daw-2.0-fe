@@ -111,6 +111,7 @@ export const TrackPanel = observer(
       }
       track.setIsResizing(false);
       setIsDragging(false);
+      setYOffset(0);
       dragStartYPosition.current = null;
       document.body.style.userSelect = "";
     }, [isDragging, mixer.tracks, newTrackIndex, trackNumber, track]);
@@ -258,16 +259,6 @@ export const TrackPanel = observer(
       }
     };
 
-    const getIndicatorPosition = () => {
-      if (newTrackIndex) {
-        return newTrackIndex > trackNumber - 1
-          ? mixer.getCombinedLaneHeightsAtIndex(newTrackIndex + 1)
-          : mixer.getCombinedLaneHeightsAtIndex(newTrackIndex) +
-              mixer.tracks[newTrackIndex].laneHeight;
-      }
-      return 0;
-    };
-
     const handleToggleExpand = (e: React.MouseEvent) => {
       e.stopPropagation();
       undoManager.withoutUndo(() => {
@@ -291,15 +282,6 @@ export const TrackPanel = observer(
     return (
       <>
         {isDragging && <div style={{ height: track.laneHeight, zIndex: -1 }} />}
-        {isDragging && !!newTrackIndex && (
-          <div
-            className="absolute w-[249px] h-[2px] bg-surface-5 w-full rounded-xl"
-            style={{
-              top: getIndicatorPosition(),
-              zIndex: 2,
-            }}
-          />
-        )}
         <div
           onClick={handleSelectTrack}
           onDoubleClick={handleDoubleClick}
@@ -350,7 +332,7 @@ export const TrackPanel = observer(
           </span>
           <div
             onMouseDown={handleDragStart}
-            style={{ cursor: isDragging ? "grabbing" : "auto" }}
+            style={{ cursor: isDragging ? "grabbing" : "grab" }}
             className={`relative h-full select-none rounded-xxs p-1 w-9 flex-shrink-0 flex items-center justify-center bg-surface-${
               2 + selectedBgOffset
             } text-surface-${
