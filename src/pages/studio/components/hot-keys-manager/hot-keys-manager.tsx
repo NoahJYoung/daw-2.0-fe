@@ -24,12 +24,6 @@ export const HotKeysManager = observer(() => {
     event.preventDefault();
     if (undoManager.canUndo) {
       undoManager.undo();
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Oops!",
-        description: "Can't undo",
-      });
     }
   });
 
@@ -37,12 +31,6 @@ export const HotKeysManager = observer(() => {
     event.preventDefault();
     if (undoManager.canRedo) {
       undoManager.redo();
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Oops!",
-        description: "Can't redo",
-      });
     }
   });
 
