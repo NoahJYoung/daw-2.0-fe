@@ -1,6 +1,7 @@
 import * as Tone from "tone";
-import { useEffect, useRef, useState } from "react";
-import { useRequestAnimationFrame } from "@/pages/studio/hooks";
+import { useEffect, useRef } from "react";
+import { useAudioEngine, useRequestAnimationFrame } from "@/pages/studio/hooks";
+import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 
 const drawMeter = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -42,15 +43,9 @@ interface MeterViewProps {
   active?: boolean;
 }
 
-export const MeterView = ({
-  meter,
-  height,
-  width,
-  active,
-  stopDelayMs = 0,
-}: MeterViewProps) => {
-  const [enabled, setEnabled] = useState(active);
+export const MeterView = ({ meter, height, width, active }: MeterViewProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const audioEngine = useAudioEngine();
 
   useRequestAnimationFrame(
     () => {
@@ -60,29 +55,15 @@ export const MeterView = ({
       }
     },
     {
-      enabled,
+      enabled: active,
     }
   );
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    if (active) {
-      setEnabled(true);
-    } else if (stopDelayMs > 0) {
-      timeoutId = setTimeout(() => {
-        setEnabled(false);
-      }, stopDelayMs);
-    } else {
-      setEnabled(false);
+    if ([AudioEngineState.stopped].includes(audioEngine.state)) {
+      canvasRef.current?.getContext("2d")?.clearRect(0, 0, width, height);
     }
-
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [active, stopDelayMs]);
+  }, [audioEngine.state, height, width]);
 
   return (
     <div

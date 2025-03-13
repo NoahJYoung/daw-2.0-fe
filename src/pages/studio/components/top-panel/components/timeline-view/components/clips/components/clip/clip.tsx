@@ -127,12 +127,17 @@ export const Clip = observer(
 
     const handleDoubleClick = (e: React.MouseEvent) => {
       undoManager.withoutUndo(() => {
-        mixer.selectFeaturedTrack(track);
-        mixer.selectFeaturedClip(clip);
-        mixer.setPanelMode(
-          clip.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
-        );
-        expandBottomPanelIfCollapsed();
+        // TODO: Remove this when audio clip zoom view is implemented
+        if (clip.type === "midi") {
+          // mixer.setPanelMode(
+          //   clip.type === "audio" ? "WAVEFORM_VIEW" : "PIANO_ROLL"
+          // );
+          mixer.selectFeaturedTrack(track);
+          mixer.selectFeaturedClip(clip);
+          mixer.setPanelMode("PIANO_ROLL");
+          expandBottomPanelIfCollapsed();
+        }
+
         if (!e.ctrlKey) {
           mixer.unselectAllTracks();
         }

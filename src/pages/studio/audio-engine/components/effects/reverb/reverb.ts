@@ -2,14 +2,16 @@ import { ExtendedModel, model, prop } from "mobx-keystone";
 import { Effect } from "../../effect/effect";
 import { action, observable } from "mobx";
 import * as Tone from "tone";
-import { audioBufferCache } from "../../audio-buffer-cache";
 
 @model("AudioEngine/Effects/Reverb")
 export class Reverb extends ExtendedModel(Effect, {
-  selectedReverb: prop<string | null>(null).withSetter(),
+  wet: prop<number>(1).withSetter(),
+  decay: prop<number>(2.5).withSetter(),
+  preDelay: prop<number>(0.01).withSetter(),
 }) {
-  convolver = new Tone.Convolver();
+  private reverb = new Tone.Reverb(this.decay);
   private hasConnected = false;
+  private volumeCompensator = new Tone.Gain(18);
 
   @observable
   loading: boolean = false;
@@ -23,17 +25,19 @@ export class Reverb extends ExtendedModel(Effect, {
     if (this.hasConnected) {
       this.disconnect();
     }
+    const { wet, decay, preDelay } = this;
+    this.reverb.set({ wet, decay, preDelay });
     this.connect();
-    if (this.selectedReverb) {
-      if (!audioBufferCache.has(this.selectedReverb)) {
-        throw new Error("Convolution file not in Audio Cache");
-      }
-      this.convolver.buffer = audioBufferCache.get(this.selectedReverb);
+    if (this.mute) {
+      this.volumeCompensator.set({ gain: 0 });
+    } else {
+      this.volumeCompensator.set({ gain: 6 });
     }
   }
 
   init() {
     super.init();
+
     this.sync();
   }
 
@@ -44,13 +48,15 @@ export class Reverb extends ExtendedModel(Effect, {
 
   connect(): void {
     super.connect();
-    this.input.connect(this.convolver);
-    this.convolver.connect(this.output);
+    this.input.connect(this.reverb);
+    this.reverb.connect(this.volumeCompensator);
+    this.volumeCompensator.connect(this.output);
     this.hasConnected = true;
   }
 
   disconnect(): void {
     super.disconnect();
-    this.convolver.disconnect();
+    this.reverb.disconnect();
+    this.hasConnected = false;
   }
 }

@@ -117,6 +117,9 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @action
   selectFeaturedClip(clip: Clip) {
+    // TODO: Remove this when audio clip zoom view is implemented
+    if (clip.type === "audio") return;
+
     if (clip && !this.tracks.some((track) => track.clips.includes(clip)))
       throw new Error("unknown clip");
 

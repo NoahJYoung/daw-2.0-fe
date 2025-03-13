@@ -12,6 +12,8 @@ export class GraphicEQ extends ExtendedModel(Effect, {
   ]).withSetter(),
   selectedBandId: prop<string | undefined>().withSetter(),
 }) {
+  private hasConnected = false;
+
   fft = new Tone.Analyser({
     type: "fft",
     size: 256,
@@ -63,8 +65,10 @@ export class GraphicEQ extends ExtendedModel(Effect, {
 
   sync() {
     super.sync();
-    this.disconnectBands();
-    this.chain();
+    if (this.hasConnected) {
+      this.disconnect();
+    }
+    this.connect();
   }
 
   init() {
@@ -87,11 +91,14 @@ export class GraphicEQ extends ExtendedModel(Effect, {
   }
 
   connect(): void {
+    super.connect();
     this.chain();
+    this.hasConnected = true;
   }
 
   disconnect(): void {
     super.disconnect();
     this.disconnectBands();
+    this.hasConnected = false;
   }
 }
