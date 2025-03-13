@@ -95,7 +95,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
           />
         ) : (
           <span className="text-sm" style={{ marginTop: "0.5rem" }}>
-            Disabled
+            N/A
           </span>
         )}
       </span>
@@ -126,7 +126,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
           />
         ) : (
           <span className="text-sm" style={{ marginTop: "0.5rem" }}>
-            Disabled
+            N/A
           </span>
         )}
       </span>

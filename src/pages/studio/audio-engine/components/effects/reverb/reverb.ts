@@ -11,7 +11,9 @@ export class Reverb extends ExtendedModel(Effect, {
 }) {
   private reverb = new Tone.Reverb(this.decay);
   private hasConnected = false;
-  private volumeCompensator = new Tone.Gain(18);
+  private volumeCompensator = new Tone.Gain(
+    Math.max(14 * this.wet - 1.5 * this.decay, 1)
+  );
 
   @observable
   loading: boolean = false;
@@ -26,18 +28,21 @@ export class Reverb extends ExtendedModel(Effect, {
       this.disconnect();
     }
     const { wet, decay, preDelay } = this;
-    this.reverb.set({ wet, decay, preDelay });
+    this.reverb.set({ decay, preDelay });
+    this.reverb.wet.linearRampTo(wet, 0.2);
+
     this.connect();
     if (this.mute) {
       this.volumeCompensator.set({ gain: 0 });
     } else {
-      this.volumeCompensator.set({ gain: 6 });
+      this.volumeCompensator.set({
+        gain: Math.max(14 * this.wet - 1.5 * this.decay, 1),
+      });
     }
   }
 
   init() {
     super.init();
-
     this.sync();
   }
 
