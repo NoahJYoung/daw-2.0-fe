@@ -29,7 +29,6 @@ export const AudioLoop = observer(
     clipLeft,
     selected,
     isLooping,
-    // scrollLeft,
     loopOffset,
     onMouseEnter,
     onMouseLeave,
@@ -40,12 +39,10 @@ export const AudioLoop = observer(
       width: clipWidth,
       height,
       peakChunks,
-      // samplesPerPixel,
       loopWidth,
     } = useWaveform(clip, track, { loop: true, loopOffset, selected });
 
     const canvasRefs = useRef<HTMLCanvasElement[][]>([]);
-    const lastLoopRefs = useRef<HTMLCanvasElement[]>([]);
 
     const loops = Array.from({
       length: Math.floor(
@@ -56,46 +53,6 @@ export const AudioLoop = observer(
     if (!canvasRefs.current.length) {
       canvasRefs.current = loops.map(() => []);
     }
-
-    // useLayoutEffect(() => {
-    //   peakChunks.forEach((chunk, i) => {
-    //     loops.forEach((_, loopIndex) => {
-    //       const canvas = canvasRefs.current[loopIndex][i];
-    //       const loopLeft = clipLeft + clipWidth * (loopIndex + 1);
-
-    //     //   if (
-    //     //     canvas &&
-    //     //     !track.isResizing &&
-    //     //     isChunkVisible(chunk, i, loopLeft, scrollLeft)
-    //     //   ) {
-    //     //     drawWaveform(chunk, canvas);
-    //     //   }
-    //     // });
-
-    //     const lastCanvas = lastLoopRefs.current[i];
-    //     const lastLoopLeft = clipLeft + clipWidth + clipWidth * loops.length;
-
-    //     // if (
-    //     //   lastCanvas &&
-    //     //   !track.isResizing &&
-    //     //   isChunkVisible(chunk, i, lastLoopLeft, scrollLeft)
-    //     // ) {
-    //     //   drawWaveform(chunk, lastCanvas);
-    //     // }
-    //   });
-    // }, [
-    //   clip.id,
-    //   clipLeft,
-    //   peakChunks,
-    //   samplesPerPixel,
-    //   track.isResizing,
-    //   isLooping,
-    //   loops.length,
-    //   loops,
-    //   scrollLeft,
-    //   clipWidth,
-    //   loopOffset,
-    // ]);
 
     return (
       <div
@@ -134,32 +91,7 @@ export const AudioLoop = observer(
             background: color,
             top,
           }}
-        >
-          <span className="flex items-center pl-[2px] pt-[2px] pb-[4px]">
-            <p
-              style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
-              className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
-            >
-              Loop
-            </p>
-          </span>
-          <div className="flex">
-            {!isLooping &&
-              peakChunks.map((chunk, i) => (
-                <canvas
-                  key={`loop-${clip.id}-${i}-last`}
-                  ref={(el) => {
-                    if (el) {
-                      lastLoopRefs.current[i] = el;
-                    }
-                  }}
-                  className="rounded-xl"
-                  width={chunk.length}
-                  height={height}
-                />
-              ))}
-          </div>
-        </div>
+        />
       </div>
     );
   }

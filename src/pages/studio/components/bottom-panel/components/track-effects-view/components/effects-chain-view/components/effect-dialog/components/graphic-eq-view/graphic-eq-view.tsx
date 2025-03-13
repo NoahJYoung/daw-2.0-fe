@@ -2,7 +2,12 @@ import { GraphicEQ } from "@/pages/studio/audio-engine/components/effects";
 import { EffectViewComponentObject, EffectViewProps } from "../../types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { observer } from "mobx-react-lite";
-import { BandControls, CenterFrequency, EQGrid } from "./components";
+import {
+  BandControls,
+  CenterFrequency,
+  EQGrid,
+  FFTVisualizer,
+} from "./components";
 import * as d3 from "d3";
 import { Point } from "./types";
 import { generateEQCurvePoints, getBandIcon } from "./helpers";
@@ -54,6 +59,11 @@ const GraphicEQTopView = observer(
 
     return (
       <>
+        <FFTVisualizer
+          graphicEQ={graphicEQ}
+          width={width - 20}
+          height={height - 20}
+        />
         <svg width={width} height={height} style={{ borderRadius: "6px" }}>
           <EQGrid
             scaleY={scaleY}

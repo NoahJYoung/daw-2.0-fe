@@ -21,7 +21,6 @@ interface LoopSectionProps {
 export const LoopSection = ({
   onMouseEnter,
   onMouseLeave,
-  isLooping,
   loopIndex,
   clipWidth,
   height,
@@ -29,9 +28,6 @@ export const LoopSection = ({
   selected,
   color,
   top,
-  peakChunks,
-  clip,
-  canvasRefs,
 }: LoopSectionProps) => (
   <div
     key={`loop-${loopIndex}`}
@@ -47,33 +43,5 @@ export const LoopSection = ({
       background: color,
       top,
     }}
-  >
-    <span className="flex items-center pl-[2px] pt-[2px] pb-[4px]">
-      <p
-        style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
-        className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
-      >
-        Loop
-      </p>
-    </span>
-    <div className="flex">
-      {isLooping &&
-        peakChunks.map((chunk, j) => (
-          <canvas
-            key={`loop-${clip.id}-${j}-${loopIndex}`}
-            ref={(el) => {
-              if (el) {
-                if (!canvasRefs.current[loopIndex]) {
-                  canvasRefs.current[loopIndex] = [];
-                }
-                canvasRefs.current[loopIndex][j] = el;
-              }
-            }}
-            className="rounded-xl"
-            width={chunk.length}
-            height={height}
-          />
-        ))}
-    </div>
-  </div>
+  />
 );

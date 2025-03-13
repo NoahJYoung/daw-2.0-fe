@@ -12,7 +12,11 @@ export class GraphicEQ extends ExtendedModel(Effect, {
   ]).withSetter(),
   selectedBandId: prop<string | undefined>().withSetter(),
 }) {
-  fft = new Tone.Analyser("fft", 2048);
+  fft = new Tone.Analyser({
+    type: "fft",
+    size: 256,
+    smoothing: 0.9,
+  });
 
   get name() {
     return "Graphic EQ";

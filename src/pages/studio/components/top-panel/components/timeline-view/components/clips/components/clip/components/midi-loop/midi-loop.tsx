@@ -1,13 +1,8 @@
 import { MidiClip, Track } from "@/pages/studio/audio-engine/components";
 import { observer } from "mobx-react-lite";
-import React, { useCallback } from "react";
+import React from "react";
 import { LoopSection } from "./components";
 import { useAudioEngine } from "@/pages/studio/hooks";
-import {
-  getNoteWidth,
-  getNoteXPosition,
-  getNoteYPosition,
-} from "../../helpers";
 
 interface MidiLoopProps {
   clip: MidiClip;
@@ -34,7 +29,6 @@ export const MidiLoop = observer(
     clipLeft,
     selected,
     isLooping,
-    // scrollLeft,
     loopOffset,
     onMouseEnter,
     onMouseLeave,
@@ -70,33 +64,6 @@ export const MidiLoop = observer(
 
     const loopWidth = getLoopWidth();
 
-    const noteHeight = (track.laneHeight - 36 - 20) / 12;
-
-    const renderLoopSVG = useCallback(
-      () => (
-        <svg
-          width={timeline.samplesToPixels(clip.length)}
-          height={track!.laneHeight - 30}
-          className="mb-[6px]"
-        >
-          <g>
-            {clip.events.map((event) => (
-              <rect
-                key={event.id}
-                fill="black"
-                height={noteHeight}
-                width={getNoteWidth(event, timeline)}
-                x={getNoteXPosition(event, timeline)}
-                rx="2px"
-                y={getNoteYPosition(event, noteHeight)}
-              />
-            ))}
-          </g>
-        </svg>
-      ),
-      [clip.events, clip.length, noteHeight, timeline, track]
-    );
-
     return (
       <div
         onClick={onClick}
@@ -117,7 +84,6 @@ export const MidiLoop = observer(
             top={top}
             color={color}
             key={i}
-            renderLoopSVG={renderLoopSVG}
           />
         ))}
 
@@ -134,17 +100,7 @@ export const MidiLoop = observer(
             background: color,
             top,
           }}
-        >
-          <span className="flex items-center pl-[2px] pt-[2px] pb-[4px]">
-            <p
-              style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
-              className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
-            >
-              Loop
-            </p>
-          </span>
-          {/* {!isLooping && renderLoopSVG()} */}
-        </div>
+        />
       </div>
     );
   }
