@@ -8,8 +8,9 @@ import {
 } from "./helpers";
 import { observer } from "mobx-react-lite";
 import React, { Dispatch, SetStateAction } from "react";
-import { useUndoManager } from "@/pages/studio/hooks";
+import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { Offsets, StateFlags } from "../../hooks/use-piano-roll-timeline/types";
+import { cn } from "@/lib/utils";
 
 interface MidiNoteViewProps {
   offsets: Offsets;
@@ -41,11 +42,16 @@ export const MidiNoteView = observer(
     const left = clip.samplesToPixels(note.on) + clipStartOffsetPx;
     const top = getTopValueFromPitch(note.note);
     const selected = clip.selectedNotes.includes(note);
-
+    const { mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
 
+    const [r, g, b] = mixer.featuredTrack?.rgb || [175, 175, 175];
+
     const generateRGBWithAlias = (alias: number) => {
-      const rgb = getColorFromVelocity(note.velocity);
+      const rgb = getColorFromVelocity(
+        note.velocity,
+        mixer.featuredTrack?.rgb || [175, 175, 175]
+      );
 
       return `rgba(${[...rgb, alias].join(", ")})`;
     };
@@ -131,11 +137,10 @@ export const MidiNoteView = observer(
           width={adjustedWidth}
           height={17.5}
           y={selected ? offsets.drag * 17.5 + top : top}
-          rx={2}
-          style={{
-            border: `1px solid ${generateRGBWithAlias(selected ? 0.7 : 0.5)}`,
-          }}
-          fill={generateRGBWithAlias(selected ? 0.7 : 0.3)}
+          rx={4}
+          className={cn({ "stroke-black": selected })}
+          strokeWidth={2}
+          fill={generateRGBWithAlias(0.8)}
         />
 
         <rect

@@ -110,7 +110,7 @@ export const Knob = ({
   const arcPath = describeArc(
     size / 2,
     size / 2,
-    size / 2 - 2,
+    size / 2 - 1.5,
     startAngle,
     endAngle
   );

@@ -17,6 +17,7 @@ interface StudioDialogProps {
   label?: string;
   title?: string;
   disabled?: boolean;
+  defaultOpen?: boolean;
 }
 
 export const StudioDialog = ({
@@ -26,6 +27,7 @@ export const StudioDialog = ({
   disabled,
   children,
   label,
+  defaultOpen = false,
 }: StudioDialogProps) => {
   const [position, setPosition] = useState({ x: -256, y: -186 });
   const [isDragging, setIsDragging] = useState(false);
@@ -94,7 +96,7 @@ export const StudioDialog = ({
   }, [handleMouseMove, isDragging, startPos]);
 
   return (
-    <Dialog modal={false}>
+    <Dialog defaultOpen={defaultOpen} modal={false}>
       <DialogTrigger disabled={disabled} asChild>
         <StudioButton
           disabled={disabled}

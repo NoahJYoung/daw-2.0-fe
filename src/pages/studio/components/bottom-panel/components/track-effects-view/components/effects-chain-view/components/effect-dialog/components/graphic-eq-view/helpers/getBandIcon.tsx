@@ -21,19 +21,19 @@ export const getBandIcon = (
       <PeakingFilterIcon
         color={selected ? selectedColor : neutralColor}
         number={index}
-        size={28}
+        size={24}
       />
     ),
     highpass: (
       <HighPassFilterIcon
         color={selected ? selectedColor : neutralColor}
-        size={28}
+        size={24}
       />
     ),
     highshelf: (
       <HighShelfFilterIcon
         color={selected ? selectedColor : neutralColor}
-        size={28}
+        size={24}
       />
     ),
   };

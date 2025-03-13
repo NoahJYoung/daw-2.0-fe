@@ -53,7 +53,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
           max={1}
           step={0.01}
           color={trackColor}
-          size={48}
+          size={40}
           showValue={false}
         />
         <NumberInput
@@ -76,7 +76,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
             max={10}
             color={trackColor}
             step={0.01}
-            size={48}
+            size={40}
             double={true}
             showValue={false}
           />
@@ -102,7 +102,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
           max={10}
           step={0.01}
           color={trackColor}
-          size={48}
+          size={40}
           double={true}
           showValue={false}
         />

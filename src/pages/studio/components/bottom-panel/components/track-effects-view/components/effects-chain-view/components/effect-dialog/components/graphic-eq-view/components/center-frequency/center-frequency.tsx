@@ -9,6 +9,8 @@ interface CenterPointProps {
   range: number[];
   scaleX: d3.ScaleLogarithmic<number, number, never>;
   scaleY: d3.ScaleLinear<number, number, never>;
+  selected: boolean;
+  rgbColor: string;
   onClick: () => void;
 }
 
@@ -17,6 +19,8 @@ export const CenterFrequency = ({
   range,
   scaleX,
   scaleY,
+  selected,
+  rgbColor,
   onClick,
 }: CenterPointProps) => {
   const circleRef = useRef<SVGCircleElement>(null);
@@ -37,7 +41,7 @@ export const CenterFrequency = ({
       const dragHandler = d3
         .drag<SVGCircleElement, unknown>()
         .on("start", function () {
-          document.body.style.cursor = "grabbing";
+          document.body.style.cursor = "crosshair";
           onClick();
           d3.select(this).raise();
         })
@@ -84,8 +88,7 @@ export const CenterFrequency = ({
     <circle
       className={styles.point}
       ref={circleRef}
-      onClick={onClick}
-      stroke="#888"
+      stroke={selected ? rgbColor : "#888"}
       fill="transparent"
       cx={scaleX(band.frequency)}
       cy={scaleY(band.gain)}

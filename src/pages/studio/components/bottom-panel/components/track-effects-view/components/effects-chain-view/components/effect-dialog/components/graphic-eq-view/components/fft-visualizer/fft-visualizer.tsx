@@ -34,7 +34,7 @@ export const FFTVisualizer = observer(
           context.clearRect(0, 0, width, height);
           context.beginPath();
           context.lineWidth = 1;
-          context.strokeStyle = "rgba(250, 125, 0, 0.3)";
+          context.strokeStyle = "#888";
 
           for (let i = 0; i < fftValues.length; i++) {
             const value = fftValues[i];

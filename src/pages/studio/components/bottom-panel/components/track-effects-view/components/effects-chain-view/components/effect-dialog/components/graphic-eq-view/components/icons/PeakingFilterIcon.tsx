@@ -17,8 +17,8 @@ export const PeakingFilterIcon = ({
     xmlns="http://www.w3.org/2000/svg"
     style={{ display: "flex", alignItems: "center" }}
   >
-    <polyline
-      points="5,70 15,70 30,35 70,35 85,70 95,70"
+    <path
+      d="M5,70 C15,70 25,70 30,55 S45,25 50,25 S65,25 70,45 S80,70 100,70"
       stroke={color}
       strokeWidth={stroke}
       fill="none"

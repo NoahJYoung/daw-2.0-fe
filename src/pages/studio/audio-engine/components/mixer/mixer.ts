@@ -6,10 +6,10 @@ import {
   Ref,
   idProp,
 } from "mobx-keystone";
-import { computed } from "mobx";
+import { action, computed, observable } from "mobx";
 import { Track } from "../track";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
-import { clipRef, trackRef } from "../refs";
+import { trackRef } from "../refs";
 import { Master } from "../master";
 import { PanelMode } from "./types";
 import { Clip } from "../types";
@@ -21,10 +21,30 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   selectedRefs: prop<Ref<Track>[]>(() => []),
   master: prop<Master>(() => new Master({})),
   topPanelHeight: prop<number>(window.innerHeight - 156),
-  featuredClipRef: prop<Ref<Clip> | null>(null).withSetter(),
-  featuredTrackRef: prop<Ref<Track> | null>(null).withSetter(),
   panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
+  @observable
+  featuredTrackId: string | undefined = undefined;
+
+  @observable
+  featuredClipId: string | undefined = undefined;
+
+  @computed
+  get featuredTrack() {
+    if (this.featuredTrackId) {
+      return this.tracks.find(({ id }) => id === this.featuredTrackId);
+    }
+  }
+
+  @computed
+  get featuredClip() {
+    if (this.featuredClipId) {
+      return this.featuredTrack?.clips.find(
+        ({ id }) => id === this.featuredClipId
+      );
+    }
+  }
+
   init() {
     this.setVolumeOnUnsoloedTracks();
     this.sync();
@@ -79,11 +99,12 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
-  @modelAction
+  @action
   selectFeaturedTrack(track: Track) {
     if (track && !this.tracks.includes(track)) throw new Error("unknown track");
 
-    this.featuredTrackRef = track ? trackRef(track) : null;
+    this.featuredTrackId = track.id;
+
     if (this.featuredClip && this.featuredClip.trackId !== track?.id) {
       this.unselectFeaturedClip();
     }
@@ -91,20 +112,21 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   unselectFeaturedTrack() {
-    this.featuredTrackRef = null;
+    this.featuredTrackId = undefined;
   }
 
-  @modelAction
+  @action
   selectFeaturedClip(clip: Clip) {
     if (clip && !this.tracks.some((track) => track.clips.includes(clip)))
       throw new Error("unknown clip");
 
-    this.featuredClipRef = clip ? clipRef(clip) : null;
+    this.featuredTrackId = clip.trackId;
+    this.featuredClipId = clip.id;
   }
 
-  @modelAction
+  @action
   unselectFeaturedClip() {
-    this.featuredClipRef = null;
+    this.featuredClipId = undefined;
   }
 
   @modelAction
@@ -155,16 +177,6 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
       (total, current) => (total += current.laneHeight),
       0
     );
-  }
-
-  @computed
-  get featuredClip() {
-    return this.featuredClipRef ? this.featuredClipRef.current : undefined;
-  }
-
-  @computed
-  get featuredTrack() {
-    return this.featuredTrackRef ? this.featuredTrackRef.current : undefined;
   }
 
   @modelAction

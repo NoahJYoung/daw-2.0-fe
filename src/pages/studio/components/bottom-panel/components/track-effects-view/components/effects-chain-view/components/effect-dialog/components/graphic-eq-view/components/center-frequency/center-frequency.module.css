@@ -1,12 +1,4 @@
 .point:hover {
-  stroke: #ccc;
   r: 6;
-}
-
-.point:hover:not(:active) {
-  cursor: grab;
-}
-
-.point:active {
-  cursor: grabbing;
+  cursor: crosshair;
 }

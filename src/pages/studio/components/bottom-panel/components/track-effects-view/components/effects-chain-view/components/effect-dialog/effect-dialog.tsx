@@ -39,6 +39,7 @@ export const EffectDialog = observer(
         label={effect.name}
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
+        defaultOpen
       >
         <div className="h-full flex flex-col gap-1 p-1">
           <div className="w-full h-1/2 shadow-sm border rounded-md">

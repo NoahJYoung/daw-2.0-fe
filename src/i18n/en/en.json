@@ -44,7 +44,7 @@
       },
       "inputOptions": {
         "mic": "Microphone",
-        "midi": "Midi",
+        "midi": "Keyboard",
         "noInput": "No input"
       }
     }

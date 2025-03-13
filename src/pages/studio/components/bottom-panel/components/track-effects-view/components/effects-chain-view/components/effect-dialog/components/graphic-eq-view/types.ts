@@ -6,7 +6,7 @@ export interface LineData {
 export interface Point {
   frequency: number;
   gain: number;
-  type: "marker" | "baseline" | "highpass" | "highshelf" | "peaking";
+  type: "marker" | "baseline" | "highpass" | "highshelf" | "peaking" | "curve";
 }
 
 export const xLines: LineData[] = [

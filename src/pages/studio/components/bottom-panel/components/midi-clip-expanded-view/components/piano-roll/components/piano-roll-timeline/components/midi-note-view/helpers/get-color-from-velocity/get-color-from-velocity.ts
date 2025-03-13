@@ -1,21 +1,22 @@
 export const getColorFromVelocity = (
-  velocity: number
+  velocity: number,
+  trackColor: [number, number, number]
 ): [number, number, number] => {
   velocity = Math.max(0, Math.min(127, velocity));
 
   const normalizedVelocity = velocity / 127;
 
-  if (normalizedVelocity < 0.5) {
-    const grayToYellow = normalizedVelocity * 2;
-    const r = Math.round(255 * grayToYellow);
-    const g = Math.round(255 * grayToYellow);
-    const b = Math.round(200 * (1 - grayToYellow));
-    return [r, g, b];
-  } else {
-    const yellowToRed = (normalizedVelocity - 0.5) * 2;
-    const r = 255;
-    const g = Math.round(255 * (1 - yellowToRed));
-    const b = 0;
-    return [r, g, b];
-  }
+  const grayColor: [number, number, number] = [175, 175, 175];
+
+  const r = Math.round(
+    grayColor[0] + (trackColor[0] - grayColor[0]) * normalizedVelocity
+  );
+  const g = Math.round(
+    grayColor[1] + (trackColor[1] - grayColor[1]) * normalizedVelocity
+  );
+  const b = Math.round(
+    grayColor[2] + (trackColor[2] - grayColor[2]) * normalizedVelocity
+  );
+
+  return [r, g, b];
 };

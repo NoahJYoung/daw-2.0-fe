@@ -30,12 +30,30 @@ export class GraphicEQ extends ExtendedModel(Effect, {
     type: BiquadFilterType = "peaking"
   ) {
     const band = new Band({ frequency, gain, Q, type });
-    this.setBands([...this.bands, band]);
+
+    const highpass = this.bands[0];
+    const highshelf = this.bands[this.bands.length - 1];
+
+    const middleBands = this.bands.slice(1, -1);
+
+    this.setBands([highpass, ...middleBands, band, highshelf]);
+    this.setSelectedBandId(band.id);
   }
 
   removeBand(oldBand: Band) {
     if (oldBand.type === "peaking") {
       this.setBands([...this.bands].filter((band) => band.id !== oldBand.id));
+    }
+  }
+
+  removeSelectedBand() {
+    if (this.selectedBand) {
+      const selected = this.selectedBand;
+      this.setSelectedBandId(undefined);
+      this.removeBand(selected);
+    }
+    if (this.bands.length) {
+      this.setSelectedBandId(this.bands[0].id);
     }
   }
 
@@ -47,6 +65,7 @@ export class GraphicEQ extends ExtendedModel(Effect, {
 
   init() {
     super.init();
+    this.fft.set({ smoothing: 0.95 });
     this.sync();
   }
 
@@ -58,7 +77,8 @@ export class GraphicEQ extends ExtendedModel(Effect, {
     this.input.chain(
       ...this.bands.map((band) => band.filter),
       this.output,
-      this.outputMeter
+      this.outputMeter,
+      this.fft
     );
   }
 

@@ -10,18 +10,18 @@ export class Band extends ExtendedModel(BaseAudioNodeWrapper, {
   gain: prop(0).withSetter(),
   Q: prop(0.5).withSetter(),
 }) {
-  filter = new Tone.Filter(this.frequency, this.type);
+  filter = new Tone.BiquadFilter(this.frequency, this.type);
 
   sync() {
-    const { frequency, gain, type, Q } = this;
-    this.filter.set({ type });
-    this.filter.frequency.linearRampTo(frequency, 0.05);
-    this.filter.gain.linearRampTo(gain, 0.05);
-    this.filter.Q.linearRampTo(Q, 0.05);
+    const { frequency, gain, Q } = this;
+    this.filter.frequency.linearRampTo(frequency, 1);
+    this.filter.gain.linearRampTo(gain, 0.25);
+    this.filter.Q.linearRampTo(Q, 0.25);
   }
 
   init() {
     this.sync();
+    this.filter.set({ type: this.type });
   }
 
   connect(node: Tone.ToneAudioNode) {
