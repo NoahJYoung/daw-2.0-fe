@@ -3,7 +3,7 @@ import { StudioDialog } from "@/components/ui/custom/studio/studio-dialog";
 import { Track } from "@/pages/studio/audio-engine/components";
 import { Effect } from "@/pages/studio/audio-engine/components/effect";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
-import { useAudioEngine } from "@/pages/studio/hooks";
+import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { IconType } from "react-icons/lib";
 import { getEffectByKey } from "./helpers";
@@ -19,6 +19,7 @@ const triggerClassName = `rounded-xxs focus-visible:ring-0 relative flex items-c
 export const EffectDialog = observer(
   ({ effect, track, triggerIcon }: SynthSettingsModalProps) => {
     const { state } = useAudioEngine();
+    const { undoManager } = useUndoManager();
 
     const onInputVolumeChange = (value: number) => {
       effect.setInputVolume(value);
@@ -33,13 +34,20 @@ export const EffectDialog = observer(
       state === AudioEngineState.playing;
 
     const Effect = getEffectByKey(effect.name);
+
+    const onOpenChange = (state: boolean) => {
+      undoManager.withoutUndo(() => {
+        effect.setDialogOpen(state);
+      });
+    };
     return (
       <StudioDialog
+        open={effect.dialogOpen}
+        onOpenChange={onOpenChange}
         title={`${track.name} - ${effect.name} `}
         label={effect.name}
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
-        defaultOpen
       >
         <div className="h-full flex flex-col gap-1 p-1">
           <div className="w-full h-1/2 shadow-sm border rounded-md">

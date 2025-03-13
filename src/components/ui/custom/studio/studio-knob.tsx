@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface KnobProps {
@@ -16,6 +17,7 @@ interface KnobProps {
   valuePosition?: "top" | "bottom";
   minLabel?: string;
   maxLabel?: string;
+  disabled?: boolean;
 }
 
 export const Knob = ({
@@ -34,6 +36,7 @@ export const Knob = ({
   valuePosition = "bottom",
   minLabel,
   maxLabel,
+  disabled,
 }: KnobProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const knobRef = useRef<SVGSVGElement>(null);
@@ -116,6 +119,9 @@ export const Knob = ({
   );
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (disabled) {
+      return;
+    }
     e.stopPropagation();
     document.body.style.userSelect = "none";
     document.body.style.cursor = "grabbing";
@@ -123,6 +129,9 @@ export const Knob = ({
   };
   const handleMouseUp = useCallback(
     (e: MouseEvent) => {
+      if (disabled) {
+        return;
+      }
       e.stopPropagation();
       setIsDragging(false);
       if (isDragging) {
@@ -131,11 +140,14 @@ export const Knob = ({
       document.body.style.userSelect = "";
       document.body.style.cursor = "";
     },
-    [isDragging, onValueCommit, value]
+    [disabled, isDragging, onValueCommit, value]
   );
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
+      if (disabled) {
+        return;
+      }
       if (isDragging && knobRef.current) {
         const rect = knobRef.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -156,7 +168,7 @@ export const Knob = ({
         onValueChange(roundedValue);
       }
     },
-    [isDragging, max, min, onValueChange, step]
+    [disabled, isDragging, max, min, onValueChange, step]
   );
 
   useEffect(() => {
@@ -178,21 +190,31 @@ export const Knob = ({
     value,
   ]);
 
+  cn("flex justify-center relative", {
+    "cursor-grabbing": isDragging,
+    "cursor-grab": !disabled && !isDragging,
+    "cursor-not-allowed": disabled,
+  });
+
   return (
     <span
       onMouseDown={handleMouseDown}
       onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
-      className={`flex justify-center relative ${
-        isDragging ? "cursor-grabbing" : "cursor-grab"
-      }`}
+      className={cn("flex justify-center relative", {
+        "cursor-grabbing": isDragging,
+        "cursor-grab": !disabled && !isDragging,
+        "cursor-not-allowed": disabled,
+        "opacity-50": disabled,
+      })}
     >
       <svg
         ref={knobRef}
         width={size}
         height={size}
-        className={`flex justify-center items-center hover:scale-105 ${
-          isDragging ? "scale-105" : ""
-        }`}
+        className={cn("flex justify-center items-center", {
+          "scale-105": isDragging,
+          "hover:scale-105": !disabled,
+        })}
       >
         <circle
           className="fill-current text-surface-5"

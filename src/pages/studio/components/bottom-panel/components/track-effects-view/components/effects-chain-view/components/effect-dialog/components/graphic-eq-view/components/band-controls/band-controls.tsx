@@ -41,6 +41,9 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
   const [r, g, b] = track.rgb;
   const trackColor = `rgb(${r}, ${g}, ${b})`;
 
+  const isQDisabled = ["highshelf", "highpass"].includes(band.type);
+  const isGainDisabled = ["highpass"].includes(band.type);
+
   return (
     <div className="w-full h-full flex items-center justify-evenly shadow-sm border rounded-md z-20 mt-1">
       <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
@@ -65,21 +68,22 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
         />
       </span>
 
-      {band.type !== "highpass" && (
-        <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
-          <span className="font-bold text-xs w-full">Gain</span>
-          <Knob
-            onValueChange={(value) => onGainChange(value)}
-            onValueCommit={(value) => onGainCommit(value)}
-            value={band.gain}
-            min={-10}
-            max={10}
-            color={trackColor}
-            step={0.01}
-            size={40}
-            double={true}
-            showValue={false}
-          />
+      <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
+        <span className="font-bold text-xs w-full">Gain</span>
+        <Knob
+          onValueChange={(value) => onGainChange(value)}
+          onValueCommit={(value) => onGainCommit(value)}
+          value={band.gain}
+          min={-10}
+          max={10}
+          color={trackColor}
+          step={0.01}
+          size={40}
+          double={true}
+          disabled={isGainDisabled}
+          showValue={false}
+        />
+        {!isGainDisabled ? (
           <NumberInput
             min={-10.0}
             max={10.0}
@@ -89,8 +93,12 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
             onCommit={onGainCommit}
             suffix="dB"
           />
-        </span>
-      )}
+        ) : (
+          <span className="text-sm" style={{ marginTop: "0.5rem" }}>
+            Disabled
+          </span>
+        )}
+      </span>
 
       <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
         <span className="font-bold text-xs w-full">Q</span>
@@ -104,16 +112,23 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
           color={trackColor}
           size={40}
           double={true}
+          disabled={isQDisabled}
           showValue={false}
         />
-        <NumberInput
-          step={0.01}
-          min={0.01}
-          max={10}
-          value={band.Q}
-          allowDecimal
-          onCommit={onQCommit}
-        />
+        {!isQDisabled ? (
+          <NumberInput
+            step={0.01}
+            min={0.01}
+            max={10}
+            value={band.Q}
+            allowDecimal
+            onCommit={onQCommit}
+          />
+        ) : (
+          <span className="text-sm" style={{ marginTop: "0.5rem" }}>
+            Disabled
+          </span>
+        )}
       </span>
     </div>
   );

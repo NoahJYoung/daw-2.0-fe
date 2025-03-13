@@ -15,6 +15,7 @@ export class Effect
     mute: prop(false).withSetter(),
     inputVolume: prop(0).withSetter(),
     outputVolume: prop(0).withSetter(),
+    dialogOpen: prop(true).withSetter(),
   })
   implements EffectInterface
 {
