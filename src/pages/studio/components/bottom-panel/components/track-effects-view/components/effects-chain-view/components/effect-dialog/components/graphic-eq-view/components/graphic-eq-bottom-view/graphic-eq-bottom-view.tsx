@@ -66,9 +66,6 @@ export const GraphicEQBottomView = observer(
                   {getBandIcon(band, track, i, effect.selectedBandId)}
                 </TabsTrigger>
               ))}
-            </TabsList>
-
-            <span className="flex align-items-center gap">
               {effect.bands.length < MAX_BANDS && (
                 <StudioButton
                   disabled={effect.bands.length >= MAX_BANDS}
@@ -82,7 +79,9 @@ export const GraphicEQBottomView = observer(
                   icon={() => <FaPlus className="flex-shrink-0" />}
                 />
               )}
+            </TabsList>
 
+            <span className="flex align-items-center gap">
               <StudioButton
                 disabled={effect.selectedBand?.type !== "peaking"}
                 className={cn(

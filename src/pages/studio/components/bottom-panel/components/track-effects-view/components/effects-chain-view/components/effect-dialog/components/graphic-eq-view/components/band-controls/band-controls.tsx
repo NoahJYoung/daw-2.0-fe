@@ -4,6 +4,7 @@ import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { NumberInput } from "./components";
 import { Track } from "@/pages/studio/audio-engine/components";
+import { clamp } from "../../../../helpers";
 
 interface BandControlsProps {
   band: Band;
@@ -63,7 +64,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
           min={freqMin}
           max={freqMax}
           value={band.frequency}
-          onCommit={onFreqCommit}
+          onCommit={(value) => onFreqCommit(clamp([freqMin, freqMax], value))}
           suffix="Hz"
         />
       </span>
@@ -90,7 +91,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
             step={0.01}
             value={band.gain}
             allowDecimal
-            onCommit={onGainCommit}
+            onCommit={(value) => onGainCommit(clamp([-10, 10], value))}
             suffix="dB"
           />
         ) : (
@@ -122,7 +123,7 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
             max={10}
             value={band.Q}
             allowDecimal
-            onCommit={onQCommit}
+            onCommit={(value) => onQCommit(clamp([0.01, 10], value))}
           />
         ) : (
           <span className="text-sm" style={{ marginTop: "0.5rem" }}>
