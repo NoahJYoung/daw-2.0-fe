@@ -66,11 +66,14 @@ export const ReverbTopView = observer(
     };
 
     return (
-      <div className="bg-surface-0">
+      <div
+        className="bg-surface-0 flex justify-center items-center"
+        style={{ borderRadius: "6px", width, height }}
+      >
         <svg
-          width={width}
-          height={height}
-          className="bg-surface-0 rounded-lg shadow-md"
+          width={width - 2}
+          height={height - 2}
+          className="bg-surface-0 shadow-md"
         >
           <g className="grid-lines">
             {[...Array(6)].map((_, i) => (
@@ -130,7 +133,7 @@ export const ReverbTopView = observer(
           />
 
           <text
-            x={padding - 2}
+            x={padding + 8}
             y={height - padding / 2 + 4}
             fontSize="12"
             fill="#888"
@@ -139,7 +142,7 @@ export const ReverbTopView = observer(
             0s
           </text>
           <text
-            x={width - padding - 2}
+            x={width - padding - 8}
             y={height - padding / 2 + 4}
             fontSize="12"
             fill="#888"
