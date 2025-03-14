@@ -10,6 +10,7 @@ interface NumberInputProps {
   step?: number;
   suffix?: string;
   allowDecimal?: boolean;
+  width?: number;
 }
 
 export const NumberInput = observer(
@@ -21,6 +22,7 @@ export const NumberInput = observer(
     step = 1,
     suffix,
     allowDecimal = false,
+    width = 42,
   }: NumberInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [localValue, setLocalValue] = useState(value);
@@ -90,7 +92,7 @@ export const NumberInput = observer(
     const maxCharLength = max.toString().split("").length;
 
     const maxChars = Math.max(minCharLength, maxCharLength);
-    const width = Math.max(maxChars * 10, 42);
+    const calculatedWidth = Math.max(maxChars * 10, width);
 
     return (
       <span className="flex items-center">
@@ -101,7 +103,7 @@ export const NumberInput = observer(
           type="number"
           min={min}
           max={max}
-          style={{ width }}
+          style={{ width: calculatedWidth }}
           className="no-arrows pr-1 text-center text-surface-6 text-sm bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
           value={`${localValue}`}
           onClick={(e) => e.stopPropagation()}

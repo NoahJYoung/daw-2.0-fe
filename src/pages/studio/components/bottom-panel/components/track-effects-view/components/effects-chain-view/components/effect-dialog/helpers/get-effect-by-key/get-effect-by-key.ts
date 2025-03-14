@@ -1,4 +1,4 @@
-import { GraphicEQView, ReverbView } from "../../components";
+import { CompressorView, GraphicEQView, ReverbView } from "../../components";
 import { EffectViewComponentObject } from "../../types";
 
 // TODO: Figure out this type relationship without using any here
@@ -7,6 +7,7 @@ import { EffectViewComponentObject } from "../../types";
 const effectComponentMap: Record<string, EffectViewComponentObject<any>> = {
   ["Graphic EQ"]: GraphicEQView,
   Reverb: ReverbView,
+  Compressor: CompressorView,
 };
 
 export const getEffectByKey = (key: string) =>

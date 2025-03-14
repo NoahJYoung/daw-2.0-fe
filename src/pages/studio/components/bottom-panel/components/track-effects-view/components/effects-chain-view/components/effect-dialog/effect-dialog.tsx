@@ -68,7 +68,6 @@ export const EffectDialog = observer(
               />
             </div>
             <div className="h-full w-[calc(100%-116px)]">
-              {" "}
               {<Effect.Lower effect={effect} track={track} />}
             </div>
             <div className="w-[58px]">
