@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { EffectViewProps } from "../../../../types";
 import { Reverb } from "@/pages/studio/audio-engine/components/effects";
+import { topHeight, topWidth } from "../../../../helpers";
 
 export const ReverbTopView = observer(
   ({ effect: reverb, track }: EffectViewProps<Reverb>) => {
@@ -8,13 +9,12 @@ export const ReverbTopView = observer(
     const [r, g, b] = track.rgb;
     const trackColor = `rgb(${r}, ${g}, ${b})`;
 
-    const [width, height] = [484, 155];
     const padding = 15;
 
     const preDelayMultiplier = 0.2 * preDelay;
 
-    const effectiveWidth = width - 2 * padding;
-    const effectiveHeight = height - 2 * padding;
+    const effectiveWidth = topWidth - 2 * padding;
+    const effectiveHeight = topHeight - 2 * padding;
     const preDelayWidth = effectiveWidth * preDelayMultiplier;
 
     const generateCurvePoints = () => {
@@ -43,9 +43,9 @@ export const ReverbTopView = observer(
     const generateFillArea = () => {
       const points = [];
 
-      points.push(`${padding},${height - padding}`);
+      points.push(`${padding},${topHeight - padding}`);
 
-      points.push(`${padding + preDelayWidth},${height - padding}`);
+      points.push(`${padding + preDelayWidth},${topHeight - padding}`);
       points.push(`${padding + preDelayWidth},${padding}`);
 
       const numPoints = 100;
@@ -60,7 +60,7 @@ export const ReverbTopView = observer(
         points.push(`${x},${y}`);
       }
 
-      points.push(`${width - padding},${height - padding}`);
+      points.push(`${topWidth - padding},${topHeight - padding}`);
 
       return points.join(" ");
     };
@@ -68,11 +68,11 @@ export const ReverbTopView = observer(
     return (
       <div
         className="bg-surface-0 flex justify-center items-center"
-        style={{ borderRadius: "6px", width, height }}
+        style={{ borderRadius: "6px", width: topWidth, height: topHeight }}
       >
         <svg
-          width={width - 2}
-          height={height - 2}
+          width={topWidth - 2}
+          height={topHeight - 2}
           className="bg-surface-0 shadow-md"
         >
           <g className="grid-lines">
@@ -80,9 +80,9 @@ export const ReverbTopView = observer(
               <line
                 key={`h-${i}`}
                 x1={padding}
-                y1={padding + ((height - 2 * padding) * i) / 5}
-                x2={width - padding}
-                y2={padding + ((height - 2 * padding) * i) / 5}
+                y1={padding + ((topHeight - 2 * padding) * i) / 5}
+                x2={topWidth - padding}
+                y2={padding + ((topHeight - 2 * padding) * i) / 5}
                 stroke="#888"
                 strokeWidth="0.5"
               />
@@ -90,10 +90,10 @@ export const ReverbTopView = observer(
             {[...Array(6)].map((_, i) => (
               <line
                 key={`v-${i}`}
-                x1={padding + ((width - 2 * padding) * i) / 5}
+                x1={padding + ((topWidth - 2 * padding) * i) / 5}
                 y1={padding}
-                x2={padding + ((width - 2 * padding) * i) / 5}
-                y2={height - padding}
+                x2={padding + ((topWidth - 2 * padding) * i) / 5}
+                y2={topHeight - padding}
                 stroke="#888"
                 strokeWidth="0.5"
               />
@@ -116,9 +116,9 @@ export const ReverbTopView = observer(
 
           <line
             x1={padding}
-            y1={height - padding}
-            x2={width - padding}
-            y2={height - padding}
+            y1={topHeight - padding}
+            x2={topWidth - padding}
+            y2={topHeight - padding}
             stroke="#888"
             strokeWidth="0.5"
           />
@@ -134,7 +134,7 @@ export const ReverbTopView = observer(
 
           <text
             x={padding + 8}
-            y={height - padding / 2 + 4}
+            y={topHeight - padding / 2 + 4}
             fontSize="12"
             fill="#888"
             textAnchor="middle"
@@ -142,8 +142,8 @@ export const ReverbTopView = observer(
             0s
           </text>
           <text
-            x={width - padding - 8}
-            y={height - padding / 2 + 4}
+            x={topWidth - padding - 8}
+            y={topHeight - padding / 2 + 4}
             fontSize="12"
             fill="#888"
             textAnchor="middle"
@@ -152,14 +152,14 @@ export const ReverbTopView = observer(
           </text>
 
           {[0, 1, 2, 3, 4, 5, 6].map((tick) => {
-            const x = padding + ((width - 2 * padding) * tick) / 5;
+            const x = padding + ((topWidth - 2 * padding) * tick) / 5;
             return (
               <line
                 key={`tick-${tick}`}
                 x1={x}
-                y1={height - padding}
+                y1={topHeight - padding}
                 x2={x}
-                y2={height - padding + 5}
+                y2={topHeight - padding + 5}
                 stroke="#888"
                 strokeWidth="0.5"
               />

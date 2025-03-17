@@ -8,6 +8,7 @@ import { Point } from "../../types";
 import { CenterFrequency } from "../center-frequency";
 import { EQGrid } from "../eq-grid";
 import { FFTVisualizer } from "../fft-visualizer";
+import { topHeight, topWidth } from "../../../../helpers";
 
 const MIN_HERTZ = 20;
 const MAX_HERTZ = 20000;
@@ -22,18 +23,17 @@ export const GraphicEQTopView = observer(
       });
     };
 
-    const [width, height] = [484, 155];
     const { bands } = graphicEQ;
     const newCurvePoints = generateEQCurvePoints(bands);
     const scaleY = d3
       .scaleLinear()
       .domain([-12, 12])
-      .range([height - 20, 0]);
+      .range([topHeight - 20, 0]);
 
     const scaleX = d3
       .scaleLog()
       .domain([MIN_HERTZ, MAX_HERTZ])
-      .range([20, width - 10]);
+      .range([20, topWidth - 10]);
 
     const lineGenerator = d3
       .line<Point>()
@@ -52,15 +52,19 @@ export const GraphicEQTopView = observer(
       <>
         <FFTVisualizer
           graphicEQ={graphicEQ}
-          width={width - 20}
-          height={height - 20}
+          width={topWidth - 20}
+          height={topHeight - 20}
         />
-        <svg width={width} height={height} style={{ borderRadius: "6px" }}>
+        <svg
+          width={topWidth}
+          height={topHeight}
+          style={{ borderRadius: "6px" }}
+        >
           <EQGrid
             scaleY={scaleY}
             scaleX={scaleX}
-            width={width}
-            height={height}
+            width={topWidth}
+            height={topHeight}
           />
 
           {combinedCurvePath && (

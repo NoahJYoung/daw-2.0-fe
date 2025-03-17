@@ -40,6 +40,7 @@ export const EffectDialog = observer(
         effect.setDialogOpen(state);
       });
     };
+
     return (
       <StudioDialog
         open={effect.dialogOpen}

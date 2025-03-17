@@ -6,10 +6,38 @@ import { IoColorPaletteSharp as ColorIcon } from "react-icons/io5";
 import { RgbColorPicker as ColorPicker } from "react-colorful";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { selectAllTracks, deleteSelectedTracks } from "../../helpers";
+import { useState } from "react";
+
+interface ColorChangeParams {
+  r: number;
+  g: number;
+  b: number;
+}
 
 export const useTracksContextMenuActions = () => {
   const { mixer } = useAudioEngine();
   const { undoManager } = useUndoManager();
+
+  const [localColorValue, setLocalColorValue] = useState<ColorChangeParams>(
+    mixer.selectedTracks.length
+      ? {
+          r: mixer.selectedTracks[0].rgb[0],
+          g: mixer.selectedTracks[0].rgb[1],
+          b: mixer.selectedTracks[0].rgb[2],
+        }
+      : { r: 175, g: 175, b: 175 }
+  );
+
+  const onColorChange = (color: { r: number; g: number; b: number }) => {
+    setLocalColorValue(color);
+  };
+
+  const onColorCommit = () => {
+    undoManager.withGroup("CHANGE TRACK COLORS", () => {
+      const { r, g, b } = localColorValue;
+      mixer.selectedTracks.forEach((track) => track.setRgb([r, g, b]));
+    });
+  };
 
   return [
     {
@@ -46,23 +74,9 @@ export const useTracksContextMenuActions = () => {
                 e.stopPropagation();
                 e.preventDefault();
               }}
-              color={
-                mixer.selectedTracks.length
-                  ? {
-                      r: mixer.selectedTracks[0].rgb[0],
-                      g: mixer.selectedTracks[0].rgb[1],
-                      b: mixer.selectedTracks[0].rgb[2],
-                    }
-                  : { r: 175, g: 175, b: 175 }
-              }
-              onChange={(color) => {
-                undoManager.withGroup("CHANGE TRACK COLORS", () => {
-                  const { r, g, b } = color;
-                  mixer.selectedTracks.forEach((track) =>
-                    track.setRgb([r, g, b])
-                  );
-                });
-              }}
+              color={localColorValue}
+              onChange={onColorChange}
+              onMouseUp={onColorCommit}
             />
           ),
         },

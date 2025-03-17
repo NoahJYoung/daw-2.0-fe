@@ -12,13 +12,13 @@ export const CompressorBottomView = observer(
 
     const attackRange: Range = [0, 1];
     const releaseRange: Range = [0, 1];
-    const thresholdRange: Range = [-100, 0];
+    const thresholdRange: Range = [-60, 0];
     const ratioRange: Range = [1, 20];
     const kneeRange: Range = [0, 40];
     const makeupGainRange: Range = [0, 12];
 
-    const defaultAttack = 0.25;
-    const defaultRelease = 0.25;
+    const defaultAttack = 0.1;
+    const defaultRelease = 0.2;
     const defaultThreshold = -20;
     const defaultRatio = 4;
     const defaultKnee = 0;
@@ -138,7 +138,7 @@ export const CompressorBottomView = observer(
               step={0.1}
               allowDecimal
               width={34}
-              onCommit={onAttackCommit}
+              onCommit={onThresholdCommit}
               suffix="dB"
             />
           </span>
