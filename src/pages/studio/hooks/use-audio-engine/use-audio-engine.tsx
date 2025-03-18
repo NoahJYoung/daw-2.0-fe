@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useMemo } from "react";
 import { AudioEngine } from "../../audio-engine";
 import { useParams } from "react-router-dom";
-import { fromSnapshot } from "mobx-keystone";
 import demoProject from "../../utils/sampleProject.json";
 
 type AudioEngineContextType = AudioEngine | null;
