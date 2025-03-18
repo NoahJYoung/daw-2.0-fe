@@ -10,6 +10,7 @@ import {
   StudioLayout,
   TopPanel,
   MainControls,
+  ModalProvider,
 } from "./components";
 
 export const Studio = observer(() => (
@@ -22,6 +23,7 @@ export const Studio = observer(() => (
           middlePanel={<MainControls />}
           lowerPanel={<BottomPanel />}
         />
+        <ModalProvider />
       </BottomPanelProvider>
     </UndoManagerProvider>
   </AudioEngineProvider>

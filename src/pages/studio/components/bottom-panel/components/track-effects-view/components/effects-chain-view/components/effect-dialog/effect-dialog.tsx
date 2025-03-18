@@ -11,13 +11,21 @@ import { getEffectByKey } from "./helpers";
 interface SynthSettingsModalProps {
   track: Track;
   effect: Effect;
+  open: boolean;
+  renderTrigger?: boolean;
   triggerIcon?: IconType;
 }
 
 const triggerClassName = `rounded-xxs focus-visible:ring-0 relative flex items-center justify-center p-1 w-full bg-surface-2 text-surface-7 hover:bg-surface-3`;
 
 export const EffectDialog = observer(
-  ({ effect, track, triggerIcon }: SynthSettingsModalProps) => {
+  ({
+    effect,
+    track,
+    triggerIcon,
+    renderTrigger,
+    open,
+  }: SynthSettingsModalProps) => {
     const { state } = useAudioEngine();
     const { undoManager } = useUndoManager();
 
@@ -43,10 +51,11 @@ export const EffectDialog = observer(
 
     return (
       <StudioDialog
-        open={effect.dialogOpen}
+        open={open}
         onOpenChange={onOpenChange}
         title={`${track.name} - ${effect.name} `}
         label={effect.name}
+        renderTrigger={renderTrigger}
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
       >

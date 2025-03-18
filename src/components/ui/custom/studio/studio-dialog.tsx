@@ -19,6 +19,7 @@ interface StudioDialogProps {
   disabled?: boolean;
   defaultOpen?: boolean;
   open?: boolean;
+  renderTrigger?: boolean;
   onOpenChange?: (state: boolean) => void;
 }
 
@@ -30,6 +31,7 @@ export const StudioDialog = ({
   children,
   label,
   open,
+  renderTrigger = true,
   onOpenChange,
   defaultOpen = false,
 }: StudioDialogProps) => {
@@ -106,14 +108,16 @@ export const StudioDialog = ({
       defaultOpen={defaultOpen}
       modal={false}
     >
-      <DialogTrigger disabled={disabled} asChild>
-        <StudioButton
-          disabled={disabled}
-          className={triggerClassName}
-          icon={TriggerIcon}
-          label={label}
-        />
-      </DialogTrigger>
+      {renderTrigger && (
+        <DialogTrigger disabled={disabled} asChild>
+          <StudioButton
+            disabled={disabled}
+            className={triggerClassName}
+            icon={TriggerIcon}
+            label={label}
+          />
+        </DialogTrigger>
+      )}
       <DialogContent
         ref={dialogRef}
         onInteractOutside={(e) => e.preventDefault()}

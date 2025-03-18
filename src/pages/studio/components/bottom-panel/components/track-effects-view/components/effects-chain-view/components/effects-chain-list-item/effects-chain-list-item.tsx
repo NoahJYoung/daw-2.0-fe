@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { cn } from "@/lib/utils";
 import { Effect, Track } from "@/pages/studio/audio-engine/components";
+import { useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { HiOutlineTrash as DeleteIcon } from "react-icons/hi";
-import { EffectDialog } from "../effect-dialog";
 
 const btnClassName = `rounded-xxs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-7 h-7 bg-surface-2 text-surface-5 hover:bg-surface-3`;
 
@@ -39,6 +39,8 @@ const baseButtonClass = cn(
   "font-bold"
 );
 
+const triggerClassName = `rounded-xxs focus-visible:ring-0 relative flex items-center justify-center p-1 w-full bg-surface-2 text-surface-7 hover:bg-surface-3`;
+
 interface AuxSendListItemProps {
   effect: Effect;
   track: Track;
@@ -47,8 +49,12 @@ interface AuxSendListItemProps {
 }
 
 export const EffectsChainListItem = observer(
-  ({ effect, onDelete, isLastItem, track }: AuxSendListItemProps) => {
+  ({ effect, onDelete, isLastItem }: AuxSendListItemProps) => {
+    const { undoManager } = useUndoManager();
     const handleDelete = () => onDelete(effect.id);
+    const handleClick = () => {
+      undoManager.withoutUndo(() => effect.setDialogOpen(!effect.dialogOpen));
+    };
 
     return (
       <li
@@ -58,7 +64,11 @@ export const EffectsChainListItem = observer(
         )}
       >
         <span className="w-1/2 md: w-2/3 max-w-full ">
-          <EffectDialog track={track} effect={effect} />
+          <StudioButton
+            onClick={handleClick}
+            className={triggerClassName}
+            label={effect.name}
+          />
         </span>
 
         <span className="flex items-center justify-evenly gap-0.5 w-1/3 md:w-1/4 max-w-full">
