@@ -52,12 +52,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   clipboard = new Clipboard();
 
   async init() {
-    const customAudioContext = new AudioContext({
-      sampleRate: 44100,
-    });
-
-    Tone.setContext(customAudioContext);
-
     mixerCtx.setDefaultComputed(() => this.mixer);
 
     const start = async () => Tone.start();
@@ -344,7 +338,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   async getOfflineBounce() {
-    const duration = this.getBounceEndFromLastClip(44100);
+    const duration = this.getBounceEndFromLastClip(
+      Tone.getContext().sampleRate
+    );
 
     const buffer = await Tone.Offline(
       () => {
@@ -354,7 +350,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       },
       duration,
       undefined,
-      44100
+      Tone.getContext().sampleRate
     );
 
     const wav = await bufferToWav(buffer, this.projectName);

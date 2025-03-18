@@ -1,941 +1,188 @@
 {
-  "id": "r-OMNtVDoLd7emShHcqg9Ch",
+  "id": "3--EI_mcxGiaCeh7yp-JJOk",
   "timeline": {
-    "bpm": 110,
+    "bpm": 108,
     "timeSignature": 4,
     "measures": 301,
-    "samplesPerPixel": 1024,
-    "seconds": 5.0184126984127,
+    "samplesPerPixel": 4096,
+    "seconds": 42.136000000000195,
     "subdivision": "4n",
     "snapToGrid": true,
     "$modelType": "AudioEngine/Transport"
   },
   "mixer": {
-    "id": "4-ZDNEkC35PKmmvv6_7R_Pg",
+    "id": "4--EI_mcxGiaCeh7yp-JJOk",
     "tracks": [
       {
-        "id": "6-ZDNEkC35PKmmvv6_7R_Pg",
+        "id": "6--EI_mcxGiaCeh7yp-JJOk",
         "onlineId": null,
-        "name": "Sine Arpeg",
+        "name": "Synth 1",
         "clips": [
           {
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "start": 0,
-            "end": 24054.545454544885,
+            "trackId": "6--EI_mcxGiaCeh7yp-JJOk",
+            "start": 533333.3333333334,
+            "end": 746666.6666666673,
             "fadeInSamples": 0,
             "fadeOutSamples": 0,
             "events": [
               {
-                "note": ["E", 4],
+                "note": ["C", 3],
                 "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "2g-ZDNEkC35PKmmvv6_7R_Pg",
+                "off": 6666.666666666657,
+                "velocity": 65,
+                "id": "sp--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["A", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "2h-ZDNEkC35PKmmvv6_7R_Pg",
+                "note": ["C", 3],
+                "on": 13333.333333333328,
+                "off": 26666.66666666667,
+                "velocity": 65,
+                "id": "sq--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["B", 3],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "2i-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "2j-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "id": "2f-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "loopSamples": 168381.8181818187,
-            "locked": false,
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "2i-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "2g-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "2h-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "2j-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 192436.3636363636,
-            "end": 216490.90909090848,
-            "loopSamples": 168381.8181818182,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["F", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "3m-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["A", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "3n-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "3o-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "3p-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "3q-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 384872.7272727272,
-            "end": 408927.27272727207,
-            "loopSamples": 168381.81818181765,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["G", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "3r-ZDNEkC35PKmmvv6_7R_Pg",
+                "note": ["E", 3],
+                "on": 26666.66666666667,
+                "off": 33333.33333333333,
+                "velocity": 65,
+                "id": "sr--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["G", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "3s-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "3t-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "3u-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "3v-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "3s-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 577309.0909090907,
-            "end": 601363.6363636355,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["Ab", 4],
-                "on": 0,
-                "off": 6013.636363636353,
-                "velocity": 64,
-                "id": "3w-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 6013.636363636353,
-                "off": 12027.272727272706,
-                "velocity": 64,
-                "id": "3x-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 12027.272727272706,
-                "off": 18040.909090909176,
-                "velocity": 64,
-                "id": "3y-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 4],
-                "on": 18040.909090909176,
-                "off": 24054.54545454553,
-                "velocity": 64,
-                "id": "3z-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "40-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "3z-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "3w-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "3x-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "3y-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 769745.4545454544,
-            "end": 793799.9999999992,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["A", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "41-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "42-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "43-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["E", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "44-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "45-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 962181.818181818,
-            "end": 986236.3636363628,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["B", 4],
-                "on": 0,
-                "off": 6013.636363636353,
-                "velocity": 64,
-                "id": "4p-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 6013.636363636353,
-                "off": 12027.272727272706,
-                "velocity": 64,
-                "id": "4q-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["E", 4],
-                "on": 12027.272727272706,
-                "off": 18040.909090908943,
-                "velocity": 64,
-                "id": "4r-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 4],
-                "on": 18040.909090908943,
-                "off": 24054.545454545296,
-                "velocity": 64,
-                "id": "4s-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "4t-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "4p-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4q-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4r-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4s-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 1154618.1818181814,
-            "end": 1178672.7272727261,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["B", 4],
-                "on": 0,
-                "off": 6013.6363636364695,
-                "velocity": 64,
-                "id": "4u-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 4],
-                "on": 6013.6363636364695,
-                "off": 12027.272727272706,
-                "velocity": 64,
-                "id": "4v-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 4],
-                "on": 12027.272727272706,
-                "off": 18040.909090909176,
-                "velocity": 64,
-                "id": "4w-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["G", 4],
-                "on": 18040.909090909176,
-                "off": 24054.545454545412,
-                "velocity": 64,
-                "id": "4x-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "4y-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "4x-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4u-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4v-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4w-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 1347054.545454545,
-            "end": 1371109.0909090897,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["B", 4],
-                "on": 0,
-                "off": 6013.6363636364695,
-                "velocity": 64,
-                "id": "4z-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 4],
-                "on": 6013.6363636364695,
-                "off": 12027.272727272939,
-                "velocity": 64,
-                "id": "50-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 4],
-                "on": 12027.272727272939,
-                "off": 18040.909090909176,
-                "velocity": 64,
-                "id": "51-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Ab", 4],
-                "on": 18040.909090909176,
-                "off": 24054.545454545645,
-                "velocity": 64,
-                "id": "52-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "53-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 64,
-            "subdivision": "16n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "52-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "4z-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "50-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              },
-              {
-                "id": "51-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 1539490.9090909127,
-            "end": 1563545.4545454576,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["E", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "6s-ZDNEkC35PKmmvv6_7R_Pg",
+                "on": 33333.33333333333,
+                "off": 40000.000000000015,
+                "velocity": 65,
+                "id": "ss--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["A", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "6t-ZDNEkC35PKmmvv6_7R_Pg",
+                "on": 50197.3333333327,
+                "off": 55125.333333332645,
+                "velocity": 65,
+                "id": "st--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["B", 3],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "6u-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "6v-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "6w-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 1731927.2727272762,
-            "end": 1755981.8181818211,
-            "loopSamples": 168381.8181818182,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["F", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "6x-ZDNEkC35PKmmvv6_7R_Pg",
+                "note": ["Bb", 3],
+                "on": 53717.33333333378,
+                "off": 65365.333333332936,
+                "velocity": 65,
+                "id": "su--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["A", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "6y-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "6z-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "70-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "71-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 1924363.63636364,
-            "end": 1948418.181818185,
-            "loopSamples": 168381.81818181765,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["G", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "72-ZDNEkC35PKmmvv6_7R_Pg",
+                "on": 66666.66666666667,
+                "off": 73333.33333333333,
+                "velocity": 65,
+                "id": "sv--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["G", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "73-ZDNEkC35PKmmvv6_7R_Pg",
+                "on": 73333.33333333333,
+                "off": 80000.00000000001,
+                "velocity": 65,
+                "id": "sw--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["B", 3],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "74-ZDNEkC35PKmmvv6_7R_Pg",
+                "note": ["A", 3],
+                "on": 80000.00000000001,
+                "off": 86666.66666666667,
+                "velocity": 65,
+                "id": "sx--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "75-ZDNEkC35PKmmvv6_7R_Pg",
+                "note": ["G", 3],
+                "on": 86666.66666666667,
+                "off": 93333.33333333333,
+                "velocity": 65,
+                "id": "sy--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 3],
+                "on": 93333.33333333333,
+                "off": 99999.99999999999,
+                "velocity": 65,
+                "id": "sz--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["E", 3],
+                "on": 99999.99999999999,
+                "off": 106666.66666666667,
+                "velocity": 65,
+                "id": "t0--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 3],
+                "on": 106666.66666666667,
+                "off": 113333.33333333336,
+                "velocity": 65,
+                "id": "t1--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 3],
+                "on": 126666.66666666667,
+                "off": 133333.3333333333,
+                "velocity": 65,
+                "id": "t2--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["E", 3],
+                "on": 133333.3333333333,
+                "off": 140000,
+                "velocity": 65,
+                "id": "t3--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 3],
+                "on": 140000,
+                "off": 146666.6666666667,
+                "velocity": 65,
+                "id": "t4--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 153215.3333333343,
+                "off": 155455.33333333425,
+                "velocity": 65,
+                "note": ["A", 3],
+                "id": "t8--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 154687.3333333354,
+                "off": 166655.33333333454,
+                "velocity": 65,
+                "note": ["Bb", 3],
+                "id": "ta--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               }
             ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "76-ZDNEkC35PKmmvv6_7R_Pg",
+            "id": "so--EI_mcxGiaCeh7yp-JJOk",
             "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
+            "loopSamples": 1706666.666666666,
             "locked": false,
-            "start": 2116800.0000000033,
-            "end": 2140854.5454545477,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
+            "samplesPerPixel": 64,
+            "subdivision": "16n",
+            "snapToGrid": false,
+            "selectedNoteRefs": [
               {
-                "note": ["Ab", 4],
-                "on": 0,
-                "off": 6013.636363636353,
-                "velocity": 64,
-                "id": "77-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 6013.636363636353,
-                "off": 12027.272727272706,
-                "velocity": 64,
-                "id": "78-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 12027.272727272706,
-                "off": 18040.909090909176,
-                "velocity": 64,
-                "id": "79-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 4],
-                "on": 18040.909090909176,
-                "off": 24054.54545454553,
-                "velocity": 64,
-                "id": "7a-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+                "id": "st--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/NoteRef"
               }
             ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "7b-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 2309236.363636367,
-            "end": 2333290.909090912,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["A", 4],
-                "on": 0,
-                "off": 6013.636363636362,
-                "velocity": 64,
-                "id": "7c-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["B", 3],
-                "on": 6013.636363636362,
-                "off": 12027.272727272724,
-                "velocity": 64,
-                "id": "7d-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 12027.272727272724,
-                "off": 18040.909090909085,
-                "velocity": 64,
-                "id": "7e-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["E", 4],
-                "on": 18040.909090909085,
-                "off": 24054.54545454545,
-                "velocity": 64,
-                "id": "7f-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "7g-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 2501672.727272731,
-            "end": 2525727.2727272757,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["B", 4],
-                "on": 0,
-                "off": 6013.636363636353,
-                "velocity": 64,
-                "id": "7h-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 4],
-                "on": 6013.636363636353,
-                "off": 12027.272727272706,
-                "velocity": 64,
-                "id": "7i-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["E", 4],
-                "on": 12027.272727272706,
-                "off": 18040.909090908943,
-                "velocity": 64,
-                "id": "7j-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 4],
-                "on": 18040.909090908943,
-                "off": 24054.545454545296,
-                "velocity": 64,
-                "id": "7k-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "7l-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 2694109.090909094,
-            "end": 2718163.6363636386,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["B", 4],
-                "on": 0,
-                "off": 6013.6363636364695,
-                "velocity": 64,
-                "id": "7m-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 4],
-                "on": 6013.6363636364695,
-                "off": 12027.272727272706,
-                "velocity": 64,
-                "id": "7n-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 4],
-                "on": 12027.272727272706,
-                "off": 18040.909090909176,
-                "velocity": 64,
-                "id": "7o-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["G", 4],
-                "on": 18040.909090909176,
-                "off": 24054.545454545412,
-                "velocity": 64,
-                "id": "7p-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "7q-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 2886545.454545458,
-            "end": 2910600.000000003,
-            "loopSamples": 168381.8181818187,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["B", 4],
-                "on": 0,
-                "off": 6013.6363636364695,
-                "velocity": 64,
-                "id": "7r-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 4],
-                "on": 6013.6363636364695,
-                "off": 12027.272727272939,
-                "velocity": 64,
-                "id": "7s-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 4],
-                "on": 12027.272727272939,
-                "off": 18040.909090909176,
-                "velocity": 64,
-                "id": "7t-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Ab", 4],
-                "on": 18040.909090909176,
-                "off": 24054.545454545645,
-                "velocity": 64,
-                "id": "7u-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "7v-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
             "quantizePercentage": 1,
             "action": "select",
             "$modelType": "AudioEngine/Mixer/Track/MidiClip"
@@ -943,59 +190,22 @@
         ],
         "effectsChain": {
           "mute": false,
-          "effects": [
-            {
-              "id": "4l-ZDNEkC35PKmmvv6_7R_Pg",
-              "bands": [
-                {
-                  "frequency": 102,
-                  "gain": 0,
-                  "Q": 1,
-                  "type": "highpass",
-                  "id": "4m-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                },
-                {
-                  "frequency": 4368,
-                  "gain": 1.73,
-                  "Q": 1,
-                  "type": "highshelf",
-                  "id": "4n-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                }
-              ],
-              "selectedBandId": "4n-ZDNEkC35PKmmvv6_7R_Pg",
-              "mute": false,
-              "inputVolume": 0,
-              "outputVolume": 0,
-              "dialogOpen": false,
-              "$modelType": "AudioEngine/Effects/GraphicEQ"
-            },
-            {
-              "id": "4o-ZDNEkC35PKmmvv6_7R_Pg",
-              "attack": 0.1,
-              "release": 0.2,
-              "threshold": -40,
-              "ratio": 4,
-              "knee": 0,
-              "makeupGain": 2,
-              "mute": false,
-              "inputVolume": 0,
-              "outputVolume": 0,
-              "dialogOpen": false,
-              "$modelType": "AudioEngine/Effects/Compressor"
-            }
-          ],
+          "effects": [],
           "$modelType": "AudioEngine/EffectsChain"
         },
-        "rgb": [5, 133, 178],
+        "rgb": [139, 238, 241],
         "active": false,
         "mute": false,
         "solo": false,
-        "pan": -0.34,
-        "laneHeight": 187,
+        "pan": 0,
+        "laneHeight": 140,
         "volume": 0,
-        "selectedRefs": [],
+        "selectedRefs": [
+          {
+            "id": "so--EI_mcxGiaCeh7yp-JJOk",
+            "$modelType": "AudioEngine/ClipRef"
+          }
+        ],
         "inputType": "midi",
         "synth": {
           "id": "7-oKPZwa4mrgcR9Fn_ZmRnF",
@@ -1003,7 +213,7 @@
           "triangle": {
             "type": "triangle",
             "id": "8-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -19.52,
+            "volume": -10,
             "attack": 1.155,
             "sustain": 0.32,
             "decay": 0.24,
@@ -1014,7 +224,7 @@
           "square": {
             "type": "square",
             "id": "9-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -34.99,
+            "volume": -12,
             "attack": 0.795,
             "sustain": 0.885,
             "decay": 1.945,
@@ -1036,7 +246,7 @@
           "sawtooth": {
             "type": "sawtooth",
             "id": "b-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -27.26,
+            "volume": -30.87,
             "attack": 0.34500000000000003,
             "sustain": 0.72,
             "decay": 1.685,
@@ -1049,61 +259,85 @@
         "$modelType": "AudioEngine/Mixer/Track"
       },
       {
-        "id": "54-ZDNEkC35PKmmvv6_7R_Pg",
+        "id": "tb--EI_mcxGiaCeh7yp-JJOk",
         "onlineId": null,
-        "name": "Bass Synth",
+        "name": "Bass synth",
         "clips": [
           {
-            "trackId": "54-ZDNEkC35PKmmvv6_7R_Pg",
-            "start": 769745.4545454544,
-            "end": 1539490.9090909127,
+            "trackId": "tb--EI_mcxGiaCeh7yp-JJOk",
+            "start": 106666.66666666667,
+            "end": 320000.0000000036,
             "fadeInSamples": 0,
             "fadeOutSamples": 0,
             "events": [
               {
-                "note": ["A", 2],
+                "note": ["C", 2],
                 "on": 0,
-                "off": 192436.36363636365,
-                "velocity": 65,
-                "id": "8f-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 2],
-                "on": 192436.36363636365,
-                "off": 384872.72727272706,
-                "velocity": 65,
-                "id": "8g-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 2],
-                "on": 384872.72727272706,
-                "off": 577309.0909090906,
-                "velocity": 65,
-                "id": "8h-ZDNEkC35PKmmvv6_7R_Pg",
+                "off": 26666.66666666667,
+                "velocity": 64,
+                "id": "vl--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["E", 2],
-                "on": 577309.0909090906,
-                "off": 769745.4545454544,
-                "velocity": 65,
-                "id": "8i-ZDNEkC35PKmmvv6_7R_Pg",
+                "on": 26666.66666666667,
+                "off": 40000.000000000015,
+                "velocity": 64,
+                "id": "vm--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["A", 2],
-                "on": 769745.4545454544,
-                "off": 769745.4545454583,
-                "velocity": 65,
-                "id": "8j-ZDNEkC35PKmmvv6_7R_Pg",
+                "note": ["F", 2],
+                "on": 46666.66666666667,
+                "off": 53333.33333333333,
+                "velocity": 64,
+                "id": "vn--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 2],
+                "on": 73333.33333333333,
+                "off": 80000.00000000001,
+                "velocity": 64,
+                "id": "vo--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 2],
+                "on": 86666.66666666667,
+                "off": 106666.66666666667,
+                "velocity": 64,
+                "id": "vp--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 2],
+                "on": 107007.33333332876,
+                "off": 133673.9999999954,
+                "velocity": 64,
+                "id": "vq--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["E", 2],
+                "on": 133673.9999999954,
+                "off": 147007.33333332877,
+                "velocity": 64,
+                "id": "vr--EI_mcxGiaCeh7yp-JJOk",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 2],
+                "on": 153673.9999999954,
+                "off": 160340.66666666203,
+                "velocity": 64,
+                "id": "vs--EI_mcxGiaCeh7yp-JJOk",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               }
             ],
-            "id": "8e-ZDNEkC35PKmmvv6_7R_Pg",
+            "id": "vk--EI_mcxGiaCeh7yp-JJOk",
             "type": "midi",
-            "loopSamples": 1539490.9090909048,
+            "loopSamples": 2133333.3333333298,
             "locked": false,
             "samplesPerPixel": 256,
             "subdivision": "8n",
@@ -1116,781 +350,62 @@
         ],
         "effectsChain": {
           "mute": false,
-          "effects": [
-            {
-              "id": "6n-ZDNEkC35PKmmvv6_7R_Pg",
-              "bands": [
-                {
-                  "frequency": 75,
-                  "gain": 0,
-                  "Q": 1,
-                  "type": "highpass",
-                  "id": "6o-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                },
-                {
-                  "frequency": 389,
-                  "gain": -8.94,
-                  "Q": 1.68,
-                  "type": "peaking",
-                  "id": "6q-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                },
-                {
-                  "frequency": 161,
-                  "gain": 5.64,
-                  "Q": 2.49,
-                  "type": "peaking",
-                  "id": "6r-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                },
-                {
-                  "frequency": 3867,
-                  "gain": 1.55,
-                  "Q": 1,
-                  "type": "highshelf",
-                  "id": "6p-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                }
-              ],
-              "selectedBandId": "6p-ZDNEkC35PKmmvv6_7R_Pg",
-              "mute": false,
-              "inputVolume": 0,
-              "outputVolume": 0,
-              "dialogOpen": false,
-              "$modelType": "AudioEngine/Effects/GraphicEQ"
-            },
-            {
-              "id": "8o-ZDNEkC35PKmmvv6_7R_Pg",
-              "attack": 0.2,
-              "release": 0.41,
-              "threshold": -30.9,
-              "ratio": 3,
-              "knee": 0,
-              "makeupGain": 1,
-              "mute": false,
-              "inputVolume": 0,
-              "outputVolume": 0,
-              "dialogOpen": false,
-              "$modelType": "AudioEngine/Effects/Compressor"
-            }
-          ],
-          "$modelType": "AudioEngine/EffectsChain"
-        },
-        "rgb": [180, 70, 246],
-        "active": false,
-        "mute": false,
-        "solo": false,
-        "pan": 0,
-        "laneHeight": 99,
-        "volume": -6,
-        "selectedRefs": [
-          {
-            "id": "8e-ZDNEkC35PKmmvv6_7R_Pg",
-            "$modelType": "AudioEngine/ClipRef"
-          }
-        ],
-        "inputType": "midi",
-        "synth": {
-          "id": "7-oKPZwa4mrgcR9Fn_ZmRnF",
-          "volume": 0,
-          "triangle": {
-            "type": "triangle",
-            "id": "8-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -12,
-            "attack": 0.09,
-            "sustain": 0.355,
-            "decay": 0.6,
-            "release": 1.5150000000000001,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "square": {
-            "type": "square",
-            "id": "9-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -16.5,
-            "attack": 0.915,
-            "sustain": 0.215,
-            "decay": 0.38,
-            "release": 0.43,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sine": {
-            "type": "sine",
-            "id": "a-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -7,
-            "attack": 1.62,
-            "sustain": 0.36,
-            "decay": 0.785,
-            "release": 0.775,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sawtooth": {
-            "type": "sawtooth",
-            "id": "b-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -6.5,
-            "attack": 0.515,
-            "sustain": 0.8,
-            "decay": 0.465,
-            "release": 0.96,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "$modelType": "AudioEngine/Synthesizer"
-        },
-        "$modelType": "AudioEngine/Mixer/Track"
-      },
-      {
-        "id": "8p-ZDNEkC35PKmmvv6_7R_Pg",
-        "onlineId": null,
-        "name": "Violin Synth R",
-        "clips": [
-          {
-            "trackId": "8p-ZDNEkC35PKmmvv6_7R_Pg",
-            "start": 769745.4545454544,
-            "end": 1154618.1818181816,
-            "id": "8w-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "events": [
-              {
-                "on": 0,
-                "off": 24054.54545454545,
-                "note": ["A", 3],
-                "velocity": 64,
-                "id": "8y-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 24054.54545454545,
-                "off": 48109.0909090909,
-                "note": ["B", 3],
-                "velocity": 64,
-                "id": "90-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 48109.0909090909,
-                "off": 72163.63636363635,
-                "note": ["C", 4],
-                "velocity": 64,
-                "id": "92-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 72163.63636363634,
-                "off": 96218.1818181818,
-                "note": ["E", 4],
-                "velocity": 64,
-                "id": "96-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 96218.1818181818,
-                "off": 120272.72727272724,
-                "note": ["F", 4],
-                "velocity": 64,
-                "id": "98-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 120272.72727272725,
-                "off": 144327.2727272727,
-                "note": ["E", 4],
-                "velocity": 64,
-                "id": "9a-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 144327.27272727268,
-                "off": 168381.81818181812,
-                "note": ["D", 4],
-                "velocity": 64,
-                "id": "9c-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 168381.81818181812,
-                "off": 192436.36363636356,
-                "note": ["C", 4],
-                "velocity": 64,
-                "id": "9e-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 192436.3636363636,
-                "off": 216490.90909090903,
-                "note": ["B", 3],
-                "velocity": 64,
-                "id": "9g-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 216490.90909090903,
-                "off": 240545.45454545447,
-                "note": ["C", 4],
-                "velocity": 64,
-                "id": "9i-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 240545.4545454545,
-                "off": 264599.99999999994,
-                "note": ["D", 4],
-                "velocity": 64,
-                "id": "9k-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 264599.99999999994,
-                "off": 288654.5454545454,
-                "note": ["E", 4],
-                "velocity": 64,
-                "id": "9m-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 288654.54545454535,
-                "off": 312709.0909090908,
-                "note": ["F", 4],
-                "velocity": 64,
-                "id": "9o-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 312709.0909090908,
-                "off": 336763.6363636363,
-                "note": ["A", 4],
-                "velocity": 64,
-                "id": "9q-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 336763.63636363624,
-                "off": 360818.1818181817,
-                "note": ["Ab", 4],
-                "velocity": 64,
-                "id": "9s-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 360818.1818181817,
-                "off": 384872.7272727272,
-                "note": ["E", 4],
-                "velocity": 64,
-                "id": "9w-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "loopSamples": 1924363.6363636358,
-            "locked": false,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "samplesPerPixel": 256,
-            "subdivision": "4n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "create",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          }
-        ],
-        "effectsChain": {
-          "mute": false,
           "effects": [],
           "$modelType": "AudioEngine/EffectsChain"
         },
-        "rgb": [219, 167, 48],
-        "active": false,
-        "mute": false,
-        "solo": false,
-        "pan": 0.5,
-        "laneHeight": 140,
-        "volume": -4.94,
-        "selectedRefs": [],
-        "inputType": "midi",
-        "synth": {
-          "id": "7-oKPZwa4mrgcR9Fn_ZmRnF",
-          "volume": 0,
-          "triangle": {
-            "type": "triangle",
-            "id": "8-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -12,
-            "attack": 0.09,
-            "sustain": 0.355,
-            "decay": 0.6,
-            "release": 1.5150000000000001,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "square": {
-            "type": "square",
-            "id": "9-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -16.5,
-            "attack": 0.915,
-            "sustain": 0.215,
-            "decay": 0.38,
-            "release": 0.43,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sine": {
-            "type": "sine",
-            "id": "a-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -7,
-            "attack": 1.62,
-            "sustain": 0.36,
-            "decay": 0.785,
-            "release": 0.775,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sawtooth": {
-            "type": "sawtooth",
-            "id": "b-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -6.5,
-            "attack": 0.515,
-            "sustain": 0.8,
-            "decay": 0.465,
-            "release": 0.96,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "$modelType": "AudioEngine/Synthesizer"
-        },
-        "$modelType": "AudioEngine/Mixer/Track"
-      },
-      {
-        "id": "9x-ZDNEkC35PKmmvv6_7R_Pg",
-        "onlineId": null,
-        "name": "Violin Synth L",
-        "clips": [
-          {
-            "locked": false,
-            "start": 1539490.9090909087,
-            "end": 1924363.636363636,
-            "loopSamples": 1154618.1818181814,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "on": 0,
-                "off": 24054.545454545412,
-                "note": ["C", 4],
-                "velocity": 64,
-                "id": "a3-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 24054.545454545412,
-                "off": 48109.09090909106,
-                "note": ["D", 4],
-                "velocity": 64,
-                "id": "a4-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 48109.09090909106,
-                "off": 72163.63636363624,
-                "note": ["E", 4],
-                "velocity": 64,
-                "id": "a5-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 72163.63636363624,
-                "off": 96218.18181818165,
-                "note": ["B", 4],
-                "velocity": 64,
-                "id": "a6-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 96218.18181818165,
-                "off": 120272.7272727273,
-                "note": ["A", 4],
-                "velocity": 64,
-                "id": "a7-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 120272.7272727273,
-                "off": 144327.2727272727,
-                "note": ["B", 4],
-                "velocity": 64,
-                "id": "a8-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 144327.2727272727,
-                "off": 168381.81818181812,
-                "note": ["A", 4],
-                "velocity": 64,
-                "id": "a9-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 168381.81818181812,
-                "off": 192436.36363636353,
-                "note": ["C", 5],
-                "velocity": 64,
-                "id": "aa-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 192436.36363636353,
-                "off": 216490.90909090894,
-                "note": ["B", 4],
-                "velocity": 64,
-                "id": "ab-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 216490.90909090894,
-                "off": 240545.45454545435,
-                "note": ["G", 4],
-                "velocity": 64,
-                "id": "ac-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 240545.45454545435,
-                "off": 264600,
-                "note": ["A", 4],
-                "velocity": 64,
-                "id": "ad-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 264600,
-                "off": 288654.5454545454,
-                "note": ["C", 5],
-                "velocity": 64,
-                "id": "ae-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 288654.5454545454,
-                "off": 312709.0909090906,
-                "note": ["B", 4],
-                "velocity": 64,
-                "id": "af-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 312709.0909090906,
-                "off": 336763.63636363624,
-                "note": ["Ab", 4],
-                "velocity": 64,
-                "id": "ag-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 336763.63636363624,
-                "off": 360818.18181818165,
-                "note": ["A", 4],
-                "velocity": 64,
-                "id": "ah-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "on": 360818.18181818165,
-                "off": 384872.7272727273,
-                "note": ["B", 4],
-                "velocity": 64,
-                "id": "ai-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "9x-ZDNEkC35PKmmvv6_7R_Pg",
-            "id": "aj-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "4n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "ai-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          }
-        ],
-        "effectsChain": {
-          "mute": false,
-          "effects": [],
-          "$modelType": "AudioEngine/EffectsChain"
-        },
-        "rgb": [114, 109, 180],
-        "active": false,
-        "mute": false,
-        "solo": false,
-        "pan": -0.5,
-        "laneHeight": 140,
-        "volume": -7.69,
-        "selectedRefs": [],
-        "inputType": "mic",
-        "synth": {
-          "id": "7-oKPZwa4mrgcR9Fn_ZmRnF",
-          "volume": 0,
-          "triangle": {
-            "type": "triangle",
-            "id": "8-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -12,
-            "attack": 0.09,
-            "sustain": 0.355,
-            "decay": 0.6,
-            "release": 1.5150000000000001,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "square": {
-            "type": "square",
-            "id": "9-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -16.5,
-            "attack": 0.915,
-            "sustain": 0.215,
-            "decay": 0.38,
-            "release": 0.43,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sine": {
-            "type": "sine",
-            "id": "a-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -7,
-            "attack": 1.62,
-            "sustain": 0.36,
-            "decay": 0.785,
-            "release": 0.775,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sawtooth": {
-            "type": "sawtooth",
-            "id": "b-oKPZwa4mrgcR9Fn_ZmRnF",
-            "volume": -6.5,
-            "attack": 0.515,
-            "sustain": 0.8,
-            "decay": 0.465,
-            "release": 0.96,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "$modelType": "AudioEngine/Synthesizer"
-        },
-        "$modelType": "AudioEngine/Mixer/Track"
-      },
-      {
-        "id": "ak-ZDNEkC35PKmmvv6_7R_Pg",
-        "onlineId": null,
-        "name": "High Sutain",
-        "clips": [
-          {
-            "trackId": "ak-ZDNEkC35PKmmvv6_7R_Pg",
-            "start": 2309236.363636363,
-            "end": 3078981.818181814,
-            "events": [
-              {
-                "note": ["E", 5],
-                "on": 0,
-                "off": 769745.4545454546,
-                "velocity": 32,
-                "id": "bi-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "id": "bj-ZDNEkC35PKmmvv6_7R_Pg",
-            "type": "midi",
-            "loopSamples": 0,
-            "locked": false,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "samplesPerPixel": 1024,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [
-              {
-                "id": "bi-ZDNEkC35PKmmvv6_7R_Pg",
-                "$modelType": "AudioEngine/NoteRef"
-              }
-            ],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          }
-        ],
-        "effectsChain": {
-          "mute": false,
-          "effects": [],
-          "$modelType": "AudioEngine/EffectsChain"
-        },
-        "rgb": [79, 171, 162],
-        "active": false,
-        "mute": false,
-        "solo": false,
-        "pan": 0,
-        "laneHeight": 140,
-        "volume": -15.39,
-        "selectedRefs": [],
-        "inputType": "mic",
-        "synth": {
-          "id": "al-ZDNEkC35PKmmvv6_7R_Pg",
-          "volume": 0,
-          "triangle": {
-            "type": "triangle",
-            "id": "am-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": -11,
-            "attack": 1.23,
-            "sustain": 0.3,
-            "decay": 0.985,
-            "release": 1.455,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "square": {
-            "type": "square",
-            "id": "an-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": -24,
-            "attack": 1.54,
-            "sustain": 0.23500000000000001,
-            "decay": 0.515,
-            "release": 1.72,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sine": {
-            "type": "sine",
-            "id": "ao-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": -17.5,
-            "attack": 1.045,
-            "sustain": 0.3,
-            "decay": 0.49,
-            "release": 0.24,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "sawtooth": {
-            "type": "sawtooth",
-            "id": "ap-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": 0.5,
-            "attack": 0.7000000000000001,
-            "sustain": 0.22,
-            "decay": 1.075,
-            "release": 1.62,
-            "mute": false,
-            "$modelType": "AudioEngine/Oscillator"
-          },
-          "$modelType": "AudioEngine/Synthesizer"
-        },
-        "$modelType": "AudioEngine/Mixer/Track"
-      },
-      {
-        "id": "b2-ZDNEkC35PKmmvv6_7R_Pg",
-        "onlineId": null,
-        "name": "Reverb bus",
-        "clips": [],
-        "effectsChain": {
-          "mute": false,
-          "effects": [
-            {
-              "id": "bc-ZDNEkC35PKmmvv6_7R_Pg",
-              "bands": [
-                {
-                  "frequency": 309,
-                  "gain": 0,
-                  "Q": 1,
-                  "type": "highpass",
-                  "id": "bd-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                },
-                {
-                  "frequency": 8929,
-                  "gain": 2.8,
-                  "Q": 1,
-                  "type": "highshelf",
-                  "id": "be-ZDNEkC35PKmmvv6_7R_Pg",
-                  "$modelType": "AudioEngine/GraphicEQ/Band"
-                }
-              ],
-              "selectedBandId": "be-ZDNEkC35PKmmvv6_7R_Pg",
-              "mute": false,
-              "inputVolume": 0,
-              "outputVolume": 0,
-              "dialogOpen": false,
-              "$modelType": "AudioEngine/Effects/GraphicEQ"
-            },
-            {
-              "id": "bf-ZDNEkC35PKmmvv6_7R_Pg",
-              "wet": 1,
-              "decay": 2.5,
-              "preDelay": 0,
-              "mute": false,
-              "inputVolume": 0,
-              "outputVolume": 0,
-              "dialogOpen": false,
-              "$modelType": "AudioEngine/Effects/Reverb"
-            }
-          ],
-          "$modelType": "AudioEngine/EffectsChain"
-        },
-        "rgb": [219, 48, 209],
-        "active": false,
+        "rgb": [250, 173, 20],
+        "active": true,
         "mute": false,
         "solo": false,
         "pan": 0,
         "laneHeight": 140,
         "volume": 0,
         "selectedRefs": [],
-        "inputType": "mic",
+        "inputType": "midi",
         "synth": {
-          "id": "b3-ZDNEkC35PKmmvv6_7R_Pg",
+          "id": "7-oKPZwa4mrgcR9Fn_ZmRnF",
           "volume": 0,
           "triangle": {
             "type": "triangle",
-            "id": "b4-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": 0,
-            "attack": 0.005,
-            "sustain": 0.3,
-            "decay": 0.1,
-            "release": 1,
+            "id": "8-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -10,
+            "attack": 0.05,
+            "sustain": 0.065,
+            "decay": 0.24,
+            "release": 0.9450000000000001,
             "mute": false,
             "$modelType": "AudioEngine/Oscillator"
           },
           "square": {
             "type": "square",
-            "id": "b5-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": 0,
-            "attack": 0.005,
-            "sustain": 0.3,
-            "decay": 0.1,
-            "release": 1,
-            "mute": false,
+            "id": "9-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -36.02,
+            "attack": 0.795,
+            "sustain": 0.08,
+            "decay": 0.265,
+            "release": 1.565,
+            "mute": true,
             "$modelType": "AudioEngine/Oscillator"
           },
           "sine": {
             "type": "sine",
-            "id": "b6-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": 0,
-            "attack": 0.005,
-            "sustain": 0.3,
-            "decay": 0.1,
-            "release": 1,
+            "id": "a-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": 1.1,
+            "attack": 0.045,
+            "sustain": 0.485,
+            "decay": 1.215,
+            "release": 0.17500000000000002,
             "mute": false,
             "$modelType": "AudioEngine/Oscillator"
           },
           "sawtooth": {
             "type": "sawtooth",
-            "id": "b7-ZDNEkC35PKmmvv6_7R_Pg",
-            "volume": 0,
-            "attack": 0.005,
-            "sustain": 0.3,
-            "decay": 0.1,
-            "release": 1,
+            "id": "b-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -31.38,
+            "attack": 0.06,
+            "sustain": 0.075,
+            "decay": 1.095,
+            "release": 0,
             "mute": false,
             "$modelType": "AudioEngine/Oscillator"
           },
@@ -1901,7 +416,7 @@
     ],
     "selectedRefs": [
       {
-        "id": "54-ZDNEkC35PKmmvv6_7R_Pg",
+        "id": "tb--EI_mcxGiaCeh7yp-JJOk",
         "$modelType": "AudioEngine/TrackRef"
       }
     ],
@@ -1910,70 +425,13 @@
       "volume": 0,
       "$modelType": "AudioEngine/Mixer/Master"
     },
-    "topPanelHeight": 846,
+    "topPanelHeight": 789,
     "panelMode": "PIANO_ROLL",
     "$modelType": "AudioEngine/Mixer"
   },
   "auxSendManager": {
-    "id": "5-ZDNEkC35PKmmvv6_7R_Pg",
-    "sends": [
-      {
-        "fromRef": {
-          "id": "6-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "toRef": {
-          "id": "b2-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "id": "b8-ZDNEkC35PKmmvv6_7R_Pg",
-        "volume": 0,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      },
-      {
-        "fromRef": {
-          "id": "8p-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "toRef": {
-          "id": "b2-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "id": "b9-ZDNEkC35PKmmvv6_7R_Pg",
-        "volume": 0,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      },
-      {
-        "fromRef": {
-          "id": "9x-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "toRef": {
-          "id": "b2-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "id": "ba-ZDNEkC35PKmmvv6_7R_Pg",
-        "volume": 0,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      },
-      {
-        "fromRef": {
-          "id": "ak-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "toRef": {
-          "id": "b2-ZDNEkC35PKmmvv6_7R_Pg",
-          "$modelType": "AudioEngine/TrackRef"
-        },
-        "id": "bb-ZDNEkC35PKmmvv6_7R_Pg",
-        "volume": 0,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      }
-    ],
+    "id": "5--EI_mcxGiaCeh7yp-JJOk",
+    "sends": [],
     "$modelType": "AudioEngine/AuxSendManager"
   },
   "keyboard": {
@@ -1984,7 +442,6 @@
     "active": false,
     "$modelType": "AudioEngine/Metronome"
   },
-  "projectId": "DEMO",
   "projectName": "New Project",
   "$modelType": "AudioEngine"
 }
