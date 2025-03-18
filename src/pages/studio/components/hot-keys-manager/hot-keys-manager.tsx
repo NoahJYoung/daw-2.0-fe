@@ -103,7 +103,7 @@ export const HotKeysManager = observer(() => {
 
   useHotkeys("ctrl+v", (event) => {
     event.preventDefault();
-    pasteClips(clipboard, mixer, timeline, undoManager);
+    pasteClips(clipboard, mixer, undoManager);
   });
 
   useHotkeys("ctrl+shift+a", (event) => {

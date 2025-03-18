@@ -56,7 +56,7 @@ export const TimelineHotKeysManager = observer(() => {
 
   useHotkeys("ctrl+v", (event) => {
     event.preventDefault();
-    pasteClips(clipboard, mixer, timeline, undoManager);
+    pasteClips(clipboard, mixer, undoManager);
   });
 
   return null;

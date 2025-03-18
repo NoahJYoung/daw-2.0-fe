@@ -56,7 +56,7 @@ export const getTimelineMenuActions = (
     },
     {
       label: "Paste",
-      onClick: () => pasteClips(clipboard, mixer, timeline, undoManager),
+      onClick: () => pasteClips(clipboard, mixer, undoManager),
       icon: PasteIcon,
       disabled:
         clipboard.getClips().length === 0 || mixer.selectedTracks.length === 0,
