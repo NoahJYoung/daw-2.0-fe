@@ -10,7 +10,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: RoutePaths.ROOT,
-        element: <div>Hi</div>,
+        element: <Studio />,
       },
       {
         path: RoutePaths.ACCESS,
