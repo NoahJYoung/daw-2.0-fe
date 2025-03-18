@@ -23,6 +23,7 @@ import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
 import { useParams } from "react-router-dom";
+import * as Tone from "tone";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -111,8 +112,11 @@ export const Toolbar = observer(
             {
               label: "Save As",
               icon: SaveAsIcon,
-              onClick: () => console.log(audioEngine.serialize()),
-              disabled: !projectId || true,
+              onClick: () => {
+                console.log(Tone.getContext().sampleRate);
+                console.log(audioEngine.serialize());
+              },
+              disabled: !projectId,
             },
             { separator: true },
             {

@@ -189,7 +189,8 @@ export const Clip = observer(
       selectedIndexOffset
     );
 
-    const showClipActions = hovering || selected;
+    const showClipActions = clipWidth >= 50 && (hovering || selected);
+    const showLock = clipWidth >= 50;
 
     return (
       <>
@@ -224,13 +225,15 @@ export const Clip = observer(
           }}
         >
           <span className="flex items-center pl-[2px] pt-[2px]">
-            <button
-              className="flex items-center justify-center"
-              style={{ color: "#222", width: "1rem" }}
-              onClick={handleLockClick}
-            >
-              {clip.locked ? <LockedIcon /> : <UnlockedIcon />}
-            </button>
+            {showLock && (
+              <button
+                className="flex items-center justify-center"
+                style={{ color: "#222", width: "1rem" }}
+                onClick={handleLockClick}
+              >
+                {clip.locked ? <LockedIcon /> : <UnlockedIcon />}
+              </button>
+            )}
             <p
               style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
               className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"

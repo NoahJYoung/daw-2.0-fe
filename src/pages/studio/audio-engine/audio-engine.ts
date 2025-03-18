@@ -52,8 +52,17 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   clipboard = new Clipboard();
 
   async init() {
+    const customAudioContext = new AudioContext({
+      sampleRate: 44100,
+    });
+
+    Tone.setContext(customAudioContext);
+
     mixerCtx.setDefaultComputed(() => this.mixer);
+
     const start = async () => Tone.start();
+    this.sync();
+
     await start();
   }
 
@@ -231,66 +240,102 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     URL.revokeObjectURL(link.href);
   }
 
-  async loadProjectData() {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = ".zip";
-    fileInput.style.display = "none";
+  async loadProjectData(settings?: Record<string, unknown>) {
+    if (settings) {
+      const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
+      const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+      const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
+      const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
+      const loadedProjectId = fromSnapshot(settings.projectId) as string;
+      const loadedProjectName = fromSnapshot(settings.projectName) as string;
 
-    document.body.appendChild(fileInput);
-
-    fileInput.onchange = async (event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      const data = await unzipProjectFile(file);
-
-      await populateBufferCache(data);
-
-      document.body.removeChild(fileInput);
-
-      const settingsBlob = data["settings.json"];
-
-      if (settingsBlob) {
-        const settings = await blobToJsonObject(settingsBlob);
-
-        const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
-        const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
-        const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
-        const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
-        const loadedProjectId = fromSnapshot(settings.projectId) as string;
-        const loadedProjectName = fromSnapshot(settings.projectName) as string;
-
-        loadedMixer.tracks.forEach((track) =>
-          track.clips.forEach((clip) => {
-            if (clip instanceof AudioClip) {
-              const buffer = audioBufferCache.get(clip.id);
-              if (buffer) {
-                clip.createWaveformCache(buffer);
-              } else {
-                throw new Error("no buffer found");
-              }
+      loadedMixer.tracks.forEach((track) =>
+        track.clips.forEach((clip) => {
+          if (clip instanceof AudioClip) {
+            const buffer = audioBufferCache.get(clip.id);
+            if (buffer) {
+              clip.createWaveformCache(buffer);
+            } else {
+              throw new Error("no buffer found");
             }
-          })
-        );
+          }
+        })
+      );
 
-        this.setTimeline(loadedTimeline);
-        this.setMixer(loadedMixer);
-        this.setKeyboard(loadedKeyboard);
-        this.setProjectId(loadedProjectId);
-        this.setProjectName(loadedProjectName);
-        this.setMetronome(loadedMetronome);
-        const loadedAuxSendManager = fromSnapshot(
-          settings.auxSendManager
-        ) as AuxSendManager;
+      this.setTimeline(loadedTimeline);
+      this.setMixer(loadedMixer);
+      this.setKeyboard(loadedKeyboard);
+      this.setProjectId(loadedProjectId);
+      this.setProjectName(loadedProjectName);
+      this.setMetronome(loadedMetronome);
+      const loadedAuxSendManager = fromSnapshot(
+        settings.auxSendManager
+      ) as AuxSendManager;
 
-        this.setAuxSendManager(loadedAuxSendManager);
-      } else {
-        throw new Error("No settings data found");
-      }
-    };
+      this.setAuxSendManager(loadedAuxSendManager);
+    } else {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = ".zip";
+      fileInput.style.display = "none";
 
-    fileInput.click();
+      document.body.appendChild(fileInput);
+
+      fileInput.onchange = async (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        const data = await unzipProjectFile(file);
+
+        await populateBufferCache(data);
+
+        document.body.removeChild(fileInput);
+
+        const settingsBlob = data["settings.json"];
+
+        if (settingsBlob) {
+          const settings = await blobToJsonObject(settingsBlob);
+
+          const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
+          const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+          const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
+          const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
+          const loadedProjectId = fromSnapshot(settings.projectId) as string;
+          const loadedProjectName = fromSnapshot(
+            settings.projectName
+          ) as string;
+
+          loadedMixer.tracks.forEach((track) =>
+            track.clips.forEach((clip) => {
+              if (clip instanceof AudioClip) {
+                const buffer = audioBufferCache.get(clip.id);
+                if (buffer) {
+                  clip.createWaveformCache(buffer);
+                } else {
+                  throw new Error("no buffer found");
+                }
+              }
+            })
+          );
+
+          this.setTimeline(loadedTimeline);
+          this.setMixer(loadedMixer);
+          this.setKeyboard(loadedKeyboard);
+          this.setProjectId(loadedProjectId);
+          this.setProjectName(loadedProjectName);
+          this.setMetronome(loadedMetronome);
+          const loadedAuxSendManager = fromSnapshot(
+            settings.auxSendManager
+          ) as AuxSendManager;
+
+          this.setAuxSendManager(loadedAuxSendManager);
+        } else {
+          throw new Error("No settings data found");
+        }
+      };
+
+      fileInput.click();
+    }
   }
 
   getBounceEndFromLastClip = (samplesPerPixel: number) => {
@@ -301,11 +346,16 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   async getOfflineBounce() {
     const duration = this.getBounceEndFromLastClip(44100);
 
-    const buffer = await Tone.Offline(() => {
-      const clonedEngine = clone(this, { generateNewIds: false });
-      generateOfflineSends(clonedEngine);
-      clonedEngine.play();
-    }, duration);
+    const buffer = await Tone.Offline(
+      () => {
+        const clonedEngine = clone(this, { generateNewIds: false });
+        generateOfflineSends(clonedEngine);
+        clonedEngine.play();
+      },
+      duration,
+      undefined,
+      44100
+    );
 
     const wav = await bufferToWav(buffer, this.projectName);
     const link = document.createElement("a");

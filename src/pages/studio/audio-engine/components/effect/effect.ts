@@ -3,7 +3,6 @@ import { ExtendedModel, idProp, model, prop } from "mobx-keystone";
 import * as Tone from "tone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { METER_SMOOTHING_VALUE } from "@/pages/studio/utils/constants";
-import { action, observable } from "mobx";
 
 interface EffectInterface {
   readonly name: string;
@@ -16,6 +15,7 @@ export class Effect
     mute: prop(false).withSetter(),
     inputVolume: prop(0).withSetter(),
     outputVolume: prop(0).withSetter(),
+    dialogOpen: prop(true).withSetter(),
   })
   implements EffectInterface
 {
@@ -27,14 +27,6 @@ export class Effect
 
   get name(): string {
     throw new Error("'Effect' subclasses must implement the 'name' getter");
-  }
-
-  @observable
-  dialogOpen = true;
-
-  @action
-  setDialogOpen(open: boolean) {
-    this.dialogOpen = open;
   }
 
   sync() {
