@@ -1197,7 +1197,7 @@
         },
         "rgb": [236, 33, 181],
         "active": false,
-        "mute": true,
+        "mute": false,
         "solo": false,
         "pan": 0.26,
         "laneHeight": 140,
