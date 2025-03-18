@@ -157,7 +157,7 @@ export const Toolbar = observer(
         <StudioButton
           title={t("studio.toolbar.paste")}
           icon={MdContentPasteGo}
-          onClick={() => pasteClips(clipboard, mixer, timeline, undoManager)}
+          onClick={() => pasteClips(clipboard, mixer, undoManager)}
           disabled={
             clipboard.getClips().length === 0 ||
             mixer.selectedTracks.length === 0

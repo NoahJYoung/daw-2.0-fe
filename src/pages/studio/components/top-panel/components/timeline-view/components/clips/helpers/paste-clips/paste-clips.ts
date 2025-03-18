@@ -4,7 +4,6 @@ import {
   Clipboard,
   MidiClip,
   Mixer,
-  Timeline,
   waveformCache,
 } from "@/pages/studio/audio-engine/components";
 import { clone, UndoManager } from "mobx-keystone";
@@ -13,7 +12,6 @@ import * as Tone from "tone";
 export const pasteClips = (
   clipboard: Clipboard,
   mixer: Mixer,
-  timeline: Timeline,
   undoManager: UndoManager
 ) => {
   const timelinePosition = Tone.Time(

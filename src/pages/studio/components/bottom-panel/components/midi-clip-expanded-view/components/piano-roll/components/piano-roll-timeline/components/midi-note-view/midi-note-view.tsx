@@ -45,8 +45,6 @@ export const MidiNoteView = observer(
     const { mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
 
-    const [r, g, b] = mixer.featuredTrack?.rgb || [175, 175, 175];
-
     const generateRGBWithAlias = (alias: number) => {
       const rgb = getColorFromVelocity(
         note.velocity,
