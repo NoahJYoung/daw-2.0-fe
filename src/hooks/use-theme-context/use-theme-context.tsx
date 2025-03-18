@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
@@ -5,6 +6,7 @@ import {
   ReactNode,
   useMemo,
   useEffect,
+  useCallback,
 } from "react";
 
 type Theme = "light" | "dark";
@@ -32,10 +34,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     document.body.classList.add(theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     document.body.classList.remove(theme);
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
+  }, [theme]);
 
   const contextValue = useMemo(
     () => ({
@@ -43,7 +45,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       setTheme,
       toggleTheme,
     }),
-    [theme]
+    [theme, toggleTheme]
   );
 
   return (

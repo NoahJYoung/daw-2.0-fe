@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphicEQView } from "../components";
 import { EffectViewComponentObject } from "../types";
 

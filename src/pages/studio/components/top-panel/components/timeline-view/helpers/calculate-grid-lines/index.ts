@@ -1,1 +1,1 @@
-export { calculateGridLines } from "./calculate-grid-lines";
+export { findSmallestSubdivision } from "./calculate-grid-lines";

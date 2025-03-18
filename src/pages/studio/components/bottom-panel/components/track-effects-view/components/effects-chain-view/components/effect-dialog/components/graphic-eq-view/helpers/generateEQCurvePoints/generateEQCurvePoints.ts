@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Band } from "@/pages/studio/audio-engine/components/effects/graphic-eq/components";
 import { Point } from "../../types";
 import * as Tone from "tone";
@@ -16,7 +17,6 @@ function highpassResponse(
 ): number {
   if (testFreq <= 0) return MIN_GAIN_DB;
 
-  // Normalize frequencies to [0, π]
   const w0 = 2 * Math.PI * (frequency / SAMPLE_RATE);
   const w = 2 * Math.PI * (testFreq / SAMPLE_RATE);
 

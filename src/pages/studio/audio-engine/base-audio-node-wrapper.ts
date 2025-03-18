@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { model, Model, onPatches, getSnapshot, getRoot } from "mobx-keystone";
 import { AudioEngine } from "./audio-engine";
 

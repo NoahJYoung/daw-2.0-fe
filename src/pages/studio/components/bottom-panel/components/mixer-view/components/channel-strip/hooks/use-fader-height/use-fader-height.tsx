@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, {
   createContext,
   Dispatch,
@@ -11,17 +12,14 @@ interface FaderHeightContext {
   setFaderHeight: Dispatch<SetStateAction<number | null>>;
 }
 
-// Create a context for sharing the fader height
 const FaderHeightContext = createContext<FaderHeightContext | undefined>(
   undefined
 );
 
-// A custom hook to use the context
 export const useFaderHeight = () => {
   return useContext(FaderHeightContext);
 };
 
-// Provider to wrap around your components
 export const FaderHeightProvider = ({
   children,
 }: {

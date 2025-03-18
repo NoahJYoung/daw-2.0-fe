@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Timeline, Track } from "@/pages/studio/audio-engine/components";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { useAudioEngine, useRequestAnimationFrame } from "@/pages/studio/hooks";
