@@ -4,7 +4,7 @@
     "bpm": 108,
     "timeSignature": 4,
     "measures": 301,
-    "samplesPerPixel": 512,
+    "samplesPerPixel": 1024,
     "seconds": 47.77777777777783,
     "subdivision": "4n",
     "snapToGrid": true,
