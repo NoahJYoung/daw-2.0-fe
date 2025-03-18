@@ -17,6 +17,7 @@ export const Playhead = React.forwardRef<HTMLSpanElement, PlayheadProps>(
         height,
         zIndex: 11,
         pointerEvents: "none",
+        willChange: "transform",
       }}
       className="absolute bg-surface-5"
     />

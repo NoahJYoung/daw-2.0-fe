@@ -64,6 +64,9 @@ export const MidiLoop = observer(
 
     const loopWidth = getLoopWidth();
 
+    // Calculate transform values for the last section
+    const transformX = clipLeft + clipWidth + clipWidth * loops.length;
+
     return (
       <div
         onClick={onClick}
@@ -94,11 +97,11 @@ export const MidiLoop = observer(
           style={{
             width: loopWidth - clipWidth * loops.length,
             height: height + 28,
-            left: clipLeft + clipWidth + clipWidth * loops.length,
+            transform: `translate(${transformX}px, ${top}px)`,
             marginTop: 2,
             opacity: selected ? 0.4 : 0.3,
             background: color,
-            top,
+            willChange: "transform",
           }}
         />
       </div>

@@ -101,7 +101,7 @@ export const Clip = observer(
       undoManager
     );
 
-    const clipLeft = selected
+    const clipTransformX = selected
       ? timeline.samplesToPixels(clip.start) + selectedOffset
       : timeline.samplesToPixels(clip.start);
 
@@ -192,6 +192,9 @@ export const Clip = observer(
     const showClipActions = clipWidth >= 50 && (hovering || selected);
     const showLock = clipWidth >= 50;
 
+    // Calculate transform values
+    const transformY = top;
+
     return (
       <>
         <div
@@ -217,11 +220,11 @@ export const Clip = observer(
             marginTop: 2,
             height: height,
             background: color,
-            top: top,
             zIndex: 9,
             position: "absolute",
-            left: clipLeft,
+            transform: `translate(${clipTransformX}px, ${transformY}px)`,
             cursor: dragging || isLooping ? "grabbing" : "auto",
+            willChange: "transform",
           }}
         >
           <span className="flex items-center pl-[2px] pt-[2px]">
@@ -248,7 +251,7 @@ export const Clip = observer(
                 scrollLeft={scrollLeft}
                 track={currentDragTrack || track}
                 clip={clip as AudioClip}
-                clipLeft={clipLeft}
+                clipLeft={clipTransformX}
               />
 
               {showClipActions && (
@@ -256,16 +259,18 @@ export const Clip = observer(
                   onMouseDown={handleLoopDown}
                   onTouchStart={handleLoopDown}
                   style={{
-                    left:
+                    transform: `translateX(${
                       (clip.length +
                         clip.loopSamples +
                         (selected ? loopOffset : 0)) /
                         timeline.samplesPerPixel -
-                      24,
+                      24
+                    }px)`,
                     bottom: 4,
+                    position: "absolute",
                   }}
                   className={cn(
-                    "absolute flex flex items-center justify-center justify-center text-xl items-center opacity-80 hover:opacity-100 w-5 h-5",
+                    "flex flex items-center justify-center justify-center text-xl items-center opacity-80 hover:opacity-100 w-5 h-5",
                     isLooping ? "cursor-grabbing" : "cursor-grab"
                   )}
                 >
@@ -287,16 +292,18 @@ export const Clip = observer(
                   onMouseDown={handleLoopDown}
                   onTouchStart={handleLoopDown}
                   style={{
-                    left:
+                    transform: `translateX(${
                       (clip.length +
                         clip.loopSamples +
                         (selected ? loopOffset : 0)) /
                         timeline.samplesPerPixel -
-                      24,
+                      24
+                    }px)`,
                     bottom: 4,
+                    position: "absolute",
                   }}
                   className={cn(
-                    "absolute flex flex items-center justify-center justify-center text-xl items-center opacity-80 hover:opacity-100 w-5 h-5",
+                    "flex flex items-center justify-center justify-center text-xl items-center opacity-80 hover:opacity-100 w-5 h-5",
                     isLooping ? "cursor-grabbing" : "cursor-grab"
                   )}
                 >
@@ -320,7 +327,7 @@ export const Clip = observer(
               onMouseDown={onMouseDown}
               track={currentDragTrack || track}
               clip={clip as AudioClip}
-              clipLeft={clipLeft}
+              clipLeft={clipTransformX}
               selected={selected}
               isLooping={isLooping && selected}
             />
@@ -339,7 +346,7 @@ export const Clip = observer(
               onMouseDown={onMouseDown}
               track={currentDragTrack || track}
               clip={clip}
-              clipLeft={clipLeft}
+              clipLeft={clipTransformX}
               selected={selected}
               isLooping={isLooping && selected}
             />

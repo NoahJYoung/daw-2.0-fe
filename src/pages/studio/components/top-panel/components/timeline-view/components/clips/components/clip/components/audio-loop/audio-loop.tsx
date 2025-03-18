@@ -54,6 +54,8 @@ export const AudioLoop = observer(
       canvasRefs.current = loops.map(() => []);
     }
 
+    const transformX = clipLeft + clipWidth + clipWidth * loops.length;
+
     return (
       <div
         onClick={onClick}
@@ -85,11 +87,11 @@ export const AudioLoop = observer(
           style={{
             width: loopWidth - clipWidth * loops.length,
             height: height + 28,
-            left: clipLeft + clipWidth + clipWidth * loops.length,
+            transform: `translate(${transformX}px, ${top}px)`,
             marginTop: 2,
             opacity: selected ? 0.4 : 0.3,
             background: color,
-            top,
+            willChange: "transform",
           }}
         />
       </div>
