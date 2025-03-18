@@ -38,10 +38,30 @@ export const TimelineView = observer(
     const [viewportWidth, setViewportWidth] = useState(0);
 
     const playheadRef = useRef<HTMLDivElement>(null);
+    const lastPlayheadUpdateTimeRef = useRef(0);
+    const lastPlayheadPositionRef = useRef(-1);
+    const PLAYHEAD_UPDATE_THRESHOLD_MS = 30;
+
     const setPlayheadLeft = (pixels: number) => {
-      if (playheadRef.current) {
-        playheadRef.current.style.transform = `translateX(${pixels}px)`;
+      if (!playheadRef.current) return;
+
+      const now = performance.now();
+
+      if (
+        now - lastPlayheadUpdateTimeRef.current <
+        PLAYHEAD_UPDATE_THRESHOLD_MS
+      ) {
+        return;
       }
+
+      if (Math.abs(pixels - lastPlayheadPositionRef.current) < 1) {
+        return;
+      }
+
+      lastPlayheadUpdateTimeRef.current = now;
+      lastPlayheadPositionRef.current = pixels;
+
+      playheadRef.current.style.transform = `translateX(${pixels}px)`;
     };
 
     useEffect(() => {
@@ -145,8 +165,9 @@ export const TimelineView = observer(
 
     useRequestAnimationFrame(
       () => {
+        const currentSeconds = Tone.getTransport().seconds;
         const pixels = timeline.samplesToPixels(
-          Tone.Time(Tone.getTransport().seconds, "s").toSamples()
+          Tone.Time(currentSeconds, "s").toSamples()
         );
         setPlayheadLeft(pixels);
       },
