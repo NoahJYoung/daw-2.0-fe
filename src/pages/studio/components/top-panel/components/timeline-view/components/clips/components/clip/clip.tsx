@@ -192,7 +192,6 @@ export const Clip = observer(
     const showClipActions = clipWidth >= 50 && (hovering || selected);
     const showLock = clipWidth >= 50;
 
-    // Calculate transform values
     const transformY = top;
 
     return (

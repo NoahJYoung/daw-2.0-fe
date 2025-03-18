@@ -53,6 +53,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   async init() {
     mixerCtx.setDefaultComputed(() => this.mixer);
+    // const customAudioContext = new AudioContext({
+    //   sampleRate: 44100,
+    // });
+
+    // Tone.setContext(customAudioContext);
 
     const start = async () => Tone.start();
     this.sync();
