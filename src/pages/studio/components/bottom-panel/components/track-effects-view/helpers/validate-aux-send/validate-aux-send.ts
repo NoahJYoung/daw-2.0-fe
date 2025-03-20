@@ -1,7 +1,11 @@
 import { AuxSend, Track } from "@/pages/studio/audio-engine/components";
 
 export const isSameTrack = (track1: Track, track2: Track) => {
-  return track1.id === track2.id;
+  if (track1 && track2) {
+    return track1?.id === track2?.id;
+  }
+
+  return false;
 };
 
 export const routeAlreadyExists = (
@@ -10,7 +14,7 @@ export const routeAlreadyExists = (
   routes: AuxSend[]
 ) => {
   const condition = routes.some(
-    (route) => route.from.id === fromTrack.id && route.to.id === toTrack.id
+    (route) => route.from?.id === fromTrack?.id && route.to?.id === toTrack?.id
   );
 
   return condition;
@@ -25,7 +29,7 @@ export const isCircular = (
     currentTrack: Track,
     visitedTracks: Set<Track>
   ): boolean => {
-    if (visitedTracks.has(currentTrack) || currentTrack.id === fromTrack.id) {
+    if (visitedTracks.has(currentTrack) || currentTrack?.id === fromTrack?.id) {
       return true;
     }
 

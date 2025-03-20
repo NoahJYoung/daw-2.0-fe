@@ -48,11 +48,11 @@ export class AuxSend extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get from() {
-    return this.fromRef.current;
+    return this.fromRef?.current;
   }
 
   @computed
   get to() {
-    return this.toRef.current;
+    return this.toRef?.current;
   }
 }
