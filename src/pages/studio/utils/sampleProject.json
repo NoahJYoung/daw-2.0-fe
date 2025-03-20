@@ -1199,12 +1199,7 @@
         "$modelType": "AudioEngine/Mixer/Track"
       }
     ],
-    "selectedRefs": [
-      {
-        "id": "6-4Ivts1hg5hgrcAutEFwnq",
-        "$modelType": "AudioEngine/TrackRef"
-      }
-    ],
+    "selectedRefs": [],
     "master": {
       "mute": false,
       "volume": 0,
@@ -1216,26 +1211,7 @@
   },
   "auxSendManager": {
     "id": "5--EI_mcxGiaCeh7yp-JJOk",
-    "sends": [
-      {
-        "id": "x8-rWSwuNrRO5HncGz6RKwji",
-        "volume": -4.21,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      },
-      {
-        "id": "x9-rWSwuNrRO5HncGz6RKwji",
-        "volume": -5.36,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      },
-      {
-        "id": "xe-rWSwuNrRO5HncGz6RKwji",
-        "volume": -13.07,
-        "mute": false,
-        "$modelType": "AudioEngine/AuxSend"
-      }
-    ],
+    "sends": [],
     "$modelType": "AudioEngine/AuxSendManager"
   },
   "keyboard": {

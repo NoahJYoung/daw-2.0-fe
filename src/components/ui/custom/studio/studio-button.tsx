@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react";
 import { IconType } from "react-icons/lib";
 import { Button } from "../../button";
 import { CSSProperties } from "react";
@@ -17,18 +17,21 @@ interface StudioButtonProps {
 }
 
 export const StudioButton = forwardRef(
-  ({
-    onClick,
-    on,
-    onClassName,
-    label,
-    icon: Icon,
-    disabled,
-    title,
-    className,
-    style,
-    size,
-  }: StudioButtonProps) => {
+  (
+    {
+      onClick,
+      on,
+      onClassName,
+      label,
+      icon: Icon,
+      disabled,
+      title,
+      className,
+      style,
+      size,
+    }: StudioButtonProps,
+    ref: ForwardedRef<HTMLButtonElement>
+  ) => {
     const getClassName = () => {
       const baseClass =
         className ??
@@ -40,6 +43,7 @@ export const StudioButton = forwardRef(
     };
     return (
       <Button
+        ref={ref}
         size={size}
         style={style}
         title={title}

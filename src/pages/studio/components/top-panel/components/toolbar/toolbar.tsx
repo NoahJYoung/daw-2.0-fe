@@ -14,7 +14,7 @@ import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
 import { observer } from "mobx-react-lite";
 import { TRACK_PANEL_EXPANDED_WIDTH } from "@/pages/studio/utils/constants";
-import { useThemeContext, useUser } from "@/hooks";
+import { useThemeContext } from "@/hooks";
 import { useTranslation } from "react-i18next";
 import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
 import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
@@ -23,6 +23,7 @@ import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
 import { useParams } from "react-router-dom";
+import { getOfflineBounce } from "@/pages/studio/audio-engine/helpers";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -31,7 +32,6 @@ interface ToolbarProps {
 
 export const Toolbar = observer(
   ({ panelExpanded, togglePanelView }: ToolbarProps) => {
-    const { user } = useUser();
     const { projectId } = useParams();
     const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
@@ -106,7 +106,6 @@ export const Toolbar = observer(
               label: "Save",
               icon: IoMdSave,
               onClick: () => console.log(audioEngine.serialize()),
-              disabled: !user || true,
             },
             {
               label: "Save As",
@@ -169,7 +168,7 @@ export const Toolbar = observer(
         <StudioButton
           title={t("studio.toolbar.download")}
           icon={IoDownloadOutline}
-          onClick={async () => audioEngine.getOfflineBounce()}
+          onClick={async () => getOfflineBounce(audioEngine)}
         />
 
         <StudioDropdownMenu

@@ -33,8 +33,10 @@ export class AuxSend extends ExtendedModel(BaseAudioNodeWrapper, {
 
   connect() {
     try {
-      this.from.channel.connect(this.channel);
-      this.channel.connect(this.to.channel);
+      if (this.from && this.to) {
+        this.from.channel.connect(this.channel);
+        this.channel.connect(this.to?.channel);
+      }
     } catch (error) {
       // TODO: Figure out how to handle connection error during offline render.
       // Current logic is functional, but error should be handled better

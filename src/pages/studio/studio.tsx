@@ -11,6 +11,7 @@ import {
   TopPanel,
   MainControls,
   ModalProvider,
+  Loader,
 } from "./components";
 
 export const Studio = observer(() => (
@@ -23,6 +24,7 @@ export const Studio = observer(() => (
           middlePanel={<MainControls />}
           lowerPanel={<BottomPanel />}
         />
+        <Loader />
         <ModalProvider />
       </BottomPanelProvider>
     </UndoManagerProvider>

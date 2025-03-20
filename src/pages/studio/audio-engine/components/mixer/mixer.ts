@@ -88,7 +88,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   unselectTrack(track: Track) {
-    if (!this.tracks.includes(track)) throw new Error("unknown todo");
+    if (!this.tracks.includes(track)) throw new Error("unknown track");
 
     const trackRefIndex = this.selectedRefs.findIndex(
       (todoRef) => todoRef.maybeCurrent === track

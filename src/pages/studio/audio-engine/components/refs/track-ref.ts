@@ -1,10 +1,10 @@
-import { customRef, detach } from "mobx-keystone";
+import { customRef, detach, getRoot } from "mobx-keystone";
 import { Track } from "../track";
-import { mixerCtx } from "../../audio-engine";
+import { AudioEngine } from "../../audio-engine";
 
 export const trackRef = customRef<Track>("AudioEngine/TrackRef", {
   resolve(ref) {
-    const mixer = mixerCtx.getDefault();
+    const { mixer } = getRoot<AudioEngine>(this);
 
     return mixer?.tracks.find((track) => {
       return track.id === ref.id;

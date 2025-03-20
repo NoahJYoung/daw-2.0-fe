@@ -5,7 +5,6 @@ import {
   clone,
   fromSnapshot,
   idProp,
-  createContext,
 } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "./base-audio-node-wrapper";
 import {
@@ -26,13 +25,11 @@ import { MidiNote } from "./components/midi-note";
 import { EventData } from "./components/keyboard/types";
 import {
   blobToJsonObject,
-  generateOfflineSends,
   populateBufferCache,
   unzipProjectFile,
 } from "./helpers";
 import JSZip from "jszip";
 import { bufferToWav } from "../utils";
-export const mixerCtx = createContext<Mixer>();
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -46,23 +43,30 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   metronome: prop<Metronome>(() => new Metronome({})).withSetter(),
   projectId: prop<string | undefined>().withSetter(),
   projectName: prop<string>("New Project").withSetter(),
+  hasInitialized: prop<boolean>(false).withSetter(),
 }) {
   @observable
   state: AudioEngineState = AudioEngineState.stopped;
   clipboard = new Clipboard();
 
-  async init() {
-    mixerCtx.setDefaultComputed(() => this.mixer);
-    const customAudioContext = new AudioContext({
-      latencyHint: "playback",
-    });
+  @observable
+  loadingState: string | null = "Initializing";
 
-    Tone.setContext(customAudioContext);
+  async init() {
+    if (!this.hasInitialized) {
+      const customAudioContext = new AudioContext({
+        latencyHint: "playback",
+      });
+
+      Tone.setContext(customAudioContext);
+      this.setHasInitialized(true);
+    }
 
     const start = async () => Tone.start();
     this.sync();
 
     await start();
+    this.setLoadingState(null);
   }
 
   getRefId() {
@@ -72,6 +76,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   @action
   private setState(state: AudioEngineState) {
     this.state = state;
+  }
+
+  @action
+  setLoadingState(state: string | null) {
+    this.loadingState = state;
   }
 
   record = async () => {
@@ -240,6 +249,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   async loadProjectData(settings?: Record<string, unknown>) {
+    this.setLoadingState("Loading project");
     if (settings) {
       const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
       const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
@@ -335,35 +345,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
       fileInput.click();
     }
+    this.setLoadingState(null);
   }
 
   getBounceEndFromLastClip = (samplesPerPixel: number) => {
     const duration = this.mixer.getLastClipEndSamples() / samplesPerPixel;
     return duration;
   };
-
-  async getOfflineBounce() {
-    const duration = this.getBounceEndFromLastClip(
-      Tone.getContext().sampleRate
-    );
-
-    const buffer = await Tone.Offline(
-      () => {
-        const clonedEngine = clone(this, { generateNewIds: false });
-        generateOfflineSends(clonedEngine);
-        clonedEngine.play();
-      },
-      duration,
-      undefined,
-      Tone.getContext().sampleRate
-    );
-
-    const wav = await bufferToWav(buffer, this.projectName);
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(wav);
-    link.download = `${this.projectName}.wav`;
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-  }
 }
