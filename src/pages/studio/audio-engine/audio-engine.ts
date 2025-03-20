@@ -53,11 +53,12 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   async init() {
     mixerCtx.setDefaultComputed(() => this.mixer);
-    // const customAudioContext = new AudioContext({
-    //   sampleRate: 44100,
-    // });
+    const customAudioContext = new AudioContext({
+      sampleRate: 44100,
+      latencyHint: "playback",
+    });
 
-    // Tone.setContext(customAudioContext);
+    Tone.setContext(customAudioContext);
 
     const start = async () => Tone.start();
     this.sync();
@@ -162,7 +163,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   play = async () => {
-    Tone.getTransport().start();
+    Tone.getTransport().start("+0.1");
     this.metronome.start();
     this.mixer.tracks.forEach((track) => track.play());
     if (this.state !== AudioEngineState.recording) {

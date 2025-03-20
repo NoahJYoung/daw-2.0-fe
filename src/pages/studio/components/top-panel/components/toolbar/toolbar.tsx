@@ -113,7 +113,6 @@ export const Toolbar = observer(
               label: "Save As",
               icon: SaveAsIcon,
               onClick: () => {
-                console.log(Tone.getContext().sampleRate);
                 console.log(audioEngine.serialize());
               },
               disabled: !projectId,
