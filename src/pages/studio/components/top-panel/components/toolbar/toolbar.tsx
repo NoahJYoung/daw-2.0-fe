@@ -23,7 +23,6 @@ import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
 import { useParams } from "react-router-dom";
-import * as Tone from "tone";
 
 interface ToolbarProps {
   panelExpanded: boolean;
