@@ -31,7 +31,7 @@ import {
   unzipProjectFile,
 } from "./helpers";
 import JSZip from "jszip";
-import { bufferToWav } from "../utils";
+import { bufferToWav, isTouchDevice } from "../utils";
 export const mixerCtx = createContext<Mixer>();
 
 @model("AudioEngine")
@@ -54,8 +54,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   async init() {
     mixerCtx.setDefaultComputed(() => this.mixer);
     const customAudioContext = new AudioContext({
-      sampleRate: 44100,
-      latencyHint: "playback",
+      latencyHint: isTouchDevice() ? 0.5 : "playback",
     });
 
     Tone.setContext(customAudioContext);
