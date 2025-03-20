@@ -114,7 +114,7 @@ export const Toolbar = observer(
               onClick: () => {
                 console.log(audioEngine.serialize());
               },
-              // disabled: !projectId,
+              disabled: !projectId,
             },
             { separator: true },
             {
