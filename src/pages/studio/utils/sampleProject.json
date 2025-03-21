@@ -1,11 +1,11 @@
 {
-  "id": "3-i_nTd0xZTjLd_GfNy-hdb",
+  "id": "3-god2yChkwuTrkMP4HKA-P",
   "timeline": {
     "bpm": 120,
     "timeSignature": 4,
     "measures": 301,
     "samplesPerPixel": 2048,
-    "seconds": 68.01999999999987,
+    "seconds": 68.01466666666715,
     "subdivision": "4n",
     "snapToGrid": true,
     "$modelType": "AudioEngine/Transport"
@@ -16,7 +16,7 @@
       {
         "id": "6-46sJ84vrxCufH_5Q78u6i",
         "onlineId": null,
-        "name": "Bach-esque L",
+        "name": "Bach-esque",
         "clips": [
           {
             "trackId": "6-46sJ84vrxCufH_5Q78u6i",
@@ -24,7 +24,7 @@
             "end": 1632000,
             "events": [
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 384000,
                 "off": 396000,
                 "velocity": 64,
@@ -32,7 +32,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 396000,
                 "off": 408000,
                 "velocity": 64,
@@ -40,7 +40,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 408000,
                 "off": 420000,
                 "velocity": 64,
@@ -48,7 +48,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 420000,
                 "off": 432000,
                 "velocity": 64,
@@ -56,7 +56,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 432000,
                 "off": 444000,
                 "velocity": 64,
@@ -64,7 +64,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 444000,
                 "off": 456000,
                 "velocity": 64,
@@ -72,7 +72,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 456000,
                 "off": 468000,
                 "velocity": 64,
@@ -80,7 +80,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 468000,
                 "off": 480000,
                 "velocity": 64,
@@ -88,7 +88,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 480000,
                 "off": 492000,
                 "velocity": 64,
@@ -96,7 +96,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 492000,
                 "off": 504000,
                 "velocity": 64,
@@ -104,7 +104,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 504000,
                 "off": 516000,
                 "velocity": 64,
@@ -112,7 +112,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 5],
+                "note": ["G", 4],
                 "on": 516000,
                 "off": 528000,
                 "velocity": 64,
@@ -120,7 +120,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["B", 3],
+                "note": ["B", 2],
                 "on": 528000,
                 "off": 540000,
                 "velocity": 64,
@@ -128,7 +128,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 540000,
                 "off": 552000,
                 "velocity": 64,
@@ -136,7 +136,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 552000,
                 "off": 564000,
                 "velocity": 64,
@@ -144,7 +144,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 564000,
                 "off": 576000,
                 "velocity": 64,
@@ -152,7 +152,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 0,
                 "off": 12000,
                 "velocity": 64,
@@ -160,7 +160,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 12000,
                 "off": 24000,
                 "velocity": 64,
@@ -168,7 +168,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 24000,
                 "off": 36000,
                 "velocity": 64,
@@ -176,7 +176,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 36000,
                 "off": 48000,
                 "velocity": 64,
@@ -184,7 +184,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 48000,
                 "off": 60000,
                 "velocity": 64,
@@ -192,7 +192,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 60000,
                 "off": 72000,
                 "velocity": 64,
@@ -200,7 +200,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 72000,
                 "off": 84000,
                 "velocity": 64,
@@ -208,7 +208,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 84000,
                 "off": 96000,
                 "velocity": 64,
@@ -216,7 +216,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 96000,
                 "off": 108000,
                 "velocity": 64,
@@ -224,7 +224,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 108000,
                 "off": 120000,
                 "velocity": 64,
@@ -232,7 +232,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 120000,
                 "off": 132000,
                 "velocity": 64,
@@ -240,7 +240,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 132000,
                 "off": 144000,
                 "velocity": 64,
@@ -248,7 +248,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 144000,
                 "off": 156000,
                 "velocity": 64,
@@ -256,7 +256,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 156000,
                 "off": 168000,
                 "velocity": 64,
@@ -264,7 +264,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["B", 4],
+                "note": ["B", 3],
                 "on": 168000,
                 "off": 180000,
                 "velocity": 64,
@@ -272,7 +272,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 5],
+                "note": ["C", 4],
                 "on": 180000,
                 "off": 192000,
                 "velocity": 64,
@@ -280,7 +280,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 192000,
                 "off": 204000,
                 "velocity": 64,
@@ -288,7 +288,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 204000,
                 "off": 216000,
                 "velocity": 64,
@@ -296,7 +296,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 5],
+                "note": ["C", 4],
                 "on": 216000,
                 "off": 228000,
                 "velocity": 64,
@@ -304,7 +304,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 228000,
                 "off": 240000,
                 "velocity": 64,
@@ -312,7 +312,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 240000,
                 "off": 252000,
                 "velocity": 64,
@@ -320,7 +320,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 252000,
                 "off": 264000,
                 "velocity": 64,
@@ -328,7 +328,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 264000,
                 "off": 276000,
                 "velocity": 64,
@@ -336,7 +336,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 276000,
                 "off": 288000,
                 "velocity": 64,
@@ -344,7 +344,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 288000,
                 "off": 300000,
                 "velocity": 64,
@@ -352,7 +352,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 300000,
                 "off": 312000,
                 "velocity": 64,
@@ -360,7 +360,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 312000,
                 "off": 324000,
                 "velocity": 64,
@@ -368,7 +368,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 324000,
                 "off": 336000,
                 "velocity": 64,
@@ -376,7 +376,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 336000,
                 "off": 348000,
                 "velocity": 64,
@@ -384,7 +384,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 348000,
                 "off": 360000,
                 "velocity": 64,
@@ -392,7 +392,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 5],
+                "note": ["C", 4],
                 "on": 360000,
                 "off": 372000,
                 "velocity": 64,
@@ -400,7 +400,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 372000,
                 "off": 384000,
                 "velocity": 64,
@@ -408,7 +408,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 576000,
                 "off": 588000,
                 "velocity": 64,
@@ -416,7 +416,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 588000,
                 "off": 600000,
                 "velocity": 64,
@@ -424,7 +424,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 600000,
                 "off": 612000,
                 "velocity": 64,
@@ -432,7 +432,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 612000,
                 "off": 624000,
                 "velocity": 64,
@@ -440,7 +440,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 624000,
                 "off": 636000,
                 "velocity": 64,
@@ -448,7 +448,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 636000,
                 "off": 648000,
                 "velocity": 64,
@@ -456,7 +456,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 648000,
                 "off": 660000,
                 "velocity": 64,
@@ -464,7 +464,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 660000,
                 "off": 672000,
                 "velocity": 64,
@@ -472,7 +472,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 4],
+                "note": ["C", 3],
                 "on": 672000,
                 "off": 684000,
                 "velocity": 64,
@@ -480,7 +480,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 684000,
                 "off": 696000,
                 "velocity": 64,
@@ -488,7 +488,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 696000,
                 "off": 708000,
                 "velocity": 64,
@@ -496,7 +496,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 708000,
                 "off": 720000,
                 "velocity": 64,
@@ -504,7 +504,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["A", 3],
+                "note": ["A", 2],
                 "on": 720000,
                 "off": 732000,
                 "velocity": 64,
@@ -512,7 +512,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 4],
+                "note": ["F", 3],
                 "on": 732000,
                 "off": 744000,
                 "velocity": 64,
@@ -520,7 +520,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 5],
+                "note": ["C", 4],
                 "on": 743744,
                 "off": 755744,
                 "velocity": 64,
@@ -528,7 +528,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 755744,
                 "off": 767744,
                 "velocity": 64,
@@ -536,7 +536,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 768000,
                 "off": 780000,
                 "velocity": 64,
@@ -544,7 +544,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 780000,
                 "off": 792000,
                 "velocity": 64,
@@ -552,7 +552,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 792000,
                 "off": 804000,
                 "velocity": 64,
@@ -560,7 +560,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 804000,
                 "off": 816000,
                 "velocity": 64,
@@ -568,7 +568,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 816000,
                 "off": 828000,
                 "velocity": 64,
@@ -576,7 +576,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 828000,
                 "off": 840000,
                 "velocity": 64,
@@ -584,7 +584,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 840000,
                 "off": 852000,
                 "velocity": 64,
@@ -592,7 +592,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 852000,
                 "off": 864000,
                 "velocity": 64,
@@ -600,7 +600,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 864000,
                 "off": 876000,
                 "velocity": 64,
@@ -608,7 +608,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 876000,
                 "off": 888000,
                 "velocity": 64,
@@ -616,7 +616,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 888000,
                 "off": 900000,
                 "velocity": 64,
@@ -624,7 +624,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 5],
+                "note": ["G", 4],
                 "on": 900000,
                 "off": 912000,
                 "velocity": 64,
@@ -632,7 +632,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 911744,
                 "off": 923744,
                 "velocity": 64,
@@ -640,7 +640,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 924000,
                 "off": 936000,
                 "velocity": 64,
@@ -648,7 +648,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 936000,
                 "off": 948000,
                 "velocity": 64,
@@ -656,7 +656,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 948000,
                 "off": 960000,
                 "velocity": 64,
@@ -664,7 +664,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 960000,
                 "off": 972000,
                 "velocity": 64,
@@ -672,7 +672,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 971744,
                 "off": 983744,
                 "velocity": 64,
@@ -680,7 +680,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 984000,
                 "off": 996000,
                 "velocity": 64,
@@ -688,7 +688,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 996000,
                 "off": 1008000,
                 "velocity": 64,
@@ -696,7 +696,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1008000,
                 "off": 1020000,
                 "velocity": 64,
@@ -704,7 +704,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 1020000,
                 "off": 1032000,
                 "velocity": 64,
@@ -712,7 +712,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1032000,
                 "off": 1044000,
                 "velocity": 64,
@@ -720,7 +720,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 1044000,
                 "off": 1056000,
                 "velocity": 64,
@@ -728,7 +728,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1056000,
                 "off": 1068000,
                 "velocity": 64,
@@ -736,7 +736,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 1068256,
                 "off": 1080256,
                 "velocity": 64,
@@ -744,7 +744,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1080000,
                 "off": 1092000,
                 "velocity": 64,
@@ -752,7 +752,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 5],
+                "note": ["G", 4],
                 "on": 1092000,
                 "off": 1104000,
                 "velocity": 64,
@@ -760,7 +760,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["A", 3],
+                "note": ["A", 2],
                 "on": 1104000,
                 "off": 1116000,
                 "velocity": 64,
@@ -768,7 +768,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 4],
+                "note": ["F", 3],
                 "on": 1116256,
                 "off": 1128256,
                 "velocity": 64,
@@ -776,7 +776,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["C", 5],
+                "note": ["C", 4],
                 "on": 1127744,
                 "off": 1139744,
                 "velocity": 64,
@@ -784,7 +784,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1139744,
                 "off": 1151744,
                 "velocity": 64,
@@ -792,7 +792,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1152000,
                 "off": 1164000,
                 "velocity": 64,
@@ -800,7 +800,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 1164000,
                 "off": 1176000,
                 "velocity": 64,
@@ -808,7 +808,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 1176000,
                 "off": 1188000,
                 "velocity": 64,
@@ -816,7 +816,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1188000,
                 "off": 1200000,
                 "velocity": 64,
@@ -824,7 +824,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1200000,
                 "off": 1212000,
                 "velocity": 64,
@@ -832,7 +832,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 1212000,
                 "off": 1224000,
                 "velocity": 64,
@@ -840,7 +840,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 1224000,
                 "off": 1236000,
                 "velocity": 64,
@@ -848,7 +848,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 1236000,
                 "off": 1248000,
                 "velocity": 64,
@@ -856,7 +856,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1248000,
                 "off": 1260000,
                 "velocity": 64,
@@ -864,7 +864,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 1260000,
                 "off": 1272000,
                 "velocity": 64,
@@ -872,7 +872,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 1272000,
                 "off": 1284000,
                 "velocity": 64,
@@ -880,7 +880,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 5],
+                "note": ["G", 4],
                 "on": 1284000,
                 "off": 1296000,
                 "velocity": 64,
@@ -888,7 +888,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1295744,
                 "off": 1307744,
                 "velocity": 64,
@@ -896,7 +896,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 1308000,
                 "off": 1320000,
                 "velocity": 64,
@@ -904,7 +904,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 1320000,
                 "off": 1332000,
                 "velocity": 64,
@@ -912,7 +912,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 1332000,
                 "off": 1344000,
                 "velocity": 64,
@@ -920,7 +920,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1344000,
                 "off": 1356000,
                 "velocity": 64,
@@ -928,7 +928,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 1355744,
                 "off": 1367744,
                 "velocity": 64,
@@ -936,7 +936,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 1368000,
                 "off": 1380000,
                 "velocity": 64,
@@ -944,7 +944,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1380000,
                 "off": 1392000,
                 "velocity": 64,
@@ -952,7 +952,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1392000,
                 "off": 1404000,
                 "velocity": 64,
@@ -960,7 +960,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 1404000,
                 "off": 1416000,
                 "velocity": 64,
@@ -968,7 +968,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1416000,
                 "off": 1428000,
                 "velocity": 64,
@@ -976,7 +976,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 1428000,
                 "off": 1440000,
                 "velocity": 64,
@@ -984,7 +984,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Bb", 3],
+                "note": ["Bb", 2],
                 "on": 1440000,
                 "off": 1452000,
                 "velocity": 64,
@@ -992,7 +992,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 4],
+                "note": ["G", 3],
                 "on": 1452256,
                 "off": 1464256,
                 "velocity": 64,
@@ -1000,7 +1000,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Eb", 5],
+                "note": ["Eb", 4],
                 "on": 1464000,
                 "off": 1476000,
                 "velocity": 64,
@@ -1008,7 +1008,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["G", 5],
+                "note": ["G", 4],
                 "on": 1476000,
                 "off": 1488000,
                 "velocity": 64,
@@ -1016,7 +1016,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["B", 3],
+                "note": ["B", 2],
                 "on": 1488000,
                 "off": 1500000,
                 "velocity": 64,
@@ -1024,7 +1024,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["Ab", 4],
+                "note": ["Ab", 3],
                 "on": 1500000,
                 "off": 1512000,
                 "velocity": 64,
@@ -1032,7 +1032,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["D", 5],
+                "note": ["D", 4],
                 "on": 1512000,
                 "off": 1524000,
                 "velocity": 64,
@@ -1040,7 +1040,7 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
+                "note": ["F", 4],
                 "on": 1524000,
                 "off": 1536000,
                 "velocity": 64,
@@ -1057,7 +1057,520 @@
             "samplesPerPixel": 256,
             "subdivision": "8n",
             "snapToGrid": false,
-            "selectedNoteRefs": [],
+            "selectedNoteRefs": [
+              {
+                "id": "cu-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "c6-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "c7-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "c8-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "c9-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ca-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cb-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cc-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cd-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ce-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cf-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cg-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ch-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ci-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cj-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ck-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cl-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cm-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cn-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "co-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cp-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cq-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cr-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cs-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ct-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cv-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cw-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cx-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cy-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "cz-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d0-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d1-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d2-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d3-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d4-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d5-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d6-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d7-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d8-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "d9-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "da-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "db-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dc-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dd-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "de-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "df-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dg-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dh-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "di-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dj-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dk-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dl-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dm-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dn-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "do-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dp-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dq-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dr-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ds-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dt-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "du-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dv-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dw-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dx-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dy-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "dz-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e0-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e1-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e2-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e3-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e4-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e5-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e6-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e7-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e8-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "e9-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ea-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "eb-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ec-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ed-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ee-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ef-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "eg-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "eh-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ei-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ej-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ek-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "el-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "em-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "en-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "eo-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ep-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "eq-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "er-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "es-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "et-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "eu-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ev-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ew-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ex-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ey-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ez-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f0-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f1-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f2-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f3-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f4-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f5-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f6-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f7-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f8-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "f9-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fa-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fb-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fc-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fd-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fe-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "ff-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fg-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fh-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fi-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fj-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fk-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fl-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fm-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fn-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fo-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              },
+              {
+                "id": "fp-46sJ84vrxCufH_5Q78u6i",
+                "$modelType": "AudioEngine/NoteRef"
+              }
+            ],
             "quantizePercentage": 1,
             "action": "select",
             "$modelType": "AudioEngine/Mixer/Track/MidiClip"
@@ -1072,8 +1585,8 @@
         "active": false,
         "mute": false,
         "solo": false,
-        "pan": -0.68,
-        "laneHeight": 135,
+        "pan": 0,
+        "laneHeight": 172,
         "volume": 0,
         "selectedRefs": [],
         "inputType": "midi",
@@ -1131,7 +1644,7 @@
       {
         "id": "6-i_nTd0xZTjLd_GfNy-hdb",
         "onlineId": null,
-        "name": "Bach-esque R",
+        "name": "Melody",
         "clips": [
           {
             "trackId": "6-i_nTd0xZTjLd_GfNy-hdb",
@@ -1423,244 +1936,8 @@
           },
           {
             "locked": false,
-            "start": 864000,
-            "end": 1632000,
-            "loopSamples": 0,
-            "fadeInSamples": 0,
-            "fadeOutSamples": 0,
-            "events": [
-              {
-                "note": ["G", 5],
-                "on": 0,
-                "off": 12000,
-                "velocity": 64,
-                "id": "36-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["G", 5],
-                "on": 36000,
-                "off": 48000,
-                "velocity": 64,
-                "id": "37-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 5],
-                "on": 84000,
-                "off": 96000,
-                "velocity": 64,
-                "id": "38-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 144000,
-                "off": 156000,
-                "velocity": 64,
-                "id": "39-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 5],
-                "on": 156000,
-                "off": 168000,
-                "velocity": 64,
-                "id": "3a-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Eb", 5],
-                "on": 168000,
-                "off": 180000,
-                "velocity": 64,
-                "id": "3b-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 180000,
-                "off": 192000,
-                "velocity": 64,
-                "id": "3c-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 5],
-                "on": 192000,
-                "off": 204000,
-                "velocity": 64,
-                "id": "3d-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 5],
-                "on": 228000,
-                "off": 240000,
-                "velocity": 64,
-                "id": "3e-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Eb", 5],
-                "on": 276064,
-                "off": 288064,
-                "velocity": 64,
-                "id": "3f-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 336000,
-                "off": 348000,
-                "velocity": 64,
-                "id": "3g-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 5],
-                "on": 348000,
-                "off": 360000,
-                "velocity": 64,
-                "id": "3h-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Eb", 5],
-                "on": 360000,
-                "off": 372000,
-                "velocity": 64,
-                "id": "3i-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 372000,
-                "off": 384000,
-                "velocity": 64,
-                "id": "3j-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Eb", 5],
-                "on": 384000,
-                "off": 396000,
-                "velocity": 64,
-                "id": "3k-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 5],
-                "on": 420000,
-                "off": 432000,
-                "velocity": 64,
-                "id": "3l-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 5],
-                "on": 467680,
-                "off": 479680,
-                "velocity": 64,
-                "id": "3m-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 480192,
-                "off": 492192,
-                "velocity": 64,
-                "id": "3n-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Bb", 4],
-                "on": 491680,
-                "off": 503680,
-                "velocity": 64,
-                "id": "3o-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Bb", 4],
-                "on": 540768,
-                "off": 552768,
-                "velocity": 64,
-                "id": "3p-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Bb", 4],
-                "on": 564000,
-                "off": 576000,
-                "velocity": 64,
-                "id": "3q-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["F", 5],
-                "on": 576000,
-                "off": 588000,
-                "velocity": 64,
-                "id": "3r-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Eb", 5],
-                "on": 600000,
-                "off": 612000,
-                "velocity": 64,
-                "id": "3s-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 720000,
-                "off": 732000,
-                "velocity": 64,
-                "id": "3t-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["D", 5],
-                "on": 732000,
-                "off": 744000,
-                "velocity": 64,
-                "id": "3u-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["Eb", 5],
-                "on": 744000,
-                "off": 756000,
-                "velocity": 64,
-                "id": "3v-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              },
-              {
-                "note": ["C", 5],
-                "on": 756000,
-                "off": 768000,
-                "velocity": 64,
-                "id": "3w-i_nTd0xZTjLd_GfNy-hdb",
-                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
-              }
-            ],
-            "trackId": "6-i_nTd0xZTjLd_GfNy-hdb",
-            "id": "3x-i_nTd0xZTjLd_GfNy-hdb",
-            "type": "midi",
-            "samplesPerPixel": 256,
-            "subdivision": "8n",
-            "snapToGrid": false,
-            "selectedNoteRefs": [],
-            "quantizePercentage": 1,
-            "action": "select",
-            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
-          },
-          {
-            "locked": false,
-            "start": 1632000,
-            "end": 2400000,
+            "start": 2400000,
+            "end": 3168000,
             "loopSamples": 0,
             "fadeInSamples": 0,
             "fadeOutSamples": 0,
@@ -1722,25 +1999,25 @@
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
-                "on": 192000,
-                "off": 204000,
+                "note": ["Bb", 5],
+                "on": 191488,
+                "off": 228064,
                 "velocity": 64,
                 "id": "45-i_nTd0xZTjLd_GfNy-hdb",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
-                "on": 228000,
-                "off": 240000,
+                "note": ["D", 5],
+                "on": 239776,
+                "off": 251776,
                 "velocity": 64,
                 "id": "46-i_nTd0xZTjLd_GfNy-hdb",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["Eb", 5],
-                "on": 276064,
-                "off": 288064,
+                "on": 264288,
+                "off": 276288,
                 "velocity": 64,
                 "id": "47-i_nTd0xZTjLd_GfNy-hdb",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
@@ -1880,10 +2157,267 @@
                 "velocity": 64,
                 "id": "4o-i_nTd0xZTjLd_GfNy-hdb",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 276000,
+                "off": 288000,
+                "note": ["D", 5],
+                "velocity": 64,
+                "id": "7-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 288000,
+                "off": 323296,
+                "note": ["C", 5],
+                "velocity": 64,
+                "id": "9-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               }
             ],
             "trackId": "6-i_nTd0xZTjLd_GfNy-hdb",
             "id": "4p-i_nTd0xZTjLd_GfNy-hdb",
+            "type": "midi",
+            "samplesPerPixel": 256,
+            "subdivision": "8n",
+            "snapToGrid": false,
+            "selectedNoteRefs": [
+              {
+                "id": "9-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/NoteRef"
+              }
+            ],
+            "quantizePercentage": 1,
+            "action": "create",
+            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
+          },
+          {
+            "locked": false,
+            "start": 1631999.999999989,
+            "end": 2399999.999999989,
+            "loopSamples": 0,
+            "fadeInSamples": 0,
+            "fadeOutSamples": 0,
+            "events": [
+              {
+                "note": ["G", 5],
+                "on": 0,
+                "off": 12000,
+                "velocity": 64,
+                "id": "a-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 36000,
+                "off": 48000,
+                "velocity": 64,
+                "id": "b-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 84000,
+                "off": 96000,
+                "velocity": 64,
+                "id": "c-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 144000,
+                "off": 156000,
+                "velocity": 64,
+                "id": "d-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 156000,
+                "off": 168000,
+                "velocity": 64,
+                "id": "e-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 168000,
+                "off": 180000,
+                "velocity": 64,
+                "id": "f-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 180000,
+                "off": 192000,
+                "velocity": 64,
+                "id": "g-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 192000,
+                "off": 204000,
+                "velocity": 64,
+                "id": "h-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 228000,
+                "off": 240000,
+                "velocity": 64,
+                "id": "i-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 276064,
+                "off": 288064,
+                "velocity": 64,
+                "id": "j-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 336000,
+                "off": 348000,
+                "velocity": 64,
+                "id": "k-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 348000,
+                "off": 360000,
+                "velocity": 64,
+                "id": "l-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 360000,
+                "off": 372000,
+                "velocity": 64,
+                "id": "m-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 372000,
+                "off": 384000,
+                "velocity": 64,
+                "id": "n-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 384000,
+                "off": 396000,
+                "velocity": 64,
+                "id": "o-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 420000,
+                "off": 432000,
+                "velocity": 64,
+                "id": "p-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 467680,
+                "off": 479680,
+                "velocity": 64,
+                "id": "q-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 480192,
+                "off": 492192,
+                "velocity": 64,
+                "id": "r-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Bb", 4],
+                "on": 491680,
+                "off": 503680,
+                "velocity": 64,
+                "id": "s-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Bb", 4],
+                "on": 540768,
+                "off": 552768,
+                "velocity": 64,
+                "id": "t-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Bb", 4],
+                "on": 564000,
+                "off": 576000,
+                "velocity": 64,
+                "id": "u-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 576000,
+                "off": 588000,
+                "velocity": 64,
+                "id": "v-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 600000,
+                "off": 612000,
+                "velocity": 64,
+                "id": "w-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 720000,
+                "off": 732000,
+                "velocity": 64,
+                "id": "x-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 732000,
+                "off": 744000,
+                "velocity": 64,
+                "id": "y-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 744000,
+                "off": 756000,
+                "velocity": 64,
+                "id": "z-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["C", 5],
+                "on": 756000,
+                "off": 768000,
+                "velocity": 64,
+                "id": "10-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              }
+            ],
+            "trackId": "6-i_nTd0xZTjLd_GfNy-hdb",
+            "id": "11-god2yChkwuTrkMP4HKA-P",
             "type": "midi",
             "samplesPerPixel": 256,
             "subdivision": "8n",
@@ -1895,8 +2429,8 @@
           },
           {
             "locked": false,
-            "start": 2400000,
-            "end": 3168000,
+            "start": 864000,
+            "end": 1632000,
             "loopSamples": 0,
             "fadeInSamples": 0,
             "fadeOutSamples": 0,
@@ -1906,7 +2440,7 @@
                 "on": 0,
                 "off": 12000,
                 "velocity": 64,
-                "id": "4q-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "16-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1914,7 +2448,7 @@
                 "on": 36000,
                 "off": 48000,
                 "velocity": 64,
-                "id": "4r-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "17-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1922,7 +2456,7 @@
                 "on": 84000,
                 "off": 96000,
                 "velocity": 64,
-                "id": "4s-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "18-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1930,7 +2464,7 @@
                 "on": 144000,
                 "off": 156000,
                 "velocity": 64,
-                "id": "4t-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "19-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1938,7 +2472,7 @@
                 "on": 156000,
                 "off": 168000,
                 "velocity": 64,
-                "id": "4u-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1a-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1946,7 +2480,7 @@
                 "on": 168000,
                 "off": 180000,
                 "velocity": 64,
-                "id": "4v-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1b-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1954,31 +2488,31 @@
                 "on": 180000,
                 "off": 192000,
                 "velocity": 64,
-                "id": "4w-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1c-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
-                "on": 192000,
-                "off": 204000,
+                "note": ["Bb", 5],
+                "on": 191488,
+                "off": 228064,
                 "velocity": 64,
-                "id": "4x-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1d-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
-                "note": ["F", 5],
-                "on": 228000,
-                "off": 240000,
+                "note": ["D", 5],
+                "on": 239776,
+                "off": 251776,
                 "velocity": 64,
-                "id": "4y-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1e-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
                 "note": ["Eb", 5],
-                "on": 276064,
-                "off": 288064,
+                "on": 264288,
+                "off": 276288,
                 "velocity": 64,
-                "id": "4z-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1f-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1986,7 +2520,7 @@
                 "on": 336000,
                 "off": 348000,
                 "velocity": 64,
-                "id": "50-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1g-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -1994,7 +2528,7 @@
                 "on": 348000,
                 "off": 360000,
                 "velocity": 64,
-                "id": "51-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1h-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2002,7 +2536,7 @@
                 "on": 360000,
                 "off": 372000,
                 "velocity": 64,
-                "id": "52-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1i-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2010,7 +2544,7 @@
                 "on": 372000,
                 "off": 384000,
                 "velocity": 64,
-                "id": "53-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1j-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2018,7 +2552,7 @@
                 "on": 384000,
                 "off": 396000,
                 "velocity": 64,
-                "id": "54-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1k-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2026,7 +2560,7 @@
                 "on": 420000,
                 "off": 432000,
                 "velocity": 64,
-                "id": "55-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1l-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2034,7 +2568,7 @@
                 "on": 467680,
                 "off": 479680,
                 "velocity": 64,
-                "id": "56-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1m-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2042,7 +2576,7 @@
                 "on": 480192,
                 "off": 492192,
                 "velocity": 64,
-                "id": "57-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1n-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2050,7 +2584,7 @@
                 "on": 491680,
                 "off": 503680,
                 "velocity": 64,
-                "id": "58-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1o-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2058,7 +2592,7 @@
                 "on": 540768,
                 "off": 552768,
                 "velocity": 64,
-                "id": "59-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1p-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2066,7 +2600,7 @@
                 "on": 564000,
                 "off": 576000,
                 "velocity": 64,
-                "id": "5a-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1q-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2074,7 +2608,7 @@
                 "on": 576000,
                 "off": 588000,
                 "velocity": 64,
-                "id": "5b-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1r-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2082,7 +2616,7 @@
                 "on": 600000,
                 "off": 612000,
                 "velocity": 64,
-                "id": "5c-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1s-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2090,7 +2624,7 @@
                 "on": 720000,
                 "off": 732000,
                 "velocity": 64,
-                "id": "5d-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1t-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2098,7 +2632,7 @@
                 "on": 732000,
                 "off": 744000,
                 "velocity": 64,
-                "id": "5e-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1u-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2106,7 +2640,7 @@
                 "on": 744000,
                 "off": 756000,
                 "velocity": 64,
-                "id": "5f-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1v-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               },
               {
@@ -2114,12 +2648,28 @@
                 "on": 756000,
                 "off": 768000,
                 "velocity": 64,
-                "id": "5g-i_nTd0xZTjLd_GfNy-hdb",
+                "id": "1w-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 276000,
+                "off": 288000,
+                "note": ["D", 5],
+                "velocity": 64,
+                "id": "1x-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 288000,
+                "off": 323296,
+                "note": ["C", 5],
+                "velocity": 64,
+                "id": "1y-god2yChkwuTrkMP4HKA-P",
                 "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
               }
             ],
             "trackId": "6-i_nTd0xZTjLd_GfNy-hdb",
-            "id": "5h-i_nTd0xZTjLd_GfNy-hdb",
+            "id": "1z-god2yChkwuTrkMP4HKA-P",
             "type": "midi",
             "samplesPerPixel": 256,
             "subdivision": "8n",
@@ -2135,12 +2685,12 @@
           "effects": [],
           "$modelType": "AudioEngine/EffectsChain"
         },
-        "rgb": [227, 168, 169],
-        "active": true,
+        "rgb": [165, 235, 25],
+        "active": false,
         "mute": false,
         "solo": false,
-        "pan": 0.36,
-        "laneHeight": 140,
+        "pan": -0.36,
+        "laneHeight": 98,
         "volume": -5.64,
         "selectedRefs": [],
         "inputType": "midi",
@@ -2196,6 +2746,645 @@
         "$modelType": "AudioEngine/Mixer/Track"
       },
       {
+        "id": "20-god2yChkwuTrkMP4HKA-P",
+        "onlineId": null,
+        "name": "Harmony",
+        "clips": [
+          {
+            "locked": false,
+            "start": 1536000,
+            "end": 1632000,
+            "loopSamples": 0,
+            "fadeInSamples": 0,
+            "fadeOutSamples": 0,
+            "events": [
+              {
+                "on": 47744,
+                "off": 59744,
+                "note": ["Eb", 5],
+                "velocity": 64,
+                "id": "26-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 60000,
+                "off": 72000,
+                "note": ["F", 5],
+                "velocity": 64,
+                "id": "27-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 71744,
+                "off": 83744,
+                "note": ["G", 5],
+                "velocity": 64,
+                "id": "28-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 84000,
+                "off": 96000,
+                "note": ["Eb", 5],
+                "velocity": 64,
+                "id": "29-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              }
+            ],
+            "trackId": "20-god2yChkwuTrkMP4HKA-P",
+            "id": "2a-god2yChkwuTrkMP4HKA-P",
+            "type": "midi",
+            "samplesPerPixel": 256,
+            "subdivision": "8n",
+            "snapToGrid": false,
+            "selectedNoteRefs": [
+              {
+                "id": "29-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/NoteRef"
+              }
+            ],
+            "quantizePercentage": 1,
+            "action": "select",
+            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
+          },
+          {
+            "locked": false,
+            "start": 2400000,
+            "end": 3168000,
+            "loopSamples": 0,
+            "fadeInSamples": 0,
+            "fadeOutSamples": 0,
+            "events": [
+              {
+                "note": ["Bb", 5],
+                "on": 0,
+                "off": 12000,
+                "velocity": 64,
+                "id": "33-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Bb", 5],
+                "on": 36256,
+                "off": 48256,
+                "velocity": 64,
+                "id": "34-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 84000,
+                "off": 96000,
+                "velocity": 64,
+                "id": "35-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 144256,
+                "off": 156256,
+                "velocity": 64,
+                "id": "36-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 155488,
+                "off": 167488,
+                "velocity": 64,
+                "id": "37-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 168512,
+                "off": 180512,
+                "velocity": 64,
+                "id": "38-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 180256,
+                "off": 192256,
+                "velocity": 64,
+                "id": "39-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 6],
+                "on": 192256,
+                "off": 228832,
+                "velocity": 64,
+                "id": "3a-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 240032,
+                "off": 252032,
+                "velocity": 64,
+                "id": "3b-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 264032,
+                "off": 276032,
+                "velocity": 64,
+                "id": "3c-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 336000,
+                "off": 348000,
+                "velocity": 64,
+                "id": "3d-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 347744,
+                "off": 359744,
+                "velocity": 64,
+                "id": "3e-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 360000,
+                "off": 372000,
+                "velocity": 64,
+                "id": "3f-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 372000,
+                "off": 384000,
+                "velocity": 64,
+                "id": "3g-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 383232,
+                "off": 395232,
+                "velocity": 64,
+                "id": "3h-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 420000,
+                "off": 432000,
+                "velocity": 64,
+                "id": "3i-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 468192,
+                "off": 480192,
+                "velocity": 64,
+                "id": "3j-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 480192,
+                "off": 492192,
+                "velocity": 64,
+                "id": "3k-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 492704,
+                "off": 504704,
+                "velocity": 64,
+                "id": "3l-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 540512,
+                "off": 552512,
+                "velocity": 64,
+                "id": "3m-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 564000,
+                "off": 576000,
+                "velocity": 64,
+                "id": "3n-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 575744,
+                "off": 587744,
+                "velocity": 64,
+                "id": "3o-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 599488,
+                "off": 611488,
+                "velocity": 64,
+                "id": "3p-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 720000,
+                "off": 732000,
+                "velocity": 64,
+                "id": "3q-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 732256,
+                "off": 744256,
+                "velocity": 64,
+                "id": "3r-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 744000,
+                "off": 756000,
+                "velocity": 64,
+                "id": "3s-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 755232,
+                "off": 767232,
+                "velocity": 64,
+                "id": "3t-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 276512,
+                "off": 288512,
+                "note": ["F", 5],
+                "velocity": 64,
+                "id": "3u-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "on": 288000,
+                "off": 323296,
+                "note": ["Eb", 5],
+                "velocity": 64,
+                "id": "3v-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              }
+            ],
+            "trackId": "20-god2yChkwuTrkMP4HKA-P",
+            "id": "3w-god2yChkwuTrkMP4HKA-P",
+            "type": "midi",
+            "samplesPerPixel": 256,
+            "subdivision": "8n",
+            "snapToGrid": false,
+            "selectedNoteRefs": [
+              {
+                "id": "3t-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/NoteRef"
+              }
+            ],
+            "quantizePercentage": 1,
+            "action": "select",
+            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
+          },
+          {
+            "locked": false,
+            "start": 1632000,
+            "end": 2400000,
+            "loopSamples": 0,
+            "fadeInSamples": 0,
+            "fadeOutSamples": 0,
+            "events": [
+              {
+                "note": ["Bb", 5],
+                "on": 0,
+                "off": 12000,
+                "velocity": 64,
+                "id": "3x-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Bb", 5],
+                "on": 36000,
+                "off": 48000,
+                "velocity": 64,
+                "id": "3y-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 84000,
+                "off": 96000,
+                "velocity": 64,
+                "id": "3z-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 144000,
+                "off": 156000,
+                "velocity": 64,
+                "id": "40-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 156000,
+                "off": 168000,
+                "velocity": 64,
+                "id": "41-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 167744,
+                "off": 179744,
+                "velocity": 64,
+                "id": "42-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 180256,
+                "off": 192256,
+                "velocity": 64,
+                "id": "43-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 192000,
+                "off": 204000,
+                "velocity": 64,
+                "id": "44-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 228256,
+                "off": 240256,
+                "velocity": 64,
+                "id": "45-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 275808,
+                "off": 287808,
+                "velocity": 64,
+                "id": "46-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 336256,
+                "off": 348256,
+                "velocity": 64,
+                "id": "47-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 348256,
+                "off": 360256,
+                "velocity": 64,
+                "id": "48-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 359744,
+                "off": 371744,
+                "velocity": 64,
+                "id": "49-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 372000,
+                "off": 384000,
+                "velocity": 64,
+                "id": "4a-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 384256,
+                "off": 396256,
+                "velocity": 64,
+                "id": "4b-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 420000,
+                "off": 432000,
+                "velocity": 64,
+                "id": "4c-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 467680,
+                "off": 479680,
+                "velocity": 64,
+                "id": "4d-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 479936,
+                "off": 491936,
+                "velocity": 64,
+                "id": "4e-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 491680,
+                "off": 503680,
+                "velocity": 64,
+                "id": "4f-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 540256,
+                "off": 552256,
+                "velocity": 64,
+                "id": "4g-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["D", 5],
+                "on": 564000,
+                "off": 576000,
+                "velocity": 64,
+                "id": "4h-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Ab", 5],
+                "on": 576000,
+                "off": 588000,
+                "velocity": 64,
+                "id": "4i-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 600512,
+                "off": 612512,
+                "velocity": 64,
+                "id": "4j-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 719744,
+                "off": 731744,
+                "velocity": 64,
+                "id": "4k-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["F", 5],
+                "on": 732000,
+                "off": 744000,
+                "velocity": 64,
+                "id": "4l-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["G", 5],
+                "on": 743744,
+                "off": 755744,
+                "velocity": 64,
+                "id": "4m-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              },
+              {
+                "note": ["Eb", 5],
+                "on": 755744,
+                "off": 767744,
+                "velocity": 64,
+                "id": "4n-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/Mixer/Track/MidiClip/MidiNote"
+              }
+            ],
+            "trackId": "20-god2yChkwuTrkMP4HKA-P",
+            "id": "4o-god2yChkwuTrkMP4HKA-P",
+            "type": "midi",
+            "samplesPerPixel": 256,
+            "subdivision": "8n",
+            "snapToGrid": false,
+            "selectedNoteRefs": [
+              {
+                "id": "4n-god2yChkwuTrkMP4HKA-P",
+                "$modelType": "AudioEngine/NoteRef"
+              }
+            ],
+            "quantizePercentage": 1,
+            "action": "select",
+            "$modelType": "AudioEngine/Mixer/Track/MidiClip"
+          }
+        ],
+        "effectsChain": {
+          "mute": false,
+          "effects": [],
+          "$modelType": "AudioEngine/EffectsChain"
+        },
+        "rgb": [235, 26, 190],
+        "active": false,
+        "mute": false,
+        "solo": false,
+        "pan": 0.34,
+        "laneHeight": 90,
+        "volume": -10.87,
+        "selectedRefs": [
+          {
+            "id": "2a-god2yChkwuTrkMP4HKA-P",
+            "$modelType": "AudioEngine/ClipRef"
+          },
+          {
+            "id": "3w-god2yChkwuTrkMP4HKA-P",
+            "$modelType": "AudioEngine/ClipRef"
+          },
+          {
+            "id": "4o-god2yChkwuTrkMP4HKA-P",
+            "$modelType": "AudioEngine/ClipRef"
+          }
+        ],
+        "inputType": "midi",
+        "synth": {
+          "id": "7-oKPZwa4mrgcR9Fn_ZmRnF",
+          "volume": 0,
+          "triangle": {
+            "type": "triangle",
+            "id": "8-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -12,
+            "attack": 0.09,
+            "sustain": 0.355,
+            "decay": 0.6,
+            "release": 1.5150000000000001,
+            "mute": false,
+            "$modelType": "AudioEngine/Oscillator"
+          },
+          "square": {
+            "type": "square",
+            "id": "9-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -16.5,
+            "attack": 0.915,
+            "sustain": 0.215,
+            "decay": 0.38,
+            "release": 0.43,
+            "mute": false,
+            "$modelType": "AudioEngine/Oscillator"
+          },
+          "sine": {
+            "type": "sine",
+            "id": "a-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -7,
+            "attack": 1.62,
+            "sustain": 0.36,
+            "decay": 0.785,
+            "release": 0.775,
+            "mute": false,
+            "$modelType": "AudioEngine/Oscillator"
+          },
+          "sawtooth": {
+            "type": "sawtooth",
+            "id": "b-oKPZwa4mrgcR9Fn_ZmRnF",
+            "volume": -6.5,
+            "attack": 0.515,
+            "sustain": 0.8,
+            "decay": 0.465,
+            "release": 0.96,
+            "mute": false,
+            "$modelType": "AudioEngine/Oscillator"
+          },
+          "$modelType": "AudioEngine/Synthesizer"
+        },
+        "$modelType": "AudioEngine/Mixer/Track"
+      },
+      {
         "id": "6-4Ivts1hg5hgrcAutEFwnq",
         "onlineId": null,
         "name": "Reverb",
@@ -2222,7 +3411,7 @@
         "mute": false,
         "solo": false,
         "pan": 0,
-        "laneHeight": 106,
+        "laneHeight": 64,
         "volume": 0,
         "selectedRefs": [],
         "inputType": "mic",
@@ -2280,7 +3469,7 @@
     ],
     "selectedRefs": [
       {
-        "id": "6-i_nTd0xZTjLd_GfNy-hdb",
+        "id": "20-god2yChkwuTrkMP4HKA-P",
         "$modelType": "AudioEngine/TrackRef"
       }
     ],
@@ -2290,7 +3479,7 @@
       "$modelType": "AudioEngine/Mixer/Master"
     },
     "topPanelHeight": 789,
-    "panelMode": "MIXER",
+    "panelMode": "KEYBOARD",
     "$modelType": "AudioEngine/Mixer"
   },
   "auxSendManager": {
@@ -2321,6 +3510,20 @@
         },
         "id": "5i-i_nTd0xZTjLd_GfNy-hdb",
         "volume": -2.76,
+        "mute": false,
+        "$modelType": "AudioEngine/AuxSend"
+      },
+      {
+        "fromRef": {
+          "id": "20-god2yChkwuTrkMP4HKA-P",
+          "$modelType": "AudioEngine/TrackRef"
+        },
+        "toRef": {
+          "id": "6-4Ivts1hg5hgrcAutEFwnq",
+          "$modelType": "AudioEngine/TrackRef"
+        },
+        "id": "5j-god2yChkwuTrkMP4HKA-P",
+        "volume": -3.34,
         "mute": false,
         "$modelType": "AudioEngine/AuxSend"
       }
