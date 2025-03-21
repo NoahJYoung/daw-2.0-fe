@@ -8,6 +8,9 @@ import {
   useBottomPanelViewController,
   useUndoManager,
 } from "../../hooks";
+import { useParams } from "react-router-dom";
+import demoProject from "../../utils/sampleProject.json";
+
 interface StudioLayoutProps {
   upperPanel: ReactElement;
   middlePanel: ReactElement;
@@ -18,6 +21,10 @@ export const StudioLayout = observer(
   ({ upperPanel, lowerPanel, middlePanel }: StudioLayoutProps) => {
     const { mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
+    const { projectId } = useParams();
+
+    const audioEngine = useAudioEngine();
+
     const { panelGroupRef, bottomPanelRef, topPanelRef, toggleBottomPanel } =
       useBottomPanelViewController();
 
@@ -30,6 +37,26 @@ export const StudioLayout = observer(
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }, [handleResize]);
+
+    useEffect(() => {
+      undoManager.withoutUndo(() => {
+        audioEngine.auxSendManager.sends.forEach((send) => {
+          const initialstate = send.mute;
+          send.setMute(!initialstate);
+          send.setMute(initialstate);
+        });
+      });
+    }, [audioEngine.auxSendManager.sends, undoManager]);
+
+    useEffect(() => {
+      const initializeDemoProject = async () => {
+        undoManager.withoutUndo(() => audioEngine.loadProjectData(demoProject));
+      };
+
+      if (!projectId) {
+        initializeDemoProject();
+      }
+    }, [audioEngine, projectId, undoManager]);
 
     return (
       <section className="bg-surface-0 text-foreground p-1">

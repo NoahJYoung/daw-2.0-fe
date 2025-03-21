@@ -1,8 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { AudioEngine } from "../../audio-engine";
-import { useParams } from "react-router-dom";
-import demoProject from "../../utils/sampleProject.json";
 
 type AudioEngineContextType = AudioEngine | null;
 
@@ -25,18 +23,7 @@ interface AudioEngineProviderProps {
 export const AudioEngineProvider: React.FC<AudioEngineProviderProps> = ({
   children,
 }) => {
-  const { projectId } = useParams();
   const audioEngine = useMemo(() => new AudioEngine({}), []);
-
-  useEffect(() => {
-    const initializeDemoProject = async () => {
-      audioEngine.loadProjectData(demoProject);
-    };
-
-    if (!projectId) {
-      initializeDemoProject();
-    }
-  }, [audioEngine, projectId]);
 
   return (
     <AudioEngineContext.Provider value={audioEngine}>
