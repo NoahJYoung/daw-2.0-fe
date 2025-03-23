@@ -121,7 +121,7 @@ export const StudioDialog = ({
       <DialogContent
         ref={dialogRef}
         onInteractOutside={(e) => e.preventDefault()}
-        className="select-none w-full h-[calc(100%-8px)] max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 overflow-auto absolute"
+        className="select-none w-full h-[calc(100%-8px)] max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute"
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
           cursor: isDragging ? "grabbing" : "default",
@@ -142,7 +142,7 @@ export const StudioDialog = ({
             </DialogTitle>
           </DialogHeader>
         )}
-        <div className="h-[calc(100%-24px)]">{children}</div>
+        <div className="overflow-auto h-[calc(100%-24px)]">{children}</div>
       </DialogContent>
     </Dialog>
   );
