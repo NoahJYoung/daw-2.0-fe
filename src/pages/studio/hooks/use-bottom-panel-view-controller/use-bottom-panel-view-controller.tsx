@@ -68,8 +68,10 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   const bottomPanelRef = useRef<ImperativePanelHandle>(null);
   const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
 
+  const isMobile = isMobileDevice();
+
   const getDefaultExpandDimensions = () => {
-    if (isMobileDevice()) {
+    if (isMobile) {
       return [0, 100];
     } else if (windowSize.height <= 800) {
       return [30, 70];
