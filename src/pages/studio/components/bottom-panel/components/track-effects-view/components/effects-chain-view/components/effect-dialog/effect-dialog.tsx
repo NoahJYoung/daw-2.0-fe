@@ -7,6 +7,7 @@ import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { IconType } from "react-icons/lib";
 import { getEffectByKey } from "./helpers";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 interface SynthSettingsModalProps {
   track: Track;
@@ -49,6 +50,9 @@ export const EffectDialog = observer(
       });
     };
 
+    const faderHeight = 156;
+    const isMobile = isMobileDevice();
+
     return (
       <StudioDialog
         open={open}
@@ -63,37 +67,42 @@ export const EffectDialog = observer(
           <div className="w-full h-1/2 shadow-sm border rounded-md">
             {<Effect.Upper effect={effect} track={track} />}
           </div>
-          <div className="flex items-center justify-between w-full h-1/2 p-1">
-            <div className="w-[58px]">
-              <MonoMeterFader
-                faderHeight={156}
-                onChange={onInputVolumeChange}
-                step={0.01}
-                min={-60}
-                max={6}
-                value={effect.inputVolume}
-                meter={effect.inputMeter}
-                stopDelayMs={2000}
-                active={active}
-              />
-            </div>
-            <div className="h-full w-[calc(100%-116px)]">
+
+          <div className="flex items-center justify-between w-full h-full md:h-1/2 p-1">
+            {!isMobile && (
+              <div className="w-[58px]">
+                <MonoMeterFader
+                  faderHeight={faderHeight}
+                  onChange={onInputVolumeChange}
+                  step={0.01}
+                  min={-60}
+                  max={6}
+                  value={effect.inputVolume}
+                  meter={effect.inputMeter}
+                  stopDelayMs={2000}
+                  active={active}
+                />
+              </div>
+            )}
+            <div className="h-full w-full md:w-[calc(100%-116px)]">
               {<Effect.Lower effect={effect} track={track} />}
             </div>
-            <div className="w-[58px]">
-              <MonoMeterFader
-                faderHeight={156}
-                onChange={onOutputVolumeChange}
-                step={0.01}
-                min={-60}
-                max={6}
-                value={effect.outputVolume}
-                meter={effect.outputMeter}
-                stopDelayMs={2000}
-                active={active}
-                orientation="right"
-              />
-            </div>
+            {!isMobile && (
+              <div className="w-[58px]">
+                <MonoMeterFader
+                  faderHeight={faderHeight}
+                  onChange={onOutputVolumeChange}
+                  step={0.01}
+                  min={-60}
+                  max={6}
+                  value={effect.outputVolume}
+                  meter={effect.outputMeter}
+                  stopDelayMs={2000}
+                  active={active}
+                  orientation="right"
+                />
+              </div>
+            )}
           </div>
         </div>
       </StudioDialog>

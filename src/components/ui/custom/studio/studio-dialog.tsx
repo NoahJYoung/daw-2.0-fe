@@ -9,6 +9,7 @@ import {
 import { StudioButton } from "./studio-button";
 import { IconType } from "react-icons/lib";
 import { cn } from "@/lib/utils";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 interface StudioDialogProps {
   triggerClassName: string;
@@ -39,6 +40,7 @@ export const StudioDialog = ({
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: -256, y: -186 });
   const dialogRef = useRef<HTMLDivElement>(null);
+  const isMobile = isMobileDevice();
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (
@@ -87,7 +89,7 @@ export const StudioDialog = ({
   };
 
   useEffect(() => {
-    if (isDragging) {
+    if (isDragging && !isMobile) {
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
     } else {
@@ -99,7 +101,7 @@ export const StudioDialog = ({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [handleMouseMove, isDragging, startPos]);
+  }, [handleMouseMove, isDragging, isMobile, startPos]);
 
   return (
     <Dialog
@@ -121,9 +123,11 @@ export const StudioDialog = ({
       <DialogContent
         ref={dialogRef}
         onInteractOutside={(e) => e.preventDefault()}
-        className="select-none w-full h-[calc(100%-8px)] max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute"
+        className="select-none w-full h-full md:max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute"
         style={{
-          transform: `translate(${position.x}px, ${position.y}px)`,
+          transform: isMobile
+            ? ""
+            : `translate(${position.x}px, ${position.y}px)`,
           cursor: isDragging ? "grabbing" : "default",
           transition: isDragging ? "none" : "default",
         }}
@@ -142,7 +146,9 @@ export const StudioDialog = ({
             </DialogTitle>
           </DialogHeader>
         )}
-        <div className="overflow-auto h-[calc(100%-24px)]">{children}</div>
+        <div className="h-[calc(100%-4px)] md:h-[calc(100%-24px)]">
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );
