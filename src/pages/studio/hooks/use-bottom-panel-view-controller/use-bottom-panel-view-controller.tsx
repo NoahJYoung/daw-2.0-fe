@@ -16,6 +16,7 @@ import {
 import { useAudioEngine } from "../use-audio-engine";
 import { useUndoManager } from "../use-undo-manager";
 import { PanelMode } from "../../audio-engine/components/mixer/types";
+import { isMobileDevice } from "../../utils";
 
 interface BottomPanelContextProps {
   toggleBottomPanel: () => void;
@@ -68,7 +69,7 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
 
   const getDefaultExpandDimensions = () => {
-    if (windowSize.height <= 450) {
+    if (isMobileDevice()) {
       return [0, 100];
     } else if (windowSize.height <= 800) {
       return [30, 70];
