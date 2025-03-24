@@ -103,6 +103,9 @@ export const StudioDialog = ({
     };
   }, [handleMouseMove, isDragging, isMobile, startPos]);
 
+  const isMobile = isMobileDevice();
+  const isLandscape = isMobile && window.innerWidth > window.innerHeight;
+
   return (
     <Dialog
       open={open}
@@ -125,9 +128,10 @@ export const StudioDialog = ({
         onInteractOutside={(e) => e.preventDefault()}
         className="select-none w-full h-full md:max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute"
         style={{
-          height: isMobileDevice() ? "99vh" : undefined,
+          marginTop: isLandscape ? "2vh" : 0,
+          height: isLandscape ? "98vh" : undefined,
           transform: isMobile
-            ? ""
+            ? `translate(${0}px, ${0}px)`
             : `translate(${position.x}px, ${position.y}px)`,
           cursor: isDragging ? "grabbing" : "default",
           transition: isDragging ? "none" : "default",
