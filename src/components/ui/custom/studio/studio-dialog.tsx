@@ -103,7 +103,6 @@ export const StudioDialog = ({
     };
   }, [handleMouseMove, isDragging, isMobile, startPos]);
 
-  const isMobile = isMobileDevice();
   const isLandscape = isMobile && window.innerWidth > window.innerHeight;
 
   return (
