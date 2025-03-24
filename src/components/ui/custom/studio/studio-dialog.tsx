@@ -127,10 +127,9 @@ export const StudioDialog = ({
         onInteractOutside={(e) => e.preventDefault()}
         className="select-none w-full h-full md:max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute"
         style={{
-          marginTop: isLandscape ? "2vh" : 0,
           height: isLandscape ? "98vh" : undefined,
           transform: isMobile
-            ? ""
+            ? `translate(${-50}%, ${-50}%)`
             : `translate(${position.x}px, ${position.y}px)`,
           cursor: isDragging ? "grabbing" : "default",
           transition: isDragging ? "none" : "default",
