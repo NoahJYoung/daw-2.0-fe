@@ -64,11 +64,11 @@ export const EffectDialog = observer(
         triggerClassName={triggerClassName}
       >
         <div className="h-full flex flex-col gap-1 p-1">
-          <div className="w-full h-1/2 shadow-sm border rounded-md">
+          <div className="w-full md:h-1/2 shadow-sm border rounded-md">
             {<Effect.Upper effect={effect} track={track} />}
           </div>
 
-          <div className="flex items-center justify-between w-full h-full md:h-1/2 p-1">
+          <div className="flex items-center justify-between w-full md:h-1/2 p-1">
             {!isMobile && (
               <div className="w-[58px]">
                 <MonoMeterFader

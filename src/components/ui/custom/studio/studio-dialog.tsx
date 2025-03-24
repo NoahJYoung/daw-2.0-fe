@@ -125,6 +125,7 @@ export const StudioDialog = ({
         onInteractOutside={(e) => e.preventDefault()}
         className="select-none w-full h-full md:max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute"
         style={{
+          height: isMobileDevice() ? "99vh" : undefined,
           transform: isMobile
             ? ""
             : `translate(${position.x}px, ${position.y}px)`,
