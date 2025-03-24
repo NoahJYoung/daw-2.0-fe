@@ -8,7 +8,7 @@ import {
   prop,
   Ref,
 } from "mobx-keystone";
-import { computed } from "mobx";
+import { computed, observable, action } from "mobx";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { MidiNote } from "../midi-note";
 import { PitchNameTuple } from "../midi-note/types";
@@ -33,7 +33,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   start: prop<number>(),
   end: prop<number>().withSetter(),
   events: prop<MidiNote[]>(() => []).withSetter(),
-  loopSamples: prop<number>(0).withSetter(),
+  loopSamples: prop<number>(0),
   locked: prop<boolean>(false).withSetter(),
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
@@ -44,6 +44,22 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   quantizePercentage: prop<number>(1),
   action: prop<"select" | "create">("select").withSetter(),
 }) {
+  // Keep track of scheduled events to optimize clearing
+  @observable scheduledEventIds = new Map<
+    string,
+    { start: number; stop: number }
+  >();
+
+  // Store computed event timings to avoid recalculating them
+  @observable private eventTimingsCache = new Map<
+    string,
+    { startSeconds: number; endSeconds: number }
+  >();
+
+  // For batch updates
+  @observable private batchUpdatePending = false;
+  private batchUpdateTimer: ReturnType<typeof setTimeout> | null = null;
+
   getRefId() {
     return this.id;
   }
@@ -52,14 +68,80 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   createEvent = (event: EventParams) => {
     const newEvent = new MidiNote({ ...event });
     this.setEvents([...this.events, clone(newEvent)]);
+    this.requestBatchUpdate();
   };
 
+  @modelAction
   deleteNote(event: MidiNote) {
+    // Clear the specific event's scheduled events
+    this.clearEventScheduling(event);
+
     this.setEvents([...this.events].filter((current) => current !== event));
+    this.requestBatchUpdate();
   }
 
+  @modelAction
   deleteSelectedNotes() {
-    this.selectedNotes.forEach((note) => this.deleteNote(note));
+    // Clear all selected notes' scheduled events
+    this.selectedNotes.forEach((note) => this.clearEventScheduling(note));
+
+    const selectedIds = new Set(this.selectedNotes.map((note) => note.id));
+    this.setEvents(
+      [...this.events].filter((note) => !selectedIds.has(note.id))
+    );
+    this.selectedNoteRefs = [];
+
+    this.requestBatchUpdate();
+  }
+
+  // Clear scheduling for a specific event
+  @action
+  clearEventScheduling(event: MidiNote) {
+    const eventKey = this.getEventKey(event);
+    const scheduledIds = this.scheduledEventIds.get(eventKey);
+
+    if (scheduledIds) {
+      const transport = Tone.getTransport();
+      if (scheduledIds.start) transport.clear(scheduledIds.start);
+      if (scheduledIds.stop) transport.clear(scheduledIds.stop);
+      this.scheduledEventIds.delete(eventKey);
+    }
+
+    // Clear from timing cache too
+    this.eventTimingsCache.delete(eventKey);
+  }
+
+  // Generate a unique key for an event
+  private getEventKey(event: MidiNote): string {
+    return `${event.id}_${event.on}_${event.off}`;
+  }
+
+  // Request a batched update to avoid excessive scheduling
+  @action
+  requestBatchUpdate() {
+    if (!this.batchUpdatePending) {
+      this.batchUpdatePending = true;
+
+      // Clear previous timer if exists
+      if (this.batchUpdateTimer) clearTimeout(this.batchUpdateTimer);
+
+      // Schedule a batch update in the next animation frame
+      this.batchUpdateTimer = setTimeout(() => {
+        this.processBatchUpdate();
+        this.batchUpdateTimer = null;
+      }, 0);
+    }
+  }
+
+  // Process all pending updates at once
+  @action
+  processBatchUpdate() {
+    this.batchUpdatePending = false;
+
+    // If events have changed, we may need to reschedule
+    if (Tone.getTransport().state === "started") {
+      this.schedule();
+    }
   }
 
   samplesToPixels(samples: number) {
@@ -124,6 +206,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   setVelocity(velocity: number) {
     this.selectedNotes.forEach((note) => note.setVelocity(velocity));
+    this.requestBatchUpdate();
   }
 
   zoomIn() {
@@ -162,10 +245,12 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
+  @modelAction
   selectAllNotes() {
     this.events.forEach((note) => this.selectNote(note));
   }
 
+  @modelAction
   unselectAllNotes() {
     this.events.forEach((note) => this.unselectNote(note));
   }
@@ -182,28 +267,73 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const difference = newStart - this.start;
     this.setEnd(this.end + difference);
     this.start = newStart;
+
+    // Clear the timing cache as all timings are now invalid
+    this.eventTimingsCache.clear();
+    this.requestBatchUpdate();
   }
 
-  play = () => {};
+  @modelAction
+  setLoopSamples(samples: number) {
+    this.setLoopSamples(samples);
+    this.requestBatchUpdate();
+  }
 
-  stop() {}
+  play = () => {
+    this.schedule();
+  };
 
+  stop() {
+    this.clearEvents();
+  }
+
+  @modelAction
   quantizeSelectedNotes() {
     this.selectedNotes.forEach((note) =>
       note.quantize(this.start, this.subdivision, this.quantizePercentage)
     );
+    this.requestBatchUpdate();
   }
 
+  @modelAction
   quantizeSelectedOn() {
     this.selectedNotes.forEach((note) =>
       note.quantizeOn(this.start, this.subdivision, this.quantizePercentage)
     );
+    this.requestBatchUpdate();
   }
 
+  @modelAction
   quantizeSelectedOff() {
     this.selectedNotes.forEach((note) =>
       note.quantizeOff(this.start, this.subdivision, this.quantizePercentage)
     );
+    this.requestBatchUpdate();
+  }
+
+  private calculateEventTiming(event: MidiNote) {
+    const eventKey = this.getEventKey(event);
+
+    if (this.eventTimingsCache.has(eventKey)) {
+      return this.eventTimingsCache.get(eventKey)!;
+    }
+
+    const startTimeInSeconds = Tone.Time(
+      event.on + this.start,
+      "samples"
+    ).toSeconds();
+    const endTimeInSeconds = Tone.Time(
+      event.off + this.start,
+      "samples"
+    ).toSeconds();
+
+    const timing = {
+      startSeconds: startTimeInSeconds,
+      endSeconds: endTimeInSeconds,
+    };
+    this.eventTimingsCache.set(eventKey, timing);
+
+    return timing;
   }
 
   schedule() {
@@ -213,57 +343,85 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
       throw new Error("No parent track found");
     }
 
+    const transport = Tone.getTransport();
     const loopEnd = this.start + this.length + this.loopSamples;
+    const loopLengthInSamples = this.length;
+
+    const iterationsNeeded =
+      this.loopSamples > 0 ? Math.ceil(this.loopSamples / this.length) + 1 : 1;
+
+    const eventsByNote = new Map<string, MidiNote[]>();
 
     this.events.forEach((event) => {
-      let eventStart = event.on + this.start;
-      let eventEnd = event.off + this.start;
-
-      while (eventStart < loopEnd) {
-        const startTimeInSeconds = Tone.Time(
-          Math.min(eventStart, loopEnd),
-          "samples"
-        ).toSeconds();
-
-        const effectiveEnd = Math.min(eventEnd, loopEnd);
-        const endTimeInSeconds = Tone.Time(effectiveEnd, "samples").toSeconds();
-
-        const startEventId = Tone.getTransport().scheduleOnce(
-          (time) =>
-            parentTrack.instrument.triggerAttack(
-              event.note.join(""),
-              time,
-              event.velocity
-            ),
-          startTimeInSeconds
-        );
-
-        const stopEventId = Tone.getTransport().scheduleOnce(
-          (time) =>
-            parentTrack.instrument.triggerRelease(event.note.join(""), time),
-          endTimeInSeconds
-        );
-
-        event.startEventId = startEventId;
-        event.stopEventId = stopEventId;
-
-        eventStart += this.length;
-        eventEnd += this.length;
+      const noteKey = event.note.join("");
+      if (!eventsByNote.has(noteKey)) {
+        eventsByNote.set(noteKey, []);
       }
+      eventsByNote.get(noteKey)!.push(event);
+    });
+
+    eventsByNote.forEach((eventsForNote, noteKey) => {
+      eventsForNote.forEach((event) => {
+        const { startSeconds: baseStartSeconds, endSeconds: baseEndSeconds } =
+          this.calculateEventTiming(event);
+
+        const eventKey = this.getEventKey(event);
+        const scheduledIds = { start: 0, stop: 0 };
+
+        for (let i = 0; i < iterationsNeeded; i++) {
+          const loopOffsetSeconds = Tone.Time(
+            i * loopLengthInSamples,
+            "samples"
+          ).toSeconds();
+
+          const startTimeInSeconds = baseStartSeconds + loopOffsetSeconds;
+          const endTimeInSeconds = baseEndSeconds + loopOffsetSeconds;
+
+          const startTimeInSamples = Tone.Time(startTimeInSeconds).toSamples();
+          const endTimeInSamples = Tone.Time(endTimeInSeconds).toSamples();
+
+          if (startTimeInSamples < loopEnd) {
+            const startEventId = transport.scheduleOnce(
+              (time) =>
+                parentTrack.instrument.triggerAttack(
+                  noteKey,
+                  time,
+                  event.velocity
+                ),
+              startTimeInSeconds
+            );
+
+            if (endTimeInSamples <= loopEnd) {
+              const stopEventId = transport.scheduleOnce(
+                (time) => parentTrack.instrument.triggerRelease(noteKey, time),
+                endTimeInSeconds
+              );
+
+              if (i === 0) {
+                scheduledIds.stop = stopEventId;
+              }
+            }
+
+            if (i === 0) {
+              scheduledIds.start = startEventId;
+            }
+          }
+        }
+
+        this.scheduledEventIds.set(eventKey, scheduledIds);
+      });
     });
   }
 
   clearEvents = () => {
     const transport = Tone.getTransport();
-    this.events.forEach((event) => {
-      if (event.startEventId) {
-        transport.clear(event.startEventId);
-      }
 
-      if (event.stopEventId) {
-        transport.clear(event.stopEventId);
-      }
+    this.scheduledEventIds.forEach((ids) => {
+      if (ids.start) transport.clear(ids.start);
+      if (ids.stop) transport.clear(ids.stop);
     });
+
+    this.scheduledEventIds.clear();
   };
 
   split(positionInSamples: number) {
@@ -347,6 +505,14 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   dispose() {
-    // TODO:
+    this.clearEvents();
+
+    if (this.batchUpdateTimer) {
+      clearTimeout(this.batchUpdateTimer);
+      this.batchUpdateTimer = null;
+    }
+
+    this.eventTimingsCache.clear();
+    this.scheduledEventIds.clear();
   }
 }
