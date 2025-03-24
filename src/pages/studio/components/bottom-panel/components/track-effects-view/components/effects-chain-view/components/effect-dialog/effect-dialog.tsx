@@ -64,7 +64,7 @@ export const EffectDialog = observer(
         triggerClassName={triggerClassName}
       >
         <div className="h-full flex flex-col gap-1 p-1">
-          <div className="w-full md:h-1/2 shadow-sm border rounded-md">
+          <div className="w-full overflow-x-auto styled-scrollbar-sm md:h-1/2 shadow-sm border rounded-md">
             {<Effect.Upper effect={effect} track={track} />}
           </div>
 
