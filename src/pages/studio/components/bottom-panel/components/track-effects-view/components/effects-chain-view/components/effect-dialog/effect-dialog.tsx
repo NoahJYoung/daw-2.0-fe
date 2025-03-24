@@ -8,6 +8,7 @@ import { observer } from "mobx-react-lite";
 import { IconType } from "react-icons/lib";
 import { getEffectByKey } from "./helpers";
 import { isMobileDevice } from "@/pages/studio/utils";
+import { cn } from "@/lib/utils";
 
 interface SynthSettingsModalProps {
   track: Track;
@@ -84,7 +85,11 @@ export const EffectDialog = observer(
                 />
               </div>
             )}
-            <div className="h-full w-full md:w-[calc(100%-116px)]">
+            <div
+              className={cn("w-full h-full", {
+                "md:w-[calc(100%-116px)]": !isMobile,
+              })}
+            >
               {<Effect.Lower effect={effect} track={track} />}
             </div>
             {!isMobile && (
