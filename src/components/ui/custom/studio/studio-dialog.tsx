@@ -131,8 +131,8 @@ export const StudioDialog = ({
         )}
         style={{
           height: isLandscape ? "98vh" : undefined,
-          transform: isLandscape
-            ? `translate(${-50}%, ${-42}%)`
+          transform: isMobile
+            ? `translate(${-50}%, ${-45}%)`
             : `translate(${position.x}px, ${position.y}px)`,
           cursor: isDragging ? "grabbing" : "default",
           transition: isDragging ? "none" : "default",
