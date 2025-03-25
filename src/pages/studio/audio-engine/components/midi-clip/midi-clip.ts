@@ -2,6 +2,7 @@ import {
   clone,
   ExtendedModel,
   getParent,
+  getRoot,
   idProp,
   model,
   modelAction,
@@ -17,6 +18,9 @@ import { Track } from "../track";
 import { EventData } from "../keyboard/types";
 import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
 import { noteRef } from "../refs";
+import { AudioEngine } from "../../audio-engine";
+import { AudioClip } from "../audio-clip";
+import { audioBufferCache } from "../audio-buffer-cache";
 
 interface EventParams {
   on: number;
@@ -57,6 +61,9 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   @observable private batchUpdatePending = false;
   private batchUpdateTimer: ReturnType<typeof setTimeout> | null = null;
 
+  @observable
+  loading = false;
+
   getRefId() {
     return this.id;
   }
@@ -87,6 +94,11 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     this.selectedNoteRefs = [];
 
     this.requestBatchUpdate();
+  }
+
+  @action
+  setLoading(state: boolean) {
+    this.loading = state;
   }
 
   @action
@@ -255,7 +267,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     this.setEnd(this.end + difference);
     this.start = newStart;
 
-    // Clear the timing cache as all timings are now invalid
     this.eventTimingsCache.clear();
     this.requestBatchUpdate();
   }
@@ -489,6 +500,94 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
       snapshots: [{ ...clipOne }, { ...clipTwo }],
       clipIdToDelete: this.id,
     };
+  }
+
+  static trimAudioBuffer(
+    originalBuffer: Tone.ToneAudioBuffer,
+    trimSeconds: number
+  ) {
+    const sampleRate = originalBuffer.sampleRate;
+    const trimSamples = Math.floor(trimSeconds * sampleRate);
+
+    const trimmedBuffer = Tone.context.createBuffer(
+      originalBuffer.numberOfChannels,
+      originalBuffer.length - trimSamples,
+      sampleRate
+    );
+
+    for (
+      let channel = 0;
+      channel < originalBuffer.numberOfChannels;
+      channel++
+    ) {
+      const originalData = originalBuffer.getChannelData(channel);
+      const trimmedData = trimmedBuffer.getChannelData(channel);
+
+      for (let i = 0; i < trimmedBuffer.length; i++) {
+        trimmedData[i] = originalData[i + trimSamples];
+      }
+    }
+
+    return new Tone.ToneAudioBuffer(trimmedBuffer);
+  }
+
+  async convertToAudioClip() {
+    this.setLoading(true);
+    const { mixer } = getRoot<AudioEngine>(this);
+
+    const parentTrack = mixer.tracks.find((track) => track.id === this.trackId);
+    if (!parentTrack) return;
+
+    const originalDuration =
+      (this.end - this.start) / Tone.getContext().sampleRate;
+    const preRollTime = 0.05; // 50ms pre-roll
+
+    const audioBuffer = await Tone.Offline(async (context) => {
+      const instrumentClone = clone(parentTrack.instrument);
+      instrumentClone.output.toDestination();
+
+      const sortedEvents = [...this.events].sort((a, b) => a.on - b.on);
+
+      sortedEvents.forEach((event) => {
+        const startTime = event.on / Tone.getContext().sampleRate + preRollTime;
+        const duration = (event.off - event.on) / Tone.getContext().sampleRate;
+
+        context.transport.scheduleOnce((time) => {
+          instrumentClone.triggerAttackRelease(
+            event.note.join(""),
+            duration,
+            time,
+            event.velocity
+          );
+        }, startTime);
+      });
+
+      context.transport.start();
+    }, originalDuration + preRollTime);
+
+    const trimmedBuffer = MidiClip.trimAudioBuffer(audioBuffer, preRollTime);
+
+    const { loopSamples, fadeInSamples, fadeOutSamples } = this;
+
+    const clip = new AudioClip({
+      trackId: this.trackId,
+      start: this.start,
+      loopSamples,
+      fadeInSamples,
+      fadeOutSamples,
+      midiNotes: [...this.events].map((event) => clone(event)),
+    });
+
+    if (trimmedBuffer) {
+      audioBufferCache.add(clip.id, trimmedBuffer.toMono());
+      clip.setBuffer(trimmedBuffer);
+      clip.createWaveformCache(trimmedBuffer);
+    }
+
+    this.dispose();
+    parentTrack.deleteClip(this);
+    parentTrack.createAudioClip(clip);
+    this.setLoading(false);
   }
 
   dispose() {

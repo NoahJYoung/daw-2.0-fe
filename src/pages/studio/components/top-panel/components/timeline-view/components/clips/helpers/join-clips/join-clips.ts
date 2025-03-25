@@ -7,7 +7,7 @@ import {
 import { EventData } from "@/pages/studio/audio-engine/components/keyboard/types";
 import { MidiNote } from "@/pages/studio/audio-engine/components/midi-note";
 import { PitchNameTuple } from "@/pages/studio/audio-engine/components/midi-note/types";
-import { UndoManager } from "mobx-keystone";
+import { clone, UndoManager } from "mobx-keystone";
 import * as Tone from "tone";
 
 export const joinClips = (mixer: Mixer, undoManager: UndoManager) => {
@@ -54,6 +54,8 @@ export const joinClips = (mixer: Mixer, undoManager: UndoManager) => {
       const ctx = Tone.getContext();
       const mergedBuffer = ctx.createBuffer(1, totalLength, ctx.sampleRate);
 
+      const allClipsHaveMidi = clips.every((clip) => clip.midiNotes.length > 0);
+
       let position = 0;
       clips.forEach((clip, index) => {
         if (clip.buffer) {
@@ -80,6 +82,24 @@ export const joinClips = (mixer: Mixer, undoManager: UndoManager) => {
         start: clips[0].start,
         fadeInSamples: clips[0].fadeInSamples,
         fadeOutSamples: clips[clips.length - 1].fadeOutSamples,
+        midiNotes: allClipsHaveMidi
+          ? [
+              ...clips
+                .map((clip, i) =>
+                  [...clip.midiNotes].map(
+                    (note) =>
+                      new MidiNote({
+                        note: [...note.note],
+                        velocity: note.velocity,
+                        on: i > 0 ? note.on + clip.start : note.on,
+                        off: i > 0 ? note.off + clip.start : note.off,
+                      })
+                  )
+                )
+                .flat()
+                .map((midiNote) => clone(midiNote)),
+            ]
+          : [],
       });
 
       const toneBuffer = new Tone.ToneAudioBuffer(mergedBuffer);

@@ -16,7 +16,7 @@ export class Oscillator extends ExtendedModel(BaseAudioNodeWrapper, {
   release: prop(1).withSetter(),
   mute: prop(false).withSetter(),
 }) {
-  private synth = new Tone.PolySynth(Tone.Synth).set({
+  synth = new Tone.PolySynth(Tone.Synth).set({
     oscillator: { type: this.type },
     envelope: {
       attack: this.attack,

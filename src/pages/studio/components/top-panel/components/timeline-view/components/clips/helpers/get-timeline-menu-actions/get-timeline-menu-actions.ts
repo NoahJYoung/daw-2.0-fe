@@ -3,6 +3,7 @@ import {
   AiOutlineMergeCells as JoinIcon,
 } from "react-icons/ai";
 import { FiDelete as DeleteIcon } from "react-icons/fi";
+import { PiWaveformBold as AudioIcon } from "react-icons/pi";
 import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
 import {
   MdContentPasteGo as PasteIcon,
@@ -21,6 +22,7 @@ import {
 import { AudioEngine } from "@/pages/studio/audio-engine";
 import { SiMidi as MidiIcon } from "react-icons/si";
 import { UndoManager } from "mobx-keystone";
+import { AudioClip, MidiClip } from "@/pages/studio/audio-engine/components";
 
 export const getTimelineMenuActions = (
   audioEngine: AudioEngine,
@@ -97,6 +99,34 @@ export const getTimelineMenuActions = (
       label: "Create midi clip",
       disabled: mixer.selectedTracks.length < 1,
       onClick: () => createEmptyMidiClip(mixer),
+      icon: MidiIcon,
+    },
+    { separator: true },
+    {
+      label: "Convert to audio",
+      disabled:
+        mixer.selectedClips.length !== 1 ||
+        mixer.selectedClips?.[0]?.type !== "midi",
+      onClick: () => {
+        undoManager.withGroup(async () => {
+          audioEngine.setPlayDisabled(true);
+          await (mixer.selectedClips[0] as MidiClip).convertToAudioClip();
+          audioEngine.setPlayDisabled(false);
+        });
+      },
+      icon: AudioIcon,
+    },
+    {
+      label: "Convert to midi",
+      disabled:
+        mixer.selectedClips.length !== 1 ||
+        mixer.selectedClips?.[0]?.type !== "audio" ||
+        !(mixer.selectedClips[0] as AudioClip).canConvertToMidi,
+
+      onClick: () =>
+        undoManager.withGroup(() =>
+          (mixer.selectedClips[0] as AudioClip).convertToMidiClip()
+        ),
       icon: MidiIcon,
     },
   ];

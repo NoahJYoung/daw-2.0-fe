@@ -1,4 +1,12 @@
-import { ExtendedModel, idProp, model, modelAction, prop } from "mobx-keystone";
+import {
+  clone,
+  ExtendedModel,
+  getRoot,
+  idProp,
+  model,
+  modelAction,
+  prop,
+} from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { action, computed, observable } from "mobx";
 import { audioBufferCache } from "../audio-buffer-cache";
@@ -6,6 +14,10 @@ import { waveformCache } from "../waveform-cache";
 import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
 import { getPeaks } from "../audio-buffer-cache/helpers";
 import * as Tone from "tone";
+import { MidiNote } from "../midi-note";
+import { AudioEngine } from "../../audio-engine";
+import { MidiClip } from "../midi-clip";
+import { EventData } from "../keyboard/types";
 
 @model("AudioEngine/Mixer/Track/AudioClip")
 export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -18,8 +30,14 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   fadeInSamples: prop<number>(0).withSetter(),
   fadeOutSamples: prop<number>(0).withSetter(),
   bufferCacheKey: prop<string | null>(null).withSetter(),
+  midiNotes: prop<MidiNote[]>(() => []),
 }) {
   player = new Tone.Player();
+
+  @observable
+  loading = false;
+
+  canConvertToMidi = !!this.midiNotes && this.midiNotes.length;
 
   @observable
   private startEventId: number | null = null;
@@ -53,6 +71,11 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   setBuffer(buffer: Tone.ToneAudioBuffer) {
     this.buffer = buffer;
     this.setPlayerBuffer();
+  }
+
+  @action
+  setLoading(state: boolean) {
+    this.loading = state;
   }
 
   play = (time: Tone.Unit.Time, seekTime?: Tone.Unit.Time) => {
@@ -102,6 +125,39 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     ) {
       return;
     }
+    const adjustedPosition = positionInSamples - this.start;
+    const difference = positionInSamples - adjustedPosition;
+
+    const getSplitEvents = () => {
+      if (!this.midiNotes) {
+        return;
+      }
+
+      const splitEvents = JSON.parse(JSON.stringify([...this.midiNotes]))
+        .filter(
+          (event: { ["$"]: EventData }) =>
+            event["$"].on < adjustedPosition &&
+            event["$"].off > adjustedPosition
+        )
+        .map((event: { ["$"]: EventData }) => [
+          {
+            on: event["$"].on,
+            off: adjustedPosition,
+            velocity: event["$"].velocity,
+            note: [...event["$"].note],
+          },
+
+          {
+            on: adjustedPosition,
+            off: event["$"].off,
+            velocity: event["$"].velocity,
+            note: [...event["$"].note],
+          },
+        ]);
+      return splitEvents;
+    };
+
+    const splitMidiNotes = getSplitEvents();
 
     const clipOne = {
       start: this.start,
@@ -112,6 +168,24 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
         0,
         Tone.Time(positionInSamples - this.start, "samples").toSeconds()
       ),
+      midiNotes: [
+        ...this.midiNotes
+          .concat(splitMidiNotes.flat())
+          .filter(
+            (event) =>
+              event.on < adjustedPosition && event.off <= adjustedPosition
+          )
+          .map((event) =>
+            clone(
+              new MidiNote({
+                note: [...event.note],
+                velocity: event.velocity,
+                on: event.on,
+                off: event.off,
+              })
+            )
+          ),
+      ],
     };
     const clipTwo = {
       start: positionInSamples,
@@ -121,6 +195,21 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
       buffer: this.buffer?.slice(
         Tone.Time(positionInSamples - this.start, "samples").toSeconds()
       ),
+      midiNotes: [
+        ...this.midiNotes
+          .concat(splitMidiNotes.flat())
+          .filter((event) => event.on >= adjustedPosition)
+          .map((event) =>
+            clone(
+              new MidiNote({
+                note: [...event.note],
+                velocity: event.velocity,
+                on: event.on - positionInSamples + difference,
+                off: event.off - positionInSamples + difference,
+              })
+            )
+          ),
+      ],
     };
 
     return { snapshots: [clipOne, clipTwo], clipIdToDelete: this.id };
@@ -219,6 +308,31 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
     return new Tone.ToneAudioBuffer(concatenatedBuffer);
   };
+
+  async convertToMidiClip() {
+    if (!this.canConvertToMidi || !this.midiNotes) {
+      return;
+    }
+    const { mixer } = getRoot<AudioEngine>(this);
+
+    const parentTrack = mixer.tracks.find((track) => track.id === this.trackId);
+    if (!parentTrack) return;
+
+    const { loopSamples, fadeInSamples, fadeOutSamples } = this;
+
+    const clip = new MidiClip({
+      trackId: this.trackId,
+      start: this.start,
+      end: this.end,
+      loopSamples,
+      fadeInSamples,
+      fadeOutSamples,
+      events: [...this.midiNotes].map((event) => clone(event)),
+    });
+
+    parentTrack.createMidiClip(clip);
+    parentTrack.deleteClip(this);
+  }
 
   sync() {
     if (!this.buffer) {

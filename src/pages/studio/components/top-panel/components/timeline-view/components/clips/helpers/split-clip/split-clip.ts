@@ -17,6 +17,8 @@ export const splitClip = (clip: Clip, mixer: Mixer) => {
     if (data) {
       const { snapshots, clipIdToDelete } = data;
       snapshots.forEach((snapshot) => {
+        const stringifiedMidiNotes = JSON.stringify(snapshot.midiNotes);
+
         const { buffer, trackId, start, fadeInSamples, fadeOutSamples } =
           snapshot;
         const clip = new AudioClip({
@@ -24,6 +26,11 @@ export const splitClip = (clip: Clip, mixer: Mixer) => {
           start,
           fadeInSamples,
           fadeOutSamples,
+          midiNotes: JSON.parse(stringifiedMidiNotes).map((event: never) => {
+            const { note, on, off, velocity } = event["$"];
+            const midiNote = new MidiNote({ note, on, off, velocity });
+            return midiNote;
+          }),
         });
 
         clip.createWaveformCache(buffer);

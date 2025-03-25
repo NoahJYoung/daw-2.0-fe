@@ -37,6 +37,8 @@ export const TransportControls = observer(() => {
     });
   }, [audioEngine, undoManager]);
 
+  const { playDisabled } = audioEngine;
+
   return (
     <span
       className="flex h-full bg-surface-mid border-surface-mid border"
@@ -46,6 +48,7 @@ export const TransportControls = observer(() => {
         on={audioEngine.state === AudioEngineState.playing}
         onClassName={buttonOnClassName}
         onClick={play}
+        disabled={playDisabled}
         className={transportButtonClassName}
         icon={FaPlay}
       />
@@ -64,6 +67,7 @@ export const TransportControls = observer(() => {
         on={audioEngine.state === AudioEngineState.recording}
         onClassName={buttonOnClassName}
         onClick={record}
+        disabled={playDisabled}
         className={transportButtonClassName}
         icon={FaCircle}
       />

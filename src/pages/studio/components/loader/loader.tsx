@@ -13,6 +13,8 @@ interface LoaderProps {
   width?: string | number;
   height?: number;
   barCount?: number;
+  global?: boolean;
+  borderRadius?: string;
 }
 
 export const Loader = observer(
@@ -21,6 +23,8 @@ export const Loader = observer(
     width = "100%",
     height = 30,
     barCount = 30,
+    global = true,
+    borderRadius = "inherit",
   }: LoaderProps) => {
     const audioEngine = useAudioEngine();
     const [bars, setBars] = useState<BarData[]>([]);
@@ -75,26 +79,33 @@ export const Loader = observer(
       };
     }, [barCount]);
 
-    return audioEngine.loadingState ? (
+    return audioEngine.loadingState || !global ? (
       <div
         style={{
           top: 0,
           left: 0,
-          position: "fixed",
+          position: global ? "fixed" : "absolute",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           zIndex: 10000,
           background: "rgba(165, 165, 165, 0.3)",
-          width: "100vw",
-          height: "100vh",
+          width: global ? "100vw" : "100%",
+          height: global ? "100vh" : "100%",
+          borderRadius,
         }}
       >
         <span className="flex flex-col gap-1 justify-center items-center">
-          <div className="flex justify-center items-center">
-            <span style={{ minWidth: "4ch" }}>{audioEngine.loadingState}</span>
-            <span style={{ width: "3ch", textAlign: "left" }}>{ellipsis}</span>
-          </div>
+          {global && (
+            <div className="flex justify-center items-center">
+              <span style={{ minWidth: "4ch" }}>
+                {audioEngine.loadingState}
+              </span>
+              <span style={{ width: "3ch", textAlign: "left" }}>
+                {ellipsis}
+              </span>
+            </div>
+          )}
           <div
             className="relative"
             style={{

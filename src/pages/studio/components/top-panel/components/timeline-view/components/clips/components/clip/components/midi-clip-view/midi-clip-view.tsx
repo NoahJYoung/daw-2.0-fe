@@ -7,6 +7,7 @@ import {
   getNoteXPosition,
   getNoteYPosition,
 } from "../../helpers";
+import { Loader } from "@/pages/studio/components/loader";
 
 interface MidiClipViewProps {
   clip: MidiClip;
@@ -76,7 +77,23 @@ export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
     });
   }, [clip.events, timeline, noteHeight, clipWidth, clipHeight]);
 
-  return (
+  return clip.loading ? (
+    <span
+      style={{
+        width: clipWidth,
+        height: clipHeight,
+        marginBottom: "6px",
+      }}
+    >
+      <Loader
+        height={clipHeight / 2}
+        color="#444"
+        global={false}
+        borderRadius="8px"
+        barCount={clipWidth / 12}
+      />
+    </span>
+  ) : (
     <canvas
       ref={canvasRef}
       style={{

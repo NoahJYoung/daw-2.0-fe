@@ -240,18 +240,20 @@ export const Clip = observer(
               style={{ maxWidth: `calc(${clipWidth - 4}px - 1rem )` }}
               className="text-black ml-[2px] mt-[2px] text-xs select-none whitespace-nowrap max-w-full text-ellipsis overflow-hidden"
             >
-              {clipInfoString}
+              {clip.loading ? "Loading..." : clipInfoString}
             </p>
           </span>
 
-          {clip?.type === "audio" && (
+          {clip instanceof AudioClip && (
             <>
-              <AudioClipView
-                scrollLeft={scrollLeft}
-                track={currentDragTrack || track}
-                clip={clip as AudioClip}
-                clipLeft={clipTransformX}
-              />
+              {
+                <AudioClipView
+                  scrollLeft={scrollLeft}
+                  track={currentDragTrack || track}
+                  clip={clip as AudioClip}
+                  clipLeft={clipTransformX}
+                />
+              }
 
               {showClipActions && (
                 <button
@@ -279,7 +281,7 @@ export const Clip = observer(
             </>
           )}
 
-          {clip?.type === "midi" && (
+          {clip instanceof MidiClip && (
             <>
               <MidiClipView
                 track={currentDragTrack || track}

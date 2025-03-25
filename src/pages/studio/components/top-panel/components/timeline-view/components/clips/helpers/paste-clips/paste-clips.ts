@@ -33,6 +33,7 @@ export const pasteClips = (
             fadeInSamples: clip.fadeInSamples,
             fadeOutSamples: clip.fadeOutSamples,
             loopSamples: clip.loopSamples,
+            midiNotes: [...clip.midiNotes].map((note) => clone(note)),
           });
 
           if (clip.buffer) {

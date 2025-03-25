@@ -52,6 +52,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   @observable
   loadingState: string | null = "Initializing";
 
+  @observable
+  playDisabled: boolean = false;
+
   async init() {
     if (!this.hasInitialized) {
       const customAudioContext = new AudioContext({
@@ -81,9 +84,22 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   @action
   setLoadingState(state: string | null) {
     this.loadingState = state;
+    if (state === null) {
+      this.setPlayDisabled(false);
+    } else {
+      this.setPlayDisabled(true);
+    }
+  }
+
+  @action
+  setPlayDisabled(state: boolean) {
+    this.playDisabled = state;
   }
 
   record = async () => {
+    if (this.playDisabled) {
+      return;
+    }
     const start = Tone.TransportTime(
       Tone.getTransport().seconds,
       "s"
@@ -171,6 +187,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   };
 
   play = async () => {
+    if (this.playDisabled) {
+      return;
+    }
     Tone.getTransport().start("+0.1");
     this.metronome.start();
     this.mixer.tracks.forEach((track) => track.play());

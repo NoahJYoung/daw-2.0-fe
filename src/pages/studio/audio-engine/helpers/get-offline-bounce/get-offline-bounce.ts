@@ -13,7 +13,7 @@ export const getOfflineBounce = async (audioEngine: AudioEngine) => {
     const clonedEngine = clone(audioEngine, { generateNewIds: false });
     generateOfflineSends(clonedEngine);
     clonedEngine.play();
-  }, duration);
+  }, duration + 1);
 
   const wav = await bufferToWav(buffer, audioEngine.projectName);
   const link = document.createElement("a");
