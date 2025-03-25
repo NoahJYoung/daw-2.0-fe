@@ -44,19 +44,16 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   quantizePercentage: prop<number>(1),
   action: prop<"select" | "create">("select").withSetter(),
 }) {
-  // Keep track of scheduled events to optimize clearing
   @observable scheduledEventIds = new Map<
     string,
     { start: number; stop: number }
   >();
 
-  // Store computed event timings to avoid recalculating them
   @observable private eventTimingsCache = new Map<
     string,
     { startSeconds: number; endSeconds: number }
   >();
 
-  // For batch updates
   @observable private batchUpdatePending = false;
   private batchUpdateTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -73,7 +70,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   deleteNote(event: MidiNote) {
-    // Clear the specific event's scheduled events
     this.clearEventScheduling(event);
 
     this.setEvents([...this.events].filter((current) => current !== event));
@@ -82,7 +78,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   deleteSelectedNotes() {
-    // Clear all selected notes' scheduled events
     this.selectedNotes.forEach((note) => this.clearEventScheduling(note));
 
     const selectedIds = new Set(this.selectedNotes.map((note) => note.id));
@@ -94,7 +89,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     this.requestBatchUpdate();
   }
 
-  // Clear scheduling for a specific event
   @action
   clearEventScheduling(event: MidiNote) {
     const eventKey = this.getEventKey(event);
@@ -107,25 +101,20 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
       this.scheduledEventIds.delete(eventKey);
     }
 
-    // Clear from timing cache too
     this.eventTimingsCache.delete(eventKey);
   }
 
-  // Generate a unique key for an event
   private getEventKey(event: MidiNote): string {
     return `${event.id}_${event.on}_${event.off}`;
   }
 
-  // Request a batched update to avoid excessive scheduling
   @action
   requestBatchUpdate() {
     if (!this.batchUpdatePending) {
       this.batchUpdatePending = true;
 
-      // Clear previous timer if exists
       if (this.batchUpdateTimer) clearTimeout(this.batchUpdateTimer);
 
-      // Schedule a batch update in the next animation frame
       this.batchUpdateTimer = setTimeout(() => {
         this.processBatchUpdate();
         this.batchUpdateTimer = null;
@@ -133,12 +122,10 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
-  // Process all pending updates at once
   @action
   processBatchUpdate() {
     this.batchUpdatePending = false;
 
-    // If events have changed, we may need to reschedule
     if (Tone.getTransport().state === "started") {
       this.schedule();
     }
