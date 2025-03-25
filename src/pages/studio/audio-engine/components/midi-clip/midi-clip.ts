@@ -262,7 +262,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   setLoopSamples(samples: number) {
-    this.setLoopSamples(samples);
+    this.loopSamples = samples;
     this.requestBatchUpdate();
   }
 
