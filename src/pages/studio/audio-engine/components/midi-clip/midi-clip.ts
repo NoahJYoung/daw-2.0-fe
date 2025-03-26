@@ -502,35 +502,6 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     };
   }
 
-  static trimAudioBuffer(
-    originalBuffer: Tone.ToneAudioBuffer,
-    trimSeconds: number
-  ) {
-    const sampleRate = originalBuffer.sampleRate;
-    const trimSamples = Math.floor(trimSeconds * sampleRate);
-
-    const trimmedBuffer = Tone.context.createBuffer(
-      originalBuffer.numberOfChannels,
-      originalBuffer.length - trimSamples,
-      sampleRate
-    );
-
-    for (
-      let channel = 0;
-      channel < originalBuffer.numberOfChannels;
-      channel++
-    ) {
-      const originalData = originalBuffer.getChannelData(channel);
-      const trimmedData = trimmedBuffer.getChannelData(channel);
-
-      for (let i = 0; i < trimmedBuffer.length; i++) {
-        trimmedData[i] = originalData[i + trimSamples];
-      }
-    }
-
-    return new Tone.ToneAudioBuffer(trimmedBuffer);
-  }
-
   async convertToAudioClip() {
     this.setLoading(true);
     const { mixer } = getRoot<AudioEngine>(this);
@@ -540,16 +511,21 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
     const originalDuration =
       (this.end - this.start) / Tone.getContext().sampleRate;
-    const preRollTime = 0.05; // 50ms pre-roll
+
+    const fadeTime = 0.05;
+
+    const totalDuration = originalDuration;
 
     const audioBuffer = await Tone.Offline(async (context) => {
       const instrumentClone = clone(parentTrack.instrument);
-      instrumentClone.output.toDestination();
+      const gain = new Tone.Gain();
+      instrumentClone.output.connect(gain);
+      gain.toDestination();
 
       const sortedEvents = [...this.events].sort((a, b) => a.on - b.on);
 
       sortedEvents.forEach((event) => {
-        const startTime = event.on / Tone.getContext().sampleRate + preRollTime;
+        const startTime = event.on / Tone.getContext().sampleRate;
         const duration = (event.off - event.on) / Tone.getContext().sampleRate;
 
         context.transport.scheduleOnce((time) => {
@@ -562,10 +538,13 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
         }, startTime);
       });
 
-      context.transport.start();
-    }, originalDuration + preRollTime);
+      gain.gain.setValueAtTime(0, 0);
+      gain.gain.linearRampToValueAtTime(1, fadeTime);
+      gain.gain.linearRampToValueAtTime(1, totalDuration - fadeTime);
+      gain.gain.linearRampToValueAtTime(0, totalDuration);
 
-    const trimmedBuffer = MidiClip.trimAudioBuffer(audioBuffer, preRollTime);
+      context.transport.start();
+    }, totalDuration);
 
     const { loopSamples, fadeInSamples, fadeOutSamples } = this;
 
@@ -578,11 +557,9 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
       midiNotes: [...this.events].map((event) => clone(event)),
     });
 
-    if (trimmedBuffer) {
-      audioBufferCache.add(clip.id, trimmedBuffer.toMono());
-      clip.setBuffer(trimmedBuffer);
-      clip.createWaveformCache(trimmedBuffer);
-    }
+    audioBufferCache.add(clip.id, audioBuffer.toMono());
+    clip.setBuffer(audioBuffer);
+    clip.createWaveformCache(audioBuffer);
 
     this.dispose();
     parentTrack.deleteClip(this);
