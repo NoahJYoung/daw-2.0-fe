@@ -246,8 +246,10 @@ export const Clip = observer(
               {clip.loading ? "Loading..." : clipInfoString}
             </p>
 
-            {showMidiIcon && (
-              <MidiIcon className="text-black ml-2 mt-1" size={24} />
+            {showMidiIcon ? (
+              <MidiIcon className="text-black ml-2" size={24} />
+            ) : (
+              <span style={{ height: 24 }} />
             )}
           </span>
 
