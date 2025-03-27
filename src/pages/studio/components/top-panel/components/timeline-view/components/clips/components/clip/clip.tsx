@@ -6,6 +6,7 @@ import {
 import { observer } from "mobx-react-lite";
 import { AudioClipView, AudioLoop, MidiClipView, MidiLoop } from "./components";
 import { MdOutlineLoop as LoopIcon } from "react-icons/md";
+import { SiMidi as MidiIcon } from "react-icons/si";
 import {
   useAudioEngine,
   useBottomPanelViewController,
@@ -189,8 +190,10 @@ export const Clip = observer(
       selectedIndexOffset
     );
 
-    const showClipActions = clipWidth >= 50 && (hovering || selected);
-    const showLock = clipWidth >= 50;
+    const showClipActions = clipWidth >= 40 && (hovering || selected);
+    const showLock = clipWidth >= 40;
+    const showMidiIcon =
+      clipWidth >= 100 && clip instanceof AudioClip && clip.canConvertToMidi;
 
     const transformY = top;
 
@@ -242,6 +245,10 @@ export const Clip = observer(
             >
               {clip.loading ? "Loading..." : clipInfoString}
             </p>
+
+            {showMidiIcon && (
+              <MidiIcon className="text-black ml-2 mt-1" size={24} />
+            )}
           </span>
 
           {clip instanceof AudioClip && (

@@ -84,7 +84,7 @@ export const AuxSendListItem = observer(
               label: track.name,
               value: track.id,
             }))}
-            value={mode === "send" ? send.to.id : send.from.id}
+            value={mode === "send" ? send.to?.id : send.from?.id}
             colorOffset={0}
             placeholder="Aux Send"
             icon={<MdOutlineSettingsInputComponent />}

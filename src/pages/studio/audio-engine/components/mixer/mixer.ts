@@ -5,6 +5,7 @@ import {
   modelAction,
   Ref,
   idProp,
+  getRoot,
 } from "mobx-keystone";
 import { action, computed, observable } from "mobx";
 import { Track } from "../track";
@@ -13,6 +14,7 @@ import { trackRef } from "../refs";
 import { Master } from "../master";
 import { PanelMode } from "./types";
 import { Clip } from "../types";
+import { AudioEngine } from "../../audio-engine";
 
 @model("AudioEngine/Mixer")
 export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -70,11 +72,23 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   removeTrack(track: Track) {
+    this.checkAndRemoveDeletedTrackFromAuxSendManager(track);
+
     const index = this.tracks.indexOf(track);
     if (index >= 0) {
       this.tracks.splice(index, 1);
     }
     track.dispose();
+  }
+
+  checkAndRemoveDeletedTrackFromAuxSendManager(track: Track) {
+    const { auxSendManager } = getRoot<AudioEngine>(this);
+    const sendsToRemove = auxSendManager.getSendsByTrack(track);
+    const receivesToRemove = auxSendManager.getReceivesByTrack(track);
+
+    [...sendsToRemove, ...receivesToRemove].forEach((auxSend) =>
+      auxSendManager.removeAuxSend(auxSend.id)
+    );
   }
 
   @modelAction
