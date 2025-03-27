@@ -509,12 +509,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const parentTrack = mixer.tracks.find((track) => track.id === this.trackId);
     if (!parentTrack) return;
 
-    const originalDuration =
-      (this.end - this.start) / Tone.getContext().sampleRate;
-
-    const bufferOffset = 0.1;
-
-    const totalDuration = originalDuration + bufferOffset * 2;
+    const duration = (this.end - this.start) / Tone.getContext().sampleRate;
 
     const audioBuffer = await Tone.Offline(async (context) => {
       const instrumentClone = clone(parentTrack.instrument);
@@ -530,20 +525,17 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
         context.transport.scheduleOnce((time) => {
           instrumentClone.triggerAttackRelease(
             event.note.join(""),
-            duration + bufferOffset,
-            time + bufferOffset,
+            duration,
+            time,
             event.velocity
           );
         }, startTime);
       });
 
       context.transport.start();
-    }, totalDuration);
+    }, duration);
 
-    const bufferLengthInSeconds = audioBuffer.length / audioBuffer.sampleRate;
-
-    const realBufferEnd = bufferLengthInSeconds - bufferOffset;
-    const trimmedBuffer = audioBuffer.slice(bufferOffset, realBufferEnd);
+    const monoBuffer = audioBuffer.toMono();
 
     const { loopSamples, fadeInSamples, fadeOutSamples } = this;
 
@@ -556,9 +548,9 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
       midiNotes: [...this.events].map((event) => clone(event)),
     });
 
-    audioBufferCache.add(clip.id, trimmedBuffer.toMono());
-    clip.setBuffer(trimmedBuffer);
-    clip.createWaveformCache(trimmedBuffer);
+    audioBufferCache.add(clip.id, monoBuffer);
+    clip.setBuffer(monoBuffer);
+    clip.createWaveformCache(monoBuffer);
 
     this.dispose();
     parentTrack.deleteClip(this);
