@@ -37,7 +37,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   @observable
   loading = false;
 
-  canConvertToMidi = !!this.midiNotes && this.midiNotes.length;
+  canConvertToMidi = this.midiNotes.length > 0;
 
   @observable
   private startEventId: number | null = null;

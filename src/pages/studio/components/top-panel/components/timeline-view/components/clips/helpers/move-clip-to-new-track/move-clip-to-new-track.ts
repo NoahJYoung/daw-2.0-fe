@@ -30,6 +30,7 @@ export const moveClipToNewTrack = (
           fadeOutSamples: oldClip.fadeOutSamples,
           trackId: newTrackId,
           loopSamples: oldClip.loopSamples,
+          midiNotes: [...oldClip.midiNotes].map((note) => clone(note)),
         });
 
         audioBufferCache.copy(oldClip.id, newClip.id);
