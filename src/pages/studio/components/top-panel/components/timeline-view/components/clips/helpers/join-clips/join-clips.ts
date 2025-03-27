@@ -91,8 +91,14 @@ export const joinClips = (mixer: Mixer, undoManager: UndoManager) => {
                       new MidiNote({
                         note: [...note.note],
                         velocity: note.velocity,
-                        on: i > 0 ? note.on + clip.start : note.on,
-                        off: i > 0 ? note.off + clip.start : note.off,
+                        on:
+                          i > 0
+                            ? note.on + (clip.start - clips[0].start)
+                            : note.on,
+                        off:
+                          i > 0
+                            ? note.off + clip.start - clips[0].start
+                            : note.off,
                       })
                   )
                 )

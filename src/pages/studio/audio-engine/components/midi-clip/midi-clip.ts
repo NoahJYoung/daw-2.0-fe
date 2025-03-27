@@ -512,15 +512,14 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const originalDuration =
       (this.end - this.start) / Tone.getContext().sampleRate;
 
-    const fadeTime = 0.05;
+    const bufferOffset = 0.1;
 
-    const totalDuration = originalDuration;
+    const totalDuration = originalDuration + bufferOffset * 2;
 
     const audioBuffer = await Tone.Offline(async (context) => {
       const instrumentClone = clone(parentTrack.instrument);
-      const gain = new Tone.Gain();
-      instrumentClone.output.connect(gain);
-      gain.toDestination();
+
+      instrumentClone.output.toDestination();
 
       const sortedEvents = [...this.events].sort((a, b) => a.on - b.on);
 
@@ -531,20 +530,20 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
         context.transport.scheduleOnce((time) => {
           instrumentClone.triggerAttackRelease(
             event.note.join(""),
-            duration,
-            time,
+            duration + bufferOffset,
+            time + bufferOffset,
             event.velocity
           );
         }, startTime);
       });
 
-      gain.gain.setValueAtTime(0, 0);
-      gain.gain.linearRampToValueAtTime(1, fadeTime);
-      gain.gain.linearRampToValueAtTime(1, totalDuration - fadeTime);
-      gain.gain.linearRampToValueAtTime(0, totalDuration);
-
       context.transport.start();
     }, totalDuration);
+
+    const bufferLengthInSeconds = audioBuffer.length / audioBuffer.sampleRate;
+
+    const realBufferEnd = bufferLengthInSeconds - bufferOffset;
+    const trimmedBuffer = audioBuffer.slice(bufferOffset, realBufferEnd);
 
     const { loopSamples, fadeInSamples, fadeOutSamples } = this;
 
@@ -557,9 +556,9 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
       midiNotes: [...this.events].map((event) => clone(event)),
     });
 
-    audioBufferCache.add(clip.id, audioBuffer.toMono());
-    clip.setBuffer(audioBuffer);
-    clip.createWaveformCache(audioBuffer);
+    audioBufferCache.add(clip.id, trimmedBuffer.toMono());
+    clip.setBuffer(trimmedBuffer);
+    clip.createWaveformCache(trimmedBuffer);
 
     this.dispose();
     parentTrack.deleteClip(this);
