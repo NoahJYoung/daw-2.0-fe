@@ -41,6 +41,10 @@ export function drawWaveform(peaks: Peak[], canvas: HTMLCanvasElement): void {
     for (let i = 1; i < peaks.length; i++) {
       x = i * pixelWidth;
       ctx.lineTo(x, height - peaks[i].min);
+      if (i === peaks.length - 1) {
+        ctx.fillStyle = "rgba(50, 50, 50, 0.8)";
+        ctx.fillRect(x, peaks[i].min, 4, peaks[i].max - peaks[i].min);
+      }
     }
 
     for (let i = peaks.length - 1; i >= 0; i--) {
@@ -50,7 +54,6 @@ export function drawWaveform(peaks: Peak[], canvas: HTMLCanvasElement): void {
 
     ctx.lineTo(0, height - peaks[0].min);
 
-    ctx.fillStyle = "rgba(50, 50, 50, 0.8)";
     ctx.fill();
   }
 }
