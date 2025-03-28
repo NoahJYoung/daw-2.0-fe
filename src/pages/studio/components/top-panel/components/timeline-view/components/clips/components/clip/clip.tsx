@@ -247,9 +247,9 @@ export const Clip = observer(
             </p>
 
             {showMidiIcon ? (
-              <MidiIcon className="text-black ml-2" size={24} />
+              <MidiIcon className="text-black ml-2 mt-[2px]" size={24} />
             ) : (
-              <span style={{ height: 24 }} />
+              <span className="mt-[2px]" style={{ height: 24 }} />
             )}
           </span>
 

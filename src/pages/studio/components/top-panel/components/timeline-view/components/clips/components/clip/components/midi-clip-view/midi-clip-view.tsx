@@ -22,6 +22,12 @@ export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
   const clipWidth = timeline.samplesToPixels(clip.length);
   const clipHeight = track.laneHeight - 30;
 
+  const pitches = clip.events.map((event) => event.note).join(",");
+
+  const starts = clip.events.map((event) => event.on).join(",");
+
+  const ends = clip.events.map((event) => event.off).join(",");
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -44,38 +50,32 @@ export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
       const width = getNoteWidth(event, timeline);
 
       ctx.fillStyle = "black";
-
-      const radius = Math.min(Math.max(noteHeight * 0.25, 0.5), noteHeight / 2);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+      ctx.lineWidth = 0.5;
 
       if (noteHeight <= 1) {
+        ctx.strokeRect(x, y, width, noteHeight);
         ctx.fillRect(x, y, width, noteHeight);
       } else {
         ctx.beginPath();
-
-        if (width > radius * 2) {
-          ctx.moveTo(x + radius, y);
-          ctx.lineTo(x + width - radius, y);
-          ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-          ctx.lineTo(x + width, y + noteHeight - radius);
-          ctx.quadraticCurveTo(
-            x + width,
-            y + noteHeight,
-            x + width - radius,
-            y + noteHeight
-          );
-          ctx.lineTo(x + radius, y + noteHeight);
-          ctx.quadraticCurveTo(x, y + noteHeight, x, y + noteHeight - radius);
-          ctx.lineTo(x, y + radius);
-          ctx.quadraticCurveTo(x, y, x + radius, y);
-        } else {
-          ctx.rect(x, y, width, noteHeight);
-        }
-
+        ctx.rect(x, y, width, noteHeight);
         ctx.closePath();
+
         ctx.fill();
+
+        ctx.stroke();
       }
     });
-  }, [clip.events, timeline, noteHeight, clipWidth, clipHeight]);
+  }, [
+    clip.events,
+    timeline,
+    noteHeight,
+    clipWidth,
+    clipHeight,
+    pitches,
+    starts,
+    ends,
+  ]);
 
   return clip.loading ? (
     <span
