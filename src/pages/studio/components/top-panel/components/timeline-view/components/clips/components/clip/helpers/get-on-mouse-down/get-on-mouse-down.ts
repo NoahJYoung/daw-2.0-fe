@@ -24,7 +24,7 @@ export const getOnMouseDown = (
     initialX.current = e.clientX;
 
     if (e.button !== 2) {
-      undoManager.withGroup("UNSELECT ALL AND SELECT ONE", () => {
+      undoManager.withoutUndo(() => {
         if (!e.ctrlKey) {
           mixer.unselectAllClips();
         }

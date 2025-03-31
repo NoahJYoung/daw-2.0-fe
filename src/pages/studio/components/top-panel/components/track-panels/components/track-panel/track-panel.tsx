@@ -225,7 +225,7 @@ export const TrackPanel = observer(
 
     const handleDoubleClick = (e: React.MouseEvent) => {
       e.preventDefault();
-      undoManager.withGroup("UNSELECT AND SELECT CLIPS OF SAME TRACK", () => {
+      undoManager.withoutUndo(() => {
         if (!e.ctrlKey) {
           mixer.unselectAllTracks();
           mixer.unselectAllClips();
@@ -236,11 +236,10 @@ export const TrackPanel = observer(
             track.selectClip(trackClip);
           }
         });
-        undoManager.withoutUndo(() => {
-          mixer.selectFeaturedTrack(track);
-          mixer.setPanelMode("TRACK_FX");
-          expandBottomPanelIfCollapsed();
-        });
+        mixer.selectFeaturedTrack(track);
+        mixer.setPanelMode("TRACK_FX");
+        expandBottomPanelIfCollapsed();
+        mixer.selectTrack(track);
       });
     };
 

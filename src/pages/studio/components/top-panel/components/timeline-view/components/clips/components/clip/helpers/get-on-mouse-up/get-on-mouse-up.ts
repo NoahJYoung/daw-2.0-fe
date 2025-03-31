@@ -47,23 +47,25 @@ export const getOnMouseUp = (
     if (isLooping) {
       const globalOffset = referenceClip.start + referenceClip.length;
 
-      mixer.selectedClips.forEach((selectedClip) => {
-        const newValue = selectedClip.loopSamples + loopOffset;
-        const quantizedNewValue =
-          Tone.Time(
-            Tone.Time(globalOffset + newValue, "samples").quantize(
-              timeline.subdivision
-            ),
-            "s"
-          ).toSamples() - globalOffset;
+      undoManager.withGroup("CLIPS-LOOP-CHANGE", () => {
+        mixer.selectedClips.forEach((selectedClip) => {
+          const newValue = selectedClip.loopSamples + loopOffset;
+          const quantizedNewValue =
+            Tone.Time(
+              Tone.Time(globalOffset + newValue, "samples").quantize(
+                timeline.subdivision
+              ),
+              "s"
+            ).toSamples() - globalOffset;
 
-        if (timeline.snapToGrid) {
-          selectedClip.setLoopSamples(
-            quantizedNewValue >= 0 ? quantizedNewValue : 0
-          );
-        } else {
-          selectedClip.setLoopSamples(newValue >= 0 ? newValue : 0);
-        }
+          if (timeline.snapToGrid) {
+            selectedClip.setLoopSamples(
+              quantizedNewValue >= 0 ? quantizedNewValue : 0
+            );
+          } else {
+            selectedClip.setLoopSamples(newValue >= 0 ? newValue : 0);
+          }
+        });
       });
 
       return resetStates();
@@ -71,44 +73,51 @@ export const getOnMouseUp = (
 
     const initialTimeDifference = timeline.pixelsToSamples(selectedOffset);
     const firstClipStart = referenceClip.start + initialTimeDifference;
-
     const quantizedFirstClipStart = Tone.Time(
       Tone.Time(firstClipStart, "samples").quantize(timeline.subdivision),
       "s"
     ).toSamples();
 
-    const quantizeOffset = timeline.snapToGrid
-      ? quantizedFirstClipStart - firstClipStart
-      : 0;
+    const willStartChange = timeline.snapToGrid
+      ? quantizedFirstClipStart !== referenceClip.start
+      : selectedOffset !== 0;
+    const willChangeTracks = selectedIndexOffset !== 0;
 
-    mixer.selectedClips.forEach((selectedClip) => {
-      const timeOffset = timeline.pixelsToSamples(selectedOffset);
-      const newStart = selectedClip.start + timeOffset + quantizeOffset;
+    const shouldPerformAction = willStartChange || willChangeTracks;
 
-      selectedClip.setStart(newStart);
-    });
+    if (shouldPerformAction) {
+      undoManager.withGroup("CLIPS-MOUSE-UP", () => {
+        const quantizeOffset = timeline.snapToGrid
+          ? quantizedFirstClipStart - firstClipStart
+          : 0;
 
-    if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
-      undoManager.withGroup("MOVE CLIPS TO NEW TRACK", () => {
         mixer.selectedClips.forEach((selectedClip) => {
-          const selectedParentIndex = mixer.tracks.findIndex(
-            (track) => track.id === selectedClip.trackId
-          );
-          if (selectedParentIndex !== -1) {
-            moveClipToNewTrack(
-              selectedClip,
-              mixer,
-              undoManager,
-              selectedParentIndex,
-              selectedParentIndex + selectedIndexOffset
-            );
-          } else {
-            throw new Error("No parent track found");
-          }
+          const timeOffset = timeline.pixelsToSamples(selectedOffset);
+          const newStart = selectedClip.start + timeOffset + quantizeOffset;
+
+          selectedClip.setStart(newStart);
         });
+
+        if (parentTrackIndex !== parentTrackIndex + selectedIndexOffset) {
+          mixer.selectedClips.forEach((selectedClip) => {
+            const selectedParentIndex = mixer.tracks.findIndex(
+              (track) => track.id === selectedClip.trackId
+            );
+            if (selectedParentIndex !== -1) {
+              moveClipToNewTrack(
+                selectedClip,
+                mixer,
+                undoManager,
+                selectedParentIndex,
+                selectedParentIndex + selectedIndexOffset
+              );
+            } else {
+              throw new Error("No parent track found");
+            }
+          });
+        }
       });
     }
-
     resetStates();
   };
 

@@ -116,5 +116,10 @@ export const HotKeysManager = observer(() => {
     deleteSelectedTracks(mixer, undoManager);
   });
 
+  // TODO: Remove this after debugging/testing of undo manager
+  useHotkeys("shift+i", () => {
+    console.log(undoManager.undoQueue[undoManager.undoQueue.length - 1]);
+  });
+
   return null;
 });

@@ -148,30 +148,32 @@ export const Clip = observer(
 
     const handleLockClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (
-        selected &&
-        mixer.selectedClips.every(
-          (selectedClip) => selectedClip.locked === clip.locked
-        )
-      ) {
-        mixer.selectedClips.forEach((selectedClip) => {
-          selectedClip.setLocked(!clip.locked);
-          const parentTrack = mixer.tracks.find(
-            (track) => track.id === selectedClip.trackId
-          );
-          parentTrack?.unselectClip(selectedClip);
-        });
-      } else {
-        clip.setLocked(!clip.locked);
-        if (clip.locked && selected) {
-          track.unselectClip(clip);
+      undoManager.withGroup("LOCK CLICK", () => {
+        if (
+          selected &&
+          mixer.selectedClips.every(
+            (selectedClip) => selectedClip.locked === clip.locked
+          )
+        ) {
+          mixer.selectedClips.forEach((selectedClip) => {
+            selectedClip.setLocked(!clip.locked);
+            const parentTrack = mixer.tracks.find(
+              (track) => track.id === selectedClip.trackId
+            );
+            parentTrack?.unselectClip(selectedClip);
+          });
         } else {
-          if (!e.ctrlKey) {
-            mixer.unselectAllClips();
+          clip.setLocked(!clip.locked);
+          if (clip.locked && selected) {
+            track.unselectClip(clip);
+          } else {
+            if (!e.ctrlKey) {
+              mixer.unselectAllClips();
+            }
+            track.selectClip(clip);
           }
-          track.selectClip(clip);
         }
-      }
+      });
     };
 
     const handleMouseEnter = () => setHovering(true);
