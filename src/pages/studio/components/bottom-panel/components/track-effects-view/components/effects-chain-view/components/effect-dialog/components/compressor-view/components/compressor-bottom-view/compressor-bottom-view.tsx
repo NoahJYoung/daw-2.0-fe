@@ -5,6 +5,7 @@ import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { Knob } from "@/components/ui/custom/studio/studio-knob";
 import { NumberInput } from "../../../graphic-eq-view/components/band-controls/components";
 import { clamp, type Range } from "../../../../helpers";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 export const CompressorBottomView = observer(
   ({ effect: compressor, track }: EffectViewProps<Compressor>) => {
@@ -61,6 +62,8 @@ export const CompressorBottomView = observer(
     const [r, g, b] = track.rgb;
     const trackColor = `rgb(${r}, ${g}, ${b})`;
 
+    const knobSize = isMobileDevice() ? 34 : 40;
+
     return (
       <div className="flex flex-col w-full h-full items-center justify-between shadow-sm border rounded-md z-20 mt-1">
         <div className="w-full h-full flex justify-evenly z-20">
@@ -75,7 +78,7 @@ export const CompressorBottomView = observer(
               max={attackRange[1]}
               step={0.01}
               color={trackColor}
-              size={34}
+              size={knobSize}
               showValue={false}
             />
 
@@ -85,7 +88,7 @@ export const CompressorBottomView = observer(
               max={attackRange[1]}
               value={attack}
               allowDecimal
-              width={34}
+              width={knobSize}
               onCommit={onAttackCommit}
               suffix="s"
             />
@@ -101,7 +104,7 @@ export const CompressorBottomView = observer(
               max={releaseRange[1]}
               step={0.01}
               color={trackColor}
-              size={34}
+              size={knobSize}
               showValue={false}
             />
 
@@ -111,7 +114,7 @@ export const CompressorBottomView = observer(
               max={releaseRange[1]}
               value={release}
               allowDecimal
-              width={34}
+              width={knobSize}
               onCommit={onReleaseCommit}
               suffix="s"
             />
@@ -127,7 +130,7 @@ export const CompressorBottomView = observer(
               max={thresholdRange[1]}
               step={0.1}
               color={trackColor}
-              size={34}
+              size={knobSize}
               showValue={false}
             />
 
@@ -137,7 +140,7 @@ export const CompressorBottomView = observer(
               max={thresholdRange[1]}
               step={0.1}
               allowDecimal
-              width={34}
+              width={knobSize}
               onCommit={onThresholdCommit}
               suffix="dB"
             />
@@ -153,7 +156,7 @@ export const CompressorBottomView = observer(
               max={ratioRange[1]}
               step={0.1}
               color={trackColor}
-              size={34}
+              size={knobSize}
               showValue={false}
             />
 
@@ -163,7 +166,7 @@ export const CompressorBottomView = observer(
               max={ratioRange[1]}
               step={0.1}
               allowDecimal
-              width={34}
+              width={knobSize}
               onCommit={onRatioCommit}
               suffix="dB"
             />
@@ -179,7 +182,7 @@ export const CompressorBottomView = observer(
               max={kneeRange[1]}
               step={0.1}
               color={trackColor}
-              size={34}
+              size={knobSize}
               showValue={false}
             />
 
@@ -189,7 +192,7 @@ export const CompressorBottomView = observer(
               max={kneeRange[1]}
               step={0.1}
               allowDecimal
-              width={34}
+              width={knobSize}
               onCommit={onKneeCommit}
               suffix="dB"
             />
@@ -205,7 +208,7 @@ export const CompressorBottomView = observer(
               max={makeupGainRange[1]}
               step={0.1}
               color={trackColor}
-              size={34}
+              size={knobSize}
               showValue={false}
             />
 
@@ -214,7 +217,7 @@ export const CompressorBottomView = observer(
               min={makeupGainRange[0]}
               max={makeupGainRange[1]}
               step={0.1}
-              width={34}
+              width={knobSize}
               allowDecimal
               onCommit={onMakeupGainCommit}
               suffix="dB"
