@@ -1,1 +1,3 @@
-export const [topWidth, topHeight] = [484, 155];
+import { isMobileDevice } from "@/pages/studio/utils";
+
+export const [topWidth, topHeight] = isMobileDevice() ? [484, 155] : [572, 194];

@@ -44,8 +44,6 @@ export const CompressorTopView = observer(
         animate();
       }
 
-      drawCompressorVisualization(ctx, compressor, topWidth, topHeight, track);
-
       return () => {
         if (animationRef.current) {
           cancelAnimationFrame(animationRef.current);
@@ -75,31 +73,16 @@ export const CompressorTopView = observer(
       track.rgb,
       compressor,
       track,
+      audioEngine.state,
     ]);
 
-    useEffect(() => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      if (ctx) {
-        drawCompressorVisualization(
-          ctx,
-          compressor,
-          topWidth,
-          topHeight,
-          track
-        );
-      }
-    }, [audioEngine.state, compressor, track]);
-
     return (
-      <div className="mb-4">
-        <canvas
-          ref={canvasRef}
-          width={topWidth}
-          height={topHeight}
-          className="bg-surface-0 rounded-md"
-        />
-      </div>
+      <canvas
+        ref={canvasRef}
+        width={topWidth}
+        height={topHeight}
+        className="bg-surface-0 rounded-md"
+      />
     );
   }
 );

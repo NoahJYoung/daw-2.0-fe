@@ -199,6 +199,8 @@ export const Knob = ({
   return (
     <span
       onMouseDown={handleMouseDown}
+      onMouseEnter={(e) => e.stopPropagation()}
+      onMouseOver={(e) => e.stopPropagation()}
       onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
       className={cn("flex justify-center relative", {
         "cursor-grabbing": isDragging,

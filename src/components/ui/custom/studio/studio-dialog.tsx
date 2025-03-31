@@ -126,11 +126,12 @@ export const StudioDialog = ({
         ref={dialogRef}
         onInteractOutside={(e) => e.preventDefault()}
         className={cn(
-          "select-none w-full md:max-h-[372px] flex flex-col bg-surface-mid p-2 gap-1 absolute",
+          "select-none w-full flex flex-col bg-surface-mid p-2 gap-1 absolute",
           { "h-full": isLandscape }
         )}
         style={{
-          height: isLandscape ? "98vh" : undefined,
+          height: isLandscape ? "98vh" : "450px",
+          minWidth: isMobile ? "100vw" : "600px",
           transform: isMobile
             ? `translate(${-50}%, ${-45}%)`
             : `translate(${position.x}px, ${position.y}px)`,

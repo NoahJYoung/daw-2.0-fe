@@ -97,7 +97,11 @@ export const GraphicEQBottomView = observer(
           </div>
 
           {effect.bands.map((band) => (
-            <TabsContent className="w-full" key={band.id} value={band.id}>
+            <TabsContent
+              className="w-full h-full"
+              key={band.id}
+              value={band.id}
+            >
               <BandControls track={track} band={band} />
             </TabsContent>
           ))}

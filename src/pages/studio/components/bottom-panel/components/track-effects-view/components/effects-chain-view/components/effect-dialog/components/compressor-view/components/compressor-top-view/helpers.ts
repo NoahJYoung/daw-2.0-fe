@@ -129,7 +129,7 @@ export const drawTransferCurve = (
   ctx.fillStyle = "#888";
   ctx.font = "12px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(`Threshold ${compressor.threshold}dB`, thresholdX, padding - 12);
+  ctx.fillText(`T ${compressor.threshold}dB`, thresholdX, padding - 12);
 };
 export const drawCurrentPoint = (
   ctx: CanvasRenderingContext2D,

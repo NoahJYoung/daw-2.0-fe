@@ -51,8 +51,8 @@ export const EffectDialog = observer(
       });
     };
 
-    const faderHeight = 156;
     const isMobile = isMobileDevice();
+    const faderHeight = isMobile ? 156 : 172;
 
     return (
       <StudioDialog
