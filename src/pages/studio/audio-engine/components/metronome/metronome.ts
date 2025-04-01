@@ -2,6 +2,7 @@ import { model, ExtendedModel, getRoot, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { action, computed, observable } from "mobx";
 import { AudioEngine } from "../../audio-engine";
+import woodblock from "/sounds/metronome.wav";
 import * as Tone from "tone";
 
 @model("AudioEngine/Metronome")
@@ -9,11 +10,12 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   active: prop<boolean>(false).withSetter(),
 }) {
   private channel = new Tone.Channel();
-  voice = new Tone.PluckSynth().connect(this.channel);
+  voice: Tone.Sampler | null = null;
 
   init() {
     this.channel.set({ mute: !this.active });
     this.channel.toDestination();
+    this.voice = new Tone.Sampler({ C5: woodblock }).connect(this.channel);
   }
 
   sync() {
@@ -39,6 +41,9 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   start() {
+    if (this.eventId) {
+      return;
+    }
     const pulse = this.timeSignature % 1 === 0 ? "4n" : "8n";
     Tone.getTransport().cancel();
     const position = Tone.getTransport().position.toString();
@@ -52,7 +57,7 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
         const [bars] = position.split(":");
         const currentBars = parseInt(bars);
         const isFirstBeat = barCounter !== currentBars;
-        this.voice.triggerAttackRelease(isFirstBeat ? "G5" : "C5", "8n", time);
+        this.voice?.triggerAttackRelease(isFirstBeat ? "G5" : "C5", 0.1, time);
         barCounter = currentBars;
       },
       pulse,
@@ -63,7 +68,7 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
 
   stop() {
     if (this.eventId) {
-      Tone.getTransport().cancel();
+      // Tone.getTransport().cancel();
       this.setEventId(null);
     }
   }
