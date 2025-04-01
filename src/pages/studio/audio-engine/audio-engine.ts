@@ -57,7 +57,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   async init() {
     if (!this.hasInitialized) {
-      const customAudioContext = new AudioContext({
+      const customAudioContext = new Tone.Context({
         latencyHint: "playback",
       });
 
