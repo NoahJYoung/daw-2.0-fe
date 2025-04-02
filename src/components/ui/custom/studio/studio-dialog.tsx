@@ -130,7 +130,7 @@ export const StudioDialog = ({
           { "h-full": isLandscape }
         )}
         style={{
-          height: "98vh",
+          height: isMobile ? "98vh" : "450px",
           minWidth: isMobile ? "100vw" : "600px",
           transform: isMobile
             ? `translate(${-50}%, ${-50}%)`
