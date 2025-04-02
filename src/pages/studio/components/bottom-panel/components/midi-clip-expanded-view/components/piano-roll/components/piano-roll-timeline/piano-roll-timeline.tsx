@@ -10,7 +10,10 @@ import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { usePianoRollEventHandlers, usePianoRollTimeline } from "./hooks";
 import { renderGridLanes } from "./components/midi-note-view/helpers/render-grid-lanes";
-import { renderGrid } from "./components/midi-note-view/helpers";
+import {
+  getTopValueFromPitch,
+  renderGrid,
+} from "./components/midi-note-view/helpers";
 
 interface PianoRollTimelineProps {
   clip: MidiClip;
@@ -149,6 +152,13 @@ export const PianoRollTimeline = observer(
     const visibleNotes = clip.events.filter((note) =>
       isNoteVisible(note, clip)
     );
+
+    useEffect(() => {
+      const top =
+        getTopValueFromPitch(clip.events[0].note) -
+        (timelineContainerRef.current?.getBoundingClientRect().height || 2) / 2;
+      timelineContainerRef.current?.scroll({ top });
+    }, [clip, mixer.featuredClip, timelineContainerRef]);
 
     return (
       <StudioContextMenu

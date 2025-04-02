@@ -23,13 +23,20 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   selectedRefs: prop<Ref<Track>[]>(() => []),
   master: prop<Master>(() => new Master({})),
   topPanelHeight: prop<number>(window.innerHeight - 156),
-  panelMode: prop<PanelMode>("MIXER").withSetter(),
 }) {
   @observable
   featuredTrackId: string | undefined = undefined;
 
   @observable
   featuredClipId: string | undefined = undefined;
+
+  @observable
+  panelMode: PanelMode = "MIXER";
+
+  @action
+  setPanelMode(mode: PanelMode) {
+    this.panelMode = mode;
+  }
 
   @computed
   get featuredTrack() {

@@ -1876,7 +1876,6 @@
       "$modelType": "AudioEngine/Mixer/Master"
     },
     "topPanelHeight": 789,
-    "panelMode": "TRACK_FX",
     "$modelType": "AudioEngine/Mixer"
   },
   "auxSendManager": {

@@ -556,6 +556,8 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     parentTrack.deleteClip(this);
     parentTrack.createAudioClip(clip);
     this.setLoading(false);
+
+    return clip;
   }
 
   dispose() {

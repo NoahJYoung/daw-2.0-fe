@@ -30,6 +30,39 @@ export const getTimelineMenuActions = (
 ) => {
   const { mixer, clipboard, timeline } = audioEngine;
 
+  const handleConvertToAudio = () => {
+    undoManager.withGroup(async () => {
+      const shouldChangePanelMode =
+        mixer.featuredClipId === mixer.selectedClips[0].id;
+      audioEngine.setPlayDisabled(true);
+      const clip = await (
+        mixer.selectedClips[0] as MidiClip
+      ).convertToAudioClip();
+      audioEngine.setPlayDisabled(false);
+      // TODO: Replace this with audio clip view when implemented
+      if (shouldChangePanelMode) {
+        mixer.setPanelMode("MIXER");
+      }
+      if (clip) {
+        mixer.tracks
+          .find((track) => track.id === clip?.trackId)
+          ?.selectClip(clip);
+      }
+    });
+  };
+
+  const handleConvertToMidi = () =>
+    undoManager.withGroup(async () => {
+      const clip = await (
+        mixer.selectedClips[0] as AudioClip
+      ).convertToMidiClip();
+      if (clip) {
+        mixer.tracks
+          .find((track) => track.id === clip?.trackId)
+          ?.selectClip(clip);
+      }
+    });
+
   const isSameParentTrack =
     mixer.selectedClips.length &&
     mixer.selectedClips.every(
@@ -41,6 +74,11 @@ export const getTimelineMenuActions = (
     mixer.selectedClips.every(
       (selectedClip) => selectedClip.type === mixer.selectedClips[0].type
     );
+
+  const isConvertDisabled = mixer.selectedClips.length !== 1;
+
+  const onlySelectedClipIsAudio =
+    !isConvertDisabled && mixer.selectedClips[0] instanceof AudioClip;
 
   return [
     {
@@ -103,31 +141,12 @@ export const getTimelineMenuActions = (
     },
     { separator: true },
     {
-      label: "Convert to audio",
-      disabled:
-        mixer.selectedClips.length !== 1 ||
-        mixer.selectedClips?.[0]?.type !== "midi",
-      onClick: () => {
-        undoManager.withGroup(async () => {
-          audioEngine.setPlayDisabled(true);
-          await (mixer.selectedClips[0] as MidiClip).convertToAudioClip();
-          audioEngine.setPlayDisabled(false);
-        });
-      },
-      icon: AudioIcon,
-    },
-    {
-      label: "Convert to midi",
-      disabled:
-        mixer.selectedClips.length !== 1 ||
-        mixer.selectedClips?.[0]?.type !== "audio" ||
-        !(mixer.selectedClips[0] as AudioClip).canConvertToMidi,
-
-      onClick: () =>
-        undoManager.withGroup(() =>
-          (mixer.selectedClips[0] as AudioClip).convertToMidiClip()
-        ),
-      icon: MidiIcon,
+      label: onlySelectedClipIsAudio ? "Convert to midi" : "Convert to audio",
+      disabled: isConvertDisabled,
+      onClick: onlySelectedClipIsAudio
+        ? handleConvertToMidi
+        : handleConvertToAudio,
+      icon: onlySelectedClipIsAudio ? MidiIcon : AudioIcon,
     },
   ];
 };

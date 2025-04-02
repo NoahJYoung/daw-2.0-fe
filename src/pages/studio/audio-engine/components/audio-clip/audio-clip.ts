@@ -332,6 +332,7 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
     parentTrack.createMidiClip(clip);
     parentTrack.deleteClip(this);
+    return clip;
   }
 
   sync() {

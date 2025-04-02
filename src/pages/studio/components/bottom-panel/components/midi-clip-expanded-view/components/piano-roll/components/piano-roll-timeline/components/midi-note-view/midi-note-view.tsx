@@ -137,7 +137,10 @@ export const MidiNoteView = observer(
           y={selected ? offsets.drag * 17.5 + top : top}
           rx={4}
           className={cn({ "stroke-black": selected })}
-          strokeWidth={2}
+          style={{
+            stroke: selected ? "black" : "rgba(0, 0, 0, 0.2)",
+            strokeWidth: selected ? 2 : 1,
+          }}
           fill={generateRGBWithAlias(0.8)}
         />
 
