@@ -76,20 +76,24 @@ export const usePianoRollTimeline = (
     if (!timelineContainerRef.current) {
       return false;
     }
+
     const clipStartOffsetPx = clip.samplesToPixels(
       clip.start - Tone.Time(clip.startMeasure, "m").toSamples()
     );
 
-    const noteStartInPixels = clip.samplesToPixels(note.on);
-    const noteEndInPixels = clip.samplesToPixels(note.off);
+    const noteStartInPixels = clipStartOffsetPx + clip.samplesToPixels(note.on);
+    const noteEndInPixels = clipStartOffsetPx + clip.samplesToPixels(note.off);
 
-    const visibleRangeStart =
-      clipStartOffsetPx + timelineContainerRef.current.scrollLeft;
+    const visibleRangeStart = timelineContainerRef.current.scrollLeft;
     const visibleRangeEnd = visibleRangeStart + viewportWidth;
 
     const noteVisible =
-      noteStartInPixels <= visibleRangeEnd &&
-      noteEndInPixels >= visibleRangeStart;
+      (noteStartInPixels < visibleRangeEnd &&
+        noteStartInPixels >= visibleRangeStart) ||
+      (noteEndInPixels > visibleRangeStart &&
+        noteEndInPixels <= visibleRangeEnd) ||
+      (noteStartInPixels <= visibleRangeStart &&
+        noteEndInPixels >= visibleRangeEnd);
 
     return noteVisible;
   };

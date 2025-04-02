@@ -146,6 +146,10 @@ export const PianoRollTimeline = observer(
       }
     };
 
+    const visibleNotes = clip.events.filter((note) =>
+      isNoteVisible(note, clip)
+    );
+
     return (
       <StudioContextMenu
         disabled={
@@ -181,8 +185,8 @@ export const PianoRollTimeline = observer(
             height={1890}
             width={clipWidthPx}
           />
-          {clip.events.map((note, i) =>
-            isNoteVisible(note, clip) ? (
+          <g className="midi-notes">
+            {visibleNotes.map((note, i) => (
               <MidiNoteView
                 key={note.id}
                 offsets={offsets}
@@ -196,8 +200,8 @@ export const PianoRollTimeline = observer(
                 note={note}
                 clip={clip}
               />
-            ) : null
-          )}
+            ))}
+          </g>
         </svg>
       </StudioContextMenu>
     );
