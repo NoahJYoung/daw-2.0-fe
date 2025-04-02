@@ -13,6 +13,7 @@ import {
 } from "react-icons/pi";
 import { useOscillatorControls } from "./hooks";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 const icons: Record<OscillatorType, IconType> = {
   sine: SineIcon,
@@ -52,11 +53,14 @@ export const OscillatorControls = observer(
 
     const Icon = useMemo(() => icons[oscillator.type], [oscillator.type]);
 
+    const knobSize = isMobileDevice() ? 30 : 34;
+    const faderHeight = isMobileDevice() ? 128 : 148;
+
     return (
-      <div className="w-[220px]  flex gap-2 items-start justify-between text-surface-6 py-1 px-2 shadow-sm border rounded-md z-20">
-        <div className="w-[128px] h-[128px] z-20">
+      <div className="sm:w-[220px] md:w-[280px] flex gap-2 items-start justify-between text-surface-6 py-1 px-2 shadow-sm border rounded-md z-20">
+        <div className="flex w-[128px] h-[128px] md:h-[170px] z-20">
           <MeterFader
-            faderHeight={128}
+            faderHeight={faderHeight}
             onChange={onVolumeChange}
             step={0.01}
             min={-60}
@@ -67,7 +71,7 @@ export const OscillatorControls = observer(
             active={active}
           />
         </div>
-        <div className="z-20 flex flex-col w-[calc(100%-116px)] gap-0 justify-start">
+        <div className="z-20 flex flex-col w-[calc(100%-116px)] gap-0 sm:justify-start md:justify-evenly h-full md:p-2">
           <span className="w-full flex items-center justify-between">
             <StudioButton
               on={oscillator.mute}
@@ -89,7 +93,7 @@ export const OscillatorControls = observer(
                 min={0}
                 max={2}
                 step={0.005}
-                size={30}
+                size={knobSize}
                 minLabel="0s"
                 maxLabel="2s"
                 valuePosition="top"
@@ -106,7 +110,7 @@ export const OscillatorControls = observer(
                 min={0}
                 max={2}
                 step={0.005}
-                size={30}
+                size={knobSize}
                 minLabel="0s"
                 maxLabel="2s"
                 valuePosition="top"
@@ -124,7 +128,7 @@ export const OscillatorControls = observer(
                 min={0}
                 max={1}
                 step={0.005}
-                size={30}
+                size={knobSize}
                 minLabel="0s"
                 maxLabel="1s"
                 valuePosition="top"
@@ -141,7 +145,7 @@ export const OscillatorControls = observer(
                 min={0}
                 max={2}
                 step={0.005}
-                size={28}
+                size={knobSize}
                 minLabel="0s"
                 maxLabel="2s"
                 valuePosition="top"

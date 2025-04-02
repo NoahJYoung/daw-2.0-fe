@@ -69,7 +69,7 @@ export const SynthSettingsModal = observer(
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
       >
-        <div className="flex flex-col gap-2 align-end">
+        <div className="overflow-auto max-w-full max-h-full flex flex-col gap-2 align-end">
           <div className="mx-3 flex items-center justify-between">
             <StudioButton
               onClick={randomize}
@@ -111,7 +111,7 @@ export const SynthSettingsModal = observer(
             </span>
           </div>
 
-          <div className="flex flex-wrap align-between justify-evenly gap-2 h-[288px]">
+          <div className="flex flex-wrap align-between justify-evenly gap-2 sm:h-[288px] md:h-full">
             {track.synth.oscillators.map((osc) => (
               <OscillatorControls
                 key={osc.id}

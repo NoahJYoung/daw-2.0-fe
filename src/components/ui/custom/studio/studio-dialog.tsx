@@ -130,10 +130,10 @@ export const StudioDialog = ({
           { "h-full": isLandscape }
         )}
         style={{
-          height: isLandscape ? "98vh" : "450px",
+          height: "98vh",
           minWidth: isMobile ? "100vw" : "600px",
           transform: isMobile
-            ? `translate(${-50}%, ${-45}%)`
+            ? `translate(${-50}%, ${-50}%)`
             : `translate(${position.x}px, ${position.y}px)`,
           cursor: isDragging ? "grabbing" : "default",
           transition: isDragging ? "none" : "default",
