@@ -154,9 +154,11 @@ export const PianoRollTimeline = observer(
     );
 
     useEffect(() => {
-      const top =
-        getTopValueFromPitch(clip.events[0].note) -
-        (timelineContainerRef.current?.getBoundingClientRect().height || 2) / 2;
+      const top = clip.events.length
+        ? getTopValueFromPitch(clip.events?.[0].note) -
+          (timelineContainerRef.current?.getBoundingClientRect().height || 2) /
+            2
+        : 0;
       timelineContainerRef.current?.scroll({ top });
     }, [clip, mixer.featuredClip, timelineContainerRef]);
 
