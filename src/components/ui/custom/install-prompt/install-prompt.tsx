@@ -22,7 +22,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
   useEffect(() => {
-    // Check if app is in standalone mode
     const checkStandalone = (): boolean => {
       const standalone =
         window.matchMedia("(display-mode: standalone)").matches ||
@@ -30,7 +29,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
           (window.navigator as any).standalone) ||
         document.referrer.includes("android-app://");
 
-      console.log("App in standalone mode:", standalone);
       return standalone;
     };
 
@@ -48,7 +46,10 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     setIsMobile(checkMobile());
 
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log("handleBeforeInstallPrompt fired");
+      alert(`handleBeforeInstallPrompt fired: ${e}`);
       e.preventDefault();
+      console.log(e);
       setInstallEvent(e as BeforeInstallPromptEvent);
       if (checkMobile() && !appIsStandalone) {
         setShowInstallPrompt(true);
@@ -71,6 +72,11 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         "beforeinstallprompt",
         handleBeforeInstallPrompt as EventListener
       );
+      window.removeEventListener("appinstalled", () => {
+        console.log("PWA was installed");
+        setShowInstallPrompt(false);
+        setIsStandalone(true);
+      });
     };
   }, []);
 
@@ -89,11 +95,13 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     });
   };
 
+  console.log("EVENT", installEvent);
+
   const isIOS: boolean =
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
   if (isStandalone) {
-    return <>{children}</>;
+    return children;
   }
 
   if (showInstallPrompt || (isMobile && !isStandalone)) {
