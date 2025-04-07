@@ -19,13 +19,24 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isStandalone, setIsStandalone] = useState<boolean>(false);
+  const [userDismissed, setUserDismissed] = useState<boolean>(false);
 
   useEffect(() => {
-    const isAppInstalled: boolean =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      ("standalone" in window.navigator &&
-        (window.navigator as any).standalone) ||
-      document.referrer.includes("android-app://");
+    // Check if app is in standalone mode
+    const checkStandalone = (): boolean => {
+      const standalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        ("standalone" in window.navigator &&
+          (window.navigator as any).standalone) ||
+        document.referrer.includes("android-app://");
+
+      console.log("App in standalone mode:", standalone);
+      return standalone;
+    };
+
+    const appIsStandalone = checkStandalone();
+    setIsStandalone(appIsStandalone);
 
     const checkMobile = (): boolean => {
       const userAgent =
@@ -40,7 +51,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setInstallEvent(e as BeforeInstallPromptEvent);
-      if (checkMobile() && !isAppInstalled) {
+      if (checkMobile() && !appIsStandalone && !userDismissed) {
         setShowInstallPrompt(true);
       }
     };
@@ -53,6 +64,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     window.addEventListener("appinstalled", () => {
       console.log("PWA was installed");
       setShowInstallPrompt(false);
+      setIsStandalone(true);
     });
 
     return () => {
@@ -61,7 +73,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         handleBeforeInstallPrompt as EventListener
       );
     };
-  }, []);
+  }, [userDismissed]);
 
   const handleInstallClick = (): void => {
     if (!installEvent) return;
@@ -78,16 +90,19 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     });
   };
 
+  const handleDismiss = (): void => {
+    setShowInstallPrompt(false);
+    setUserDismissed(true);
+  };
+
   const isIOS: boolean =
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
-  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-
-  if (isStandalone) {
+  if (isStandalone || userDismissed) {
     return <>{children}</>;
   }
 
-  if (showInstallPrompt || (isMobile && !isStandalone)) {
+  if (showInstallPrompt || (isMobile && !isStandalone && !userDismissed)) {
     return (
       <div
         className="install-prompt-container"
@@ -145,7 +160,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         )}
 
         <button
-          onClick={() => setShowInstallPrompt(false)}
+          onClick={handleDismiss}
           style={{
             backgroundColor: "transparent",
             color: "#666",
