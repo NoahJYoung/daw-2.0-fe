@@ -20,7 +20,7 @@ export default defineConfig({
         description: "Your app description",
         theme_color: "#000000",
         background_color: "#ffffff",
-        display: "fullscreen",
+        display: "standalone",
         orientation: "landscape",
         icons: [
           {
