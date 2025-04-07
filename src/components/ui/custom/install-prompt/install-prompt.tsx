@@ -22,8 +22,8 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
   useEffect(() => {
-    alert(`IS STANDALONE: ${isStandalone}`);
-  }, [isStandalone]);
+    alert(`IS STANDALONE: ${isStandalone} INSTALL EVENT: ${installEvent}`);
+  }, [installEvent, isStandalone]);
 
   useEffect(() => {
     const checkStandalone = (): boolean => {
