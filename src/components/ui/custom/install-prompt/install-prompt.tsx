@@ -22,6 +22,10 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
   useEffect(() => {
+    alert(`IS STANDALONE: ${isStandalone}`);
+  }, [isStandalone]);
+
+  useEffect(() => {
     const checkStandalone = (): boolean => {
       const standalone =
         window.matchMedia("(display-mode: standalone)").matches ||
@@ -107,7 +111,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   if (showInstallPrompt || (isMobile && !isStandalone)) {
     return (
       <div
-        className="install-prompt-container"
+        className="install-prompt-container bg-surface-0 text-surface-8"
         style={{
           position: "fixed",
           top: 0,
@@ -118,7 +122,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#fff",
           zIndex: 9999,
           padding: "20px",
           textAlign: "center",
@@ -163,9 +166,9 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
 
         <button
           onClick={() => setShowInstallPrompt(false)}
+          className="text-surface-8"
           style={{
             backgroundColor: "transparent",
-            color: "#666",
             border: "1px solid #ccc",
             borderRadius: "4px",
             padding: "8px 16px",
