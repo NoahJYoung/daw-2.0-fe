@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// InstallPrompt.tsx
+
 import React, { useState, useEffect, ReactNode } from "react";
 
+// Define interface for beforeinstallprompt event
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
@@ -10,34 +13,30 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+// Define props interface
 interface InstallPromptProps {
   children: ReactNode;
 }
 
-export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
+const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [showInstallPrompt, setShowInstallPrompt] = useState<boolean>(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
-  const [userDismissed, setUserDismissed] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  alert(isStandalone);
 
   useEffect(() => {
-    // Check if app is in standalone mode
-    const checkStandalone = (): boolean => {
-      const standalone =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        ("standalone" in window.navigator &&
-          (window.navigator as any).standalone) ||
-        document.referrer.includes("android-app://");
+    // Check if the app is already installed
+    const isAppInstalled: boolean =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone || // For iOS
+      document.referrer.includes("android-app://");
 
-      console.log("App in standalone mode:", standalone);
-      return standalone;
-    };
+    setIsStandalone(isAppInstalled);
 
-    const appIsStandalone = checkStandalone();
-    setIsStandalone(appIsStandalone);
-
+    // Detect if user is on mobile
     const checkMobile = (): boolean => {
       const userAgent =
         navigator.userAgent || navigator.vendor || (window as any).opera;
@@ -48,10 +47,14 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
 
     setIsMobile(checkMobile());
 
+    // Listen for the beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault();
+      // Stash the event so it can be triggered later
       setInstallEvent(e as BeforeInstallPromptEvent);
-      if (checkMobile() && !appIsStandalone && !userDismissed) {
+      // Only show prompt if user is on mobile and app is not installed
+      if (checkMobile() && !isAppInstalled) {
         setShowInstallPrompt(true);
       }
     };
@@ -61,7 +64,9 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       handleBeforeInstallPrompt as EventListener
     );
 
+    // Listen for app installed event
     window.addEventListener("appinstalled", () => {
+      // Log install to analytics
       console.log("PWA was installed");
       setShowInstallPrompt(false);
       setIsStandalone(true);
@@ -73,13 +78,15 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         handleBeforeInstallPrompt as EventListener
       );
     };
-  }, [userDismissed]);
+  }, []);
 
   const handleInstallClick = (): void => {
     if (!installEvent) return;
 
+    // Show the install prompt
     installEvent.prompt();
 
+    // Wait for the user to respond to the prompt
     installEvent.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === "accepted") {
         console.log("User accepted the install prompt");
@@ -90,19 +97,16 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     });
   };
 
-  const handleDismiss = (): void => {
-    setShowInstallPrompt(false);
-    setUserDismissed(true);
-  };
-
+  // iOS specific instructions since it doesn't support beforeinstallprompt
   const isIOS: boolean =
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
-  if (isStandalone || userDismissed) {
+  if (isStandalone) {
+    // Already installed as PWA, show the app
     return <>{children}</>;
   }
 
-  if (showInstallPrompt || (isMobile && !isStandalone && !userDismissed)) {
+  if (showInstallPrompt || (isMobile && !isStandalone)) {
     return (
       <div
         className="install-prompt-container"
@@ -160,7 +164,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         )}
 
         <button
-          onClick={handleDismiss}
+          onClick={() => setShowInstallPrompt(false)}
           style={{
             backgroundColor: "transparent",
             color: "#666",
@@ -172,11 +176,14 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
             cursor: "pointer",
           }}
         >
-          Continue to Studio
+          Continue to Website
         </button>
       </div>
     );
   }
 
+  // Not mobile or user dismissed the prompt, show the app
   return <>{children}</>;
 };
+
+export default InstallPrompt;
