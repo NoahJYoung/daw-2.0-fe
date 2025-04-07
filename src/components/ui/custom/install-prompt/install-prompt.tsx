@@ -25,8 +25,6 @@ const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  alert(isStandalone);
-
   useEffect(() => {
     // Check if the app is already installed
     const isAppInstalled: boolean =
@@ -79,6 +77,8 @@ const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       );
     };
   }, []);
+
+  useEffect(() => alert(`IS STANDALONE: ${isStandalone}`), [isStandalone]);
 
   const handleInstallClick = (): void => {
     if (!installEvent) return;
@@ -176,7 +176,7 @@ const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
             cursor: "pointer",
           }}
         >
-          Continue to Website
+          Continue to Studio
         </button>
       </div>
     );
