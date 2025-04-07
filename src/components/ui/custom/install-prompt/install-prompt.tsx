@@ -18,7 +18,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [showInstallPrompt, setShowInstallPrompt] = useState<boolean>(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isStandalone, setIsStandalone] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,8 +26,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       ("standalone" in window.navigator &&
         (window.navigator as any).standalone) ||
       document.referrer.includes("android-app://");
-
-    setIsStandalone(isAppInstalled);
 
     const checkMobile = (): boolean => {
       const userAgent =
@@ -56,7 +53,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     window.addEventListener("appinstalled", () => {
       console.log("PWA was installed");
       setShowInstallPrompt(false);
-      setIsStandalone(true);
     });
 
     return () => {
@@ -84,6 +80,8 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
 
   const isIOS: boolean =
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
 
   if (isStandalone) {
     return <>{children}</>;
