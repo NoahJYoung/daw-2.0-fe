@@ -28,7 +28,7 @@ export const BottomPanel = observer(() => {
     "data-[state=active]:border-b-surface-6 focus:ring-0 select-none data-[state=active]:text-surface-6 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 hover:bg-surface-2 rounded-xxs w-48";
 
   const contentClassName = cn(
-    "w-full pt-2 h-full bg-transparent 2xl:justify-center 2xl:w-full"
+    "w-full md:pt-2 h-full bg-transparent 2xl:justify-center 2xl:w-full"
   );
 
   return (
@@ -39,12 +39,11 @@ export const BottomPanel = observer(() => {
         undoManager.withoutUndo(() => mixer.setPanelMode(e as PanelMode))
       }
       defaultValue="MIXER"
-      className="w-full h-full min-h-[300px] bg-transparent flex flex-col items-center"
+      className="w-full h-full md:min-h-[300px] bg-transparent flex flex-col items-center"
     >
       <TabsList
         ref={tabsListRef}
-        className="w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs pb-3 pt-3"
-        style={{ height: 40 }}
+        className="w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs md:pb-3 md:pt-3"
       >
         <TabsTrigger className={triggerClassName} value="MIXER">
           Mixer
