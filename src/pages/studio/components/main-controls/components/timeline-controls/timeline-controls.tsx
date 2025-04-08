@@ -3,7 +3,6 @@ import { FaEllipsis } from "react-icons/fa6";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
-import { isMobileDevice } from "@/pages/studio/utils";
 
 const timeSignatureOptions = [
   { label: "2/4", value: "2" },
@@ -30,7 +29,6 @@ export const TimelineControls = observer(() => {
   ];
 
   const hiddenClassName = "hidden sm:flex mr-1";
-  const isMobile = isMobileDevice();
 
   return (
     <>
