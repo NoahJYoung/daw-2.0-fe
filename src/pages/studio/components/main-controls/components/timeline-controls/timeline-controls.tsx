@@ -3,6 +3,7 @@ import { FaEllipsis } from "react-icons/fa6";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 const timeSignatureOptions = [
   { label: "2/4", value: "2" },
@@ -29,10 +30,10 @@ export const TimelineControls = observer(() => {
   ];
 
   const hiddenClassName = "hidden sm:flex mr-1";
+  const isMobile = isMobileDevice();
 
   return (
     <>
-      {/* <div className="sm:gap-5 hidden sm:flex justify-between mr-1"> */}
       <BpmInput className={hiddenClassName} />
       <span className={hiddenClassName}>
         <StudioDropdown
@@ -44,7 +45,7 @@ export const TimelineControls = observer(() => {
             <TimeSignatureIcon
               upper={upper}
               lower={lower}
-              className="h-8 w-8 text-surface-5 fill-current"
+              className="h-7 w-7 md:h-8 md:w-8 text-surface-5 fill-current"
             />
           }
           size="lg"

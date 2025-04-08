@@ -46,7 +46,7 @@ export const StudioDropdown = ({
             : `text-surface-${6 + colorOffset}`
         } ${size === "lg" ? "text-lg" : "text-sm"} border-surface-${
           2 + colorOffset
-        } rounded-xxs ${size === "lg" ? "h-10" : "h-7"} `}
+        } rounded-xxs ${size === "lg" ? "md:h-10 h-8" : "h-7"} `}
       >
         {Icon}
         {showSelectedValue && (
