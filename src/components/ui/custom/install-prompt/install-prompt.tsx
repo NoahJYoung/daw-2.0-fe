@@ -18,8 +18,10 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [showInstallPrompt, setShowInstallPrompt] = useState<boolean>(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  // const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
+
+  const isMobile = true; // isMobileDevice();
 
   useEffect(() => {
     const checkStandalone = (): boolean => {
@@ -35,20 +37,20 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     const appIsStandalone = checkStandalone();
     setIsStandalone(appIsStandalone);
 
-    const checkMobile = (): boolean => {
-      const userAgent =
-        navigator.userAgent || navigator.vendor || (window as any).opera;
-      return /android|iPad|iPhone|iPod|webOS|BlackBerry|Windows Phone/i.test(
-        userAgent
-      );
-    };
+    // const checkMobile = (): boolean => {
+    //   const userAgent =
+    //     navigator.userAgent || navigator.vendor || (window as any).opera;
+    //   return /android|iPad|iPhone|iPod|webOS|BlackBerry|Windows Phone/i.test(
+    //     userAgent
+    //   );
+    // };
 
-    setIsMobile(checkMobile());
+    // setIsMobile(checkMobile());
 
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setInstallEvent(e as BeforeInstallPromptEvent);
-      if (checkMobile() && !appIsStandalone) {
+      if (isMobile && !appIsStandalone) {
         setShowInstallPrompt(true);
       }
     };
@@ -75,7 +77,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         setIsStandalone(true);
       });
     };
-  }, []);
+  }, [isMobile]);
 
   const handleInstallClick = (): void => {
     if (!installEvent) return;
@@ -99,7 +101,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     return children;
   }
 
-  if (showInstallPrompt || (isMobile && !isStandalone)) {
+  if (showInstallPrompt && isMobile && !isStandalone) {
     return (
       <div
         className="install-prompt-container bg-surface-0 text-surface-8"
@@ -157,7 +159,11 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         )}
 
         <button
-          onClick={() => setShowInstallPrompt(false)}
+          onClick={() => {
+            setShowInstallPrompt(false);
+            console.log("TOUCHED");
+          }}
+          onTouchEnd={() => setShowInstallPrompt(false)}
           className="text-surface-8"
           style={{
             backgroundColor: "transparent",

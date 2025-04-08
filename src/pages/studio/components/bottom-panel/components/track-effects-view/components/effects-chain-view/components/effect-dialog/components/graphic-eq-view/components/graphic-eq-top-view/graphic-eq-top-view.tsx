@@ -8,13 +8,17 @@ import { Point } from "../../types";
 import { CenterFrequency } from "../center-frequency";
 import { EQGrid } from "../eq-grid";
 import { FFTVisualizer } from "../fft-visualizer";
-import { topHeight, topWidth } from "../../../../helpers";
 
 const MIN_HERTZ = 20;
 const MAX_HERTZ = 20000;
 
 export const GraphicEQTopView = observer(
-  ({ effect: graphicEQ, track }: EffectViewProps<GraphicEQ>) => {
+  ({
+    effect: graphicEQ,
+    track,
+    width: topWidth,
+    height: topHeight,
+  }: EffectViewProps<GraphicEQ>) => {
     const { undoManager } = useUndoManager();
 
     const handleTabChange = (id: string) => {

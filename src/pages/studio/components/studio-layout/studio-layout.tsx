@@ -81,7 +81,7 @@ export const StudioLayout = observer(
             style={{ borderTopWidth: 1 }}
             className="z-10 h-0 lg:h-2 ml-[2px] bg-surface-mid border-0 border-surface-1"
           />
-          <div className="z-20 flex bg-surface-mid ml-[2px] pl-[4px] w-full items-start h-8 lg:h-[48px] sm:gap-5 justify-between lg:justify-start">
+          <div className="pt-1 z-20 flex bg-surface-mid ml-[2px] pl-[4px] w-full items-start h-[36px] lg:h-[48px] sm:gap-5 justify-between lg:justify-start">
             <StudioButton
               className="rounded-xxs shadow-none text-xl relative flex items-center justify-centers p-1 lg:w-10 w-8 h-8 lg:h-10 bg-transparent text-surface-3 hover:text-surface-4 hover:bg-transparent"
               icon={PiCaretUpDownFill}

@@ -9,6 +9,7 @@ import { IconType } from "react-icons/lib";
 import { getEffectByKey } from "./helpers";
 import { isMobileDevice } from "@/pages/studio/utils";
 import { cn } from "@/lib/utils";
+import { useLayoutEffect, useRef, useState } from "react";
 
 interface SynthSettingsModalProps {
   track: Track;
@@ -54,19 +55,57 @@ export const EffectDialog = observer(
     const isMobile = isMobileDevice();
     const faderHeight = isMobile ? 156 : 172;
 
+    const [upperRect, setUpperRect] = useState<DOMRect | null>(null);
+    const upperContainerRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+      if (!open) return;
+
+      const timeoutId = setTimeout(() => {
+        const upperContainer = upperContainerRef.current;
+        if (!upperContainer) return;
+
+        setUpperRect(upperContainer.getBoundingClientRect());
+
+        const resizeObserver = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            setUpperRect(entry.contentRect);
+          }
+        });
+
+        resizeObserver.observe(upperContainer);
+
+        return () => {
+          resizeObserver.disconnect();
+        };
+      }, 0);
+
+      return () => clearTimeout(timeoutId);
+    }, [open]);
+
     return (
       <StudioDialog
         open={open}
         onOpenChange={onOpenChange}
-        title={`${track.name} - ${effect.name} `}
+        title={isMobile ? "" : `${track.name} - ${effect.name} `}
         label={effect.name}
         renderTrigger={renderTrigger}
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
       >
-        <div className="h-full flex flex-col gap-1 p-1">
-          <div className="w-full overflow-x-auto styled-scrollbar-sm md:h-1/2 shadow-sm border rounded-md">
-            {<Effect.Upper effect={effect} track={track} />}
+        <div className="h-full flex flex-col p-1">
+          <div
+            ref={upperContainerRef}
+            className="w-full h-full overflow-x-auto styled-scrollbar-sm md:h-1/2 shadow-sm border rounded-md"
+          >
+            {
+              <Effect.Upper
+                effect={effect}
+                track={track}
+                width={upperRect?.width || 0}
+                height={upperRect?.height || 0}
+              />
+            }
           </div>
 
           <div className="flex items-center justify-between w-full md:h-1/2 p-1">
@@ -87,10 +126,17 @@ export const EffectDialog = observer(
             )}
             <div
               className={cn("w-full h-full", {
-                "md:w-[calc(100%-116px)]": !isMobile,
+                "lg:w-[calc(100%-116px)]": !isMobile,
               })}
             >
-              {<Effect.Lower effect={effect} track={track} />}
+              {
+                <Effect.Lower
+                  effect={effect}
+                  track={track}
+                  width={upperRect?.width || 0}
+                  height={upperRect?.height || 0}
+                />
+              }
             </div>
             {!isMobile && (
               <div className="w-[58px]">

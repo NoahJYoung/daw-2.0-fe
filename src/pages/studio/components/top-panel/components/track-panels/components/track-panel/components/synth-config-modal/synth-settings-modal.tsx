@@ -14,6 +14,7 @@ import { IoMdSave } from "react-icons/io";
 import { HiOutlineTrash as DeleteIcon } from "react-icons/hi";
 import React, { useState } from "react";
 import { getSnapshot } from "mobx-keystone";
+import { isMobileDevice } from "@/pages/studio/utils";
 interface SynthSettingsModalProps {
   track: Track;
   triggerIcon: IconType;
@@ -65,12 +66,16 @@ export const SynthSettingsModal = observer(
 
     return (
       <StudioDialog
-        title={`${track.name} - ${activePreset?.name || "Synthesizer"}`}
+        title={
+          isMobileDevice()
+            ? ""
+            : `${track.name} - ${activePreset?.name || "Synthesizer"}`
+        }
         triggerIcon={triggerIcon}
         triggerClassName={triggerClassName}
       >
         <div className="overflow-auto max-w-full max-h-full flex flex-col gap-2 align-end">
-          <div className="mx-3 flex items-center justify-between">
+          <div className="mx-8 flex items-center justify-between">
             <StudioButton
               onClick={randomize}
               icon={RandomizeIcon}

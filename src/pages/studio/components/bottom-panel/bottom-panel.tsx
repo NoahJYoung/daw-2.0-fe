@@ -43,7 +43,7 @@ export const BottomPanel = observer(() => {
     >
       <TabsList
         ref={tabsListRef}
-        className="w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs p-0 lg:px-1 lg:pb-3 lg:pt-3"
+        className="pb-1 w-full flex max-w-[1068px] justify-between gap-1 bg-transparent rounded-xxs lg:px-1 lg:pb-3 lg:pt-3"
       >
         <TabsTrigger className={triggerClassName} value="MIXER">
           Mixer

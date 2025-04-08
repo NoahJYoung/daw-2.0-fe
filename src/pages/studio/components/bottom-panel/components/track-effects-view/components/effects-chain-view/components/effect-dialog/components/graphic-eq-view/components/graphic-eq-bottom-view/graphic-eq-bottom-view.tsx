@@ -43,7 +43,7 @@ export const GraphicEQBottomView = observer(
       }
     }, [effect]);
 
-    const triggerClassName = "hover:opacity-50 shadow-none";
+    const triggerClassName = "hover:opacity-50 shadow-none h-4 lg: h-6";
 
     const [r, g, b] = track.rgb;
     const rgbColor = `rgb(${r}, ${g}, ${b})`;

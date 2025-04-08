@@ -46,8 +46,8 @@ export const BandControls = observer(({ band, track }: BandControlsProps) => {
   const isGainDisabled = ["highpass"].includes(band.type);
 
   return (
-    <div className="w-full h-full flex items-center justify-evenly shadow-sm border rounded-md z-20 mt-1">
-      <span className="flex flex-col items-center gap-3 p-2 text-surface-6 py-1 px-2 w-full">
+    <div className="w-full lg:h-full flex items-center justify-evenly shadow-sm border rounded-md z-20 mt-1">
+      <span className="flex flex-col items-center gap-1 p-1 lg:gap-3 lg:p-2 text-surface-6 py-1 px-2 w-full">
         <span className="font-bold text-xs w-full">Frequency</span>
         <Knob
           onValueChange={(value) => onFreqChange(linearToLog(value))}

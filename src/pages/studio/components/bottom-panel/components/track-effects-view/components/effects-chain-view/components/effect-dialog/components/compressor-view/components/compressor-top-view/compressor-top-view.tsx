@@ -2,33 +2,38 @@ import { Compressor } from "@/pages/studio/audio-engine/components/effects";
 import { EffectViewProps } from "../../../../types";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef } from "react";
-import { topHeight, topWidth } from "../../../../helpers";
 import { drawCompressorVisualization } from "./helpers";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 
 export const CompressorTopView = observer(
-  ({ track, effect: compressor }: EffectViewProps<Compressor>) => {
+  ({
+    track,
+    effect: compressor,
+    width: topWidth,
+    height: topHeight,
+  }: EffectViewProps<Compressor>) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animationRef = useRef<number>();
-
     const audioEngine = useAudioEngine();
 
     useEffect(() => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
+      if (!canvas || !topWidth) return;
+
+      canvas.width = topWidth;
+      canvas.height = topHeight;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
       const enabled = ![
         AudioEngineState.stopped,
         AudioEngineState.paused,
       ].includes(audioEngine.state);
 
-      if (!ctx) {
-        return;
-      }
-
       const animate = () => {
         ctx.clearRect(0, 0, topWidth, topHeight);
-
         drawCompressorVisualization(
           ctx,
           compressor,
@@ -36,9 +41,11 @@ export const CompressorTopView = observer(
           topHeight,
           track
         );
-
         animationRef.current = requestAnimationFrame(animate);
       };
+
+      // Initial draw, even if not animating
+      drawCompressorVisualization(ctx, compressor, topWidth, topHeight, track);
 
       if (enabled) {
         animate();
@@ -49,20 +56,16 @@ export const CompressorTopView = observer(
           cancelAnimationFrame(animationRef.current);
         }
       };
-    }, [audioEngine.state, compressor, track]);
+    }, [audioEngine.state, compressor, track, topWidth, topHeight]);
 
     useEffect(() => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      if (ctx) {
-        drawCompressorVisualization(
-          ctx,
-          compressor,
-          topWidth,
-          topHeight,
-          track
-        );
-      }
+      if (!canvas || !topWidth) return;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      drawCompressorVisualization(ctx, compressor, topWidth, topHeight, track);
     }, [
       compressor.attack,
       compressor.release,
@@ -73,16 +76,17 @@ export const CompressorTopView = observer(
       track.rgb,
       compressor,
       track,
-      audioEngine.state,
+      topWidth,
+      topHeight,
     ]);
 
-    return (
+    return topWidth ? (
       <canvas
         ref={canvasRef}
         width={topWidth}
         height={topHeight}
         className="bg-surface-0 rounded-md"
       />
-    );
+    ) : null;
   }
 );

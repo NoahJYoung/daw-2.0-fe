@@ -1,11 +1,15 @@
 import { observer } from "mobx-react-lite";
 import { EffectViewProps } from "../../../../types";
 import { Reverb } from "@/pages/studio/audio-engine/components/effects";
-import { topHeight, topWidth } from "../../../../helpers";
 import { isMobileDevice } from "@/pages/studio/utils";
 
 export const ReverbTopView = observer(
-  ({ effect: reverb, track }: EffectViewProps<Reverb>) => {
+  ({
+    effect: reverb,
+    track,
+    width: topWidth,
+    height: topHeight,
+  }: EffectViewProps<Reverb>) => {
     const { decay, wet, preDelay } = reverb;
     const [r, g, b] = track.rgb;
     const trackColor = `rgb(${r}, ${g}, ${b})`;
