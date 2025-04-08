@@ -21,7 +21,7 @@ export const BpmInput = observer(({ className }: { className: string }) => {
         id="bpm"
         ref={bpmRef}
         type="number"
-        className="text-surface-4 w-[64px] text-xl md:text-2xl bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
+        className="text-surface-4 w-[64px] text-xl lg:text-2xl bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
         value={timeline.bpm}
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => timeline.setBpm(parseInt(e.target.value))}

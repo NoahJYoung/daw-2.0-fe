@@ -24,11 +24,11 @@ export const MasterFader = observer(
           height: mixerHeight,
         }}
       >
-        <div className="flex gap-1 items-center w-full py-1 border-b-2 border-surface-1 py-5 h-8">
+        <div className="flex gap-1 items-center w-full py-1 border-b-2 border-surface-1 h-[36px] lg:h-8">
           <p className="text-lg text-surface-5 w-full text-center">Master</p>
         </div>
 
-        <div className="h-full w-full py-2">
+        <div className="h-full w-full">
           <MeterFader
             faderHeight={mixerHeight - 58}
             onChange={onChange}

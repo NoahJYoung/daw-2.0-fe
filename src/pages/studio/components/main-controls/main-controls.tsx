@@ -54,7 +54,7 @@ export const MainControls = observer(() => {
   }, [timeline.positionInSamples, state]);
 
   const TransportPositionDisplay = () => (
-    <div className="bg-transparent min-w-[120px] text-center justify-center text-surface-4 md:mt-1 text-2xl">
+    <div className="bg-transparent min-w-[120px] text-center justify-center text-surface-4 lg:mt-1 text-2xl">
       <span ref={transportPositionRef}>
         {Tone.Time(Tone.getTransport().seconds, "s").toBarsBeatsSixteenths()}
       </span>

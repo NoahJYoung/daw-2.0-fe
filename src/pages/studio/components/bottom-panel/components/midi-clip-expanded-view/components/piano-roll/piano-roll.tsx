@@ -149,7 +149,7 @@ export const PianoRoll = observer(({ clip }: PianoRollProps) => {
   );
 
   return (
-    <div className="border border-surface-2 h-full flex flex-shrink-0 md:max-h-[400px]">
+    <div className="border border-surface-2 h-full flex flex-shrink-0 lg:max-h-[400px]">
       <VerticalKeyboard
         clip={clip}
         onScroll={handleVerticalKeyboardScroll}

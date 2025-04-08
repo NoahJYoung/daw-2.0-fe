@@ -40,7 +40,7 @@ export const StudioDropdownMenu = ({
           {label && label}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="rounded-xxs bg-surface-1 max-h-48 md:max-h-96 overflow-y-auto">
+      <DropdownMenuContent className="rounded-xxs bg-surface-1 max-h-48 lg:max-h-96 overflow-y-auto">
         {options.map((option, i) => {
           if (option?.separator) {
             return <DropdownMenuSeparator key={option.label ?? i} />;

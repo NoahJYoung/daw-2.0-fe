@@ -79,11 +79,11 @@ export const StudioLayout = observer(
           </Panel>
           <PanelResizeHandle
             style={{ borderTopWidth: 1 }}
-            className="z-10 h-0 md:h-2 ml-[2px] bg-surface-mid border-0 border-surface-1"
+            className="z-10 h-0 lg:h-2 ml-[2px] bg-surface-mid border-0 border-surface-1"
           />
-          <div className="z-20 flex bg-surface-mid ml-[2px] pl-[4px] w-full items-start h-8 md:h-[48px] sm:gap-5 justify-between md:justify-start">
+          <div className="z-20 flex bg-surface-mid ml-[2px] pl-[4px] w-full items-start h-8 lg:h-[48px] sm:gap-5 justify-between lg:justify-start">
             <StudioButton
-              className="rounded-xxs shadow-none text-xl relative flex items-center justify-centers p-1 md:w-10 w-8 h-8 md:h-10 bg-transparent text-surface-3 hover:text-surface-4 hover:bg-transparent"
+              className="rounded-xxs shadow-none text-xl relative flex items-center justify-centers p-1 lg:w-10 w-8 h-8 lg:h-10 bg-transparent text-surface-3 hover:text-surface-4 hover:bg-transparent"
               icon={PiCaretUpDownFill}
               onClick={toggleBottomPanel}
             />

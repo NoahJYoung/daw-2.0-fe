@@ -125,7 +125,7 @@ export const ChannelStrip = observer(
           height: mixerHeight,
         }}
       >
-        <div className="flex gap-1 h-[36px] md:h-[42px] items-center px-2 py-1 border-b-2 border-surface-1">
+        <div className="flex gap-1 h-[36px] lg:h-8 items-center px-2 py-1 border-b-2 border-surface-1">
           <Button
             onClick={handleToggleActive}
             className={`bg-transparent ${

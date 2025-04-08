@@ -78,7 +78,7 @@ export const AuxSendListItem = observer(
           { "pb-1 border-b": !isLastItem }
         )}
       >
-        <span className="w-1/2 md: w-2/2 max-w-full ">
+        <span className="w-1/2 md:w-2/2 max-w-full ">
           <StudioDropdown
             options={options.map((track) => ({
               label: track.name,
@@ -92,7 +92,7 @@ export const AuxSendListItem = observer(
           />
         </span>
 
-        <span className="flex items-center justify-evenly gap-0.5 w-1/2 md:w-1/3 max-w-full">
+        <span className="flex items-center justify-evenly gap-0.5 w-1/2 lg:w-1/3 max-w-full">
           <Knob
             onValueChange={onVolumeChange}
             onValueCommit={commitVolumeChange}

@@ -76,9 +76,9 @@ export const Key = observer(({ keyData, baseOctave, left }: KeyProps) => {
       className={cn(
         "flex justify-center items-end rounded-sm select-none border absolute",
         {
-          "text-zinc-900 w-[80px] h-full min-h-[180px] bg-zinc-100 border-zinc-300 max-h-[180px] md:max-h-[215px]":
+          "text-zinc-900 w-[80px] h-full min-h-[180px] bg-zinc-100 border-zinc-300 max-h-[180px] lg:max-h-[215px]":
             keyData.type === "white",
-          "bg-zinc-900 text-zinc-100 w-[70px] h-4/6 md:max-h-[142px] max-h-[124px] min-h-[120px] ml-[-30px] z-20 border-zinc-100":
+          "bg-zinc-900 text-zinc-100 w-[70px] h-4/6 lg:max-h-[142px] max-h-[124px] min-h-[120px] ml-[-30px] z-20 border-zinc-100":
             keyData.type === "black",
         }
       )}
