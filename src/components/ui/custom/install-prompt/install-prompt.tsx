@@ -136,8 +136,9 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         ) : installEvent ? (
           <button
             onClick={handleInstallClick}
+            className="bg-brand-1 text-white"
             style={{
-              backgroundColor: "#4285f4",
+              backgroundColor: "te",
               color: "white",
               border: "none",
               borderRadius: "4px",
