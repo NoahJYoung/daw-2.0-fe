@@ -15,10 +15,10 @@ export default defineConfig({
         "logo512.png",
       ],
       manifest: {
-        name: "Your App Name",
-        short_name: "App",
+        name: "Velocity Studio",
+        short_name: "Velocity",
         description: "Your app description",
-        theme_color: "#000000",
+        theme_color: "#06b8af",
         background_color: "#ffffff",
         display: "standalone",
         orientation: "landscape",

@@ -42,9 +42,9 @@ export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
     time: Tone.Unit.Time,
     velocity: number
   ) {
-    this.oscillators.forEach((osc) =>
-      osc.triggerAttackRelease(note, duration, time, velocity)
-    );
+    this.oscillators.forEach((osc) => {
+      if (!osc.mute) osc.triggerAttackRelease(note, duration, time, velocity);
+    });
   }
 
   releaseAll(time: Tone.Unit.Time) {
