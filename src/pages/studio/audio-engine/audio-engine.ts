@@ -229,7 +229,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     this.setState(AudioEngineState.stopped);
   };
 
-  async getProjectZip() {
+  async getProjectZip(download = true) {
     const clips = this.mixer.tracks
       .map((track) => track.clips)
       .flat()
@@ -252,16 +252,30 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const blob = new Blob([jsonStr], { type: "application/json" });
     const settingsFile = new File([blob], "settings.json");
 
+    const metadata = JSON.stringify({
+      projectName: this.projectName,
+      bpm: this.timeline.bpm,
+      timeSignature: this.timeline.timeSignature,
+      key: "C",
+      lastModified: new Date().toISOString(),
+    });
+
     const zip = new JSZip();
     mp3Files.forEach((file) => {
       zip.file(file.name, file);
     });
     zip.file(settingsFile.name, settingsFile);
 
-    const zipBlob = await zip.generateAsync({ type: "blob" });
+    const zipBlob = await zip.generateAsync({
+      type: "blob",
+      comment: metadata,
+    });
+    if (!download) {
+      return zipBlob;
+    }
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipBlob);
-    link.download = `${this.projectName}.zip`;
+    link.download = `${this.projectName}.velocity.zip`;
     link.click();
 
     URL.revokeObjectURL(link.href);

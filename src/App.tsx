@@ -1,13 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { Toaster } from "./components/ui/toaster";
-import { routes } from "./routes";
-import { useThemeContext } from "./hooks";
+import { FileSystemProvider, useThemeContext } from "./hooks";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { routeTree } from "./routes";
+
 import "./i18n";
 
 const queryClient = new QueryClient();
-const router = createBrowserRouter(routes);
+const router = createRouter({ routeTree });
 
 function App() {
   const { theme } = useThemeContext();
@@ -16,7 +17,9 @@ function App() {
     <div className={`w-full ${theme}`}>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
+          <FileSystemProvider>
+            <RouterProvider router={router} />
+          </FileSystemProvider>
         </QueryClientProvider>
       </GoogleOAuthProvider>
       <Toaster />

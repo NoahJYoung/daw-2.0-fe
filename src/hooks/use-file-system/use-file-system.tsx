@@ -1,0 +1,223 @@
+/* eslint-disable react-refresh/only-export-components */
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { createContext, useContext, ReactNode, useEffect } from "react";
+import { useState } from "react";
+import { getProjects } from "./helpers";
+import { v4 as uuidv4 } from "uuid";
+
+export interface Project {
+  lastModified: string;
+  bpm: number;
+  key: string;
+  timeSignature: number;
+  name: string;
+  id: string;
+  data: File;
+}
+
+export interface FileSystemContextType {
+  projects: Project[] | undefined;
+  isLoading: boolean;
+  isFileSystemSupported: boolean;
+  isMobileDevice: boolean;
+  saveProject: (
+    projectName: string,
+    projectZip: Blob,
+    projectId?: string
+  ) => Promise<void>;
+  loadProject: (projectPath: string) => Promise<File | null>;
+  deleteProject: (projectId: string) => Promise<void>;
+}
+
+const FileSystemContext = createContext<FileSystemContextType | undefined>(
+  undefined
+);
+
+const detectEnvironment = () => {
+  const isFileSystemSupported = "showDirectoryPicker" in window;
+  const isMobileDevice =
+    /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+
+  return { isFileSystemSupported, isMobileDevice };
+};
+
+export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [rootDirectory, setRootDirectory] =
+    useState<FileSystemDirectoryHandle | null>(null);
+  const queryClient = useQueryClient();
+  const { isFileSystemSupported, isMobileDevice } = detectEnvironment();
+
+  const invalidateProjectQuery = () => {
+    queryClient.invalidateQueries({ queryKey: ["PROJECTS"] });
+  };
+
+  const { data: projects, isFetching: isLoading } = useQuery({
+    queryKey: ["PROJECTS"],
+    queryFn: () => getProjects(rootDirectory),
+    enabled: !!rootDirectory,
+  });
+
+  useEffect(() => {
+    const getRootDirectory = async () => {
+      const root = await navigator.storage.getDirectory();
+      setRootDirectory(root);
+    };
+    getRootDirectory();
+  }, []);
+
+  const createProject = async (projectName: string, projectZip: Blob) => {
+    if (!rootDirectory) {
+      throw new Error("Root directory not initialized");
+    }
+
+    const projectId = uuidv4();
+    const fileName = `${projectName}.${projectId}.velocity.app`;
+
+    try {
+      const fileHandle = await rootDirectory.getFileHandle(fileName, {
+        create: true,
+      });
+
+      const writable = await fileHandle.createWritable();
+      await writable.write(projectZip);
+      await writable.close();
+
+      invalidateProjectQuery();
+      console.log("PROJECT CREATED", projectId);
+
+      return projectId;
+    } catch (error) {
+      console.error("Error creating project:", error);
+      throw new Error("Failed to create project");
+    }
+  };
+
+  const updateProject = async (
+    projectName: string,
+    projectId: string,
+    projectZip: Blob
+  ) => {
+    if (!rootDirectory) {
+      throw new Error("Root directory not initialized");
+    }
+
+    const fileName = `${projectName}.${projectId}.velocity.app`;
+
+    try {
+      const existingFiles = await getProjects(rootDirectory);
+      const existingFile = existingFiles?.find((file) =>
+        file.name.includes(projectId)
+      );
+
+      if (existingFile) {
+        if (existingFile.name !== fileName) {
+          await rootDirectory.removeEntry(existingFile.name);
+        }
+      }
+
+      const fileHandle = await rootDirectory.getFileHandle(fileName, {
+        create: true,
+      });
+      const writable = await fileHandle.createWritable();
+      await writable.write(projectZip);
+      await writable.close();
+      invalidateProjectQuery();
+    } catch (error) {
+      console.error("Error updating project:", error);
+      throw new Error("Failed to update project");
+    }
+  };
+
+  const deleteProject = async (projectId: string) => {
+    if (!rootDirectory) {
+      throw new Error("Root directory not initialized");
+    }
+
+    try {
+      const projectToDelete = projects?.find(
+        (project) => project.id === projectId
+      );
+
+      if (projectToDelete) {
+        const fileToDelete = projectToDelete.data;
+        if (fileToDelete) {
+          await rootDirectory.removeEntry(fileToDelete.name);
+          invalidateProjectQuery();
+        } else {
+          throw new Error(`Project with ID ${projectId} not found`);
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      throw new Error("Failed to delete project");
+    }
+  };
+
+  const saveProject = async (
+    projectName: string,
+    projectZip: Blob,
+    projectId?: string
+  ) => {
+    if (projectId) {
+      await updateProject(projectName, projectId, projectZip);
+    } else {
+      console.log("CALLING CREATE PROJECT");
+      await createProject(projectName, projectZip);
+    }
+    invalidateProjectQuery();
+  };
+
+  const loadProject = async (projectId: string): Promise<File | null> => {
+    if (!rootDirectory) {
+      throw new Error("Root directory not initialized");
+    }
+
+    try {
+      const existingFiles = await getProjects(rootDirectory);
+
+      const fileToLoad = existingFiles?.find((file) =>
+        file.name.includes(projectId)
+      );
+
+      if (fileToLoad) {
+        const fileHandle = await rootDirectory.getFileHandle(fileToLoad.name);
+
+        const file = await fileHandle.getFile();
+        return file;
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error loading project:", error);
+      throw new Error("Failed to load project");
+    }
+  };
+
+  const contextValue: FileSystemContextType = {
+    projects,
+    isLoading,
+    isFileSystemSupported,
+    isMobileDevice,
+    saveProject,
+    loadProject,
+    deleteProject,
+  };
+
+  return (
+    <FileSystemContext.Provider value={contextValue}>
+      {children}
+    </FileSystemContext.Provider>
+  );
+};
+
+export const useFileSystem = (): FileSystemContextType => {
+  const context = useContext(FileSystemContext);
+  if (context === undefined) {
+    throw new Error("useFileSystem must be used within a FileSystemProvider");
+  }
+  return context;
+};

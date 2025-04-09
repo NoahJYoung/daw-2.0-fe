@@ -26,6 +26,7 @@ export const getOnTouchMove = (
   const onTouchMove = (e: TouchEvent) => {
     if (!dragging || !selected || !clip) return;
     e.stopPropagation();
+    e.preventDefault();
 
     const touch = e.touches[0];
     const movementX = touch.clientX - (initialX.current || touch.clientX);

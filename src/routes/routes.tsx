@@ -1,33 +1,42 @@
-import { RouteObject } from "react-router-dom";
-import { RoutePaths } from "./route-paths";
-import { Access, Dashboard, Studio } from "@/pages";
-import { ApiProvider } from "@/api";
+import { Outlet, createRoute, createRootRoute } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { Dashboard, Studio } from "@/pages";
 
-export const routes: RouteObject[] = [
-  {
-    path: "",
-    element: <ApiProvider />,
-    children: [
-      {
-        path: RoutePaths.ROOT,
-        element: <Studio />,
-      },
-      {
-        path: RoutePaths.ACCESS,
-        element: <Access />,
-      },
-      {
-        path: RoutePaths.DASHBOARD,
-        element: <Dashboard />,
-      },
-      {
-        path: RoutePaths.STUDIO,
-        element: <Studio />,
-      },
-      {
-        path: `${RoutePaths.STUDIO}/:projectId`,
-        element: <Studio />,
-      },
-    ],
+const rootRoute = createRootRoute({
+  component: () => (
+    <>
+      <Outlet />
+      <TanStackRouterDevtools />
+    </>
+  ),
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: () => {
+    return <Dashboard />;
   },
-];
+});
+
+const newProjectRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/studio",
+  component: () => {
+    return <Studio />;
+  },
+});
+
+const existingProjectRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/studio/$projectId",
+  component: () => {
+    return <Studio />;
+  },
+});
+
+export const routeTree = rootRoute.addChildren([
+  dashboardRoute,
+  newProjectRoute,
+  existingProjectRoute,
+]);

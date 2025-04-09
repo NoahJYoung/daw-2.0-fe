@@ -8,7 +8,7 @@ import {
   useBottomPanelViewController,
   useUndoManager,
 } from "../../hooks";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 import demoProject from "../../utils/sampleProject.json";
 
 interface StudioLayoutProps {
@@ -21,7 +21,7 @@ export const StudioLayout = observer(
   ({ upperPanel, lowerPanel, middlePanel }: StudioLayoutProps) => {
     const { mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
-    const { projectId } = useParams();
+    const { projectId } = useParams({ strict: false });
 
     const audioEngine = useAudioEngine();
 
@@ -53,7 +53,7 @@ export const StudioLayout = observer(
         undoManager.withoutUndo(() => audioEngine.loadProjectData(demoProject));
       };
 
-      if (!projectId) {
+      if (projectId === "DEMO") {
         initializeDemoProject();
       }
     }, [audioEngine, projectId, undoManager]);

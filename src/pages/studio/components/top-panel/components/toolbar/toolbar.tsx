@@ -14,7 +14,7 @@ import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
 import { observer } from "mobx-react-lite";
 import { TRACK_PANEL_EXPANDED_WIDTH } from "@/pages/studio/utils/constants";
-import { useThemeContext } from "@/hooks";
+import { useFileSystem, useThemeContext } from "@/hooks";
 import { useTranslation } from "react-i18next";
 import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
 import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
@@ -22,7 +22,7 @@ import { FaFileExport as ExportIcon } from "react-icons/fa";
 import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 import { getOfflineBounce } from "@/pages/studio/audio-engine/helpers";
 
 interface ToolbarProps {
@@ -32,12 +32,22 @@ interface ToolbarProps {
 
 export const Toolbar = observer(
   ({ panelExpanded, togglePanelView }: ToolbarProps) => {
-    const { projectId } = useParams();
+    const { projectId } = useParams({ strict: false });
     const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
+    const { saveProject } = useFileSystem();
     const audioEngine = useAudioEngine();
     const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
+
+    const handleSave = async () => {
+      audioEngine.setLoadingState("Saving Project...");
+      const zip = await audioEngine.getProjectZip(false);
+      if (zip) {
+        await saveProject(audioEngine.projectName, zip, projectId);
+      }
+      audioEngine.setLoadingState(null);
+    };
 
     return (
       <div
@@ -105,7 +115,7 @@ export const Toolbar = observer(
             {
               label: "Save",
               icon: IoMdSave,
-              onClick: () => console.log(audioEngine.serialize()),
+              onClick: handleSave,
               disabled: false,
             },
             {

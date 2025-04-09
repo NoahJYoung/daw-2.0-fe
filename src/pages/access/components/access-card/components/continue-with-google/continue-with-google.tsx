@@ -1,12 +1,10 @@
 import { api } from "@/api";
 import { useToast } from "@/components/ui/use-toast";
-import { RoutePaths } from "@/routes/route-paths";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
 
 export const ContinueWithGoogle = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     const token = credentialResponse.credential;
@@ -24,7 +22,7 @@ export const ContinueWithGoogle = () => {
       if (accessToken && refreshToken) {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-        navigate(`/${RoutePaths.DASHBOARD}`);
+        // navigate(`/${RoutePaths.DASHBOARD}`);
       }
     } catch (error) {
       toast({

@@ -1,15 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { AxiosInstance } from "axios";
 import { api, refreshToken } from "@/api";
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useMemo,
-  useEffect,
-} from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { RoutePaths } from "@/routes/route-paths";
+import { createContext, useContext, useMemo, useEffect } from "react";
+import { Outlet } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 const ApiContext = createContext<AxiosInstance | undefined>(undefined);
@@ -22,9 +15,8 @@ export const useApi = (): AxiosInstance => {
   return context;
 };
 
-export const ApiProvider = ({ children }: { children?: ReactNode }) => {
+export const ApiProvider = () => {
   const contextValue = useMemo(() => api, []);
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -54,7 +46,7 @@ export const ApiProvider = ({ children }: { children?: ReactNode }) => {
             return api(originalRequest);
           } catch (refreshError) {
             console.error("Token refresh failed:", refreshError);
-            navigate(`/${RoutePaths.ACCESS}`);
+            // navigate({ to: `/${RoutePaths.ACCESS}` });
             return Promise.reject(refreshError);
           }
         }
@@ -62,11 +54,10 @@ export const ApiProvider = ({ children }: { children?: ReactNode }) => {
         return Promise.reject(error);
       }
     );
-  }, [navigate, queryClient]);
+  }, [queryClient]);
 
   return (
     <ApiContext.Provider value={contextValue}>
-      {children ?? null}
       <Outlet />
     </ApiContext.Provider>
   );
