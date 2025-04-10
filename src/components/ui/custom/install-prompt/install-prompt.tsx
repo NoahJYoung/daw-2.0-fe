@@ -19,28 +19,22 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [showInstallPrompt, setShowInstallPrompt] = useState<boolean>(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
   const isMobile = isMobileDevice();
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    ("standalone" in window.navigator &&
+      (window.navigator as any).standalone) ||
+    document.referrer.includes("android-app://");
+
+  const isIOS: boolean =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
   useEffect(() => {
-    const checkStandalone = (): boolean => {
-      const standalone =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        ("standalone" in window.navigator &&
-          (window.navigator as any).standalone) ||
-        document.referrer.includes("android-app://");
-
-      return standalone;
-    };
-
-    const appIsStandalone = checkStandalone();
-    setIsStandalone(appIsStandalone);
-
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setInstallEvent(e as BeforeInstallPromptEvent);
-      if (isMobile && !appIsStandalone) {
+      if (isMobile && !isStandalone) {
         setShowInstallPrompt(true);
       }
     };
@@ -50,10 +44,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       handleBeforeInstallPrompt as EventListener
     );
 
-    window.addEventListener("appinstalled", () => {
-      setIsStandalone(true);
-    });
-
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
@@ -61,10 +51,9 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       );
       window.removeEventListener("appinstalled", () => {
         console.log("PWA was installed");
-        setIsStandalone(true);
       });
     };
-  }, [isMobile]);
+  }, [isMobile, isStandalone]);
 
   const handleInstallClick = (): void => {
     if (!installEvent) return;
@@ -80,9 +69,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       setInstallEvent(null);
     });
   };
-
-  const isIOS: boolean =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
   if (isStandalone) {
     return children;
