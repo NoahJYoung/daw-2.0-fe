@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { isMobileDevice } from "@/pages/studio/utils";
 import React, { useState, useEffect, ReactNode } from "react";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -18,10 +19,9 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
   const [showInstallPrompt, setShowInstallPrompt] = useState<boolean>(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  // const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
-  const isMobile = true; // isMobileDevice();
+  const isMobile = isMobileDevice();
 
   useEffect(() => {
     const checkStandalone = (): boolean => {
@@ -36,16 +36,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
 
     const appIsStandalone = checkStandalone();
     setIsStandalone(appIsStandalone);
-
-    // const checkMobile = (): boolean => {
-    //   const userAgent =
-    //     navigator.userAgent || navigator.vendor || (window as any).opera;
-    //   return /android|iPad|iPhone|iPod|webOS|BlackBerry|Windows Phone/i.test(
-    //     userAgent
-    //   );
-    // };
-
-    // setIsMobile(checkMobile());
 
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
