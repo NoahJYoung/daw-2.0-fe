@@ -1875,7 +1875,6 @@
       "volume": 0,
       "$modelType": "AudioEngine/Mixer/Master"
     },
-    "topPanelHeight": 789,
     "$modelType": "AudioEngine/Mixer"
   },
   "auxSendManager": {
