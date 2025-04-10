@@ -81,13 +81,40 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     this.state = state;
   }
 
-  @action
-  setLoadingState(state: string | null) {
-    this.loadingState = state;
-    if (state === null) {
-      this.setPlayDisabled(false);
-    } else {
+  private loadingTimeout: NodeJS.Timeout | null = null;
+  private loadingStartTime: number | null = null;
+
+  setLoadingState(state: string | null): void {
+    if (state !== null) {
+      if (this.loadingTimeout) {
+        clearTimeout(this.loadingTimeout);
+        this.loadingTimeout = null;
+      }
+
+      this.loadingStartTime = Date.now();
+
+      this.loadingState = state;
       this.setPlayDisabled(true);
+    } else {
+      if (this.loadingStartTime === null) {
+        this.loadingStartTime = Date.now();
+      }
+
+      const timeElapsed = Date.now() - this.loadingStartTime;
+      const remainingTime = Math.max(0, 300 - timeElapsed);
+
+      if (remainingTime > 0) {
+        this.loadingTimeout = setTimeout(() => {
+          this.loadingState = null;
+          this.setPlayDisabled(false);
+          this.loadingStartTime = null;
+          this.loadingTimeout = null;
+        }, remainingTime);
+      } else {
+        this.loadingState = null;
+        this.setPlayDisabled(false);
+        this.loadingStartTime = null;
+      }
     }
   }
 

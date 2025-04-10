@@ -22,7 +22,6 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   tracks: prop<Track[]>(() => []),
   selectedRefs: prop<Ref<Track>[]>(() => []),
   master: prop<Master>(() => new Master({})),
-  topPanelHeight: prop<number>(window.innerHeight - 156),
 }) {
   @observable
   featuredTrackId: string | undefined = undefined;
@@ -33,9 +32,17 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
   @observable
   panelMode: PanelMode = "MIXER";
 
+  @observable
+  topPanelHeight: number = window.innerHeight - 156;
+
   @action
   setPanelMode(mode: PanelMode) {
     this.panelMode = mode;
+  }
+
+  @action
+  setTopPanelHeight(height: number) {
+    this.topPanelHeight = height;
   }
 
   @computed

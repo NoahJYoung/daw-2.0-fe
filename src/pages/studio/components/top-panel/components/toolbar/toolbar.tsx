@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { PiMetronomeFill, PiMagnetStraight } from "react-icons/pi";
@@ -24,6 +25,7 @@ import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { getOfflineBounce } from "@/pages/studio/audio-engine/helpers";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -40,25 +42,67 @@ export const Toolbar = observer(
     const audioEngine = useAudioEngine();
     const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
+    const { toast } = useToast();
 
     const handleSave = async () => {
       audioEngine.setLoadingState("Saving Project...");
-      const zip = await audioEngine.getProjectZip(false);
-      if (zip) {
-        await saveProject(audioEngine.projectName, zip, projectId);
+      try {
+        const zip = await audioEngine.getProjectZip(false);
+        if (zip) {
+          const createdId = await saveProject(
+            audioEngine.projectName,
+            zip,
+            projectId
+          );
+          if (createdId) {
+            audioEngine.setLoadingState(null);
+            navigate({ to: `/studio/${createdId}` });
+            toast({
+              title: "Success!",
+              description: "Project created successfully",
+            });
+          } else {
+            toast({
+              title: "Success!",
+              description: "Project saved successfully",
+            });
+          }
+        }
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Oops!",
+          description: error?.message ?? "Something went wrong",
+        });
+      } finally {
+        audioEngine.setLoadingState(null);
       }
-      audioEngine.setLoadingState(null);
     };
 
     const handleSaveAs = async () => {
       audioEngine.setLoadingState("Saving Project...");
-      const zip = await audioEngine.getProjectZip(false);
-      if (zip) {
-        const projectId = await saveProject(audioEngine.projectName, zip);
+      try {
+        const zip = await audioEngine.getProjectZip(false);
+        if (zip) {
+          const projectId = await saveProject(audioEngine.projectName, zip);
+          audioEngine.setLoadingState(null);
+          if (projectId) {
+            navigate({ to: `/studio/${projectId}` });
+            toast({
+              title: "Success!",
+              description: "Project created successfully",
+            });
+          }
+        }
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Oops!",
+          description: error?.message ?? "Something went wrong",
+        });
+      } finally {
         audioEngine.setLoadingState(null);
-        navigate({ to: `/studio/${projectId}` });
       }
-      audioEngine.setLoadingState(null);
     };
 
     return (
