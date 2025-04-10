@@ -135,7 +135,7 @@ export const Toolbar = observer(
             {
               label: "Import Project",
               icon: ImportIcon,
-              onClick: () => audioEngine.loadProjectData(),
+              onClick: () => audioEngine.loadProjectDataFromFile(),
             },
           ]}
         />
