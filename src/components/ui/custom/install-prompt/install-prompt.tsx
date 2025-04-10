@@ -51,7 +51,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     );
 
     window.addEventListener("appinstalled", () => {
-      console.log("PWA was installed");
       setShowInstallPrompt(false);
       setIsStandalone(true);
     });
@@ -63,7 +62,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
       );
       window.removeEventListener("appinstalled", () => {
         console.log("PWA was installed");
-        setShowInstallPrompt(false);
         setIsStandalone(true);
       });
     };
@@ -151,7 +149,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
         <button
           onClick={() => {
             setShowInstallPrompt(false);
-            console.log("TOUCHED");
           }}
           onTouchEnd={() => setShowInstallPrompt(false)}
           className="text-surface-8"
