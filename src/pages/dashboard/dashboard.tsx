@@ -14,8 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const newProjectBtnClassName = `rounded-xs font-bold text-md focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-surface-8 text-surface-0 hover:text-surface-8 hover:bg-surface-0 border border-surface-8 `;
-const demoProjectBtnClassName = `rounded-xs font-bold text-md focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-surface-0 border-surface-8 border text-surface-8 hover:text-surface-0 hover:border-surface-8 hover:bg-surface-8`;
+const newProjectBtnClassName = `rounded-xs font-bold text-md focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-brand-1 text-white hover:bg-brand-2 hover:border-brand-2 border border-brand-1 transition-colors `;
+const demoProjectBtnClassName = `rounded-xs font-bold text-md focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-surface-0 border-surface-8 border text-surface-8 hover:text-surface-7 hover:border-surface-7 hover:bg-surface-1 transition-colors`;
 
 const getTimeSignatureIconValues = (timeSignature: number) => {
   const timeSignatureOptions: { label: string; value: string }[] = [
