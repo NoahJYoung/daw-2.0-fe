@@ -24,7 +24,7 @@ export interface FileSystemContextType {
     projectName: string,
     projectZip: Blob,
     projectId?: string
-  ) => Promise<void>;
+  ) => Promise<string | void>;
   loadProject: (projectPath: string) => Promise<File | null>;
   deleteProject: (projectId: string) => Promise<void>;
 }
@@ -164,11 +164,12 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
   ) => {
     if (projectId) {
       await updateProject(projectName, projectId, projectZip);
+      invalidateProjectQuery();
     } else {
-      console.log("CALLING CREATE PROJECT");
-      await createProject(projectName, projectZip);
+      const id = await createProject(projectName, projectZip);
+      invalidateProjectQuery();
+      return id;
     }
-    invalidateProjectQuery();
   };
 
   const loadProject = async (projectId: string): Promise<File | null> => {

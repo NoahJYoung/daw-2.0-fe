@@ -8,7 +8,7 @@ import {
   IoMdSave,
   IoIosSettings,
 } from "react-icons/io";
-import { PiUserList } from "react-icons/pi";
+import { IoExitOutline } from "react-icons/io5";
 import { PiMusicNoteSimpleFill } from "react-icons/pi";
 import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
@@ -22,7 +22,7 @@ import { FaFileExport as ExportIcon } from "react-icons/fa";
 import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { getOfflineBounce } from "@/pages/studio/audio-engine/helpers";
 
 interface ToolbarProps {
@@ -36,6 +36,7 @@ export const Toolbar = observer(
     const { undoManager } = useUndoManager();
     const { toggleTheme } = useThemeContext();
     const { saveProject } = useFileSystem();
+    const navigate = useNavigate();
     const audioEngine = useAudioEngine();
     const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
@@ -45,6 +46,17 @@ export const Toolbar = observer(
       const zip = await audioEngine.getProjectZip(false);
       if (zip) {
         await saveProject(audioEngine.projectName, zip, projectId);
+      }
+      audioEngine.setLoadingState(null);
+    };
+
+    const handleSaveAs = async () => {
+      audioEngine.setLoadingState("Saving Project...");
+      const zip = await audioEngine.getProjectZip(false);
+      if (zip) {
+        const projectId = await saveProject(audioEngine.projectName, zip);
+        audioEngine.setLoadingState(null);
+        navigate({ to: `/studio/${projectId}` });
       }
       audioEngine.setLoadingState(null);
     };
@@ -121,9 +133,7 @@ export const Toolbar = observer(
             {
               label: "Save As",
               icon: SaveAsIcon,
-              onClick: () => {
-                console.log(audioEngine.serialize());
-              },
+              onClick: handleSaveAs,
               disabled: !projectId,
             },
             { separator: true },
@@ -141,9 +151,9 @@ export const Toolbar = observer(
         />
 
         <StudioButton
-          title={t("studio.toolbar.userMenu")}
-          icon={PiUserList}
-          onClick={() => {}}
+          title={t("studio.toolbar.exit")}
+          icon={() => <IoExitOutline className="rotate-180" />}
+          onClick={() => navigate({ to: "/" })}
         />
 
         <StudioButton

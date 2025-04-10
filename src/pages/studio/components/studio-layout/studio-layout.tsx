@@ -10,7 +10,7 @@ import {
 } from "../../hooks";
 import { useParams } from "@tanstack/react-router";
 import demoProject from "../../utils/sampleProject.json";
-import { useFileSystem } from "@/hooks";
+import { useBlockRefresh, useFileSystem } from "@/hooks";
 
 interface StudioLayoutProps {
   upperPanel: ReactElement;
@@ -68,6 +68,8 @@ export const StudioLayout = observer(
         initializeProject(projectId);
       }
     }, [audioEngine, loadProject, projectId, undoManager]);
+
+    useBlockRefresh();
 
     return (
       <section className="bg-surface-0 text-foreground p-1">
