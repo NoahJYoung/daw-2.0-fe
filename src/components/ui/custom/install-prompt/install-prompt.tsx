@@ -51,7 +51,6 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ children }) => {
     );
 
     window.addEventListener("appinstalled", () => {
-      setShowInstallPrompt(false);
       setIsStandalone(true);
     });
 
