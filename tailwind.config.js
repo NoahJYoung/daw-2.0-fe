@@ -57,6 +57,7 @@ export default {
         },
         brand: {
           1: "hsl(var(--brand-1))",
+          2: "hsl(var(--brand-2))",
         },
         surface: {
           0: "hsl(var(--surface-0))",

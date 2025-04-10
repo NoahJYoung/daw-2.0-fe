@@ -281,7 +281,121 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     URL.revokeObjectURL(link.href);
   }
 
-  async loadProjectData(settings?: Record<string, unknown>) {
+  async loadProjectDataFromFile(projectZip?: File) {
+    this.setLoadingState("Loading project");
+
+    if (!projectZip) {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = ".zip";
+      fileInput.style.display = "none";
+
+      document.body.appendChild(fileInput);
+
+      fileInput.onchange = async (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        const data = await unzipProjectFile(file);
+
+        await populateBufferCache(data);
+
+        document.body.removeChild(fileInput);
+
+        const settingsBlob = data["settings.json"];
+
+        if (settingsBlob) {
+          const settings = await blobToJsonObject(settingsBlob);
+
+          const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
+          const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+          const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
+          const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
+          const loadedProjectId = fromSnapshot(settings.projectId) as string;
+          const loadedProjectName = fromSnapshot(
+            settings.projectName
+          ) as string;
+
+          loadedMixer.tracks.forEach((track) =>
+            track.clips.forEach((clip) => {
+              if (clip instanceof AudioClip) {
+                const buffer = audioBufferCache.get(clip.id);
+                if (buffer) {
+                  clip.createWaveformCache(buffer);
+                } else {
+                  throw new Error("no buffer found");
+                }
+              }
+            })
+          );
+
+          this.setTimeline(loadedTimeline);
+          this.setMixer(loadedMixer);
+          this.setKeyboard(loadedKeyboard);
+          this.setProjectId(loadedProjectId);
+          this.setProjectName(loadedProjectName);
+          this.setMetronome(loadedMetronome);
+          const loadedAuxSendManager = fromSnapshot(
+            settings.auxSendManager
+          ) as AuxSendManager;
+
+          this.setAuxSendManager(loadedAuxSendManager);
+        } else {
+          throw new Error("No settings data found");
+        }
+      };
+
+      fileInput.click();
+    } else {
+      const data = await unzipProjectFile(projectZip);
+
+      await populateBufferCache(data);
+
+      const settingsBlob = data["settings.json"];
+
+      if (settingsBlob) {
+        const settings = await blobToJsonObject(settingsBlob);
+
+        const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
+        const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+        const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
+        const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
+        const loadedProjectId = fromSnapshot(settings.projectId) as string;
+        const loadedProjectName = fromSnapshot(settings.projectName) as string;
+
+        loadedMixer.tracks.forEach((track) =>
+          track.clips.forEach((clip) => {
+            if (clip instanceof AudioClip) {
+              const buffer = audioBufferCache.get(clip.id);
+              if (buffer) {
+                clip.createWaveformCache(buffer);
+              } else {
+                throw new Error("no buffer found");
+              }
+            }
+          })
+        );
+
+        this.setTimeline(loadedTimeline);
+        this.setMixer(loadedMixer);
+        this.setKeyboard(loadedKeyboard);
+        this.setProjectId(loadedProjectId);
+        this.setProjectName(loadedProjectName);
+        this.setMetronome(loadedMetronome);
+        const loadedAuxSendManager = fromSnapshot(
+          settings.auxSendManager
+        ) as AuxSendManager;
+
+        this.setAuxSendManager(loadedAuxSendManager);
+      } else {
+        throw new Error("No settings data found");
+      }
+    }
+
+    this.setLoadingState(null);
+  }
+
+  async loadProjectDataFromObject(settings: Record<string, unknown>) {
     this.setLoadingState("Loading project");
     if (settings) {
       const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;

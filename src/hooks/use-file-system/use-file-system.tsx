@@ -177,17 +177,10 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
-      const existingFiles = await getProjects(rootDirectory);
+      const project = projects?.find((project) => project.id === projectId);
 
-      const fileToLoad = existingFiles?.find((file) =>
-        file.name.includes(projectId)
-      );
-
-      if (fileToLoad) {
-        const fileHandle = await rootDirectory.getFileHandle(fileToLoad.name);
-
-        const file = await fileHandle.getFile();
-        return file;
+      if (project) {
+        return project.data;
       }
 
       return null;

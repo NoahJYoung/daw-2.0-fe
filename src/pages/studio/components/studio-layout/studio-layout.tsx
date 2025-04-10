@@ -10,6 +10,7 @@ import {
 } from "../../hooks";
 import { useParams } from "@tanstack/react-router";
 import demoProject from "../../utils/sampleProject.json";
+import { useFileSystem } from "@/hooks";
 
 interface StudioLayoutProps {
   upperPanel: ReactElement;
@@ -21,6 +22,7 @@ export const StudioLayout = observer(
   ({ upperPanel, lowerPanel, middlePanel }: StudioLayoutProps) => {
     const { mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
+    const { loadProject } = useFileSystem();
     const { projectId } = useParams({ strict: false });
 
     const audioEngine = useAudioEngine();
@@ -49,14 +51,23 @@ export const StudioLayout = observer(
     }, [audioEngine.auxSendManager.sends, undoManager]);
 
     useEffect(() => {
-      const initializeDemoProject = async () => {
-        undoManager.withoutUndo(() => audioEngine.loadProjectData(demoProject));
+      const initializeProject = async (projectId: string) => {
+        if (projectId === "DEMO") {
+          undoManager.withoutUndo(() =>
+            audioEngine.loadProjectDataFromObject(demoProject)
+          );
+        } else {
+          const projectData = await loadProject(projectId);
+          if (projectData) {
+            audioEngine.loadProjectDataFromFile(projectData);
+          }
+        }
       };
 
-      if (projectId === "DEMO") {
-        initializeDemoProject();
+      if (projectId) {
+        initializeProject(projectId);
       }
-    }, [audioEngine, projectId, undoManager]);
+    }, [audioEngine, loadProject, projectId, undoManager]);
 
     return (
       <section className="bg-surface-0 text-foreground p-1">

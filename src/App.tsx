@@ -6,6 +6,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { routeTree } from "./routes";
 
 import "./i18n";
+import { InstallPrompt } from "./components/ui/custom/install-prompt";
 
 const queryClient = new QueryClient();
 const router = createRouter({ routeTree });
@@ -18,7 +19,9 @@ function App() {
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <QueryClientProvider client={queryClient}>
           <FileSystemProvider>
-            <RouterProvider router={router} />
+            <InstallPrompt>
+              <RouterProvider router={router} />
+            </InstallPrompt>
           </FileSystemProvider>
         </QueryClientProvider>
       </GoogleOAuthProvider>
