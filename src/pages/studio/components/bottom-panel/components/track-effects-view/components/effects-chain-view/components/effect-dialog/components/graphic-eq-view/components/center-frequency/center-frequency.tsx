@@ -38,6 +38,29 @@ export const CenterFrequency = ({
   useEffect(() => {
     if (circleRef.current) {
       const [min, max] = range;
+
+      // Process both mouse drag events and touch events
+      const processMove = (eventX: number, eventY: number) => {
+        const newX = scaleX.invert(eventX);
+        const newY = scaleY.invert(eventY);
+
+        if (newX >= min && newX <= max) {
+          onFreqChange(newX);
+        } else {
+          return;
+        }
+
+        if (band.type !== "highpass") {
+          if (newY <= 12 && newY >= -12) {
+            d3.select(circleRef.current).attr("cx", eventX).attr("cy", eventY);
+            onGainChange(newY);
+          } else {
+            return;
+          }
+        }
+      };
+
+      // D3 drag handler (for mouse events)
       const dragHandler = d3
         .drag<SVGCircleElement, unknown>()
         .on("start", function () {
@@ -46,23 +69,7 @@ export const CenterFrequency = ({
           d3.select(this).raise();
         })
         .on("drag", function (event) {
-          const newX = scaleX.invert(event.x);
-          const newY = scaleY.invert(event.y);
-
-          if (newX >= min && newX <= max) {
-            onFreqChange(newX);
-          } else {
-            return;
-          }
-
-          if (band.type !== "highpass") {
-            if (newY <= 12 && newY >= -12) {
-              d3.select(this).attr("cx", event.x).attr("cy", event.y);
-              onGainChange(newY);
-            } else {
-              return;
-            }
-          }
+          processMove(event.x, event.y);
         })
         .on("end", function () {
           onFreqCommit(band.frequency);
@@ -70,7 +77,66 @@ export const CenterFrequency = ({
           document.body.style.cursor = "auto";
         });
 
-      d3.select(circleRef.current).call(dragHandler);
+      const element = d3.select(circleRef.current);
+
+      // Apply the D3 drag handler for mouse events
+      element.call(dragHandler);
+
+      // Touch event handlers
+      const handleTouchStart = (event: TouchEvent) => {
+        event.preventDefault(); // Prevent scrolling
+        document.body.style.cursor = "crosshair";
+        onClick();
+        element.raise();
+      };
+
+      const handleTouchMove = (event: TouchEvent) => {
+        event.preventDefault(); // Prevent scrolling
+
+        if (event.touches.length !== 1) return;
+
+        const touch = event.touches[0];
+        const svgElement = circleRef.current!.ownerSVGElement;
+
+        if (!svgElement) return;
+
+        // Convert touch coordinates to SVG coordinates
+        const pt = svgElement.createSVGPoint();
+        pt.x = touch.clientX;
+        pt.y = touch.clientY;
+        const svgPoint = pt.matrixTransform(
+          svgElement.getScreenCTM()!.inverse()
+        );
+
+        processMove(svgPoint.x, svgPoint.y);
+      };
+
+      const handleTouchEnd = () => {
+        onFreqCommit(band.frequency);
+        onGainCommit(band.gain);
+        document.body.style.cursor = "auto";
+      };
+
+      // Add touch event listeners
+      const node = element.node();
+      if (node) {
+        node.addEventListener("touchstart", handleTouchStart, {
+          passive: false,
+        });
+        node.addEventListener("touchmove", handleTouchMove, { passive: false });
+        node.addEventListener("touchend", handleTouchEnd);
+        node.addEventListener("touchcancel", handleTouchEnd);
+      }
+
+      // Clean up function
+      return () => {
+        if (node) {
+          node.removeEventListener("touchstart", handleTouchStart);
+          node.removeEventListener("touchmove", handleTouchMove);
+          node.removeEventListener("touchend", handleTouchEnd);
+          node.removeEventListener("touchcancel", handleTouchEnd);
+        }
+      };
     }
   }, [
     scaleX,
