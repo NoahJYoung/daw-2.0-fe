@@ -101,7 +101,6 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
         await writable.close();
 
         invalidateProjectQuery();
-        console.log("PROJECT CREATED", projectId);
 
         return projectId;
       } catch (error) {
