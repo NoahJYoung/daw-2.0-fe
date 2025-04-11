@@ -96,7 +96,7 @@ export const EffectDialog = observer(
         <div className="h-full flex flex-col p-1">
           <div
             ref={upperContainerRef}
-            className="w-full h-full overflow-x-auto styled-scrollbar-sm h-[65%] lg:h-1/2 shadow-sm border rounded-md"
+            className="w-full h-full overflow-x-auto styled-scrollbar-sm md:h-1/2 shadow-sm border rounded-md"
           >
             {
               <Effect.Upper
@@ -125,7 +125,7 @@ export const EffectDialog = observer(
               </div>
             )}
             <div
-              className={cn("w-full h-[35%] lg:h-1/2", {
+              className={cn("w-full h-full", {
                 "lg:w-[calc(100%-116px)]": !isMobile,
               })}
             >
