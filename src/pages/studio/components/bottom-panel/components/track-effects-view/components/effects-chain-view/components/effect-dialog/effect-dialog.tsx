@@ -96,7 +96,7 @@ export const EffectDialog = observer(
         <div className="h-full flex flex-col p-1">
           <div
             ref={upperContainerRef}
-            className="w-full h-full overflow-x-auto styled-scrollbar-sm md:h-1/2 shadow-sm border rounded-md"
+            className="w-full h-full overflow-x-auto styled-scrollbar-sm sm:h-[55%] lg:h-1/2 shadow-sm border rounded-md"
           >
             {
               <Effect.Upper
@@ -108,7 +108,7 @@ export const EffectDialog = observer(
             }
           </div>
 
-          <div className="flex items-center justify-between w-full md:h-1/2 p-1">
+          <div className="flex items-center justify-between w-full sm:h-[45%] lg:h-1/2 p-1">
             {!isMobile && (
               <div className="w-[58px]">
                 <MonoMeterFader
