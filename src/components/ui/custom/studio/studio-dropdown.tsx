@@ -56,7 +56,7 @@ export const StudioDropdown = ({
           />
         )}
       </SelectTrigger>
-      <SelectContent className="rounded-xxs bg-surface-1">
+      <SelectContent className="rounded-xxs bg-surface-1 max-h-[250px] overflow-auto">
         {label && <SelectLabel>{label}</SelectLabel>}
         {options.map((option) => (
           <SelectItem
