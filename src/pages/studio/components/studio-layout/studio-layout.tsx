@@ -52,16 +52,16 @@ export const StudioLayout = observer(
 
     useEffect(() => {
       const initializeProject = async (projectId: string) => {
-        if (projectId === "DEMO") {
-          undoManager.withoutUndo(() =>
-            audioEngine.loadProjectDataFromObject(demoProject)
-          );
-        } else {
-          const project = getProjectById(projectId);
-          if (project) {
-            audioEngine.loadProjectDataFromFile(project.data);
+        undoManager.withoutUndo(() => {
+          if (projectId === "DEMO") {
+            audioEngine.loadProjectDataFromObject(demoProject);
+          } else {
+            const project = getProjectById(projectId);
+            if (project) {
+              audioEngine.loadProjectDataFromFile(project.data);
+            }
           }
-        }
+        });
       };
 
       if (projectId) {

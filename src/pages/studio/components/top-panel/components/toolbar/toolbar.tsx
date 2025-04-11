@@ -26,6 +26,10 @@ import { pasteClips } from "../timeline-view/components/clips/helpers";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { getOfflineBounce } from "@/pages/studio/audio-engine/helpers";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  audioBufferCache,
+  waveformCache,
+} from "@/pages/studio/audio-engine/components";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -103,6 +107,14 @@ export const Toolbar = observer(
       } finally {
         audioEngine.setLoadingState(null);
       }
+    };
+
+    const handleExit = () => {
+      waveformCache.clear();
+      audioBufferCache.clear();
+      undoManager.clearUndo();
+      undoManager.clearRedo();
+      navigate({ to: "/" });
     };
 
     return (
@@ -197,7 +209,7 @@ export const Toolbar = observer(
         <StudioButton
           title={t("studio.toolbar.exit")}
           icon={() => <IoExitOutline className="rotate-180" />}
-          onClick={() => navigate({ to: "/" })}
+          onClick={handleExit}
         />
 
         <StudioButton

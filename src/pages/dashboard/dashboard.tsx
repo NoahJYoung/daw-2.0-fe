@@ -49,9 +49,9 @@ export const Dashboard = () => {
     }
   };
 
-  const handleDownload = (projectId: string) => {
+  const handleDownload = (e: React.MouseEvent, projectId: string) => {
+    e.stopPropagation();
     const project = getProjectById(projectId);
-
     if (project) {
       const link = document.createElement("a");
       link.href = URL.createObjectURL(project.data);
@@ -85,9 +85,7 @@ export const Dashboard = () => {
                   <TableHead>BPM</TableHead>
                   <TableHead>Key</TableHead>
                   <TableHead>Time Signature</TableHead>
-                  <TableHead className="display-none lg:display-block">
-                    Modified
-                  </TableHead>
+                  <TableHead>Modified</TableHead>
 
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -129,8 +127,8 @@ export const Dashboard = () => {
                             onMouseOver={(e) => e.stopPropagation()}
                             variant="outline"
                             size="icon"
-                            className=" h-full p-1"
-                            onClick={() => handleDownload(project.id)}
+                            className="border-0 bg-transparent h-full p-1"
+                            onClick={(e) => handleDownload(e, project.id)}
                             aria-label={`Download ${project.name}`}
                           >
                             <GrDownload className="h-5 w-5" />
@@ -140,7 +138,7 @@ export const Dashboard = () => {
                             onMouseOver={(e) => e.stopPropagation()}
                             variant="outline"
                             size="icon"
-                            className=" h-full p-1"
+                            className="border-0 bg-transparent h-full p-1"
                             onClick={(e) => handleDelete(e, project.id)}
                             aria-label={`Delete ${project.name}`}
                           >
