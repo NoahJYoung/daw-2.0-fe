@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useFileSystem } from "@/hooks";
 import { TimeSignatureIcon } from "../studio/components/main-controls/components/timeline-controls/components";
 import { HiOutlineTrash as DeleteIcon } from "react-icons/hi";
-
+import { GrDownload } from "react-icons/gr";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,8 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const newProjectBtnClassName = `rounded-xs font-bold text-md focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-brand-1 text-white hover:bg-brand-2 hover:border-brand-2 border border-brand-1 transition-colors `;
-const demoProjectBtnClassName = `rounded-xs font-bold text-md focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-surface-0 border-surface-8 border text-surface-8 hover:text-surface-7 hover:border-surface-7 hover:bg-surface-1 transition-colors`;
+const newProjectBtnClassName = `rounded-xs font-bold text-sm focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-brand-1 text-white hover:bg-brand-2 hover:border-brand-2 border border-brand-1 transition-colors `;
+const demoProjectBtnClassName = `rounded-xs font-bold text-sm focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-surface-0 border-surface-8 border text-surface-8 hover:text-surface-7 hover:border-surface-7 hover:bg-surface-1 transition-colors`;
 
 const getTimeSignatureIconValues = (timeSignature: number) => {
   const timeSignatureOptions: { label: string; value: string }[] = [
@@ -38,7 +38,7 @@ const getTimeSignatureIconValues = (timeSignature: number) => {
 };
 
 export const Dashboard = () => {
-  const { projects, deleteProject } = useFileSystem();
+  const { projects, deleteProject, getProjectById } = useFileSystem();
   const navigate = useNavigate();
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
@@ -46,6 +46,19 @@ export const Dashboard = () => {
       e.preventDefault();
       e.stopPropagation();
       deleteProject(id);
+    }
+  };
+
+  const handleDownload = (projectId: string) => {
+    const project = getProjectById(projectId);
+
+    if (project) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(project.data);
+      link.download = `${project.name}.zip`;
+      link.click();
+
+      URL.revokeObjectURL(link.href);
     }
   };
 
@@ -117,10 +130,21 @@ export const Dashboard = () => {
                             variant="outline"
                             size="icon"
                             className=" h-full p-1"
+                            onClick={() => handleDownload(project.id)}
+                            aria-label={`Download ${project.name}`}
+                          >
+                            <GrDownload className="h-5 w-5" />
+                          </Button>
+
+                          <Button
+                            onMouseOver={(e) => e.stopPropagation()}
+                            variant="outline"
+                            size="icon"
+                            className=" h-full p-1"
                             onClick={(e) => handleDelete(e, project.id)}
                             aria-label={`Delete ${project.name}`}
                           >
-                            <DeleteIcon className="h-6 w-6 text-destructive" />
+                            <DeleteIcon className="h-5 w-5 text-destructive" />
                           </Button>
                         </div>
                       </TableCell>

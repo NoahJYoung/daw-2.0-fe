@@ -22,7 +22,7 @@ export const StudioLayout = observer(
   ({ upperPanel, lowerPanel, middlePanel }: StudioLayoutProps) => {
     const { mixer } = useAudioEngine();
     const { undoManager } = useUndoManager();
-    const { loadProject } = useFileSystem();
+    const { getProjectById } = useFileSystem();
     const { projectId } = useParams({ strict: false });
 
     const audioEngine = useAudioEngine();
@@ -43,9 +43,9 @@ export const StudioLayout = observer(
     useEffect(() => {
       undoManager.withoutUndo(() => {
         audioEngine.auxSendManager.sends.forEach((send) => {
-          const initialstate = send.mute;
-          send.setMute(!initialstate);
-          send.setMute(initialstate);
+          const initialState = send.mute;
+          send.setMute(!initialState);
+          send.setMute(initialState);
         });
       });
     }, [audioEngine.auxSendManager.sends, undoManager]);
@@ -57,9 +57,9 @@ export const StudioLayout = observer(
             audioEngine.loadProjectDataFromObject(demoProject)
           );
         } else {
-          const projectData = await loadProject(projectId);
-          if (projectData) {
-            audioEngine.loadProjectDataFromFile(projectData);
+          const project = getProjectById(projectId);
+          if (project) {
+            audioEngine.loadProjectDataFromFile(project.data);
           }
         }
       };
@@ -67,7 +67,7 @@ export const StudioLayout = observer(
       if (projectId) {
         initializeProject(projectId);
       }
-    }, [audioEngine, loadProject, projectId, undoManager]);
+    }, [audioEngine, getProjectById, projectId, undoManager]);
 
     return (
       <section className="bg-surface-0 text-foreground p-1">
