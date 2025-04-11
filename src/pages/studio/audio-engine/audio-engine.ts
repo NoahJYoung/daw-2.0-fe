@@ -41,6 +41,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   ).withSetter(),
   keyboard: prop<Keyboard>(() => new Keyboard({})).withSetter(),
   metronome: prop<Metronome>(() => new Metronome({})).withSetter(),
+  key: prop<string>("C").withSetter(),
   projectId: prop<string | undefined>().withSetter(),
   projectName: prop<string>("New Project").withSetter(),
   hasInitialized: prop<boolean>(false).withSetter(),
@@ -283,7 +284,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       projectName: this.projectName,
       bpm: this.timeline.bpm,
       timeSignature: this.timeline.timeSignature,
-      key: "C",
+      key: this.key,
       lastModified: new Date().toISOString(),
     });
 
@@ -332,7 +333,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         const settingsBlob = data["settings.json"];
 
         if (settingsBlob) {
-          const settings = await blobToJsonObject(settingsBlob);
+          const settings = (await blobToJsonObject(
+            settingsBlob
+          )) as unknown as AudioEngine;
 
           const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
           const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
@@ -362,6 +365,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           this.setProjectId(loadedProjectId);
           this.setProjectName(loadedProjectName);
           this.setMetronome(loadedMetronome);
+          this.setKey(settings.key);
+
           const loadedAuxSendManager = fromSnapshot(
             settings.auxSendManager
           ) as AuxSendManager;
@@ -409,6 +414,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setProjectId(loadedProjectId);
         this.setProjectName(loadedProjectName);
         this.setMetronome(loadedMetronome);
+        this.setKey(settings.key as string);
+
         const loadedAuxSendManager = fromSnapshot(
           settings.auxSendManager
         ) as AuxSendManager;
@@ -451,6 +458,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       this.setProjectId(loadedProjectId);
       this.setProjectName(loadedProjectName);
       this.setMetronome(loadedMetronome);
+      this.setKey(settings.key as string);
+
       const loadedAuxSendManager = fromSnapshot(
         settings.auxSendManager
       ) as AuxSendManager;
@@ -507,6 +516,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           this.setProjectId(loadedProjectId);
           this.setProjectName(loadedProjectName);
           this.setMetronome(loadedMetronome);
+          this.setKey(settings.key as string);
+
           const loadedAuxSendManager = fromSnapshot(
             settings.auxSendManager
           ) as AuxSendManager;
