@@ -3,7 +3,7 @@
   "name": "Velocity Web Studio",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "logo32.png",
       "sizes": "64x64",
       "type": "image/x-icon"
     },
@@ -27,6 +27,6 @@
   "start_url": ".",
   "display": "fullscreen",
   "orientation": "portrait",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#FD3574",
+  "background_color": "#000000"
 }

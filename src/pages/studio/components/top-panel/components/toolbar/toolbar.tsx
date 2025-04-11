@@ -30,6 +30,8 @@ import {
   audioBufferCache,
   waveformCache,
 } from "@/pages/studio/audio-engine/components";
+import { ProjectSettingsDialog } from "./components";
+import { useState } from "react";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -47,6 +49,8 @@ export const Toolbar = observer(
     const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
     const { toast } = useToast();
+    const [projectSettingsModalOpen, setProjectSettingsModalOpen] =
+      useState(false);
 
     const handleSave = async () => {
       audioEngine.setLoadingState("Saving Project...");
@@ -252,7 +256,17 @@ export const Toolbar = observer(
           triggerIcon={IoIosSettings}
           title={t("studio.toolbar.settings")}
           onValueChange={() => {}}
-          options={[{ label: "Toggle Theme", onClick: toggleTheme }]}
+          options={[
+            { label: "Toggle Theme", onClick: toggleTheme },
+            {
+              label: "Project Settings",
+              onClick: () => setProjectSettingsModalOpen(true),
+            },
+          ]}
+        />
+        <ProjectSettingsDialog
+          open={projectSettingsModalOpen}
+          onOpenChange={setProjectSettingsModalOpen}
         />
       </div>
     );

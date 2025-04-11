@@ -30,7 +30,7 @@ export const MixerView = observer(() => {
         <div
           onClick={() => mixer.unselectAllTracks()}
           ref={mixerRef}
-          className="flex flex-shrink-0 w-[1360px] h-full max-h-[276px] items-center bg-transparent sm:pb-[2px]"
+          className="flex flex-shrink-0 min-w-screen h-full max-h-[276px] items-center bg-transparent sm:pb-[2px]"
         >
           <MasterFader mixerHeight={258} />
           {mixer.tracks.map((track, i) => (

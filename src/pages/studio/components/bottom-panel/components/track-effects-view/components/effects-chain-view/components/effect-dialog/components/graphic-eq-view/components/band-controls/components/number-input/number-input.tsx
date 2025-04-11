@@ -11,6 +11,8 @@ interface NumberInputProps {
   suffix?: string;
   allowDecimal?: boolean;
   width?: number;
+  id?: string;
+  name?: string;
 }
 
 export const NumberInput = observer(
@@ -23,6 +25,8 @@ export const NumberInput = observer(
     suffix,
     allowDecimal = false,
     width = 42,
+    id,
+    name,
   }: NumberInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [localValue, setLocalValue] = useState(value);
@@ -97,8 +101,8 @@ export const NumberInput = observer(
     return (
       <span className="flex items-center">
         <input
-          name="bpm"
-          id="bpm"
+          name={name}
+          id={id}
           ref={inputRef}
           type="number"
           min={min}

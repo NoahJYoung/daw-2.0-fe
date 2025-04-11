@@ -3,20 +3,7 @@ import { FaEllipsis } from "react-icons/fa6";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
-import { keys } from "@/pages/studio/audio-engine/types";
-
-const timeSignatureOptions = [
-  { label: "2/4", value: "2" },
-  { label: "3/4", value: "3" },
-  { label: "4/4", value: "4" },
-  { label: "5/4", value: "5" },
-  { label: "6/4", value: "6" },
-  { label: "7/4", value: "7" },
-  { label: "5/8", value: "2.5" },
-  { label: "7/8", value: "3.5" },
-  { label: "9/8", value: "4.5" },
-  { label: "11/8", value: "5.5" },
-];
+import { keys, timeSignatureOptions } from "@/pages/studio/audio-engine/types";
 
 export const TimelineControls = observer(() => {
   const audioEngine = useAudioEngine();

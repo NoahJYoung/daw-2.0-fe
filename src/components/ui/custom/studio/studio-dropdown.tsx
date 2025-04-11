@@ -20,6 +20,9 @@ interface DropdownProps {
   style?: CSSProperties;
   showSelectedValue?: boolean;
   disabled?: boolean;
+  id?: string;
+  className?: string;
+  name?: string;
 }
 
 export const StudioDropdown = ({
@@ -34,23 +37,35 @@ export const StudioDropdown = ({
   showSelectedValue = true,
   style,
   disabled,
+  id,
+  name,
+  className = "",
 }: DropdownProps) => {
   const isPlaceholder = !value;
   return (
-    <Select disabled={disabled} value={value || ""} onValueChange={onChange}>
+    <Select
+      name={name}
+      disabled={disabled}
+      value={value || ""}
+      onValueChange={onChange}
+    >
       <SelectTrigger
         style={style}
-        className={`max-w-full flex items-center gap-1 focus:ring-0 ${
-          isPlaceholder
-            ? `text-surface-${4 + colorOffset}`
-            : `text-surface-${6 + colorOffset}`
-        } ${size === "lg" ? "text-lg" : "text-sm"} border-surface-${
-          2 + colorOffset
-        } rounded-xxs ${size === "lg" ? "lg:h-10 h-8" : "h-7"} `}
+        className={[
+          ...`max-w-full flex items-center gap-1 focus:ring-0 ${
+            isPlaceholder
+              ? `text-surface-${4 + colorOffset}`
+              : `text-surface-${6 + colorOffset}`
+          } ${size === "lg" ? "text-lg" : "text-sm"} border-surface-${
+            2 + colorOffset
+          } rounded-xxs ${size === "lg" ? "lg:h-10 h-8" : "h-7"} `.split(" "),
+          ...className.split(" "),
+        ].join(" ")}
       >
         {Icon}
         {showSelectedValue && (
           <SelectValue
+            id={id}
             className="text-sm text-surface-0"
             placeholder={placeholder}
           />
