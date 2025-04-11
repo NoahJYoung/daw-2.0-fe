@@ -118,89 +118,121 @@ export const Knob = ({
     endAngle
   );
 
+  const calculateNewValue = useCallback(
+    (clientX: number, clientY: number) => {
+      if (disabled || !knobRef.current) return;
+
+      const rect = knobRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const x = clientX - centerX;
+      const y = clientY - centerY;
+      const angle = Math.round(Math.atan2(y, x) * (180 / Math.PI));
+
+      let adjustedAngle = angle + 135;
+      if (adjustedAngle < 0) adjustedAngle = 0;
+      if (adjustedAngle > 270) adjustedAngle = 270;
+
+      const rawValue = min + (adjustedAngle / 270) * (max - min);
+
+      const newValue = Math.round(rawValue / step) * step;
+      const decimalPlaces = step.toString().split(".")[1]?.length || 0;
+      return parseFloat(newValue.toFixed(decimalPlaces));
+    },
+    [disabled, max, min, step]
+  );
+
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (disabled) {
-      return;
-    }
+    if (disabled) return;
     e.stopPropagation();
     document.body.style.userSelect = "none";
     document.body.style.cursor = "grabbing";
     setIsDragging(true);
   };
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (disabled || !isDragging) return;
+
+      const newValue = calculateNewValue(e.clientX, e.clientY);
+      if (newValue !== undefined) {
+        onValueChange(newValue);
+      }
+    },
+    [disabled, isDragging, calculateNewValue, onValueChange]
+  );
+
   const handleMouseUp = useCallback(
     (e: MouseEvent) => {
-      if (disabled) {
-        return;
-      }
+      if (disabled) return;
       e.stopPropagation();
-      setIsDragging(false);
       if (isDragging) {
         onValueCommit(value);
       }
+      setIsDragging(false);
       document.body.style.userSelect = "";
       document.body.style.cursor = "";
     },
     [disabled, isDragging, onValueCommit, value]
   );
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (disabled) {
-        return;
-      }
-      if (isDragging && knobRef.current) {
-        const rect = knobRef.current.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const x = e.clientX - centerX;
-        const y = e.clientY - centerY;
-        const angle = Math.round(Math.atan2(y, x) * (180 / Math.PI));
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (disabled) return;
+    e.stopPropagation();
+    e.preventDefault();
+    document.body.style.userSelect = "none";
+    setIsDragging(true);
+  };
 
-        let adjustedAngle = angle + 135;
-        if (adjustedAngle < 0) adjustedAngle = 0;
-        if (adjustedAngle > 270) adjustedAngle = 270;
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      if (disabled || !isDragging) return;
+      e.preventDefault();
 
-        const rawValue = min + (adjustedAngle / 270) * (max - min);
-
-        const newValue = Math.round(rawValue / step) * step;
-        const decimalPlaces = step.toString().split(".")[1]?.length || 0;
-        const roundedValue = parseFloat(newValue.toFixed(decimalPlaces));
-        onValueChange(roundedValue);
+      const touch = e.touches[0];
+      const newValue = calculateNewValue(touch.clientX, touch.clientY);
+      if (newValue !== undefined) {
+        onValueChange(newValue);
       }
     },
-    [disabled, isDragging, max, min, onValueChange, step]
+    [disabled, isDragging, calculateNewValue, onValueChange]
+  );
+
+  const handleTouchEnd = useCallback(
+    (e: TouchEvent) => {
+      if (disabled) return;
+      e.stopPropagation();
+      if (isDragging) {
+        onValueCommit(value);
+      }
+      setIsDragging(false);
+      document.body.style.userSelect = "";
+    },
+    [disabled, isDragging, onValueCommit, value]
   );
 
   useEffect(() => {
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("mousemove", handleMouseMove);
 
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener("touchcancel", handleTouchEnd);
+
     return () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, [
-    handleMouseMove,
-    handleMouseUp,
-    isDragging,
-    max,
-    min,
-    onValueChange,
-    step,
-    value,
-  ]);
 
-  cn("flex justify-center relative", {
-    "cursor-grabbing": isDragging,
-    "cursor-grab": !disabled && !isDragging,
-    "cursor-not-allowed": disabled,
-  });
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchEnd);
+    };
+  }, [handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   return (
     <span
       onMouseDown={handleMouseDown}
-      onMouseEnter={(e) => e.stopPropagation()}
-      onMouseOver={(e) => e.stopPropagation()}
+      onTouchStart={handleTouchStart}
       onDoubleClick={() => onDoubleClick && onDoubleClick(value)}
       className={cn("flex justify-center relative", {
         "cursor-grabbing": isDragging,
