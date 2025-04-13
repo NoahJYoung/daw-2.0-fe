@@ -44,7 +44,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   key: prop<string>("C").withSetter(),
   projectId: prop<string | undefined>().withSetter(),
   projectName: prop<string>("New Project").withSetter(),
-  hasInitialized: prop<boolean>(false).withSetter(),
 }) {
   @observable
   state: AudioEngineState = AudioEngineState.stopped;
@@ -57,15 +56,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   playDisabled: boolean = false;
 
   async init() {
-    if (!this.hasInitialized) {
-      // const customAudioContext = new Tone.Context({
-      //   latencyHint: "playback",
-      // });
-
-      // Tone.setContext(customAudioContext);
-      this.setHasInitialized(true);
-    }
-
     this.sync();
     await Tone.loaded();
     this.setLoadingState(null);
