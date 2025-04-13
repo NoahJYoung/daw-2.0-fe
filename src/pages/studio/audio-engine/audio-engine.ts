@@ -62,7 +62,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         latencyHint: "playback",
       });
 
-      Tone.setContext(customAudioContext);
+      // Tone.setContext(customAudioContext);
       this.setHasInitialized(true);
     }
 
