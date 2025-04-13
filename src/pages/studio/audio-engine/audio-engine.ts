@@ -67,7 +67,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     }
 
     this.sync();
-    // this.setLoadingState(null);
+    await Tone.loaded();
+    this.setLoadingState(null);
   }
 
   getRefId() {
@@ -84,7 +85,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @action
   setLoadingState(state: string | null): void {
-    console.log("STATE: ", state);
     if (state !== null) {
       if (this.loadingTimeout) {
         clearTimeout(this.loadingTimeout);

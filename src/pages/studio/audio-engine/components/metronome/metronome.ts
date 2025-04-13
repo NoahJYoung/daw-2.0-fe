@@ -2,7 +2,6 @@ import { model, ExtendedModel, getRoot, prop } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { action, computed, observable } from "mobx";
 import { AudioEngine } from "../../audio-engine";
-import woodblock from "/sounds/metronome.wav";
 import * as Tone from "tone";
 
 @model("AudioEngine/Metronome")
@@ -12,22 +11,13 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   private channel = new Tone.Channel();
   voice: Tone.Sampler | null = null;
 
-  @observable
-  ready = false;
-
-  @action
-  setReady(state: boolean) {
-    this.ready = state;
-    const audioEngine = getRoot<AudioEngine>(this);
-    audioEngine.setLoadingState(null);
-  }
-
   init() {
     this.channel.set({ mute: !this.active });
     this.channel.toDestination();
-    this.voice = new Tone.Sampler({ C5: woodblock }, () => {
-      this.setReady(true);
-    }).connect(this.channel);
+    this.voice = new Tone.Sampler({ C5: "/sounds/metronome.wav" }, () =>
+      console.log("onload")
+    ).connect(this.channel);
+    console.log("initial buffer: ", this.voice.loaded);
   }
 
   sync() {
