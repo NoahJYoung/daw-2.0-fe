@@ -67,7 +67,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     }
 
     this.sync();
-    this.setLoadingState(null);
+    // this.setLoadingState(null);
   }
 
   getRefId() {

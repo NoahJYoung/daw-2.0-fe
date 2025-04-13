@@ -12,10 +12,22 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   private channel = new Tone.Channel();
   voice: Tone.Sampler | null = null;
 
+  @observable
+  ready = false;
+
+  @action
+  setReady(state: boolean) {
+    this.ready = state;
+    const audioEngine = getRoot<AudioEngine>(this);
+    audioEngine.setLoadingState(null);
+  }
+
   init() {
     this.channel.set({ mute: !this.active });
     this.channel.toDestination();
-    this.voice = new Tone.Sampler({ C5: woodblock }).connect(this.channel);
+    this.voice = new Tone.Sampler({ C5: woodblock }, () => {
+      this.setReady(true);
+    }).connect(this.channel);
   }
 
   sync() {
