@@ -13,6 +13,7 @@ export default defineConfig({
       includeAssets: [
         "favicon.ico",
         "robots.txt",
+        "logo32.png",
         "logo192.png",
         "logo512.png",
       ],

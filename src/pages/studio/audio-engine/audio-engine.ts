@@ -66,10 +66,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       this.setHasInitialized(true);
     }
 
-    const start = async () => Tone.start();
     this.sync();
-
-    await start();
     this.setLoadingState(null);
   }
 
@@ -85,7 +82,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   private loadingTimeout: NodeJS.Timeout | null = null;
   private loadingStartTime: number | null = null;
 
+  @action
   setLoadingState(state: string | null): void {
+    console.log("STATE: ", state);
     if (state !== null) {
       if (this.loadingTimeout) {
         clearTimeout(this.loadingTimeout);

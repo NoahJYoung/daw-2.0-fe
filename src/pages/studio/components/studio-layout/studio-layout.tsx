@@ -55,7 +55,7 @@ export const StudioLayout = observer(
         undoManager.withoutUndo(() => {
           if (projectId === "DEMO") {
             audioEngine.loadProjectDataFromObject(demoProject);
-          } else {
+          } else if (projectId) {
             const project = getProjectById(projectId);
             if (project) {
               audioEngine.loadProjectDataFromFile(project.data);
