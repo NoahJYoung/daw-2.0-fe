@@ -66,7 +66,7 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
 
   stop() {
     if (this.eventId) {
-      // Tone.getTransport().cancel();
+      Tone.getTransport().clear(this.eventId);
       this.setEventId(null);
     }
   }
