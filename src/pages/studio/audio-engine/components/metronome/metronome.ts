@@ -14,10 +14,9 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   init() {
     this.channel.set({ mute: !this.active });
     this.channel.toDestination();
-    this.voice = new Tone.Sampler({ C5: "/sounds/metronome.wav" }, () =>
-      console.log("onload")
-    ).connect(this.channel);
-    console.log("initial buffer: ", this.voice.loaded);
+    this.voice = new Tone.Sampler({ C5: "/sounds/metronome.wav" }).connect(
+      this.channel
+    );
   }
 
   sync() {
@@ -43,9 +42,6 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   start() {
-    if (this.eventId) {
-      return;
-    }
     const pulse = this.timeSignature % 1 === 0 ? "4n" : "8n";
     Tone.getTransport().cancel();
     const position = Tone.getTransport().position.toString();
