@@ -14,9 +14,9 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   init() {
     this.channel.set({ mute: !this.active });
     this.channel.toDestination();
-    this.voice = new Tone.Sampler({ C5: "/sounds/metronome.wav" }).connect(
-      this.channel
-    );
+    this.voice = new Tone.Sampler({ C5: "/sounds/metronome.wav" }, () =>
+      console.log("sample loaded")
+    ).connect(this.channel);
   }
 
   sync() {
