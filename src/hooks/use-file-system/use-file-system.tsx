@@ -9,7 +9,7 @@ import React, {
   useMemo,
 } from "react";
 import { useState } from "react";
-import { getProjects } from "./helpers";
+import { FormattedStorageQuota, getProjects, getStorageInfo } from "./helpers";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Project {
@@ -20,6 +20,7 @@ export interface Project {
   name: string;
   id: string;
   data: File;
+  size: number;
 }
 
 export interface FileSystemContextType {
@@ -34,6 +35,7 @@ export interface FileSystemContextType {
   ) => Promise<string | void>;
   getProjectById: (projectPath: string) => Project | null;
   deleteProject: (projectId: string) => Promise<void>;
+  quota?: FormattedStorageQuota;
 }
 
 const FileSystemContext = createContext<FileSystemContextType | undefined>(
@@ -63,12 +65,21 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 
   const invalidateProjectQuery = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["PROJECTS"] });
+    queryClient.invalidateQueries({ queryKey: ["STORAGE-INFO"] });
   }, [queryClient]);
 
   const { data: projects, isFetching: isLoading } = useQuery({
     queryKey: ["PROJECTS"],
     queryFn: () => getProjects(rootDirectory),
     enabled: !!rootDirectory,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
+  });
+
+  const { data: quota } = useQuery({
+    queryKey: ["STORAGE-INFO"],
+    queryFn: getStorageInfo,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
@@ -215,6 +226,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     isLoading,
     isFileSystemSupported,
     isMobileDevice,
+    quota,
     saveProject,
     getProjectById,
     deleteProject,

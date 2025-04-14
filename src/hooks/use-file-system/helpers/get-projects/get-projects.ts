@@ -40,6 +40,7 @@ export const getProjects = async (
             bpm: metadata.bpm,
             timeSignature: metadata.timeSignature,
             key: metadata.key,
+            size: metadata.size || 0,
           };
 
           projectsFound.push(projectObject);

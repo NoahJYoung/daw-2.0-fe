@@ -1,4 +1,3 @@
-export { getProjects } from "./get-projects";
 export {
   getStorageInfo,
   formatBytes,

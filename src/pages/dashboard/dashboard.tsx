@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatBytes } from "@/hooks/use-file-system/helpers";
 
 const newProjectBtnClassName = `rounded-xs font-bold text-sm focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-brand-1 text-white hover:bg-brand-2 hover:border-brand-2 border border-brand-1 transition-colors `;
 const demoProjectBtnClassName = `rounded-xs font-bold text-sm focus-visible:ring-0 relative flex items-center gap-2 p-1 h-8 bg-surface-0 border-surface-8 border text-surface-8 hover:text-surface-7 hover:border-surface-7 hover:bg-surface-1 transition-colors`;
@@ -38,7 +39,7 @@ const getTimeSignatureIconValues = (timeSignature: number) => {
 };
 
 export const Dashboard = () => {
-  const { projects, deleteProject, getProjectById } = useFileSystem();
+  const { projects, deleteProject, getProjectById, quota } = useFileSystem();
   const navigate = useNavigate();
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
@@ -75,6 +76,16 @@ export const Dashboard = () => {
           </Link>
         </span>
       </div>
+      <div className="flex gap-4 w-full justify-between sm:justify-end px-2 py-1">
+        <span className="text-surface-6 text-xs lg:text-sm">
+          Used: <strong>{`${quota?.used} `}</strong>/
+          <strong>{` ${quota?.total}`}</strong>
+        </span>
+
+        <span className="text-surface-6 text-xs lg:text-sm">
+          Available: <strong>{`${quota?.available} `}</strong>
+        </span>
+      </div>
       <Card className="max-w-[990px] h-[calc(100%-50px)] w-full">
         <CardContent className="h-full">
           <div className="h-full overflow-auto no-scrollbar">
@@ -85,14 +96,16 @@ export const Dashboard = () => {
                   <TableHead>BPM</TableHead>
                   <TableHead>Key</TableHead>
                   <TableHead>Time Signature</TableHead>
+                  <TableHead>Size</TableHead>
                   <TableHead>Modified</TableHead>
 
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className="h-full overflow-auto no-scrollbar">
-                {projects &&
-                  projects.map((project) => (
+              <></>
+              {projects?.length ? (
+                <TableBody className="h-full overflow-auto no-scrollbar">
+                  {projects.map((project) => (
                     <TableRow
                       onClick={() => navigate({ to: `studio/${project.id}` })}
                       className="cursor-pointer h-[80px]"
@@ -119,7 +132,10 @@ export const Dashboard = () => {
                         />
                       </TableCell>
                       <TableCell className="display-none lg:display-block text-muted-foreground">
-                        {project.lastModified}
+                        {formatBytes(project.size)}
+                      </TableCell>
+                      <TableCell className="display-none lg:display-block text-muted-foreground">
+                        {new Date(project.lastModified).toLocaleString()}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
@@ -148,7 +164,13 @@ export const Dashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-              </TableBody>
+                </TableBody>
+              ) : (
+                <span className="flex items-center justify-center text-center text-surface-5 w-full h-full flex-shrink-0">
+                  No projects found! Click 'New Project' to create one, or check
+                  out a demo by clicking 'Load Demo'.
+                </span>
+              )}
             </Table>
           </div>
         </CardContent>

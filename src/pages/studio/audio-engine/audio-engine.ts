@@ -269,19 +269,24 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const blob = new Blob([jsonStr], { type: "application/json" });
     const settingsFile = new File([blob], "settings.json");
 
+    let totalFileSize = 0;
+
+    const zip = new JSZip();
+    mp3Files.forEach((file) => {
+      zip.file(file.name, file);
+      totalFileSize += file.size;
+    });
+    zip.file(settingsFile.name, settingsFile);
+    totalFileSize += settingsFile.size;
+
     const metadata = JSON.stringify({
       projectName: this.projectName,
       bpm: this.timeline.bpm,
       timeSignature: this.timeline.timeSignature,
       key: this.key,
       lastModified: new Date().toISOString(),
+      size: totalFileSize,
     });
-
-    const zip = new JSZip();
-    mp3Files.forEach((file) => {
-      zip.file(file.name, file);
-    });
-    zip.file(settingsFile.name, settingsFile);
 
     const zipBlob = await zip.generateAsync({
       type: "blob",
