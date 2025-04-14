@@ -89,21 +89,21 @@ export const Dashboard = () => {
       <Card className="max-w-[990px] h-[calc(100%-50px)] w-full">
         <CardContent className="h-full">
           <div className="h-full overflow-auto no-scrollbar">
-            <Table className="h-full">
-              <TableHeader>
-                <TableRow className="pointer-events-none">
-                  <TableHead>Name</TableHead>
-                  <TableHead>BPM</TableHead>
-                  <TableHead>Key</TableHead>
-                  <TableHead>Time Signature</TableHead>
-                  <TableHead>Size</TableHead>
-                  <TableHead>Modified</TableHead>
+            {projects?.length ? (
+              <Table className="h-full">
+                <TableHeader>
+                  <TableRow className="pointer-events-none">
+                    <TableHead>Name</TableHead>
+                    <TableHead>BPM</TableHead>
+                    <TableHead>Key</TableHead>
+                    <TableHead>Time Signature</TableHead>
+                    <TableHead>Size</TableHead>
+                    <TableHead>Modified</TableHead>
 
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <></>
-              {projects?.length ? (
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+
                 <TableBody className="h-full overflow-auto no-scrollbar">
                   {projects.map((project) => (
                     <TableRow
@@ -165,13 +165,13 @@ export const Dashboard = () => {
                     </TableRow>
                   ))}
                 </TableBody>
-              ) : (
-                <span className="flex items-center justify-center text-center text-surface-5 w-full h-full flex-shrink-0">
-                  No projects found! Click 'New Project' to create one, or check
-                  out a demo by clicking 'Load Demo'.
-                </span>
-              )}
-            </Table>
+              </Table>
+            ) : (
+              <span className="flex items-center justify-center text-center text-surface-5 w-full h-full flex-shrink-0">
+                No projects found! Click 'New Project' to create one, or check
+                out a demo by clicking 'Load Demo'.
+              </span>
+            )}
           </div>
         </CardContent>
       </Card>
