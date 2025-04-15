@@ -53,7 +53,6 @@ export const Toolbar = observer(
       useState(false);
 
     const handleSave = async () => {
-      audioEngine.setLoadingState("Saving Project...");
       try {
         const zip = await audioEngine.getProjectZip(false);
         if (zip) {
@@ -63,7 +62,6 @@ export const Toolbar = observer(
             projectId
           );
           if (createdId) {
-            audioEngine.setLoadingState(null);
             navigate({ to: `/studio/${createdId}` });
             toast({
               title: "Success!",
@@ -82,18 +80,14 @@ export const Toolbar = observer(
           title: "Oops!",
           description: error?.message ?? "Something went wrong",
         });
-      } finally {
-        audioEngine.setLoadingState(null);
       }
     };
 
     const handleSaveAs = async () => {
-      audioEngine.setLoadingState("Saving Project...");
       try {
         const zip = await audioEngine.getProjectZip(false);
         if (zip) {
           const projectId = await saveProject(audioEngine.projectName, zip);
-          audioEngine.setLoadingState(null);
           if (projectId) {
             navigate({ to: `/studio/${projectId}` });
             toast({
@@ -108,8 +102,6 @@ export const Toolbar = observer(
           title: "Oops!",
           description: error?.message ?? "Something went wrong",
         });
-      } finally {
-        audioEngine.setLoadingState(null);
       }
     };
 

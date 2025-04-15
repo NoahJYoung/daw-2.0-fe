@@ -76,7 +76,7 @@ export const Dashboard = () => {
           </Link>
         </span>
       </div>
-      <div className="flex gap-4 w-full justify-between sm:justify-end px-2 py-1">
+      <div className="flex gap-4 w-full justify-between sm:justify-end px-2 py-1 max-w-[990px]">
         <span className="text-surface-6 text-xs lg:text-sm">
           Used: <strong>{`${quota?.used} `}</strong>/
           <strong>{` ${quota?.total}`}</strong>
@@ -88,7 +88,7 @@ export const Dashboard = () => {
       </div>
       <Card className="max-w-[990px] h-[calc(100%-50px)] w-full">
         <CardContent className="h-full">
-          <div className="h-full overflow-auto no-scrollbar">
+          <div className="h-full overflow-auto no-scrollbar ">
             {projects?.length ? (
               <Table className="h-full">
                 <TableHeader>
@@ -167,7 +167,7 @@ export const Dashboard = () => {
                 </TableBody>
               </Table>
             ) : (
-              <span className="flex items-center justify-center text-center text-surface-5 w-full h-full flex-shrink-0">
+              <span className="flex items-center mx-auto justify-center text-center text-surface-5 w-1/2 h-full flex-shrink-0">
                 No projects found! Click 'New Project' to create one, or check
                 out a demo by clicking 'Load Demo'.
               </span>

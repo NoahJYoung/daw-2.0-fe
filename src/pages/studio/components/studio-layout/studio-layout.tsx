@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { ReactElement, useCallback, useEffect } from "react";
+import { ReactElement, useCallback, useEffect, useRef } from "react";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { PiCaretUpDownFill } from "react-icons/pi";
 import {
@@ -24,6 +24,7 @@ export const StudioLayout = observer(
     const { undoManager } = useUndoManager();
     const { getProjectById } = useFileSystem();
     const { projectId } = useParams({ strict: false });
+    const hasLoaded = useRef(false);
 
     const audioEngine = useAudioEngine();
 
@@ -57,8 +58,9 @@ export const StudioLayout = observer(
             audioEngine.loadProjectDataFromObject(demoProject);
           } else if (projectId) {
             const project = getProjectById(projectId);
-            if (project) {
+            if (project && !hasLoaded.current) {
               audioEngine.loadProjectDataFromFile(project.data);
+              hasLoaded.current = true;
             }
           }
         });
