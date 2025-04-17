@@ -35,7 +35,8 @@ export const MeterFader = ({
 
   return (
     <div
-      className={`h-full w-full flex justify-center h-full z-20 items-center items-center ${
+      style={{ height: faderHeight }}
+      className={` w-full flex justify-center h-full z-20 items-center items-center ${
         selected ? "bg-transparent" : "bg-transparent"
       } relative`}
     >

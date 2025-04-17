@@ -23,7 +23,7 @@ import {
   MAX_LANE_HEIGHT,
   MIN_LANE_HEIGHT,
 } from "@/pages/studio/audio-engine/constants";
-import { SynthSettingsModal } from "./components";
+import { SamplerSelectorModal, SynthSettingsModal } from "./components";
 
 const DRAG_THRESHOLD = 24;
 
@@ -442,21 +442,35 @@ export const TrackPanel = observer(
                   {showInstrumentSelector && (
                     <span className="flex items-center gap-1">
                       <StudioDropdown
-                        options={[{ label: "Synth", value: "synth" }]}
-                        value={"synth"}
-                        disabled
+                        options={[
+                          { label: "Synthesizer", value: "synth" },
+                          { label: "Sampler", value: "sampler" },
+                        ]}
+                        value={track.instrumentKey}
                         placeholder={t(
                           "studio.trackPanel.placeholders.instrument"
                         )}
                         colorOffset={selectedBgOffset}
                         icon={<FaGuitar />}
-                        onChange={() => {}}
+                        onChange={(instrument: string) =>
+                          track.setInstrumentKey(
+                            instrument as "synth" | "sampler"
+                          )
+                        }
                       />
-                      <SynthSettingsModal
-                        triggerClassName={settingsButtonClassName}
-                        triggerIcon={SettingsIcon}
-                        track={track}
-                      />
+                      {track.instrumentKey === "sampler" ? (
+                        <SamplerSelectorModal
+                          triggerClassName={settingsButtonClassName}
+                          triggerIcon={SettingsIcon}
+                          track={track}
+                        />
+                      ) : (
+                        <SynthSettingsModal
+                          triggerClassName={settingsButtonClassName}
+                          triggerIcon={SettingsIcon}
+                          track={track}
+                        />
+                      )}
                     </span>
                   )}
 

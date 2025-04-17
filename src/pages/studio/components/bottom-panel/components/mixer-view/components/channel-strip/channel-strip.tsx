@@ -101,7 +101,7 @@ export const ChannelStrip = observer(
 
     const faderContainerRef = useRef<HTMLDivElement>(null);
 
-    const faderHeight = mixerHeight - 138;
+    const faderHeight = mixerHeight - 124;
 
     const handleSelectTrack = (e: React.MouseEvent) => {
       e.stopPropagation();

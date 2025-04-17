@@ -23,6 +23,7 @@ import { MidiClip } from "../midi-clip";
 import { Synthesizer } from "../synthesizer";
 import { AudioEngine } from "../../audio-engine";
 import { EffectsChain } from "../effects-chain";
+import { Sampler } from "../sampler";
 
 @model("AudioEngine/Mixer/Track")
 export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -45,6 +46,8 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   selectedRefs: prop<Ref<Clip>[]>(() => []),
   inputType: prop<string | null>("mic"),
   synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
+  sampler: prop<Sampler>(() => new Sampler({})).withSetter(),
+  instrumentKey: prop<"synth" | "sampler">("sampler").withSetter(),
 }) {
   channel = new Tone.Channel();
   output = new Tone.Channel();
@@ -60,6 +63,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   sync() {
     const { volume, pan, mute } = this;
     this.synth.connect(this.channel);
+    this.sampler.connect(this.channel);
     this.output.volume.linearRampTo(volume, 0.01);
     this.output.pan.linearRampTo(pan, 0.01);
     if (mute) {
@@ -138,7 +142,11 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @computed
   get instrument() {
-    return this.synth;
+    const instrumentMap = {
+      synth: this.synth,
+      sampler: this.sampler,
+    };
+    return instrumentMap[this.instrumentKey];
   }
 
   @modelAction

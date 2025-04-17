@@ -5,11 +5,18 @@ interface clearCacheOptions {
   except?: string[];
 }
 
+interface AddSamplesParams {
+  path: string;
+  samples: Record<string, Tone.ToneAudioBuffer>;
+}
+
 export class AudioBufferCache {
   private cache: Map<string, Tone.ToneAudioBuffer>;
+  private loadedSamplePaths: string[];
 
   constructor(private maxCacheSize?: number) {
     this.cache = new Map();
+    this.loadedSamplePaths = [];
   }
 
   add(id: string, audioBuffer: Tone.ToneAudioBuffer) {
@@ -39,8 +46,8 @@ export class AudioBufferCache {
     return this.cache.get(id) || null;
   }
 
-  has(id: string) {
-    return this.cache.has(id);
+  has(key: string) {
+    return this.cache.has(key) || this.loadedSamplePaths.includes(key);
   }
 
   remove(id: string) {
@@ -72,6 +79,16 @@ export class AudioBufferCache {
 
   size() {
     return this.cache.size;
+  }
+
+  addSamples(params: AddSamplesParams) {
+    const { path, samples } = params;
+    Object.keys(samples).map((note) => {
+      const fullKey = `${path}/${note}`;
+      const buffer = samples[note];
+      this.add(fullKey, buffer);
+    });
+    this.loadedSamplePaths.push(path);
   }
 
   getMemoryUsage() {
