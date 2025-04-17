@@ -80,9 +80,9 @@ export const SamplerSelectorModal = observer(
             ) : (
               <div className="flex flex-col w-full h-full sm:flex-row items-center justify-evenly gap-4">
                 {imgUrl ? (
-                  <div className="w-[280px]">
+                  <div className="w-[250px]">
                     <img
-                      className="w-[280px] h-[280px] rounded-md"
+                      className="w-[250px] h-[250px] rounded-md"
                       src={imgUrl}
                       alt="Instrument Image"
                     />
