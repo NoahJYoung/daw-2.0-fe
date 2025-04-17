@@ -123,7 +123,7 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
         const audioProcessingPromises = audioFiles.map(async (fileName) => {
           const audioBlob = files[fileName];
           const audioBuffer = await blobToAudioBuffer(audioBlob);
-          const splitPath = fileName.replace(".wav", "").split("/");
+          const splitPath = fileName.replace(/\.(wav|mp3)$/i, "").split("/");
           if (splitPath.length > 1) {
             const noteName = splitPath[1];
             samplesMap[noteName] = audioBuffer;
