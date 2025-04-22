@@ -44,10 +44,11 @@ export const AudioClipView = observer(
 
     return (
       <div
-        className="h-full flex flex-shrink-0"
+        className="overflow-hidden h-full flex flex-shrink-0"
         style={{
           width,
           height,
+          borderBottomLeftRadius: "0.5rem",
         }}
       >
         {peakChunks.map((chunk, i) => (
@@ -58,7 +59,6 @@ export const AudioClipView = observer(
                 canvasRefs.current[i] = el;
               }
             }}
-            className="rounded-xl"
             width={chunk.length}
             height={height}
           />

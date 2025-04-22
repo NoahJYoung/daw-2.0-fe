@@ -254,7 +254,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const mp3Promises = clips.map(async (clip: AudioClip, i) => {
       const buffer = audioBufferCache.get(clip.id);
       if (buffer) {
-        // const file = await audioBufferToMp3(buffer, `${clip.id}`);
         const file = await bufferToWav(buffer, `${clip.id}`);
 
         return file;

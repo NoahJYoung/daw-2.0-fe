@@ -22,7 +22,7 @@ export const useWaveform = (
   const { timeline } = useAudioEngine();
   const width = timeline.samplesToPixels(clip.length);
 
-  const adjustedHeight = track.laneHeight - 30;
+  const adjustedHeight = track.laneHeight - 38;
 
   const waveformMagnificationValue = 1;
 

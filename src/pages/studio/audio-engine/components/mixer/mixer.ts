@@ -210,7 +210,7 @@ export class Mixer extends ExtendedModel(BaseAudioNodeWrapper, {
     );
   }
 
-  @modelAction
+  @action
   refreshTopPanelHeight() {
     const min = window.innerHeight - 156;
     this.topPanelHeight =
