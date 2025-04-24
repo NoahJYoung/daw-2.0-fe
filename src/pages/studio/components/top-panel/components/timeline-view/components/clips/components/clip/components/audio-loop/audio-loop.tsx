@@ -37,7 +37,7 @@ export const AudioLoop = observer(
   }: AudioLoopProps) => {
     const {
       width: clipWidth,
-      height,
+
       peakChunks,
       loopWidth,
     } = useWaveform(clip, track, { loop: true, loopOffset, selected });
@@ -55,6 +55,8 @@ export const AudioLoop = observer(
     }
 
     const transformX = clipLeft + clipWidth + clipWidth * loops.length;
+
+    const height = track.laneHeight - 2;
 
     return (
       <div
@@ -86,7 +88,7 @@ export const AudioLoop = observer(
           className="h-full flex flex-col flex-shrink-0 rounded-xl absolute overflow-hidden"
           style={{
             width: loopWidth - clipWidth * loops.length,
-            height: height + 28,
+            height,
             transform: `translate(${transformX}px, ${top}px)`,
             marginTop: 2,
             opacity: selected ? 0.4 : 0.3,

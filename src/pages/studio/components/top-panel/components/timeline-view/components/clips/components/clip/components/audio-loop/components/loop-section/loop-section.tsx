@@ -36,7 +36,7 @@ export const LoopSection = ({
     className="h-full flex flex-col flex-shrink-0 rounded-xl absolute overflow-hidden"
     style={{
       width: clipWidth,
-      height: height + 28,
+      height,
       left: clipLeft + clipWidth * (loopIndex + 1),
       marginTop: 2,
       opacity: selected ? 0.4 : 0.3,
