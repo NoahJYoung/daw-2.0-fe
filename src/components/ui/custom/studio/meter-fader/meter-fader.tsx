@@ -7,8 +7,8 @@ interface MeterFaderProps {
   onChange: (value: number) => void;
   value: number;
   step: number;
-  min: number;
-  max: number;
+  min: number; // Typically -60 for our dB range
+  max: number; // Typically 12 for our new +12dB max
   faderHeight: number;
   meters: Tone.Meter[];
   active?: boolean;

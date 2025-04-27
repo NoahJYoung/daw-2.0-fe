@@ -8,11 +8,22 @@ export const MonoLevelView = ({
   orientation = "left",
 }: LevelViewProps) => {
   const heightOffset = Math.round(height * 0.02);
-  const renderSixDbValues = height >= 170;
 
-  const textX = orientation === "left" ? 7 : 32;
+  const textX = orientation === "left" ? 12 : 26;
   const lineStartX = orientation === "left" ? 32 : 2;
   const lineEndX = orientation === "left" ? 80 : 26;
+
+  const positionForDb = (dbValue: number) => {
+    return 1 - (dbValue + 60) / 72;
+  };
+
+  const pos12db = positionForDb(12) * height;
+  const pos6db = positionForDb(6) * height;
+  const pos0db = positionForDb(0) * height;
+  const posMinus6db = positionForDb(-6) * height;
+  const posMinus18db = positionForDb(-18) * height;
+  const posMinus36db = positionForDb(-36) * height;
+  const posMinus60db = positionForDb(-60) * height;
 
   return (
     <svg
@@ -26,39 +37,37 @@ export const MonoLevelView = ({
         zIndex: 10,
       }}
     >
-      {renderSixDbValues && (
-        <text
-          className="fill-current text-surface-5"
-          x={textX}
-          y="9"
-          fontSize="12"
-        >
-          +6
-        </text>
-      )}
       <text
         className="fill-current text-surface-5"
-        x={textX}
-        y={height * 0.125 + 3}
+        x={textX - 2}
+        y={pos12db + 10}
         fontSize="12"
       >
-        +0
+        +12
       </text>
-      {renderSixDbValues && (
-        <text
-          className="fill-current text-surface-5"
-          x={textX}
-          y={height * 0.25}
-          fontSize="12"
-        >
-          -6
-        </text>
-      )}
 
       <text
         className="fill-current text-surface-5"
         x={textX}
-        y={height * 0.4375}
+        y={pos0db + 3}
+        fontSize="12"
+      >
+        +0
+      </text>
+
+      <text
+        className="fill-current text-surface-5"
+        x={textX + 3}
+        y={posMinus6db + 3}
+        fontSize="12"
+      >
+        -6
+      </text>
+
+      <text
+        className="fill-current text-surface-5"
+        x={textX}
+        y={posMinus18db + 3}
         fontSize="12"
       >
         -18
@@ -67,15 +76,16 @@ export const MonoLevelView = ({
       <text
         className="fill-current text-surface-5"
         x={textX}
-        y={height * 0.625}
+        y={posMinus36db + 3}
         fontSize="12"
       >
         -36
       </text>
+
       <text
         className="fill-current text-surface-5"
         x={textX}
-        y={height - 2}
+        y={posMinus60db - 2}
         fontSize="12"
       >
         -60
@@ -84,50 +94,54 @@ export const MonoLevelView = ({
       <line
         className="stroke-current text-surface-4"
         x1={lineStartX}
-        y1={heightOffset}
+        y1={pos12db}
         x2={lineEndX}
-        y2={heightOffset}
-        strokeWidth="1"
-      />
-      <line
-        className="stroke-current text-surface-4"
-        x1={lineStartX}
-        y1={height * 0.125 - heightOffset}
-        x2={lineEndX}
-        y2={height * 0.125 - heightOffset}
-        strokeWidth="1"
-      />
-      <line
-        className="stroke-current text-surface-4"
-        x1={lineStartX}
-        y1={height * 0.25 - heightOffset}
-        x2={lineEndX}
-        y2={height * 0.25 - heightOffset}
-        strokeWidth="1"
-      />
-      <line
-        className="stroke-current text-surface-4"
-        x1={lineStartX}
-        y1={height * 0.4375 - heightOffset}
-        x2={lineEndX}
-        y2={height * 0.4375 - heightOffset}
+        y2={pos12db}
         strokeWidth="1"
       />
 
       <line
         className="stroke-current text-surface-4"
         x1={lineStartX}
-        y1={height * 0.625 - heightOffset}
+        y1={pos0db}
         x2={lineEndX}
-        y2={height * 0.625 - heightOffset}
+        y2={pos0db}
         strokeWidth="1"
       />
+
       <line
         className="stroke-current text-surface-4"
         x1={lineStartX}
-        y1={height - heightOffset}
+        y1={posMinus6db}
         x2={lineEndX}
-        y2={height - heightOffset}
+        y2={posMinus6db}
+        strokeWidth="1"
+      />
+
+      <line
+        className="stroke-current text-surface-4"
+        x1={lineStartX}
+        y1={posMinus18db}
+        x2={lineEndX}
+        y2={posMinus18db}
+        strokeWidth="1"
+      />
+
+      <line
+        className="stroke-current text-surface-4"
+        x1={lineStartX}
+        y1={posMinus36db}
+        x2={lineEndX}
+        y2={posMinus36db}
+        strokeWidth="1"
+      />
+
+      <line
+        className="stroke-current text-surface-4"
+        x1={lineStartX}
+        y1={posMinus60db}
+        x2={lineEndX}
+        y2={posMinus60db}
         strokeWidth="1"
       />
     </svg>

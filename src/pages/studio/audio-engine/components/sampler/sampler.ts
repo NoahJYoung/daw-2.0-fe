@@ -9,7 +9,7 @@ import { action, observable } from "mobx";
 @model("AudioEngine/Sampler")
 export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
-  outputGain: prop(0.05).withSetter(),
+  outputGain: prop(0.03).withSetter(),
   samplePath: prop<string>("/sounds/samples/grand_piano/grand_piano.zip"),
   imgUrl: prop<string>("").withSetter(),
 }) {

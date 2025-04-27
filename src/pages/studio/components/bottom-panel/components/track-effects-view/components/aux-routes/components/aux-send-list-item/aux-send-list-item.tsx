@@ -100,7 +100,7 @@ export const AuxSendListItem = observer(
             value={send.volume}
             step={0.01}
             min={-20}
-            max={6}
+            max={12}
             size={26}
           />
           <Button
