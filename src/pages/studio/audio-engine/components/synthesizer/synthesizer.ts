@@ -2,7 +2,7 @@ import { model, ExtendedModel, prop, idProp } from "mobx-keystone";
 import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { Oscillator } from "../oscillator";
 import * as Tone from "tone";
-import { computed } from "mobx";
+import { computed, observable, action } from "mobx";
 
 @model("AudioEngine/Synthesizer")
 export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -15,25 +15,61 @@ export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
 }) {
   output = new Tone.Channel();
 
+  // Track active notes to prevent duplicate triggers
+  @observable activeNotes = new Map<string, boolean>();
+
+  // Cache for active oscillators to avoid filtering in the hot path
+  @observable _activeOscillators: Oscillator[] = [];
+
   init() {
+    // Connect all oscillators at initialization time
     this.triangle.connect(this.output);
     this.square.connect(this.output);
     this.sine.connect(this.output);
     this.sawtooth.connect(this.output);
 
+    // Update the active oscillators cache
+    this.updateActiveOscillators();
+
     this.sync();
+  }
+
+  @action
+  updateActiveOscillators() {
+    this._activeOscillators = this.oscillators.filter((osc) => !osc.mute);
   }
 
   sync() {
     this.output.set({ volume: this.volume });
+
+    // When oscillator mute status changes, update the active oscillators cache
+    this.updateActiveOscillators();
   }
 
+  @action
   triggerAttack(note: string, time: Tone.Unit.Time, velocity: number) {
-    this.oscillators.forEach((osc) => osc.triggerAttack(note, time, velocity));
+    // Skip if we're already playing this note (prevents duplicate triggers)
+    if (this.activeNotes.get(note)) return;
+
+    // Mark note as active
+    this.activeNotes.set(note, true);
+
+    // Only trigger active oscillators
+    this._activeOscillators.forEach((osc) =>
+      osc.triggerAttack(note, time, velocity)
+    );
   }
 
+  @action
   triggerRelease(note: string, time: Tone.Unit.Time) {
-    this.oscillators.forEach((osc) => osc.triggerRelease(note, time));
+    // Skip if note isn't active
+    if (!this.activeNotes.get(note)) return;
+
+    // Mark note as inactive
+    this.activeNotes.set(note, false);
+
+    // Only release on active oscillators
+    this._activeOscillators.forEach((osc) => osc.triggerRelease(note, time));
   }
 
   triggerAttackRelease(
@@ -42,13 +78,19 @@ export class Synthesizer extends ExtendedModel(BaseAudioNodeWrapper, {
     time: Tone.Unit.Time,
     velocity: number
   ) {
-    this.oscillators.forEach((osc) => {
-      if (!osc.mute) osc.triggerAttackRelease(note, duration, time, velocity);
+    // Only use active oscillators
+    this._activeOscillators.forEach((osc) => {
+      osc.triggerAttackRelease(note, duration, time, velocity);
     });
   }
 
+  @action
   releaseAll(time: Tone.Unit.Time) {
-    this.oscillators.forEach((osc) => osc.releaseAll(time));
+    // Clear active notes tracking
+    this.activeNotes.clear();
+
+    // Only release active oscillators
+    this._activeOscillators.forEach((osc) => osc.releaseAll(time));
   }
 
   connect(node: Tone.ToneAudioNode) {
