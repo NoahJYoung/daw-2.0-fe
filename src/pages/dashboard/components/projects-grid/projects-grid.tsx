@@ -33,14 +33,14 @@ import {
 } from "@/hooks/use-file-system/use-file-system";
 import { formatBytes } from "@/hooks/use-file-system/helpers";
 import { getTimeSignatureLabel } from "@/pages/studio/audio-engine/types";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { EmptyProjects } from "../empty-projects";
 
 export const ProjectsGrid = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const { deleteProject, getProjectById, isLoading, quota, projects } =
+  const { deleteProject, getProjectById, isLoading, projects } =
     useFileSystem();
   const navigate = useNavigate();
 
@@ -77,25 +77,7 @@ export const ProjectsGrid = () => {
 
   return isLoading ? null : (
     <div className="mx-auto max-w-7xl h-full">
-      <div className="lg:mx-3 w-full flex justify-between items-end pb-1">
-        <span className="text-surface-6 text-xs lg:text-sm">
-          Used: <strong>{`${quota?.used} `}</strong>/
-          <strong>{` ${quota?.total}`}</strong>
-        </span>
-        <div className="flex items-center gap-4 lg:mr-6">
-          <button
-            onClick={() => alert("not implemented yet")}
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-          >
-            Import
-          </button>
-          <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-            <Link to="/studio">New Project</Link>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:p-3 py-2 overflow-y-auto max-h-full no-scrollbar">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-2 pb-2 overflow-y-auto max-h-full no-scrollbar">
         {projects ? (
           projects.map((project, index) => (
             <Card
