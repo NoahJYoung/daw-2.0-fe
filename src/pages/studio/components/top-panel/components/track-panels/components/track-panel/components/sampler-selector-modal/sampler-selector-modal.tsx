@@ -88,7 +88,7 @@ export const SamplerSelectorModal = observer(
                     />
                   </div>
                 ) : (
-                  <span>No cover image</span>
+                  <span>No cover image found</span>
                 )}
                 <div className="flex flex-col gap-2">
                   <h4>Output Gain</h4>
