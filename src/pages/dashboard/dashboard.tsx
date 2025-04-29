@@ -7,9 +7,9 @@ export const Dashboard = () => {
   return (
     <div className="flex flex-col h-screen">
       <main className="flex-1 flex flex-col bg-muted/40 max-h-full">
-        <div className="p-2 pb-2">
+        <div className="pt-3 px-3 pb-0">
           <div className="mx-auto max-w-7xl">
-            <div className="flex w-full items-center justify-between mb-2 lg:px-2">
+            <div className="flex w-full items-center justify-between mb-2 lg:px-3">
               <span className="flex flex-col justify-center gap-1">
                 <h1 className="text-3xl font-bold">Projects</h1>
                 <span className="flex gap-1 text-surface-6 text-xs lg:text-sm">

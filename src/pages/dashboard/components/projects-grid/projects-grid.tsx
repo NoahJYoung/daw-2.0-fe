@@ -35,6 +35,7 @@ import { formatBytes } from "@/hooks/use-file-system/helpers";
 import { getTimeSignatureLabel } from "@/pages/studio/audio-engine/types";
 import { useNavigate } from "@tanstack/react-router";
 import { EmptyProjects } from "../empty-projects";
+import { useThemeContext } from "@/hooks";
 
 export const ProjectsGrid = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -42,6 +43,7 @@ export const ProjectsGrid = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const { deleteProject, getProjectById, isLoading, projects } =
     useFileSystem();
+  const { theme } = useThemeContext();
   const navigate = useNavigate();
 
   const handleDelete = (e: React.MouseEvent, project: Project) => {
@@ -75,9 +77,18 @@ export const ProjectsGrid = () => {
     setOpenDropdownId(open ? projectId : null);
   };
 
+  const fadeColor =
+    theme === "dark"
+      ? "linear-gradient(to bottom, rgba(24, 24, 27, 0.7), rgba(24, 24, 27, 0.1))"
+      : "linear-gradient(to bottom, rgba(244, 244, 245, 0.7), rgba(244, 244, 245, 0.1))";
+
   return isLoading ? null : (
-    <div className="mx-auto max-w-7xl h-full">
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-2 pb-2 overflow-y-auto max-h-full no-scrollbar">
+    <div className="mx-auto max-w-7xl h-full ">
+      <div className="grid pt-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 pb-2 overflow-y-auto max-h-full no-scrollbar relative">
+        <div
+          style={{ background: fadeColor }}
+          className="fixed h-5 flex w-full z-10"
+        />
         {projects ? (
           projects.map((project, index) => (
             <Card
