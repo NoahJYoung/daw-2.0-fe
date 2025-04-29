@@ -46,3 +46,14 @@ export const keys = [
   "Gm",
   "G#m",
 ];
+
+export const getTimeSignatureLabel = (value: string): string => {
+  const timeSignature = timeSignatureOptions.find(
+    (time) => time.value === value
+  );
+  if (timeSignature) {
+    return timeSignature.label;
+  }
+
+  return value;
+};

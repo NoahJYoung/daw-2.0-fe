@@ -129,7 +129,10 @@ export const ProjectSettingsDialog = observer(
                   className="h-10"
                   id="key"
                   name="key"
-                  options={keys.map((key) => ({ label: key, value: key }))}
+                  options={keys.map((key) => ({
+                    label: key.replace("b", "♭").replace("#", "♯"),
+                    value: key,
+                  }))}
                   value={key}
                   showSelectedValue={true}
                   size="lg"

@@ -62,6 +62,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     detectEnvironment,
     []
   );
+  const [isFetchingRootDirectory, setIsFetchingRootDirectory] = useState(true);
 
   const invalidateProjectQuery = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["PROJECTS"] });
@@ -89,6 +90,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     const getRootDirectory = async () => {
       const root = await navigator.storage.getDirectory();
       setRootDirectory(root);
+      setIsFetchingRootDirectory(false);
     };
     getRootDirectory();
   }, []);
@@ -223,7 +225,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 
   const contextValue: FileSystemContextType = {
     projects,
-    isLoading,
+    isLoading: isLoading || isFetchingRootDirectory,
     isFileSystemSupported,
     isMobileDevice,
     quota,

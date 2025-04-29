@@ -45,7 +45,10 @@ export const TimelineControls = observer(() => {
       <span className={hiddenClassName}>
         <StudioDropdown
           style={{ width: "5rem" }}
-          options={keys.map((key) => ({ label: key, value: key }))}
+          options={keys.map((key) => ({
+            label: key.replace("b", "♭").replace("#", "♯"),
+            value: key,
+          }))}
           value={audioEngine.key}
           showSelectedValue={true}
           size="lg"

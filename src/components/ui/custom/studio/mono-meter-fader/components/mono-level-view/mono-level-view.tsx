@@ -7,6 +7,7 @@ export const MonoLevelView = ({
   height,
   orientation = "left",
 }: LevelViewProps) => {
+  const heightOffset = Math.round(height * 0.02);
   const textX = orientation === "left" ? 12 : 26;
   const lineStartX = orientation === "left" ? 32 : 2;
   const lineEndX = orientation === "left" ? 80 : 26;
@@ -15,12 +16,12 @@ export const MonoLevelView = ({
     return 1 - (dbValue + 60) / 72;
   };
 
-  const pos12db = positionForDb(12) * height;
-  const pos0db = positionForDb(0) * height;
-  const posMinus6db = positionForDb(-6) * height;
-  const posMinus18db = positionForDb(-18) * height;
-  const posMinus36db = positionForDb(-36) * height;
-  const posMinus60db = positionForDb(-60) * height;
+  const pos12db = heightOffset + positionForDb(12) * height;
+  const pos0db = heightOffset + positionForDb(0) * height;
+  const posMinus6db = heightOffset + positionForDb(-6) * height;
+  const posMinus18db = heightOffset + positionForDb(-18) * height;
+  const posMinus36db = heightOffset + positionForDb(-36) * height;
+  const posMinus60db = heightOffset + positionForDb(-60) * height;
 
   return (
     <svg
