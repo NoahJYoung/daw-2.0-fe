@@ -77,18 +77,20 @@ export const ProjectsGrid = () => {
     setOpenDropdownId(open ? projectId : null);
   };
 
-  const fadeColor =
+  const maskGradient =
     theme === "dark"
-      ? "linear-gradient(to bottom, rgba(24, 24, 27, 0.7), rgba(24, 24, 27, 0.1))"
-      : "linear-gradient(to bottom, rgba(244, 244, 245, 0.7), rgba(244, 244, 245, 0.1))";
+      ? "linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)"
+      : "linear-gradient(to bottom, transparent, white 20px, white calc(100% - 20px), transparent)";
 
   return isLoading ? null : (
-    <div className="mx-auto max-w-7xl h-full ">
-      <div className="grid pt-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 pb-2 overflow-y-auto max-h-full no-scrollbar relative">
-        <div
-          style={{ background: fadeColor }}
-          className="fixed h-5 flex w-full z-10"
-        />
+    <div className="mx-auto max-w-7xl h-full">
+      <div
+        className="grid pt-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 pb-2 overflow-y-auto max-h-full no-scrollbar"
+        style={{
+          maskImage: maskGradient,
+          WebkitMaskImage: maskGradient,
+        }}
+      >
         {projects ? (
           projects.map((project, index) => (
             <Card
@@ -101,7 +103,7 @@ export const ProjectsGrid = () => {
               
               ${openDropdownId === project.id ? "lg:scale-105" : ""} 
               hover:lg:scale-105 `}
-              onClick={() => navigate({ to: `studio/${project.id}` })}
+              onClick={() => navigate({ to: `/studio/${project.id}` })}
             >
               <CardHeader className="flex flex-row items-center gap-4 p-4 pb-0">
                 <div className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10">
