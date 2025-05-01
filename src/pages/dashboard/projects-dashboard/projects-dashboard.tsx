@@ -33,7 +33,7 @@ export const ProjectsDashboard = () => {
         </div>
       </div>
 
-      <div className="h-[calc(100%-136px)] w-full">
+      <div className="h-[calc(100%-80px)] w-full">
         <div className="mx-auto max-w-7xl w-full h-full">
           <ProjectsGrid />
         </div>
