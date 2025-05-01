@@ -85,7 +85,7 @@ export const ProjectsGrid = () => {
   return isLoading ? null : (
     <>
       <div
-        className="grid py-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 pb-2 h-fit max-h-full overflow-y-auto no-scrollbar"
+        className="shrink-0 w-full grid py-3 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 h-fit max-h-full overflow-y-auto no-scrollbar"
         style={{
           maskImage: maskGradient,
           WebkitMaskImage: maskGradient,
@@ -99,7 +99,7 @@ export const ProjectsGrid = () => {
                 animationDelay: `${index * 100}ms`,
                 animationDuration: "500ms",
               }}
-              className={`shrink-0 overflow-hidden cursor-pointer transition-all duration-300
+              className={`min-w-max shrink-0 w-full overflow-hidden cursor-pointer transition-all duration-300
               
               ${openDropdownId === project.id ? "lg:scale-105" : ""} 
               hover:lg:scale-105 `}

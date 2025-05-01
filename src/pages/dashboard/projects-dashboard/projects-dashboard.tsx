@@ -6,8 +6,8 @@ export const ProjectsDashboard = () => {
   const { quota } = useFileSystem();
   return (
     <section className="flex-1 flex flex-col bg-muted/40 h-full">
-      <div className="pt-3 px-3 pb-0 h-1/5">
-        <div className="mx-auto max-w-7xl">
+      <div className="pt-3 px-3 pb-0 h-[80px]">
+        <div className="mx-auto max-w-7xl w-full">
           <div className="flex w-full items-center justify-between mb-2 lg:px-3">
             <span className="flex flex-col justify-center gap-1">
               <h1 className="text-3xl font-bold">Projects</h1>
@@ -33,8 +33,10 @@ export const ProjectsDashboard = () => {
         </div>
       </div>
 
-      <div className="flex-1 h-full h-4/5">
-        <ProjectsGrid />
+      <div className="h-[calc(100%-80px)] w-full">
+        <div className="mx-auto max-w-7xl w-full h-full">
+          <ProjectsGrid />
+        </div>
       </div>
     </section>
   );
