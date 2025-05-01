@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 
 export const DashboardHeader = () => {
   return (
-    <header className="flex fixed w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
+    <header className="flex fixed w-full top-0 z-10 flex h-[56px] items-center gap-4 border-b bg-background px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
         <img src="/logo32.png" />
         <span className="text-lg">Velocity</span>
