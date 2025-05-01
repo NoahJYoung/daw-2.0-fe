@@ -83,9 +83,9 @@ export const ProjectsGrid = () => {
       : "linear-gradient(to bottom, transparent, white 20px, white calc(100% - 20px), transparent)";
 
   return isLoading ? null : (
-    <div className="mx-auto max-w-7xl h-full">
+    <>
       <div
-        className="grid pt-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 pb-2 overflow-y-auto max-h-full no-scrollbar"
+        className="grid py-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 pb-2 h-fit max-h-full overflow-y-auto no-scrollbar"
         style={{
           maskImage: maskGradient,
           WebkitMaskImage: maskGradient,
@@ -99,7 +99,7 @@ export const ProjectsGrid = () => {
                 animationDelay: `${index * 100}ms`,
                 animationDuration: "500ms",
               }}
-              className={`overflow-hidden cursor-pointer transition-all duration-300
+              className={`shrink-0 overflow-hidden cursor-pointer transition-all duration-300
               
               ${openDropdownId === project.id ? "lg:scale-105" : ""} 
               hover:lg:scale-105 `}
@@ -186,6 +186,6 @@ export const ProjectsGrid = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 };
