@@ -39,9 +39,9 @@ export default defineConfig({
       manifest: {
         name: "Velocity Studio",
         short_name: "Velocity",
-        description: "Your app description",
-        theme_color: "#06b8af",
-        background_color: "#ffffff",
+        description: "Make something cool",
+        theme_color: "#fd3574",
+        background_color: "#000000",
         display: "standalone",
         orientation: "landscape",
         icons: [
