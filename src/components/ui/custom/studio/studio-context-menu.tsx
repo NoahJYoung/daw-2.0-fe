@@ -58,13 +58,13 @@ export const StudioContextMenu = ({
         <ContextMenuSub key={label}>
           <ContextMenuSubTrigger
             disabled={disabled}
-            className="hover:bg-surface-2 rounded-xxs gap-2 data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
+            className="hover:bg-surface-2 rounded-xs gap-2 data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
             inset={!Icon}
           >
             {Icon && <Icon className="w-[16px] h-[16px]" />}
             {label ?? ""}
           </ContextMenuSubTrigger>
-          <ContextMenuSubContent className="hover:bg-surface-2 w-56 rounded-xxs">
+          <ContextMenuSubContent className="hover:bg-surface-2 w-56 rounded-xs">
             {children.map((child) => getSubMenu(child))}
           </ContextMenuSubContent>
         </ContextMenuSub>
@@ -72,13 +72,13 @@ export const StudioContextMenu = ({
     }
     return (
       <ContextMenuItem
-        className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs p-0"
+        className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xs p-0"
         onClick={onClick}
         disabled={disabled}
         inset={!Icon}
         key={label}
       >
-        <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
+        <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xs px-2 py-1.5">
           {Icon && <Icon className="w-[16px] h-[16px]" />}
           <div className="hover:bg-surface-2 w-[104px] ">{label || ""}</div>
           {shortcut ? (
@@ -100,7 +100,7 @@ export const StudioContextMenu = ({
       </ContextMenuTrigger>
       <ContextMenuContent
         onClick={(e) => e.stopPropagation()}
-        className="w-56 bg-surface-1 rounded-xxs text-surface-6"
+        className="w-56 bg-surface-1 rounded-xs text-surface-6"
       >
         {items?.map((item, i) => {
           if (item.children) {
@@ -113,13 +113,13 @@ export const StudioContextMenu = ({
 
           return (
             <ContextMenuItem
-              className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs p-0"
+              className="hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xs p-0"
               onClick={onClick}
               key={label}
               inset={!Icon}
               disabled={item.disabled}
             >
-              <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xxs px-2 py-1.5">
+              <div className="w-full h-full p-0 m-0 bg-transparent hover:bg-surface-2 flex items-center gap-2 justify-between rounded-xs px-2 py-1.5">
                 <span className="flex hover:bg-surface-2 gap-2 items-center">
                   {Icon && <Icon className="w-[16px] h-[16px]" />}
                   <div>{label || ""}</div>

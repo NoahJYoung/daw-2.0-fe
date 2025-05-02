@@ -6,7 +6,7 @@ import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { observer } from "mobx-react-lite";
 import { useCallback } from "react";
 
-const transportButtonClassName = `cursor-pointer rounded-xxs text-xl relative flex items-center justify-centers p-1 w-10 lg:w-12 h-8 lg:h-10 bg-surface-2 text-surface-5 hover:bg-surface-3`;
+const transportButtonClassName = `cursor-pointer rounded-xs text-xl relative flex items-center justify-centers p-1 w-10 lg:w-12 h-8 lg:h-10 bg-surface-2 text-surface-5 hover:bg-surface-3`;
 const buttonOnClassName = "bg-surface-2 text-surface-7";
 
 export const TransportControls = observer(() => {

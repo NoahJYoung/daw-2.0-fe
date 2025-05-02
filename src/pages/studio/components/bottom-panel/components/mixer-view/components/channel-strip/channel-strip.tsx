@@ -117,7 +117,7 @@ export const ChannelStrip = observer(
     return (
       <div
         onClick={handleSelectTrack}
-        className={`flex flex-col h-full flex-shrink-0 items-center ${
+        className={`flex flex-col h-full flex-shrink-0 items-center rounded-xs ${
           selected ? "bg-surface-3" : "bg-surface-2"
         } border border-surface-1`}
         style={{
@@ -125,7 +125,7 @@ export const ChannelStrip = observer(
           height: mixerHeight,
         }}
       >
-        <div className="flex gap-1 h-[36px] lg:h-8 items-center px-2 py-1 border-b-2 border-surface-1">
+        <div className="flex gap-1 rounded-xs h-[36px] lg:h-8 items-center px-2 py-1 border-b-2 border-surface-1">
           <Button
             onClick={handleToggleActive}
             className={`bg-transparent ${
@@ -151,7 +151,7 @@ export const ChannelStrip = observer(
 
         <div
           style={{ height: 56 }}
-          className="flex w-full justify-evenly gap-1 items-center py-3"
+          className="flex w-full justify-evenly gap-1 items-center py-3 rounded-xs"
         >
           <Button
             onClick={(e) => {

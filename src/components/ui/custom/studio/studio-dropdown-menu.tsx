@@ -9,6 +9,7 @@ import {
 import { Button } from "../../button";
 import { MenuItem } from "../types";
 import { IconType } from "react-icons/lib";
+import { cn } from "@/lib/utils";
 
 interface ToolbarMenuProps {
   options: MenuItem[];
@@ -34,13 +35,13 @@ export const StudioDropdownMenu = ({
       <DropdownMenuTrigger disabled={disabled} asChild>
         <Button
           title={title}
-          className="rounded-xxs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3"
+          className="rounded-xs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3"
         >
           {Icon && <Icon />}
           {label && label}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="rounded-xxs bg-surface-1 max-h-48 lg:max-h-96 overflow-y-auto">
+      <DropdownMenuContent className="rounded-xs bg-surface-1 max-h-48 lg:max-h-96 overflow-y-auto">
         {options.map((option, i) => {
           if (option?.separator) {
             return <DropdownMenuSeparator key={option.label ?? i} />;
@@ -57,11 +58,10 @@ export const StudioDropdownMenu = ({
             <DropdownMenuItem
               disabled={option.disabled}
               key={option.label ?? i}
-              className={
-                value && option?.value === value
-                  ? "bg-surface-1 rounded-xxs font-bold text-surface-6 cursor-pointer"
-                  : "bg-surface-1 rounded-xxs text-surface-5 cursor-pointer"
-              }
+              className={cn(
+                "bg-surface-1 text-surface-5 rounded-xs cursor-pointer",
+                { "font-bold text-surface-6": value && option?.value === value }
+              )}
               onClick={(e) => {
                 if (option?.onClick) {
                   option.onClick(e);

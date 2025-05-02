@@ -35,7 +35,7 @@ export const StudioButton = forwardRef(
     const getClassName = () => {
       const baseClass =
         className ??
-        `rounded-xxs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3`;
+        `rounded-xs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3`;
       if (!!on && !!onClassName) {
         return [...baseClass.split(" "), ...onClassName.split(" ")].join(" ");
       }

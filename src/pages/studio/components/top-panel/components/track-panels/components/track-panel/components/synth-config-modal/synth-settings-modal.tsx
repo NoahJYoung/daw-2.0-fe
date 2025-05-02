@@ -79,7 +79,7 @@ export const SynthSettingsModal = observer(
             <StudioButton
               onClick={randomize}
               icon={RandomizeIcon}
-              className="rounded-xxs focus-visible:ring-0 shadow-none text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-transparent text-surface-5 hover:opacity-80 hover:bg-transparent"
+              className="rounded-xs focus-visible:ring-0 shadow-none text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-transparent text-surface-5 hover:opacity-80 hover:bg-transparent"
             />
             <span className="flex gap-1 items-center justify-end w-full">
               <StudioDropdown
@@ -96,7 +96,7 @@ export const SynthSettingsModal = observer(
                 onClick={handleDelete}
                 icon={DeleteIcon}
                 disabled={!activePreset}
-                className="rounded-xxs focus-visible:ring-0 shadow-none text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-transparent text-surface-5 hover:opacity-80 hover:bg-transparent"
+                className="rounded-xs focus-visible:ring-0 shadow-none text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-transparent text-surface-5 hover:opacity-80 hover:bg-transparent"
               />
               <input
                 type="text"
@@ -111,7 +111,7 @@ export const SynthSettingsModal = observer(
                 onClick={handleSave}
                 disabled={!inputState}
                 icon={IoMdSave}
-                className="rounded-xxs focus-visible:ring-0 shadow-none text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-transparent text-surface-5 hover:opacity-80 hover:bg-transparent"
+                className="rounded-xs focus-visible:ring-0 shadow-none text-2xl relative flex items-center justify-center p-1 w-8 h-8 bg-transparent text-surface-5 hover:opacity-80 hover:bg-transparent"
               />
             </span>
           </div>

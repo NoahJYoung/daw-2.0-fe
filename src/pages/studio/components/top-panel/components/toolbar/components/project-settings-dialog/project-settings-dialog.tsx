@@ -90,7 +90,7 @@ export const ProjectSettingsDialog = observer(
                   Project Name:
                 </label>
                 <Input
-                  className="w-full rounded-xxs h-10"
+                  className="w-full rounded-xs h-10"
                   id="projectName"
                   name="projectName"
                   value={projectName}
@@ -106,7 +106,7 @@ export const ProjectSettingsDialog = observer(
                   Measures:
                 </label>
                 <input
-                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xxs"
+                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
                   type="number"
                   id="measures"
                   name="measures"
@@ -141,7 +141,7 @@ export const ProjectSettingsDialog = observer(
                 />
               </span>
               <span className="flex justify-end flex-col gap-1 pb-[4px] w-1/5">
-                <Button type="button" disabled className="h-10 rounded-xxs">
+                <Button type="button" disabled className="h-10 rounded-xs">
                   Detect
                 </Button>
               </span>
@@ -178,7 +178,7 @@ export const ProjectSettingsDialog = observer(
                   Bpm:
                 </label>
                 <input
-                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xxs"
+                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
                   type="number"
                   id="bpm"
                   name="bpm"
@@ -195,13 +195,13 @@ export const ProjectSettingsDialog = observer(
             <Button
               onClick={handleCancel}
               type="button"
-              className="bg-transparent hover:bg-transparent hover:text-surface-10 text-surface-8 rounded-xxs"
+              className="bg-transparent hover:bg-transparent hover:text-surface-10 text-surface-8 rounded-xs"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-surface-7 hover:bg-surface-8 text-surface-1 rounded-xxs"
+              className="bg-surface-7 hover:bg-surface-8 text-surface-1 rounded-xs"
             >
               Save
             </Button>

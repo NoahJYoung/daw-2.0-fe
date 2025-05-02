@@ -6,7 +6,7 @@ import { useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { HiOutlineTrash as DeleteIcon } from "react-icons/hi";
 
-const btnClassName = `rounded-xxs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-7 h-7 bg-surface-2 text-surface-5 hover:bg-surface-3`;
+const btnClassName = `rounded-xs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-7 h-7 bg-surface-2 text-surface-5 hover:bg-surface-3`;
 
 const activeButtonClass = cn(
   "hover:text-surface-10",
@@ -39,7 +39,7 @@ const baseButtonClass = cn(
   "font-bold"
 );
 
-const triggerClassName = `rounded-xxs focus-visible:ring-0 relative flex items-center justify-center p-1 w-full bg-surface-2 text-surface-7 hover:bg-surface-3`;
+const triggerClassName = `rounded-xs focus-visible:ring-0 relative flex items-center justify-center p-1 w-full bg-surface-2 text-surface-7 hover:bg-surface-3`;
 
 interface AuxSendListItemProps {
   effect: Effect;

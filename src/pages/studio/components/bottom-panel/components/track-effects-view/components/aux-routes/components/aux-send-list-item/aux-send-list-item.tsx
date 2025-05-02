@@ -11,7 +11,7 @@ import { HiOutlineTrash as DeleteIcon } from "react-icons/hi";
 
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 
-const btnClassName = `rounded-xxs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-7 h-7 bg-surface-2 text-surface-5 hover:bg-surface-3`;
+const btnClassName = `rounded-xs focus-visible:ring-0 text-2xl relative flex items-center justify-center p-1 w-7 h-7 bg-surface-2 text-surface-5 hover:bg-surface-3`;
 
 const activeButtonClass = cn(
   "hover:text-surface-10",

@@ -44,7 +44,7 @@ export const TopBar = memo(
               width: measureWidth,
               borderLeftWidth: i === 0 ? 1 : 0,
             }}
-            className="flex-shrink-0 flex rounded-xxs border-surface-2 border relative border-1"
+            className="flex-shrink-0 flex rounded-xs border-surface-2 border relative border-1"
           >
             {subdivisionsArray.map((_, j) => {
               const { height, marginTop } = getSubdivisionStyle(j);

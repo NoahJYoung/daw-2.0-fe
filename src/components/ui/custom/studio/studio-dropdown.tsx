@@ -58,7 +58,7 @@ export const StudioDropdown = ({
               : `text-surface-${6 + colorOffset}`
           } ${size === "lg" ? "text-lg" : "text-sm"} border-surface-${
             2 + colorOffset
-          } rounded-xxs ${size === "lg" ? "lg:h-10 h-8" : "h-7"} `.split(" "),
+          } rounded-xs ${size === "lg" ? "lg:h-10 h-8" : "h-7"} `.split(" "),
           ...className.split(" "),
         ].join(" ")}
       >
@@ -71,11 +71,11 @@ export const StudioDropdown = ({
           />
         )}
       </SelectTrigger>
-      <SelectContent className="rounded-xxs bg-surface-1 max-h-[250px] overflow-auto">
+      <SelectContent className="rounded-xs bg-surface-1 max-h-[250px] overflow-auto">
         {label && <SelectLabel>{label}</SelectLabel>}
         {options.map((option) => (
           <SelectItem
-            className="bg-surface-1 hover:bg-surface-2 rounded-xxs"
+            className="bg-surface-1 hover:bg-surface-2 rounded-xs"
             key={option.value}
             value={option.value}
           >

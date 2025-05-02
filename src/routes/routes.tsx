@@ -6,6 +6,10 @@ import {
 } from "@tanstack/react-router";
 import { Dashboard, Studio } from "@/pages";
 import { ProjectsDashboard } from "@/pages/dashboard/projects-dashboard";
+import {
+  SampleEditor,
+  SamplesDashboard,
+} from "@/pages/dashboard/samples-dashboard";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -51,13 +55,24 @@ const projectsDashboardRoute = createRoute({
   component: () => <ProjectsDashboard />,
 });
 
-// const samplesDashboardRoute = createRoute({
-//   getParentRoute: () => dashboardLayoutRoute,
-//   path: "/samples",
-//   component: () => <SamplesDashboard />,
-// });
+const samplesDashboardRoute = createRoute({
+  getParentRoute: () => dashboardLayoutRoute,
+  path: "/samples",
+  component: () => <SamplesDashboard />,
+});
 
-// Studio routes remain at the root level (no header)
+const editSamplesDashboardRoute = createRoute({
+  getParentRoute: () => dashboardLayoutRoute,
+  path: "/samples/$samplePackId",
+  component: () => <SampleEditor />,
+});
+
+const createSamplesDashboardRoute = createRoute({
+  getParentRoute: () => dashboardLayoutRoute,
+  path: "/samples/new",
+  component: () => <SampleEditor />,
+});
+
 const newProjectRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/studio",
@@ -75,7 +90,9 @@ export const routeTree = rootRoute.addChildren([
   dashboardLayoutRoute.addChildren([
     dashboardIndexRoute,
     projectsDashboardRoute,
-    // samplesDashboardRoute,
+    samplesDashboardRoute,
+    editSamplesDashboardRoute,
+    createSamplesDashboardRoute,
   ]),
   newProjectRoute,
   existingProjectRoute,

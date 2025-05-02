@@ -59,7 +59,7 @@ const baseButtonClass = cn(
 );
 
 const settingsButtonClassName = cn(
-  "rounded-xxs",
+  "rounded-xs",
   "focus-visible:ring-0",
   "shadow-none",
   "border-0",
@@ -286,7 +286,7 @@ export const TrackPanel = observer(
           onDoubleClick={handleDoubleClick}
           className={cn(
             "select-none",
-            "flex rounded-xxs",
+            "flex rounded-xs",
             "gap-1",
             "pr-1",
             "w-full",
@@ -332,7 +332,7 @@ export const TrackPanel = observer(
           <div
             onMouseDown={handleDragStart}
             style={{ cursor: isDragging ? "grabbing" : "grab" }}
-            className={`relative h-full select-none rounded-xxs p-1 w-9 flex-shrink-0 flex items-center justify-center bg-surface-${
+            className={`relative h-full select-none rounded-xs p-1 w-9 flex-shrink-0 flex items-center justify-center bg-surface-${
               2 + selectedBgOffset
             } text-surface-${
               4 + selectedBgOffset
@@ -344,7 +344,7 @@ export const TrackPanel = observer(
                 className="flex flex-col justify-between absolute items-center"
               >
                 <StudioButton
-                  className={`rounded-xxs bottom-[0px] shadow-none text-l relative flex items-center justify-centers p-1 w-6 h-6 bg-transparent text-surface-${
+                  className={`rounded-xs bottom-[0px] shadow-none text-l relative flex items-center justify-centers p-1 w-6 h-6 bg-transparent text-surface-${
                     3 + selectedBgOffset
                   } hover:text-surface-${
                     4 + selectedBgOffset
@@ -360,7 +360,7 @@ export const TrackPanel = observer(
                   }}
                 />
                 <StudioButton
-                  className={`rounded-xxs bottom-[0px] shadow-none text-l relative flex items-center justify-centers p-1 w-6 h-6 bg-transparent text-surface-${
+                  className={`rounded-xs bottom-[0px] shadow-none text-l relative flex items-center justify-centers p-1 w-6 h-6 bg-transparent text-surface-${
                     3 + selectedBgOffset
                   } hover:text-surface-${
                     4 + selectedBgOffset

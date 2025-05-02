@@ -19,7 +19,7 @@ interface SynthSettingsModalProps {
   triggerIcon?: IconType;
 }
 
-const triggerClassName = `rounded-xxs focus-visible:ring-0 relative flex items-center justify-center p-1 w-full bg-surface-2 text-surface-7 hover:bg-surface-3`;
+const triggerClassName = `rounded-xs focus-visible:ring-0 relative flex items-center justify-center p-1 w-full bg-surface-2 text-surface-7 hover:bg-surface-3`;
 
 export const EffectDialog = observer(
   ({

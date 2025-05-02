@@ -89,14 +89,10 @@ export const ProjectsGrid = () => {
         }}
       >
         {projects?.length
-          ? projects.map((project, index) => (
+          ? projects.map((project) => (
               <Card
                 key={project.id}
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  animationDuration: "500ms",
-                }}
-                className={`min-w-max shrink-0 w-full overflow-hidden cursor-pointer transition-all duration-300
+                className={`min-w-max bg-surface-0 shrink-0 w-full overflow-hidden cursor-pointer transition-all duration-300
               
               ${openDropdownId === project.id ? "lg:scale-105" : ""} 
               hover:lg:scale-105 `}
