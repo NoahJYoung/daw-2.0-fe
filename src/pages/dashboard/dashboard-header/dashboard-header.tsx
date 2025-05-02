@@ -1,7 +1,6 @@
-import { Search, Settings, User } from "lucide-react";
+import { Music2, Settings, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Link } from "@tanstack/react-router";
 
 export const DashboardHeader = () => {
@@ -13,14 +12,10 @@ export const DashboardHeader = () => {
       </Link>
 
       <div className="ml-auto flex items-center gap-4">
-        <form className="relative hidden md:block">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search projects..."
-            className="w-64 pl-8 bg-background"
-          />
-        </form>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Music2 className="h-6 w-6 text-primary" />
+          <span className="sr-only">Settings</span>
+        </Button>
 
         <Button variant="ghost" size="icon" className="rounded-full">
           <Settings className="h-5 w-5" />

@@ -5,7 +5,7 @@ import {
   redirect,
 } from "@tanstack/react-router";
 import { Dashboard, Studio } from "@/pages";
-import { ProjectsDashboard } from "@/pages/dashboard/projects-dashboard"; // You'll need to create this
+import { ProjectsDashboard } from "@/pages/dashboard/projects-dashboard";
 
 const rootRoute = createRootRoute({
   component: () => (

@@ -15,7 +15,7 @@ function App() {
   const { theme } = useThemeContext();
 
   return (
-    <div className={`w-full ${theme}`}>
+    <div className={`w-full ${theme} h-screen overflow-hidden`}>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <QueryClientProvider client={queryClient}>
           <FileSystemProvider>
