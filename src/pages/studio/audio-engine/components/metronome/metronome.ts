@@ -3,6 +3,8 @@ import { BaseAudioNodeWrapper } from "../../base-audio-node-wrapper";
 import { action, computed, observable } from "mobx";
 import { AudioEngine } from "../../audio-engine";
 import * as Tone from "tone";
+import { audioBufferCache } from "../audio-buffer-cache";
+import { blobToAudioBuffer } from "../../helpers";
 
 @model("AudioEngine/Metronome")
 export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -11,12 +13,11 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
   private channel = new Tone.Channel();
   voice: Tone.Sampler | null = null;
 
-  init() {
+  async init() {
     this.channel.set({ mute: !this.active });
     this.channel.toDestination();
-    this.voice = new Tone.Sampler({ C5: "/sounds/metronome.wav" }).connect(
-      this.channel
-    );
+    this.voice = new Tone.Sampler().connect(this.channel);
+    await this.loadSample();
   }
 
   sync() {
@@ -68,6 +69,30 @@ export class Metronome extends ExtendedModel(BaseAudioNodeWrapper, {
     if (this.eventId) {
       Tone.getTransport().clear(this.eventId);
       this.setEventId(null);
+    }
+  }
+  private loadSamplesFromCache() {
+    const buffer = audioBufferCache.get("/sounds/metronome.wav");
+
+    if (buffer) {
+      this.voice?.add("C5", buffer);
+    }
+  }
+
+  async loadSample() {
+    if (audioBufferCache.has("/sounds/metronome.wav")) {
+      this.loadSamplesFromCache();
+    } else {
+      try {
+        const response = await fetch("/sounds/metronome.wav");
+        const blob = await response.blob();
+        const audioBuffer = await blobToAudioBuffer(blob);
+
+        audioBufferCache.add("/sounds/metronome.wav", audioBuffer);
+        this.loadSamplesFromCache();
+      } catch (error) {
+        console.error("Error loading instrument:", error);
+      }
     }
   }
 

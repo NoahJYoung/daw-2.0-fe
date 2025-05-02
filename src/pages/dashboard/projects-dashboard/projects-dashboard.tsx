@@ -5,7 +5,7 @@ import { Link } from "@tanstack/react-router";
 export const ProjectsDashboard = () => {
   const { quota, projects } = useFileSystem();
   return (
-    <section className="flex flex-col bg-muted/40 h-full">
+    <section className="flex flex-col bg-muted/40 h-full lg:pt-16">
       <div className="pt-3 px-3 pb-0">
         <div className="mx-auto max-w-7xl w-full">
           <div className="flex w-full items-center justify-between mb-2 lg:px-3">
@@ -34,7 +34,7 @@ export const ProjectsDashboard = () => {
       </div>
 
       <div className="flex-1 w-full overflow-hidden">
-        <div className="mx-auto max-w-7xl w-full h-full py-1">
+        <div className="mx-auto max-w-7xl w-full h-full pt-1 pb-2">
           {projects?.length ? <ProjectsGrid /> : <EmptyProjects />}
         </div>
       </div>

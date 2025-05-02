@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Download, MoreHorizontal, Music2, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
