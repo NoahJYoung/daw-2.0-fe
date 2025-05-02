@@ -1,12 +1,12 @@
 import { useFileSystem } from "@/hooks";
-import { ProjectsGrid } from "./components";
+import { EmptyProjects, ProjectsGrid } from "./components";
 import { Link } from "@tanstack/react-router";
 
 export const ProjectsDashboard = () => {
-  const { quota } = useFileSystem();
+  const { quota, projects } = useFileSystem();
   return (
-    <section className="flex-1 flex flex-col bg-muted/40 h-full">
-      <div className="pt-3 px-3 pb-0 h-[80px]">
+    <section className="flex flex-col bg-muted/40 h-full">
+      <div className="pt-3 px-3 pb-0">
         <div className="mx-auto max-w-7xl w-full">
           <div className="flex w-full items-center justify-between mb-2 lg:px-3">
             <span className="flex flex-col justify-center gap-1">
@@ -33,9 +33,9 @@ export const ProjectsDashboard = () => {
         </div>
       </div>
 
-      <div className="h-[calc(100%-80px)] w-full">
+      <div className="flex-1 w-full overflow-hidden">
         <div className="mx-auto max-w-7xl w-full h-full py-1">
-          <ProjectsGrid />
+          {projects?.length ? <ProjectsGrid /> : <EmptyProjects />}
         </div>
       </div>
     </section>

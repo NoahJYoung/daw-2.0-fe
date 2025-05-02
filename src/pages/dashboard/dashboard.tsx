@@ -5,7 +5,7 @@ export const Dashboard = () => {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <DashboardHeader />
-      <main className="flex-1 h-[calc(100%-80px)] overflow-hidden">
+      <main className="flex-1 overflow-hidden">
         <Outlet />
       </main>
     </div>
