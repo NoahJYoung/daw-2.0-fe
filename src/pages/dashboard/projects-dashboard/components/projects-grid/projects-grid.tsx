@@ -85,7 +85,7 @@ export const ProjectsGrid = () => {
   return isLoading ? null : (
     <>
       <div
-        className="shrink-0 w-full grid py-3 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 h-fit max-h-full overflow-y-auto no-scrollbar"
+        className="shrink-0 w-full grid py-4 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3 h-fit max-h-full overflow-y-auto"
         style={{
           maskImage: maskGradient,
           WebkitMaskImage: maskGradient,

@@ -34,7 +34,7 @@ export const ProjectsDashboard = () => {
       </div>
 
       <div className="h-[calc(100%-80px)] w-full">
-        <div className="mx-auto max-w-7xl w-full h-full">
+        <div className="mx-auto max-w-7xl w-full h-full py-1">
           <ProjectsGrid />
         </div>
       </div>
