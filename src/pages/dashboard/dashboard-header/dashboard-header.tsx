@@ -37,7 +37,7 @@ export const DashboardHeader = () => {
                   className={navigationMenuTriggerStyle()}
                 >
                   <FileAudio />
-                  <span className="hidden md:block">Projects</span>
+                  <span className="hidden lg:block">Projects</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -48,7 +48,7 @@ export const DashboardHeader = () => {
                   className={navigationMenuTriggerStyle()}
                 >
                   <AudioLines />
-                  <span className="hidden md:block">Samples</span>
+                  <span className="hidden lg:block">Samples</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
