@@ -1,4 +1,4 @@
-import { Settings, User } from "lucide-react";
+import { AudioLines, FileAudio, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
 
@@ -24,7 +24,7 @@ export const DashboardHeader = () => {
     <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
         <img src="/logo32.png" />
-        <span className="text-lg">Velocity</span>
+        <span className="text-lg hidden sm:block">Velocity</span>
       </Link>
 
       <div className="ml-auto flex items-center gap-4">
@@ -36,7 +36,8 @@ export const DashboardHeader = () => {
                   active={location.pathname === "/dashboard/projects"}
                   className={navigationMenuTriggerStyle()}
                 >
-                  Projects
+                  <FileAudio />
+                  <span className="hidden md:block">Projects</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -46,7 +47,8 @@ export const DashboardHeader = () => {
                   active={location.pathname.split("/").includes("samples")}
                   className={navigationMenuTriggerStyle()}
                 >
-                  Samples
+                  <AudioLines />
+                  <span className="hidden md:block">Samples</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>

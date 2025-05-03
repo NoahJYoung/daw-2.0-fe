@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowLeft, Save, Upload, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, Save, Upload, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,9 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ToneAudioBuffer } from "tone";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
+import * as Tone from "tone";
+import { blobToAudioBuffer } from "@/pages/studio/audio-engine/helpers";
 
 const NOTES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 const OCTAVES = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -34,88 +35,48 @@ export const SampleEditor = () => {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [currentOctave, setCurrentOctave] = useState(4);
   const [samples, setSamples] = useState<SampleMap>({});
-  const [previewingNote, setPreviewingNote] = useState<string | null>(null);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioSource, setAudioSource] = useState<AudioBufferSourceNode | null>(
-    null
-  );
+  const [previewingNotes, setPreviewingNotes] = useState<
+    Record<string, boolean>
+  >({});
 
-  const initAudioContext = () => {
-    if (!audioContext) {
-      const newContext = new AudioContext();
-      setAudioContext(newContext);
-      return newContext;
-    }
-    return audioContext;
+  const sampler = useMemo(() => new Tone.Sampler().toDestination(), []);
+
+  const initAudioContext = async () => {
+    await Tone.start();
+    return Tone.getContext();
   };
 
-  const handleFileUpload = (octave: number, note: string, file: File) => {
+  const handleFileUpload = async (octave: number, note: string, file: File) => {
     const noteId = `${note}${octave}`;
-    setSamples({
-      ...samples,
-      [noteId]: {
-        file,
-        name: file.name,
-      },
-    });
+    const buffer = await blobToAudioBuffer(file);
+    sampler.add(noteId as Tone.Unit.Note, buffer);
+    setSamples({ ...samples, [noteId]: { name: noteId, file } });
   };
 
-  const previewSample = async (noteId: string) => {
-    if (!samples[noteId]?.file) return;
-
-    setPreviewingNote(noteId);
-    const context = initAudioContext();
-
-    if (audioSource) {
-      audioSource.stop();
-      setAudioSource(null);
-    }
-
-    try {
-      const arrayBuffer = await samples[noteId].file!.arrayBuffer();
-      const audioBuffer = await context.decodeAudioData(arrayBuffer);
-      const monoBuffer = new ToneAudioBuffer(audioBuffer).toMono(1).get();
-
-      if (!monoBuffer) {
-        throw new Error("Unable to decode audio buffer");
-      }
-
-      const source = context.createBufferSource();
-      source.buffer = monoBuffer;
-      source.connect(context.destination);
-      source.start(0);
-      setAudioSource(source);
-
-      source.onended = () => {
-        setPreviewingNote(null);
-        setAudioSource(null);
-      };
-    } catch (error) {
-      console.error("Error playing audio:", error);
-      setPreviewingNote(null);
-    }
+  const handleMouseDown = (note: Tone.Unit.Note) => {
+    sampler.triggerAttack(note);
+    setPreviewingNotes({ ...previewingNotes, [note]: true });
+    console.log(previewingNotes[note]);
   };
 
-  const stopPreview = () => {
-    if (audioSource) {
-      audioSource.stop();
-      setAudioSource(null);
-      setPreviewingNote(null);
-    }
+  const handleMouseUp = (note: Tone.Unit.Note) => {
+    sampler.triggerRelease(note);
+    setPreviewingNotes({ ...previewingNotes, [note]: false });
+    console.log(previewingNotes[note]);
   };
 
   const saveSamplePack = () => {
-    const samplePackData = {
-      name: packName,
-      description: packDescription,
-      coverImage: coverImage ? coverImage.name : null,
-      samples: Object.keys(samples).map((noteId) => ({
-        noteId,
-        fileName: samples[noteId].name,
-      })),
-    };
+    // const samplePackData = {
+    //   name: packName,
+    //   description: packDescription,
+    //   coverImage: coverImage ? coverImage.name : null,
+    //   samples: Object.keys(samples).map((noteId) => ({
+    //     noteId,
+    //     fileName: samples[noteId].name,
+    //   })),
+    // };
 
-    console.log("Saving sample pack:", samplePackData);
+    // console.log("Saving sample pack:", samplePackData);
     alert("Sample pack saved successfully!");
   };
 
@@ -124,6 +85,10 @@ export const SampleEditor = () => {
       ? "bg-black text-white h-16 w-10 relative z-10 -mx-5"
       : "bg-white text-black h-24 w-14";
   };
+
+  useEffect(() => {
+    initAudioContext();
+  }, []);
 
   return (
     <div className="w-full h-full bg-surface-1 px-2 lg:px-0">
@@ -245,36 +210,24 @@ export const SampleEditor = () => {
                       <div className="flex max-w-full overflow-x-auto no-scrollbar">
                         {NOTES.map((note) => {
                           const noteId = `${note}${octave}`;
-                          const hasFile = !!samples[noteId]?.file;
 
                           return (
                             <div
                               key={note}
-                              className={`${getKeyClass(note)} flex flex-col justify-end items-center border border-surface-3 `}
+                              className={cn(
+                                `${getKeyClass(note)} flex flex-col justify-end items-center border border-surface-3 cursor-pointer`,
+                                { "bg-brand-1": previewingNotes[noteId] }
+                              )}
+                              onMouseDown={() =>
+                                handleMouseDown(noteId as Tone.Unit.Note)
+                              }
+                              onMouseUp={() =>
+                                handleMouseUp(noteId as Tone.Unit.Note)
+                              }
                             >
                               <div className="text-xs font-medium mb-1">
                                 {note.replace("b", "♭")}
                                 {octave}
-                              </div>
-                              <div className="flex gap-1 mb-2">
-                                {hasFile && (
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="h-6 w-6 rounded-full bg-surface-2 hover:bg-surface-3 text-surface-8"
-                                    onClick={() =>
-                                      previewingNote === noteId
-                                        ? stopPreview()
-                                        : previewSample(noteId)
-                                    }
-                                  >
-                                    {previewingNote === noteId ? (
-                                      <VolumeX className="h-3 w-3" />
-                                    ) : (
-                                      <Volume2 className="h-3 w-3" />
-                                    )}
-                                  </Button>
-                                )}
                               </div>
                             </div>
                           );
@@ -334,17 +287,18 @@ export const SampleEditor = () => {
                                   size="icon"
                                   variant="ghost"
                                   className="h-8 w-8 rounded-full bg-surface-2 hover:bg-surface-3"
-                                  onClick={() =>
-                                    previewingNote === noteId
-                                      ? stopPreview()
-                                      : previewSample(noteId)
+                                  onMouseDown={() =>
+                                    handleMouseDown(noteId as Tone.Unit.Note)
+                                  }
+                                  onMouseUp={() =>
+                                    handleMouseUp(noteId as Tone.Unit.Note)
                                   }
                                 >
-                                  {previewingNote === noteId ? (
-                                    <VolumeX className="h-4 w-4" />
-                                  ) : (
-                                    <Volume2 className="h-4 w-4" />
-                                  )}
+                                  <Volume2
+                                    className={cn("h-4 w-4", {
+                                      "text-brand-1": previewingNotes[noteId],
+                                    })}
+                                  />
                                 </Button>
                               )}
                             </div>

@@ -27,7 +27,8 @@ export function SamplesGrid() {
       name: "Vintage Synth",
       samples: 48,
       lastModified: "1 week ago",
-      description: "A cool synth I made while I was high",
+      description:
+        "A cool synth I made while I was high on mushrooms exploring the vast unknowns of my own psyche",
     },
     {
       id: "3",
@@ -87,7 +88,7 @@ export function SamplesGrid() {
                 {pack.samples} samples • Last modified {pack.lastModified}
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-surface-6">
+            <CardContent className="text-sm text-surface-6 max-w-full max-h-full truncate">
               {pack.description}
             </CardContent>
             <CardFooter className="flex justify-between">
