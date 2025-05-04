@@ -53,13 +53,12 @@ export const SampleEditor = () => {
     setSamples({ ...samples, [noteId]: { name: noteId, file } });
   };
 
-  const handleMouseDown = (note: Tone.Unit.Note) => {
+  const attack = (note: Tone.Unit.Note) => {
     sampler.triggerAttack(note);
     setPreviewingNotes({ ...previewingNotes, [note]: true });
-    console.log(previewingNotes[note]);
   };
 
-  const handleMouseUp = (note: Tone.Unit.Note) => {
+  const release = (note: Tone.Unit.Note) => {
     sampler.triggerRelease(note);
     setPreviewingNotes({ ...previewingNotes, [note]: false });
     console.log(previewingNotes[note]);
@@ -185,8 +184,8 @@ export const SampleEditor = () => {
               }
             >
               <div className="flex flex-col justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Octave</h3>
-                <TabsList className="bg-surface-2">
+                <h3 className="text-lg font-medium text-surface-8">Octave</h3>
+                <TabsList className="bg-surface-2 ">
                   {OCTAVES.map((octave) => (
                     <TabsTrigger
                       key={octave}
@@ -215,17 +214,23 @@ export const SampleEditor = () => {
                             <div
                               key={note}
                               className={cn(
-                                `${getKeyClass(note)} flex flex-col justify-end items-center border border-surface-3 cursor-pointer`,
+                                `${getKeyClass(note)} select-none flex flex-col justify-end items-center border border-surface-3 cursor-pointer`,
                                 { "bg-brand-1": previewingNotes[noteId] }
                               )}
+                              onTouchStart={() =>
+                                attack(noteId as Tone.Unit.Note)
+                              }
+                              onTouchEnd={() =>
+                                release(noteId as Tone.Unit.Note)
+                              }
                               onMouseDown={() =>
-                                handleMouseDown(noteId as Tone.Unit.Note)
+                                attack(noteId as Tone.Unit.Note)
                               }
                               onMouseUp={() =>
-                                handleMouseUp(noteId as Tone.Unit.Note)
+                                release(noteId as Tone.Unit.Note)
                               }
                             >
-                              <div className="text-xs font-medium mb-1">
+                              <div className="text-xs font-medium mb-1 ">
                                 {note.replace("b", "♭")}
                                 {octave}
                               </div>
@@ -287,11 +292,17 @@ export const SampleEditor = () => {
                                   size="icon"
                                   variant="ghost"
                                   className="h-8 w-8 rounded-full bg-surface-2 hover:bg-surface-3"
+                                  onTouchStart={() =>
+                                    attack(noteId as Tone.Unit.Note)
+                                  }
+                                  onTouchEnd={() =>
+                                    release(noteId as Tone.Unit.Note)
+                                  }
                                   onMouseDown={() =>
-                                    handleMouseDown(noteId as Tone.Unit.Note)
+                                    attack(noteId as Tone.Unit.Note)
                                   }
                                   onMouseUp={() =>
-                                    handleMouseUp(noteId as Tone.Unit.Note)
+                                    release(noteId as Tone.Unit.Note)
                                   }
                                 >
                                   <Volume2
