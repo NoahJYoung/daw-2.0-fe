@@ -9,7 +9,12 @@ import React, {
   useMemo,
 } from "react";
 import { useState } from "react";
-import { FormattedStorageQuota, getProjects, getStorageInfo } from "./helpers";
+import {
+  FormattedStorageQuota,
+  getProjects,
+  getSamplePacks,
+  getStorageInfo,
+} from "./helpers";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Project {
@@ -23,8 +28,19 @@ export interface Project {
   size: number;
 }
 
+export interface SamplePack {
+  id: string;
+  name: string;
+  samples: number;
+  lastModified: string;
+  description: string;
+  data: File;
+  size: number;
+}
+
 export interface FileSystemContextType {
-  projects: Project[] | undefined;
+  projects: Project[];
+  samplePacks: SamplePack[];
   isLoading: boolean;
   isFileSystemSupported: boolean;
   isMobileDevice: boolean;
@@ -33,8 +49,15 @@ export interface FileSystemContextType {
     projectZip: Blob,
     projectId?: string
   ) => Promise<string | void>;
-  getProjectById: (projectPath: string) => Project | null;
+  getProjectById: (projectId: string) => Project | null;
   deleteProject: (projectId: string) => Promise<void>;
+  saveSamplePack: (
+    packName: string,
+    packZip: Blob,
+    packId?: string
+  ) => Promise<string | void>;
+  getSamplePackById: (packId: string) => SamplePack | null;
+  deleteSamplePack: (packId: string) => Promise<void>;
   quota?: FormattedStorageQuota;
 }
 
@@ -57,6 +80,10 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [rootDirectory, setRootDirectory] =
     useState<FileSystemDirectoryHandle | null>(null);
+  const [projectsDirectory, setProjectsDirectory] =
+    useState<FileSystemDirectoryHandle | null>(null);
+  const [samplePacksDirectory, setSamplePacksDirectory] =
+    useState<FileSystemDirectoryHandle | null>(null);
   const queryClient = useQueryClient();
   const { isFileSystemSupported, isMobileDevice } = useMemo(
     detectEnvironment,
@@ -69,9 +96,23 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     queryClient.invalidateQueries({ queryKey: ["STORAGE-INFO"] });
   }, [queryClient]);
 
+  const invalidateSamplePackQuery = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ["SAMPLE-PACKS"] });
+    queryClient.invalidateQueries({ queryKey: ["STORAGE-INFO"] });
+  }, [queryClient]);
+
   const { data: projects, isFetching: isLoading } = useQuery({
     queryKey: ["PROJECTS"],
-    queryFn: () => getProjects(rootDirectory),
+    queryFn: () => getProjects(projectsDirectory),
+    enabled: !!rootDirectory,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
+  });
+
+  const { data: samplePacks, isFetching: isLoadingSamplePacks } = useQuery({
+    queryKey: ["SAMPLE-PACKS"],
+    queryFn: () => getSamplePacks(samplePacksDirectory),
     enabled: !!rootDirectory,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -90,6 +131,17 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     const getRootDirectory = async () => {
       const root = await navigator.storage.getDirectory();
       setRootDirectory(root);
+
+      const projectsDir = await root.getDirectoryHandle("projects", {
+        create: true,
+      });
+      setProjectsDirectory(projectsDir);
+
+      const samplePacksDir = await root.getDirectoryHandle("sample-packs", {
+        create: true,
+      });
+      setSamplePacksDirectory(samplePacksDir);
+
       setIsFetchingRootDirectory(false);
     };
     getRootDirectory();
@@ -97,7 +149,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 
   const createProject = useCallback(
     async (projectName: string, projectZip: Blob) => {
-      if (!rootDirectory) {
+      if (!projectsDirectory) {
         throw new Error("Root directory not initialized");
       }
 
@@ -105,7 +157,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
       const fileName = `${projectName}.${projectId}.velocity.app`;
 
       try {
-        const fileHandle = await rootDirectory.getFileHandle(fileName, {
+        const fileHandle = await projectsDirectory.getFileHandle(fileName, {
           create: true,
         });
 
@@ -121,30 +173,30 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("Failed to create project");
       }
     },
-    [invalidateProjectQuery, rootDirectory]
+    [invalidateProjectQuery, projectsDirectory]
   );
 
   const updateProject = useCallback(
     async (projectName: string, projectId: string, projectZip: Blob) => {
-      if (!rootDirectory) {
+      if (!projectsDirectory) {
         throw new Error("Root directory not initialized");
       }
 
       const fileName = `${projectName}.${projectId}.velocity.app`;
 
       try {
-        const existingFiles = await getProjects(rootDirectory);
+        const existingFiles = await getProjects(projectsDirectory);
         const existingFile = existingFiles?.find((file) =>
           file.name.includes(projectId)
         );
 
         if (existingFile) {
           if (existingFile.name !== fileName) {
-            await rootDirectory.removeEntry(existingFile.name);
+            await projectsDirectory.removeEntry(existingFile.name);
           }
         }
 
-        const fileHandle = await rootDirectory.getFileHandle(fileName, {
+        const fileHandle = await projectsDirectory.getFileHandle(fileName, {
           create: true,
         });
         const writable = await fileHandle.createWritable();
@@ -156,12 +208,12 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("Failed to update project");
       }
     },
-    [invalidateProjectQuery, rootDirectory]
+    [invalidateProjectQuery, projectsDirectory]
   );
 
   const deleteProject = useCallback(
     async (projectId: string) => {
-      if (!rootDirectory) {
+      if (!projectsDirectory) {
         throw new Error("Root directory not initialized");
       }
 
@@ -173,7 +225,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
         if (projectToDelete) {
           const fileToDelete = projectToDelete.data;
           if (fileToDelete) {
-            await rootDirectory.removeEntry(fileToDelete.name);
+            await projectsDirectory.removeEntry(fileToDelete.name);
             invalidateProjectQuery();
           } else {
             throw new Error(`Project with ID ${projectId} not found`);
@@ -184,7 +236,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("Failed to delete project");
       }
     },
-    [invalidateProjectQuery, projects, rootDirectory]
+    [invalidateProjectQuery, projects, projectsDirectory]
   );
 
   const saveProject = useCallback(
@@ -203,7 +255,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 
   const getProjectById = useCallback(
     (projectId: string): Project | null => {
-      if (!rootDirectory) {
+      if (!projectsDirectory) {
         throw new Error("Root directory not initialized");
       }
 
@@ -220,18 +272,150 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("Failed to load project");
       }
     },
-    [projects, rootDirectory]
+    [projects, projectsDirectory]
+  );
+
+  const createSamplePack = useCallback(
+    async (packName: string, packZip: Blob) => {
+      if (!samplePacksDirectory) {
+        throw new Error("Root directory not initialized");
+      }
+
+      const packId = uuidv4();
+      const fileName = `${packName}.${packId}.velocity.app`;
+
+      try {
+        const fileHandle = await samplePacksDirectory.getFileHandle(fileName, {
+          create: true,
+        });
+
+        const writable = await fileHandle.createWritable();
+        await writable.write(packZip);
+        await writable.close();
+
+        invalidateSamplePackQuery();
+
+        return packId;
+      } catch (error) {
+        console.error("Error creating sample pack:", error);
+        throw new Error("Failed to create sample pack");
+      }
+    },
+    [invalidateSamplePackQuery, samplePacksDirectory]
+  );
+
+  const updateSamplePack = useCallback(
+    async (packName: string, packId: string, packZip: Blob) => {
+      if (!samplePacksDirectory) {
+        throw new Error("Root directory not initialized");
+      }
+
+      const fileName = `${packName}.${packId}.velocity.app`;
+
+      try {
+        const existingFiles = await getSamplePacks(samplePacksDirectory);
+        const existingFile = existingFiles?.find((file) =>
+          file.name.includes(packId)
+        );
+
+        if (existingFile) {
+          if (existingFile.name !== fileName) {
+            await samplePacksDirectory.removeEntry(existingFile.name);
+          }
+        }
+
+        const fileHandle = await samplePacksDirectory.getFileHandle(fileName, {
+          create: true,
+        });
+        const writable = await fileHandle.createWritable();
+        await writable.write(packZip);
+        await writable.close();
+        invalidateSamplePackQuery();
+      } catch (error) {
+        console.error("Error updating sample pack:", error);
+        throw new Error("Failed to update sample pack");
+      }
+    },
+    [invalidateSamplePackQuery, samplePacksDirectory]
+  );
+
+  const deleteSamplePack = useCallback(
+    async (packId: string) => {
+      if (!samplePacksDirectory) {
+        throw new Error("Root directory not initialized");
+      }
+
+      try {
+        const packToDelete = samplePacks?.find(
+          (project) => project.id === packId
+        );
+
+        if (packToDelete) {
+          const fileToDelete = packToDelete.data;
+          if (fileToDelete) {
+            await samplePacksDirectory.removeEntry(fileToDelete.name);
+            invalidateSamplePackQuery();
+          } else {
+            throw new Error(`Sample pack with ID ${packId} not found`);
+          }
+        }
+      } catch (error) {
+        console.error("Error deleting sample pack:", error);
+        throw new Error("Failed to delete sample pack");
+      }
+    },
+    [invalidateSamplePackQuery, samplePacks, samplePacksDirectory]
+  );
+
+  const saveSamplePack = useCallback(
+    async (packName: string, packZip: Blob, packId?: string) => {
+      if (packId) {
+        await updateSamplePack(packName, packId, packZip);
+        invalidateSamplePackQuery();
+      } else {
+        const id = await createSamplePack(packName, packZip);
+        invalidateSamplePackQuery();
+        return id;
+      }
+    },
+    [createSamplePack, invalidateSamplePackQuery, updateSamplePack]
+  );
+
+  const getSamplePackById = useCallback(
+    (packId: string): SamplePack | null => {
+      if (!samplePacksDirectory) {
+        throw new Error("Root directory not initialized");
+      }
+
+      try {
+        const samplePack = samplePacks?.find((pack) => pack.id === packId);
+
+        if (samplePack) {
+          return samplePack;
+        }
+
+        return null;
+      } catch (error) {
+        console.error("Error loading project:", error);
+        throw new Error("Failed to load project");
+      }
+    },
+    [samplePacks, samplePacksDirectory]
   );
 
   const contextValue: FileSystemContextType = {
-    projects,
-    isLoading: isLoading || isFetchingRootDirectory,
+    projects: projects || [],
+    samplePacks: samplePacks || [],
+    isLoading: isLoading || isFetchingRootDirectory || isLoadingSamplePacks,
     isFileSystemSupported,
     isMobileDevice,
     quota,
     saveProject,
+    saveSamplePack,
     getProjectById,
+    getSamplePackById,
     deleteProject,
+    deleteSamplePack,
   };
 
   return (

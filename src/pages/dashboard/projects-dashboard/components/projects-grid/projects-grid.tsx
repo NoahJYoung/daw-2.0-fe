@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, MoreHorizontal, Music2, Trash2 } from "lucide-react";
+import { Download, MoreHorizontal, Music2, Plus, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ import {
 } from "@/hooks/use-file-system/use-file-system";
 import { formatBytes } from "@/hooks/use-file-system/helpers";
 import { getTimeSignatureLabel } from "@/pages/studio/audio-engine/types";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useThemeContext } from "@/hooks";
 
 export const ProjectsGrid = () => {
@@ -88,6 +88,18 @@ export const ProjectsGrid = () => {
           WebkitMaskImage: maskGradient,
         }}
       >
+        <Link to="/studio" className="block h-full">
+          <Card className="bg-surface-0 text-white border-surface-2 border-dashed h-48 lg:h-full flex flex-col items-center justify-center hover:bg-surface-1 transition-colors cursor-pointer">
+            <CardContent className="flex flex-col items-center justify-center py-8">
+              <div className="h-16 w-16 rounded-full bg-[#fd3574]/10 flex items-center justify-center mb-4">
+                <Plus className="h-8 w-8 text-[#fd3574]" />
+              </div>
+              <h3 className="hidden lg:block text-xl font-medium mb-2 text-surface-8">
+                New Project
+              </h3>
+            </CardContent>
+          </Card>
+        </Link>
         {projects?.length
           ? projects.map((project) => (
               <Card

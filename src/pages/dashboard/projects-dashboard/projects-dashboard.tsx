@@ -1,6 +1,7 @@
 import { useFileSystem } from "@/hooks";
 import { EmptyProjects, ProjectsGrid } from "./components";
-import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { FolderInput } from "lucide-react";
 
 export const ProjectsDashboard = () => {
   const { quota, projects } = useFileSystem();
@@ -10,7 +11,7 @@ export const ProjectsDashboard = () => {
         <div className="mx-auto max-w-7xl w-full">
           <div className="flex w-full items-center justify-between mb-2 lg:px-3">
             <span className="flex flex-col justify-center gap-1">
-              <h1 className="text-3xl font-bold">Projects</h1>
+              <h1 className="text-3xl font-bold">Your Projects</h1>
               <span className="flex gap-1 text-surface-6 text-xs lg:text-sm">
                 <p className="hidden sm:block">Used:</p>{" "}
                 <strong>{`${quota?.used} `}</strong>/
@@ -19,15 +20,14 @@ export const ProjectsDashboard = () => {
             </span>
 
             <div className="flex items-center gap-4">
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => alert("not implemented yet")}
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                className="inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
               >
-                Import
-              </button>
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-                <Link to="/studio">New Project</Link>
-              </button>
+                <FolderInput />
+                Import Project
+              </Button>
             </div>
           </div>
         </div>

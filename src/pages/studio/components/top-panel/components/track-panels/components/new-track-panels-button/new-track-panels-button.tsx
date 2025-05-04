@@ -1,15 +1,17 @@
 import { useAudioEngine } from "@/pages/studio/hooks";
-import { IoMdAdd as PlusIcon } from "react-icons/io";
+import { Plus } from "lucide-react";
 
 export const NewTrackPanelsButton = () => {
   const { mixer } = useAudioEngine();
   return (
-    <button
-      className="flex-shrink-0 opacity-50 hover:opacity-100 my-[2px] w-[249px] h-[80px] flex items-center justify-center text-2xl text-surface-4"
-      onClick={() => mixer.createTrack()}
-      type="button"
-    >
-      <PlusIcon className="h-[48px] w-[48px]" />
-    </button>
+    <div className="w-full py-1 flex items-center justify-center">
+      <button
+        className="h-16 w-16 rounded-full hover:bg-[#fd3574]/10 flex items-center justify-center mb-4 transition-all transition-500 transition-ease"
+        onClick={() => mixer.createTrack()}
+        type="button"
+      >
+        <Plus className="h-8 w-8 text-[#fd3574]" />
+      </button>
+    </div>
   );
 };

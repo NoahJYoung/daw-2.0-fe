@@ -9,35 +9,12 @@ import {
 import { Edit, Trash2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { useThemeContext } from "@/hooks";
+import { useFileSystem, useThemeContext } from "@/hooks";
 
 export function SamplesGrid() {
   const { theme } = useThemeContext();
+  const { samplePacks } = useFileSystem();
 
-  const samplePacks = [
-    {
-      id: "1",
-      name: "Acoustic Piano",
-      samples: 88,
-      lastModified: "2 days ago",
-      description: "Boring old piano...",
-    },
-    {
-      id: "2",
-      name: "Vintage Synth",
-      samples: 48,
-      lastModified: "1 week ago",
-      description:
-        "A cool synth I made while I was high on mushrooms exploring the vast unknowns of my own psyche",
-    },
-    {
-      id: "3",
-      name: "Drum Kit",
-      samples: 24,
-      lastModified: "3 weeks ago",
-      description: "Pump it! (louder)",
-    },
-  ];
   const maskGradient =
     theme === "dark"
       ? "linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)"
@@ -59,7 +36,7 @@ export function SamplesGrid() {
                 <Plus className="h-8 w-8 text-[#fd3574]" />
               </div>
               <h3 className="hidden lg:block text-xl font-medium mb-2 text-surface-8">
-                Create New Sample Pack
+                New Sample Pack
               </h3>
               <p className="hidden lg:block text-surface-6 text-center">
                 Start with an empty template and add your samples
