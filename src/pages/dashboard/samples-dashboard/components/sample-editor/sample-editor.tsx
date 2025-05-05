@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import * as Tone from "tone";
 import { blobToAudioBuffer } from "@/pages/studio/audio-engine/helpers";
+// import { useFileSystem } from "@/hooks";
 
 const NOTES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 const OCTAVES = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -38,6 +39,7 @@ export const SampleEditor = () => {
   const [previewingNotes, setPreviewingNotes] = useState<
     Record<string, boolean>
   >({});
+  // const { saveSamplePack } = useFileSystem();
 
   const sampler = useMemo(() => new Tone.Sampler().toDestination(), []);
 
@@ -61,21 +63,9 @@ export const SampleEditor = () => {
   const release = (note: Tone.Unit.Note) => {
     sampler.triggerRelease(note);
     setPreviewingNotes({ ...previewingNotes, [note]: false });
-    console.log(previewingNotes[note]);
   };
 
-  const saveSamplePack = () => {
-    // const samplePackData = {
-    //   name: packName,
-    //   description: packDescription,
-    //   coverImage: coverImage ? coverImage.name : null,
-    //   samples: Object.keys(samples).map((noteId) => ({
-    //     noteId,
-    //     fileName: samples[noteId].name,
-    //   })),
-    // };
-
-    // console.log("Saving sample pack:", samplePackData);
+  const handleSave = () => {
     alert("Sample pack saved successfully!");
   };
 
@@ -328,7 +318,7 @@ export const SampleEditor = () => {
               {Object.keys(samples).length} of 96 samples loaded
             </div>
             <Button
-              onClick={saveSamplePack}
+              onClick={handleSave}
               className="bg-brand-1 hover:bg-brand-2 text-white"
             >
               <Save className="mr-2 h-4 w-4 " />

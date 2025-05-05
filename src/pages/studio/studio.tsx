@@ -17,8 +17,8 @@ import {
 export const Studio = observer(() => (
   <AudioEngineProvider>
     <UndoManagerProvider>
-      <HotKeysManager />
       <BottomPanelProvider>
+        <HotKeysManager />
         <StudioLayout
           upperPanel={<TopPanel />}
           middlePanel={<MainControls />}

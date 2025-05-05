@@ -1,5 +1,9 @@
 import { useHotkeys } from "react-hotkeys-hook";
-import { useAudioEngine, useUndoManager } from "../../hooks";
+import {
+  useAudioEngine,
+  useBottomPanelViewController,
+  useUndoManager,
+} from "../../hooks";
 import { useToast } from "@/components/ui/use-toast";
 import { observer } from "mobx-react-lite";
 import {
@@ -13,12 +17,14 @@ import {
   deleteSelectedTracks,
   selectAllTracks,
 } from "../top-panel/components/track-panels/helpers";
+import { AudioClip, MidiClip } from "../../audio-engine/components";
 
 export const HotKeysManager = observer(() => {
   const { undoManager } = useUndoManager();
   const audioEngine = useAudioEngine();
   const { mixer, clipboard, timeline } = audioEngine;
   const { toast } = useToast();
+  const { bottomPanelRef } = useBottomPanelViewController();
 
   useHotkeys("ctrl+z", (event) => {
     event.preventDefault();
@@ -80,7 +86,38 @@ export const HotKeysManager = observer(() => {
 
   useHotkeys("delete", (event) => {
     event.preventDefault();
-    deleteSelectedClips(mixer, undoManager);
+    const shouldDeleteTracks =
+      mixer.selectedTracks.length >= 1 &&
+      mixer.selectedClips.length === 0 &&
+      (!((bottomPanelRef.current?.getSize() || 0) > 30) ||
+        !mixer.featuredClip ||
+        mixer.featuredClip instanceof AudioClip ||
+        mixer.featuredClip.selectedNotes.length === 0);
+
+    const shouldDeleteClips =
+      mixer.selectedClips.length >= 1 &&
+      mixer.selectedTracks.length === 0 &&
+      (!((bottomPanelRef.current?.getSize() || 0) > 30) ||
+        !mixer.featuredClip ||
+        mixer.featuredClip instanceof AudioClip ||
+        mixer.featuredClip.selectedNotes.length === 0);
+
+    const shouldDeleteNotes =
+      mixer.panelMode === "PIANO_ROLL" &&
+      (bottomPanelRef.current?.getSize() || 0) > 30 &&
+      mixer.featuredClip &&
+      mixer.featuredClip instanceof MidiClip &&
+      mixer.featuredClip.selectedNotes.length >= 0;
+
+    if (shouldDeleteClips) {
+      deleteSelectedClips(mixer, undoManager);
+    } else if (shouldDeleteTracks) {
+      deleteSelectedTracks(mixer, undoManager);
+    } else if (shouldDeleteNotes) {
+      undoManager.withGroup("DELETE SELECTED NOTES", () => {
+        (mixer.featuredClip as MidiClip)?.deleteSelectedNotes();
+      });
+    }
   });
 
   useHotkeys("ctrl+a", (event) => {
