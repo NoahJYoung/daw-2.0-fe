@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import * as Tone from "tone";
 import { blobToAudioBuffer } from "@/pages/studio/audio-engine/helpers";
+import { Textarea } from "@/components/ui/textarea";
 // import { useFileSystem } from "@/hooks";
 
 const NOTES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
@@ -91,76 +92,74 @@ export const SampleEditor = () => {
         </Link>
 
         <Card className="bg-surface-0 text-white border-surface-2">
-          <CardHeader>
+          <CardHeader className="flex flex-col sm:flex-row gap-6 items-center justify-between">
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>
                   <Input
                     value={packName}
                     onChange={(e) => setPackName(e.target.value)}
-                    className="text-2xl font-bold bg-transparent border-none p-0 h-auto text-surface-9 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="text-2xl font-bold bg-transparent border-t-0 border-x-0 border-b-1 border-surface-5 rounded-none p-0 py-1 h-auto text-surface-9 focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
                 </CardTitle>
                 <CardDescription>
-                  <Input
+                  <Textarea
                     value={packDescription}
                     onChange={(e) => setPackDescription(e.target.value)}
+                    rows={4}
                     placeholder="Add a description for your sample pack"
-                    className="text-sm text-surface-6 bg-transparent border-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="resize-none text-sm text-surface-6 bg-transparent border-t-0 border-x-0 border-b-1 border-surface-5 rounded-none p-0 py-1 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
                 </CardDescription>
-                <div className="mt-4">
-                  <Label
-                    htmlFor="cover-image"
-                    className="text-sm font-medium mb-2 block"
-                  >
-                    Pack Cover Image
-                  </Label>
-                  <div className="flex items-center gap-4">
-                    <div className="h-24 w-24 rounded-md bg-surface-2 border border-surface-3 flex items-center justify-center overflow-hidden">
-                      {coverImage ? (
-                        <img
-                          src={
-                            URL.createObjectURL(coverImage) ||
-                            "/placeholder.svg"
-                          }
-                          alt="Pack cover"
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <Upload className="h-8 w-8 text-surface-5" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="relative">
-                        <Input
-                          id="cover-image"
-                          type="file"
-                          accept="image/*"
-                          className="absolute inset-0 opacity-0 cursor-pointer"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              setCoverImage(e.target.files[0]);
-                            }
-                          }}
-                        />
-                        <Button
-                          variant="outline"
-                          className="bg-surface-1 border-surface-3 text-surface-7 hover:bg-surface-2 w-full justify-start"
-                        >
-                          <Upload className="mr-2 h-4 w-4 bg-surface-1 cursor-pointer hover:bg-surface-2" />
-                          {coverImage
-                            ? "Change Cover Image"
-                            : "Upload Cover Image"}
-                        </Button>
-                      </div>
-                      {coverImage && (
-                        <p className="text-xs text-surface-6 mt-1 truncate">
-                          {coverImage.name}
-                        </p>
-                      )}
-                    </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <Label
+                htmlFor="cover-image"
+                className="text-sm font-medium mb-2 block"
+              >
+                Pack Cover Image
+              </Label>
+              <div className="flex items-center gap-4">
+                <div className="h-24 w-24 rounded-md bg-surface-2 border border-surface-3 flex items-center justify-center overflow-hidden">
+                  {coverImage ? (
+                    <img
+                      src={
+                        URL.createObjectURL(coverImage) || "/placeholder.svg"
+                      }
+                      alt="Pack cover"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Upload className="h-8 w-8 text-surface-5" />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <div className="relative">
+                    <Input
+                      id="cover-image"
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setCoverImage(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="outline"
+                      className="bg-surface-1 border-surface-3 text-surface-7 hover:bg-surface-2 w-full justify-start"
+                    >
+                      <Upload className="mr-2 h-4 w-4 bg-surface-1 cursor-pointer hover:bg-surface-2" />
+                      {coverImage ? "Change Cover Image" : "Upload Cover Image"}
+                    </Button>
                   </div>
+                  {coverImage && (
+                    <p className="text-xs text-surface-6 mt-1 truncate">
+                      {coverImage.name}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
