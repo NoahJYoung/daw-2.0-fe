@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { Toaster } from "./components/ui/toaster";
 import { FileSystemProvider, useThemeContext } from "./hooks";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { routeTree } from "./routes";
 
 import "./i18n";
@@ -16,15 +15,13 @@ function App() {
 
   return (
     <div className={`w-screen ${theme} h-screen overflow-hidden`}>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-        <QueryClientProvider client={queryClient}>
-          <FileSystemProvider>
-            <InstallPrompt>
-              <RouterProvider router={router} />
-            </InstallPrompt>
-          </FileSystemProvider>
-        </QueryClientProvider>
-      </GoogleOAuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <FileSystemProvider>
+          <InstallPrompt>
+            <RouterProvider router={router} />
+          </InstallPrompt>
+        </FileSystemProvider>
+      </QueryClientProvider>
       <Toaster />
     </div>
   );

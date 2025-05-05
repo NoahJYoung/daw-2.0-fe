@@ -4,18 +4,19 @@ import {
   createRootRoute,
   redirect,
 } from "@tanstack/react-router";
-import { Dashboard, Studio } from "@/pages";
+import { Dashboard, SignIn, Studio } from "@/pages";
 import { ProjectsDashboard } from "@/pages/dashboard/projects-dashboard";
 import {
   SampleEditor,
   SamplesDashboard,
 } from "@/pages/dashboard/samples-dashboard";
+import { AuthProvider } from "@/context/auth-context";
 
 const rootRoute = createRootRoute({
   component: () => (
-    <>
+    <AuthProvider>
       <Outlet />
-    </>
+    </AuthProvider>
   ),
 });
 
@@ -24,7 +25,7 @@ const indexRoute = createRoute({
   path: "/",
   beforeLoad: () => {
     throw redirect({
-      to: "/dashboard/projects",
+      to: "/app/projects",
       replace: true,
     });
   },
@@ -33,7 +34,7 @@ const indexRoute = createRoute({
 
 const dashboardLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/dashboard",
+  path: "/app",
   component: () => <Dashboard />,
 });
 
@@ -42,7 +43,7 @@ const dashboardIndexRoute = createRoute({
   path: "/",
   beforeLoad: () => {
     throw redirect({
-      to: "/dashboard/projects",
+      to: "/app/projects",
       replace: true,
     });
   },
@@ -73,6 +74,12 @@ const createSamplesDashboardRoute = createRoute({
   component: () => <SampleEditor />,
 });
 
+const authRoute = createRoute({
+  getParentRoute: () => dashboardLayoutRoute,
+  path: "/signin",
+  component: () => <SignIn />,
+});
+
 const newProjectRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/studio",
@@ -93,6 +100,7 @@ export const routeTree = rootRoute.addChildren([
     samplesDashboardRoute,
     editSamplesDashboardRoute,
     createSamplesDashboardRoute,
+    authRoute,
   ]),
   newProjectRoute,
   existingProjectRoute,

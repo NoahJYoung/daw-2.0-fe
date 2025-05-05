@@ -16,10 +16,12 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useAuth } from "@/context/auth-context";
 
 export const DashboardHeader = () => {
   const { toggleTheme } = useThemeContext();
   const location = useLocation();
+  const { isLoggedIn, signOut } = useAuth();
   return (
     <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
@@ -31,9 +33,9 @@ export const DashboardHeader = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link to="/dashboard/projects">
+              <Link to="/app/projects">
                 <NavigationMenuLink
-                  active={location.pathname === "/dashboard/projects"}
+                  active={location.pathname === "/app/projects"}
                   className={navigationMenuTriggerStyle()}
                 >
                   <FileAudio />
@@ -42,7 +44,7 @@ export const DashboardHeader = () => {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to="/dashboard/samples">
+              <Link to="/app/samples">
                 <NavigationMenuLink
                   active={location.pathname.split("/").includes("samples")}
                   className={navigationMenuTriggerStyle()}
@@ -69,10 +71,25 @@ export const DashboardHeader = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <User className="h-5 w-5" />
-          <span className="sr-only">Account</span>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <User className="h-5 w-5" />
+              <span className="sr-only">Account</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {isLoggedIn ? (
+              <DropdownMenuItem onClick={signOut}>Sign Out</DropdownMenuItem>
+            ) : (
+              <Link to="/app/signin">
+                <DropdownMenuItem className="w-full text-center">
+                  Sign In
+                </DropdownMenuItem>
+              </Link>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
