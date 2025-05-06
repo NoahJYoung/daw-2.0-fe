@@ -13,20 +13,24 @@ import {
   ModalProvider,
   Loader,
 } from "./components";
+import { OrientationManager } from "@/components/ui/custom/orientation-manager";
+import { isMobileDevice } from "./utils";
 
 export const Studio = observer(() => (
-  <AudioEngineProvider>
-    <UndoManagerProvider>
-      <BottomPanelProvider>
-        <HotKeysManager />
-        <StudioLayout
-          upperPanel={<TopPanel />}
-          middlePanel={<MainControls />}
-          lowerPanel={<BottomPanel />}
-        />
-        <Loader />
-        <ModalProvider />
-      </BottomPanelProvider>
-    </UndoManagerProvider>
-  </AudioEngineProvider>
+  <OrientationManager requireLandscape={isMobileDevice()}>
+    <AudioEngineProvider>
+      <UndoManagerProvider>
+        <BottomPanelProvider>
+          <HotKeysManager />
+          <StudioLayout
+            upperPanel={<TopPanel />}
+            middlePanel={<MainControls />}
+            lowerPanel={<BottomPanel />}
+          />
+          <Loader />
+          <ModalProvider />
+        </BottomPanelProvider>
+      </UndoManagerProvider>
+    </AudioEngineProvider>
+  </OrientationManager>
 ));

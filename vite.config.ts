@@ -43,7 +43,7 @@ export default defineConfig({
         theme_color: "#fd3574",
         background_color: "#000000",
         display: "standalone",
-        orientation: "landscape",
+        orientation: "portrait-primary",
         icons: [
           {
             src: "/logo192.png",
