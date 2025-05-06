@@ -11,7 +11,6 @@ import {
   SamplesDashboard,
 } from "@/pages/dashboard/samples-dashboard";
 import { AuthProvider } from "@/context/auth-context";
-import { AuthCallback } from "@/pages/auth-callback";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -93,24 +92,9 @@ const existingProjectRoute = createRoute({
   component: () => <Studio />,
 });
 
-// Add the auth callback route at the root level
-const authCallbackRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/auth/callback",
-  component: () => <AuthCallback />,
-});
-
-// // Add a popup signin route for initiating signin in popup window
-// const popupSignInRoute = createRoute({
-//   getParentRoute: () => rootRoute,
-//   path: "/auth/popup-signin",
-//   component: () => <PopupSignIn />,
-// });
-
 export const routeTree = rootRoute.addChildren([
   indexRoute,
-  authCallbackRoute, // Add auth callback at root level
-  // popupSignInRoute, // Add popup signin at root level
+
   dashboardLayoutRoute.addChildren([
     dashboardIndexRoute,
     projectsDashboardRoute,
