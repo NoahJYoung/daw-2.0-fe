@@ -1,4 +1,5 @@
-import { useState, useEffect, ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, ReactNode, useCallback } from "react";
 
 interface OrientationManagerProps {
   requireLandscape: boolean;
@@ -10,15 +11,10 @@ export const OrientationManager = ({
   children,
 }: OrientationManagerProps) => {
   const [isWrongOrientation, setIsWrongOrientation] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  useEffect(() => {
-    if (!requireLandscape) return;
-
-    const canLock =
-      screen.orientation &&
-      screen.orientation.lock &&
-      typeof screen.orientation.lock === "function";
-
+  // Function to handle orientation detection
+  const setupOrientationDetection = useCallback(() => {
     const checkOrientation = () => {
       if (requireLandscape) {
         const isLandscape = window.innerWidth > window.innerHeight;
@@ -28,18 +24,62 @@ export const OrientationManager = ({
       }
     };
 
-    const setupOrientationDetection = () => {
-      checkOrientation();
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
 
-      window.addEventListener("resize", checkOrientation);
+    return () => {
+      window.removeEventListener("resize", checkOrientation);
+    };
+  }, [requireLandscape]);
 
-      return () => {
-        window.removeEventListener("resize", checkOrientation);
-      };
+  // Handle fullscreen requests
+  useEffect(() => {
+    if (!requireLandscape) return;
+
+    const enterFullscreen = async () => {
+      try {
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+          setIsFullscreen(true);
+        } else {
+          // Fallback to orientation detection if fullscreen not supported
+          setupOrientationDetection();
+        }
+      } catch (error) {
+        console.log("Fullscreen request failed:", error);
+        setupOrientationDetection();
+      }
     };
 
+    enterFullscreen();
+
+    // Listen for fullscreen changes
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch((err) => console.log(err));
+      }
+    };
+  }, [requireLandscape, setupOrientationDetection]);
+
+  // Handle orientation locking (after fullscreen)
+  useEffect(() => {
+    if (!requireLandscape || !isFullscreen) return;
+
+    const canLock =
+      "orientation" in screen &&
+      "lock" in screen.orientation &&
+      typeof screen.orientation.lock === "function";
+
     if (canLock) {
-      screen.orientation.lock("landscape").catch((error) => {
+      // Use type assertion to handle TypeScript error
+      (screen.orientation as any).lock("landscape").catch((error: any) => {
         console.log(
           "Orientation lock failed, falling back to detection",
           error
@@ -48,14 +88,14 @@ export const OrientationManager = ({
       });
 
       return () => {
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
+        if ("orientation" in screen && "unlock" in screen.orientation) {
+          (screen.orientation as any).unlock();
         }
       };
     } else {
       setupOrientationDetection();
     }
-  }, [requireLandscape]);
+  }, [requireLandscape, isFullscreen, setupOrientationDetection]);
 
   if (isWrongOrientation) {
     return (
