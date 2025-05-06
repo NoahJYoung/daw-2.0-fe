@@ -85,7 +85,7 @@ export const SampleEditor = () => {
       <div className="mx-auto py-3 max-w-7xl bg-surface-1 w-full h-full overflow-y-auto">
         <Link
           className="flex items-center gap-1 text-surface-6 text-sm mb-2 hover:text-surface-7 transition-all transition-300 w-fit"
-          to="/dashboard/samples"
+          to="/app/samples"
         >
           <ArrowLeft />
           Back to samples
