@@ -8,6 +8,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 type Theme = "light" | "dark";
 
@@ -28,7 +29,13 @@ export const useThemeContext = (): ThemeContextType => {
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const prefersDarkMode = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+  const [theme, setTheme] = useLocalStorage<Theme>(
+    "theme-preference",
+    prefersDarkMode ? "dark" : "light"
+  );
 
   useEffect(() => {
     document.body.classList.add(theme);
@@ -37,7 +44,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const toggleTheme = useCallback(() => {
     document.body.classList.remove(theme);
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  }, [theme]);
+  }, [setTheme, theme]);
 
   const contextValue = useMemo(
     () => ({
