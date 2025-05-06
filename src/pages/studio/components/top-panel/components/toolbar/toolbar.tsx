@@ -62,7 +62,7 @@ export const Toolbar = observer(
             projectId
           );
           if (createdId) {
-            navigate({ to: `/studio/${createdId}` });
+            navigate({ to: `${createdId}` });
             toast({
               title: "Success!",
               description: "Project created successfully",

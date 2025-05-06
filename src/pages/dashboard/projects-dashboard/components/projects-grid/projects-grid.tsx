@@ -88,7 +88,7 @@ export const ProjectsGrid = () => {
           WebkitMaskImage: maskGradient,
         }}
       >
-        <Link to="/studio" className="block h-full">
+        <Link to="studio" className="block h-full">
           <Card className="bg-surface-0 text-white border-surface-2 border-dashed h-48 lg:h-full flex flex-col items-center justify-center hover:bg-surface-1 transition-colors cursor-pointer">
             <CardContent className="flex flex-col items-center justify-center py-8">
               <div className="h-16 w-16 rounded-full bg-[#fd3574]/10 flex items-center justify-center mb-4">
@@ -108,7 +108,7 @@ export const ProjectsGrid = () => {
               
               ${openDropdownId === project.id ? "lg:scale-105" : ""} 
               hover:lg:scale-105 `}
-                onClick={() => navigate({ to: `/studio/${project.id}` })}
+                onClick={() => navigate({ to: `studio/${project.id}` })}
               >
                 <CardHeader className="flex flex-row items-center gap-4 p-4 pb-0">
                   <div className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10">

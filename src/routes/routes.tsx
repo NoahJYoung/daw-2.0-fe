@@ -81,14 +81,14 @@ const authRoute = createRoute({
 });
 
 const newProjectRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/studio",
+  getParentRoute: () => dashboardLayoutRoute,
+  path: "projects/studio",
   component: () => <Studio />,
 });
 
 const existingProjectRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/studio/$projectId",
+  getParentRoute: () => dashboardLayoutRoute,
+  path: "projects/studio/$projectId",
   component: () => <Studio />,
 });
 
@@ -101,7 +101,7 @@ export const routeTree = rootRoute.addChildren([
     editSamplesDashboardRoute,
     createSamplesDashboardRoute,
     authRoute,
+    newProjectRoute,
+    existingProjectRoute,
   ]),
-  newProjectRoute,
-  existingProjectRoute,
 ]);

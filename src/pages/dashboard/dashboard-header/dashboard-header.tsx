@@ -22,7 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const DashboardHeader = () => {
   const { toggleTheme } = useThemeContext();
   const location = useLocation();
-  const { isLoggedIn, signOut, profile } = useAuth();
+  const { isLoggedIn, signOut, profile, user } = useAuth();
 
   const initials = `${[
     profile?.display_name?.split(" ")?.[0],
@@ -31,8 +31,11 @@ export const DashboardHeader = () => {
     .join("")
     .toUpperCase()}`;
 
-  console.log(profile, initials);
-  return (
+  console.log({ user });
+
+  const isInsideStudio = location.pathname.includes("studio");
+
+  return isInsideStudio ? null : (
     <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
         <img src="/logo32.png" />
