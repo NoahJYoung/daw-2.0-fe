@@ -17,11 +17,12 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { useAuth } from "@/context/auth-context";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const DashboardHeader = () => {
   const { toggleTheme } = useThemeContext();
   const location = useLocation();
-  const { isLoggedIn, signOut } = useAuth();
+  const { isLoggedIn, signOut, profile } = useAuth();
   return (
     <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
@@ -74,7 +75,21 @@ export const DashboardHeader = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
+              {isLoggedIn ? (
+                <Avatar>
+                  <AvatarImage src={profile?.avatar_url} alt="profile_image" />
+                  <AvatarFallback>
+                    {`${[
+                      profile?.display_name?.split(" ")?.[0],
+                      profile?.display_name?.split(" ")?.[1],
+                    ]
+                      .join("")
+                      .toUpperCase()}`}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <User className="h-5 w-5" />
+              )}
               <span className="sr-only">Account</span>
             </Button>
           </DropdownMenuTrigger>
