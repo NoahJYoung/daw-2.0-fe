@@ -20,7 +20,7 @@ export const SignIn = () => {
             supabaseClient={supabase}
             appearance={{ theme: getThemeObject(theme) }}
             providers={["google"]}
-            redirectTo={`${window.location.origin}/app/projects`}
+            redirectTo={`${window.location.origin}`}
           />
         </div>
       </div>

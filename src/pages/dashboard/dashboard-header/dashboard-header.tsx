@@ -23,6 +23,15 @@ export const DashboardHeader = () => {
   const { toggleTheme } = useThemeContext();
   const location = useLocation();
   const { isLoggedIn, signOut, profile } = useAuth();
+
+  const initials = `${[
+    profile?.display_name?.split(" ")?.[0],
+    profile?.display_name?.split(" ")?.[1],
+  ]
+    .join("")
+    .toUpperCase()}`;
+
+  console.log(profile, initials);
   return (
     <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
@@ -82,14 +91,7 @@ export const DashboardHeader = () => {
                     src={profile?.avatar_url}
                     alt="profile_image"
                   />
-                  <AvatarFallback>
-                    {`${[
-                      profile?.display_name?.split(" ")?.[0],
-                      profile?.display_name?.split(" ")?.[1],
-                    ]
-                      .join("")
-                      .toUpperCase()}`}
-                  </AvatarFallback>
+                  <AvatarFallback>{}</AvatarFallback>
                 </Avatar>
               ) : (
                 <User className="h-5 w-5" />
