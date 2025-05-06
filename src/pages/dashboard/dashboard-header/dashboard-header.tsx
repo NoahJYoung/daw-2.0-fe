@@ -77,7 +77,11 @@ export const DashboardHeader = () => {
             <Button variant="ghost" size="icon" className="rounded-full">
               {isLoggedIn ? (
                 <Avatar>
-                  <AvatarImage src={profile?.avatar_url} alt="profile_image" />
+                  <AvatarImage
+                    className="h-6 w-6 rounded-full"
+                    src={profile?.avatar_url}
+                    alt="profile_image"
+                  />
                   <AvatarFallback>
                     {`${[
                       profile?.display_name?.split(" ")?.[0],
