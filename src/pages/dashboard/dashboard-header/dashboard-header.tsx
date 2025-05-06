@@ -24,12 +24,12 @@ export const DashboardHeader = () => {
   const location = useLocation();
   const { isLoggedIn, signOut, profile, user } = useAuth();
 
-  const initials = `${[
-    profile?.display_name?.split(" ")?.[0],
-    profile?.display_name?.split(" ")?.[1],
-  ]
-    .join("")
-    .toUpperCase()}`;
+  // const initials = `${[
+  //   profile?.display_name?.split(" ")?.[0],
+  //   profile?.display_name?.split(" ")?.[1],
+  // ]
+  //   .join("")
+  //   .toUpperCase()}`;
 
   console.log({ user });
 
