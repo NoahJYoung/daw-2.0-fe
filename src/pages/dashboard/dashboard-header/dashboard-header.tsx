@@ -22,16 +22,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const DashboardHeader = () => {
   const { toggleTheme } = useThemeContext();
   const location = useLocation();
-  const { isLoggedIn, signOut, profile, user } = useAuth();
+  const { isLoggedIn, signOut, user } = useAuth();
 
-  // const initials = `${[
-  //   profile?.display_name?.split(" ")?.[0],
-  //   profile?.display_name?.split(" ")?.[1],
-  // ]
-  //   .join("")
-  //   .toUpperCase()}`;
+  const name = user?.identities?.[0]?.identity_data?.name;
+  const avatarUrl = user?.identities?.[0]?.identity_data?.avatar_url;
 
-  console.log({ user });
+  const initials = `${[(name || "")?.split(" ")?.[0], name?.split(" ")?.[1]]
+    .join("")
+    .toUpperCase()}`;
 
   const isInsideStudio = location.pathname.includes("studio");
 
@@ -91,10 +89,10 @@ export const DashboardHeader = () => {
                 <Avatar>
                   <AvatarImage
                     className="h-6 w-6 rounded-full"
-                    src={profile?.avatar_url}
+                    src={avatarUrl}
                     alt="profile_image"
                   />
-                  <AvatarFallback>{}</AvatarFallback>
+                  <AvatarFallback>{initials ?? ""}</AvatarFallback>
                 </Avatar>
               ) : (
                 <User className="h-5 w-5" />
