@@ -88,18 +88,14 @@ export const ProjectsGrid = () => {
           WebkitMaskImage: maskGradient,
         }}
       >
-        <Link to="studio" className="block h-full">
-          <Card className="bg-surface-0 text-white border-surface-2 border-dashed h-48 lg:h-full flex flex-col items-center justify-center hover:bg-surface-1 transition-colors cursor-pointer">
-            <CardContent className="flex flex-col items-center justify-center py-8">
-              <div className="h-16 w-16 rounded-full bg-[#fd3574]/10 flex items-center justify-center mb-4">
-                <Plus className="h-8 w-8 text-[#fd3574]" />
-              </div>
-              <h3 className="hidden lg:block text-xl font-medium mb-2 text-surface-8">
-                Create a New Project
-              </h3>
-            </CardContent>
-          </Card>
-        </Link>
+        <div className="h-full w-full flex items-center justify-center">
+          <Link to="studio" className="flex">
+            <div className="h-20 w-20 rounded-full bg-[#fd3574]/5 hover:bg-[#fd3574]/10 hover:scale-105 transition-all transition-300 flex items-center justify-center mb-4">
+              <Plus className="h-10 w-10 text-[#fd3574]" />
+            </div>
+          </Link>
+        </div>
+
         {projects?.length
           ? projects.map((project) => (
               <Card
