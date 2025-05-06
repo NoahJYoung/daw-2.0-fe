@@ -7,8 +7,9 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { User } from "@supabase/supabase-js";
+import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import { useLocalStorage } from "usehooks-ts";
 
 interface Profile {
   id: string;
@@ -31,6 +32,9 @@ interface AuthContextType {
   loading: boolean;
 }
 
+// Session storage key
+const SESSION_STORAGE_KEY = "supabase.auth.session";
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
@@ -49,16 +53,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [storedSession, setStoredSession] = useLocalStorage<Session | null>(
+    SESSION_STORAGE_KEY,
+    null
+  );
+
   useEffect(() => {
     const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      setUser(session?.user || null);
-      if (session?.user) {
-        fetchUserProfile(session.user.id);
-      } else {
+        if (session) {
+          setStoredSession(session);
+          setUser(session.user);
+          fetchUserProfile(session.user.id);
+        } else if (storedSession) {
+          const { data, error } = await supabase.auth.setSession({
+            access_token: storedSession.access_token,
+            refresh_token: storedSession.refresh_token,
+          });
+
+          if (error) {
+            console.error("Error restoring session:", error);
+            setStoredSession(null);
+            setLoading(false);
+          } else if (data?.session) {
+            setUser(data.session.user);
+            fetchUserProfile(data.session.user.id);
+          } else {
+            setLoading(false);
+          }
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error checking session:", error);
         setLoading(false);
       }
     };
@@ -68,11 +99,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_, session) => {
-      setUser(session?.user || null);
-
-      if (session?.user) {
+      if (session) {
+        setStoredSession(session);
+        setUser(session.user);
         fetchUserProfile(session.user.id);
       } else {
+        setStoredSession(null);
+        setUser(null);
         setProfile(null);
         setLoading(false);
       }
@@ -81,7 +114,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => {
       subscription?.unsubscribe();
     };
-  }, []);
+  }, [setStoredSession, storedSession]);
 
   const fetchUserProfile = async (userId: string) => {
     try {
@@ -101,6 +134,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signOut = async () => {
+    setStoredSession(null);
     await supabase.auth.signOut();
   };
 
