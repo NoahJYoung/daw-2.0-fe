@@ -95,7 +95,7 @@ export const ProjectsGrid = () => {
                 <Plus className="h-8 w-8 text-[#fd3574]" />
               </div>
               <h3 className="hidden lg:block text-xl font-medium mb-2 text-surface-8">
-                New Project
+                Create a New Project
               </h3>
             </CardContent>
           </Card>

@@ -13,7 +13,6 @@ export const OrientationManager = ({
   const [isWrongOrientation, setIsWrongOrientation] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Function to handle orientation detection
   const setupOrientationDetection = useCallback(() => {
     const checkOrientation = () => {
       if (requireLandscape) {
@@ -32,7 +31,6 @@ export const OrientationManager = ({
     };
   }, [requireLandscape]);
 
-  // Handle fullscreen requests
   useEffect(() => {
     if (!requireLandscape) return;
 
@@ -42,7 +40,6 @@ export const OrientationManager = ({
           await document.documentElement.requestFullscreen();
           setIsFullscreen(true);
         } else {
-          // Fallback to orientation detection if fullscreen not supported
           setupOrientationDetection();
         }
       } catch (error) {
@@ -53,7 +50,6 @@ export const OrientationManager = ({
 
     enterFullscreen();
 
-    // Listen for fullscreen changes
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
@@ -68,7 +64,6 @@ export const OrientationManager = ({
     };
   }, [requireLandscape, setupOrientationDetection]);
 
-  // Handle orientation locking (after fullscreen)
   useEffect(() => {
     if (!requireLandscape || !isFullscreen) return;
 
@@ -78,7 +73,6 @@ export const OrientationManager = ({
       typeof screen.orientation.lock === "function";
 
     if (canLock) {
-      // Use type assertion to handle TypeScript error
       (screen.orientation as any).lock("landscape").catch((error: any) => {
         console.log(
           "Orientation lock failed, falling back to detection",

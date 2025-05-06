@@ -1,10 +1,10 @@
 import { useFileSystem } from "@/hooks";
-import { EmptyProjects, ProjectsGrid } from "./components";
+import { ProjectsGrid } from "./components";
 import { Button } from "@/components/ui/button";
 import { FolderInput } from "lucide-react";
 
 export const ProjectsDashboard = () => {
-  const { quota, projects } = useFileSystem();
+  const { quota } = useFileSystem();
   return (
     <section className="flex flex-col bg-muted/40 h-full lg:pt-16">
       <div className="pt-3 px-3 pb-0">
@@ -35,7 +35,7 @@ export const ProjectsDashboard = () => {
 
       <div className="flex-1 w-full overflow-hidden">
         <div className="mx-auto max-w-7xl w-full h-full pt-1 pb-2">
-          {projects?.length ? <ProjectsGrid /> : <EmptyProjects />}
+          <ProjectsGrid />
         </div>
       </div>
     </section>

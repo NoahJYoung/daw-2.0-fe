@@ -103,8 +103,8 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 
   const { data: projects, isFetching: isLoading } = useQuery({
     queryKey: ["PROJECTS"],
-    queryFn: () => getProjects(projectsDirectory),
-    enabled: !!rootDirectory,
+    queryFn: async () => await getProjects(projectsDirectory),
+    enabled: !!rootDirectory && !!projectsDirectory,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
@@ -113,7 +113,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
   const { data: samplePacks, isFetching: isLoadingSamplePacks } = useQuery({
     queryKey: ["SAMPLE-PACKS"],
     queryFn: () => getSamplePacks(samplePacksDirectory),
-    enabled: !!rootDirectory,
+    enabled: !!rootDirectory && !!samplePacksDirectory,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
