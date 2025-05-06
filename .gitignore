@@ -28,5 +28,6 @@ coverage/*
 dev-dist/*
 
 .env
+.env.*
 .env.development
 .env.production
