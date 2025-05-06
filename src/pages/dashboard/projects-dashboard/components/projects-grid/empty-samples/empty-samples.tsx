@@ -4,7 +4,7 @@ import { AudioLines } from "lucide-react";
 export const EmptySamples = () => {
   return (
     <div className="landscape:gap-2 md:landscape:gap-1 mx-3 flex h-full lg:h-[400px] flex-col items-center justify-center rounded-md border border-dashed p-2 lg:p-8 text-center animate-in fade-in-50">
-      <div className="landscape:hidden md:landscape:flex mx-auto flex w-20 h-20 items-center justify-center rounded-full bg-muted">
+      <div className="landscape:hidden lg:landscape:flex mx-auto flex w-20 h-20 items-center justify-center rounded-full bg-muted">
         <AudioLines className="h-10 w-10 text-muted-foreground" />
       </div>
       <h2 className="mt-6 text-xl font-semibold">No sample packs found</h2>
