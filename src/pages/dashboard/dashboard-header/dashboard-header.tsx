@@ -69,9 +69,14 @@ export const DashboardHeader = () => {
         </NavigationMenu>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+          <DropdownMenuTrigger className={navigationMenuTriggerStyle()} asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full lg:rounded-md"
+            >
               <Settings className="h-6 w-6 text-primary" />
+              <span className="hidden lg:block">Settings</span>
               <span className="sr-only">Settings</span>
             </Button>
           </DropdownMenuTrigger>
@@ -83,7 +88,10 @@ export const DashboardHeader = () => {
         </DropdownMenu>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger
+            className={isLoggedIn ? undefined : navigationMenuTriggerStyle()}
+            asChild
+          >
             <Button variant="ghost" size="icon" className="rounded-full">
               {isLoggedIn ? (
                 <Avatar>
@@ -91,7 +99,10 @@ export const DashboardHeader = () => {
                   <AvatarFallback>{initials ?? ""}</AvatarFallback>
                 </Avatar>
               ) : (
-                <User className="h-5 w-5" />
+                <>
+                  <User className="h-5 w-5" />
+                  <span className="hidden lg:block">Account</span>
+                </>
               )}
               <span className="sr-only">Account</span>
             </Button>
