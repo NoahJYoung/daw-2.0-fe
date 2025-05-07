@@ -134,8 +134,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // };
 
   const signOut = async () => {
-    setStoredSession(null);
     await supabase.auth.signOut();
+    setStoredSession(null);
   };
 
   // const updateProfile = async (updates: Partial<Profile>) => {
