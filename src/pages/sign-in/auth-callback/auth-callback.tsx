@@ -8,8 +8,6 @@ export const AuthCallback = () => {
     const handleCallback = async () => {
       const { data, error } = await supabase.auth.getSession();
 
-      console.log({ data, error });
-
       if (error) {
         console.error("Auth error:", error);
         return;

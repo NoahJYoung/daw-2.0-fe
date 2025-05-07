@@ -5,7 +5,6 @@ import { FileSystemProvider, useThemeContext } from "./hooks";
 import { routeTree } from "./routes";
 
 import "./i18n";
-import { InstallPrompt } from "./components/ui/custom/install-prompt";
 
 const queryClient = new QueryClient();
 const router = createRouter({ routeTree });
@@ -17,9 +16,7 @@ function App() {
     <div className={`w-screen ${theme} h-screen overflow-hidden`}>
       <QueryClientProvider client={queryClient}>
         <FileSystemProvider>
-          <InstallPrompt>
-            <RouterProvider router={router} />
-          </InstallPrompt>
+          <RouterProvider router={router} />
         </FileSystemProvider>
       </QueryClientProvider>
       <Toaster />
