@@ -11,23 +11,23 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import { useLocalStorage } from "usehooks-ts";
 
-interface Profile {
-  id: string;
-  created_at?: string;
-  updated_at?: string;
-  display_name?: string;
-  avatar_url?: string;
-  storage_used?: number;
-  [key: string]: any;
-}
+// interface Profile {
+//   id: string;
+//   created_at?: string;
+//   updated_at?: string;
+//   display_name?: string;
+//   avatar_url?: string;
+//   storage_used?: number;
+//   [key: string]: any;
+// }
 
 interface AuthContextType {
   user: User | null;
-  profile: Profile | null;
+  // profile: Profile | null;
   signOut: () => Promise<void>;
-  updateProfile: (
-    updates: Partial<Profile>
-  ) => Promise<{ success: boolean; error?: any }>;
+  // updateProfile: (
+  //   updates: Partial<Profile>
+  // ) => Promise<{ success: boolean; error?: any }>;
   isLoggedIn: boolean;
   loading: boolean;
 }
@@ -37,9 +37,9 @@ const SESSION_STORAGE_KEY = "supabase.auth.session";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  profile: null,
+  // profile: null,
   signOut: async () => {},
-  updateProfile: async () => ({ success: false }),
+  // updateProfile: async () => ({ success: false }),
   isLoggedIn: false,
   loading: true,
 });
@@ -50,7 +50,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  // const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [storedSession, setStoredSession] = useLocalStorage<Session | null>(
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (session) {
           setStoredSession(session);
           setUser(session.user);
-          fetchUserProfile(session.user.id);
+          // fetchUserProfile(session.user.id);
         } else if (storedSession) {
           const { data, error } = await supabase.auth.setSession({
             access_token: storedSession.access_token,
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setLoading(false);
           } else if (data?.session) {
             setUser(data.session.user);
-            fetchUserProfile(data.session.user.id);
+            // fetchUserProfile(data.session.user.id);
           } else {
             setLoading(false);
           }
@@ -102,11 +102,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (session) {
         setStoredSession(session);
         setUser(session.user);
-        fetchUserProfile(session.user.id);
+        // fetchUserProfile(session.user.id);
       } else {
         setStoredSession(null);
         setUser(null);
-        setProfile(null);
+        // setProfile(null);
         setLoading(false);
       }
     });
@@ -116,54 +116,54 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, [setStoredSession, storedSession]);
 
-  const fetchUserProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+  // const fetchUserProfile = async (userId: string) => {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("profiles")
+  //       .select("*")
+  //       .eq("id", userId)
+  //       .single();
 
-      if (error) throw error;
-      setProfile(data as Profile);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (error) throw error;
+  //     setProfile(data as Profile);
+  //   } catch (error) {
+  //     console.error("Error fetching profile:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const signOut = async () => {
     setStoredSession(null);
     await supabase.auth.signOut();
   };
 
-  const updateProfile = async (updates: Partial<Profile>) => {
-    try {
-      if (!user) throw new Error("No user logged in");
+  // const updateProfile = async (updates: Partial<Profile>) => {
+  //   try {
+  //     if (!user) throw new Error("No user logged in");
 
-      const { error } = await supabase
-        .from("profiles")
-        .update(updates)
-        .eq("id", user.id);
+  //     const { error } = await supabase
+  //       .from("profiles")
+  //       .update(updates)
+  //       .eq("id", user.id);
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      fetchUserProfile(user.id);
-      return { success: true };
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      return { success: false, error };
-    }
-  };
+  //     fetchUserProfile(user.id);
+  //     return { success: true };
+  //   } catch (error) {
+  //     console.error("Error updating profile:", error);
+  //     return { success: false, error };
+  //   }
+  // };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        profile,
+        // profile,
         signOut,
-        updateProfile,
+        // updateProfile,
         isLoggedIn: !!user,
         loading,
       }}
