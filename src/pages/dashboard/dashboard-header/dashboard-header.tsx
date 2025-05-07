@@ -1,4 +1,13 @@
-import { AudioLines, FileAudio, Settings, User } from "lucide-react";
+import {
+  AudioLines,
+  FileAudio,
+  LogIn,
+  LogOut,
+  Moon,
+  Settings,
+  Sun,
+  User,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
 
@@ -20,7 +29,7 @@ import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const DashboardHeader = () => {
-  const { toggleTheme } = useThemeContext();
+  const { toggleTheme, theme } = useThemeContext();
   const location = useLocation();
   const { isLoggedIn, signOut, user } = useAuth();
 
@@ -81,8 +90,18 @@ export const DashboardHeader = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={toggleTheme}>
-              Toggle Theme
+            <DropdownMenuItem
+              className="w-full flex gap-4 items-center"
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+              <span className="font-semibold">
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -109,11 +128,18 @@ export const DashboardHeader = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {isLoggedIn ? (
-              <DropdownMenuItem onClick={signOut}>Sign Out</DropdownMenuItem>
+              <DropdownMenuItem
+                className="w-full flex gap-4 items-center"
+                onClick={signOut}
+              >
+                <LogOut className="h-2 w-2" />
+                <span className="font-semibold">Sign Out</span>
+              </DropdownMenuItem>
             ) : (
               <Link to="/app/signin">
-                <DropdownMenuItem className="w-full text-center">
-                  Sign In
+                <DropdownMenuItem className="w-full flex gap-4 items-center">
+                  <LogIn className="h-4 w-4" />
+                  <span className="font-semibold">Sign In</span>
                 </DropdownMenuItem>
               </Link>
             )}

@@ -6,7 +6,7 @@ export const NewTrackPanelsButton = () => {
   return (
     <div className="w-full py-2 flex items-center justify-center">
       <button
-        className="h-16 w-16 rounded-full bg-[#fd3574]/10 hover:bg-[#fd3574]/20 flex items-center justify-center mb-4 transition-all transition-500 transition-ease"
+        className="h-16 w-16 rounded-full bg-[#fd3574]/10 hover:bg-[#fd3574]/20 flex items-center justify-center mb-4 hover:scale-105 transition-all transition-300 transition-ease"
         onClick={() => mixer.createTrack()}
         type="button"
       >
