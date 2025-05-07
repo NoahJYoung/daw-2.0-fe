@@ -2,7 +2,7 @@ import {
   Outlet,
   createRoute,
   createRootRoute,
-  redirect,
+  // redirect,
 } from "@tanstack/react-router";
 import { Dashboard, SignIn, Studio } from "@/pages";
 import { ProjectsDashboard } from "@/pages/dashboard/projects-dashboard";
@@ -11,6 +11,7 @@ import {
   SamplesDashboard,
 } from "@/pages/dashboard/samples-dashboard";
 import { AuthProvider } from "@/context/auth-context";
+import { AuthCallback } from "@/pages/sign-in/auth-callback";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -23,12 +24,12 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  beforeLoad: () => {
-    throw redirect({
-      to: "/app/projects",
-      replace: true,
-    });
-  },
+  // beforeLoad: () => {
+  //   throw redirect({
+  //     to: "/app/projects",
+  //     replace: true,
+  //   });
+  // },
   component: () => null,
 });
 
@@ -41,12 +42,12 @@ const dashboardLayoutRoute = createRoute({
 const dashboardIndexRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
   path: "/",
-  beforeLoad: () => {
-    throw redirect({
-      to: "/app/projects",
-      replace: true,
-    });
-  },
+  // beforeLoad: () => {
+  //   throw redirect({
+  //     to: "/app/projects",
+  //     replace: true,
+  //   });
+  // },
   component: () => null,
 });
 
@@ -92,9 +93,15 @@ const existingProjectRoute = createRoute({
   component: () => <Studio />,
 });
 
+const authCallbackRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/auth/callback",
+  component: () => <AuthCallback />,
+});
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
-
+  authCallbackRoute,
   dashboardLayoutRoute.addChildren([
     dashboardIndexRoute,
     projectsDashboardRoute,
