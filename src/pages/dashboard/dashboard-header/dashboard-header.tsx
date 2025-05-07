@@ -132,7 +132,7 @@ export const DashboardHeader = () => {
                 className="w-full flex gap-4 items-center"
                 onClick={signOut}
               >
-                <LogOut className="h-2 w-2" />
+                <LogOut className="h-4 w-4" />
                 <span className="font-semibold">Sign Out</span>
               </DropdownMenuItem>
             ) : (
