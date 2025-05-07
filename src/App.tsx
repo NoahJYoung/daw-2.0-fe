@@ -3,6 +3,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { Toaster } from "./components/ui/toaster";
 import { FileSystemProvider, useThemeContext } from "./hooks";
 import { routeTree } from "./routes";
+import { InstallPrompt } from "./components/ui/custom/install-prompt";
 
 import "./i18n";
 
@@ -16,7 +17,9 @@ function App() {
     <div className={`w-screen ${theme} h-screen overflow-hidden`}>
       <QueryClientProvider client={queryClient}>
         <FileSystemProvider>
-          <RouterProvider router={router} />
+          <InstallPrompt>
+            <RouterProvider router={router} />
+          </InstallPrompt>
         </FileSystemProvider>
       </QueryClientProvider>
       <Toaster />
