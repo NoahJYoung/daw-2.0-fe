@@ -92,7 +92,7 @@ export const SampleEditor = () => {
         </Link>
 
         <Card className="bg-surface-0 text-white border-surface-2">
-          <CardHeader className="flex flex-col sm:flex-row gap-6 items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row gap-6 items-end justify-between">
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>
@@ -108,16 +108,13 @@ export const SampleEditor = () => {
                     onChange={(e) => setPackDescription(e.target.value)}
                     rows={4}
                     placeholder="Add a description for your sample pack"
-                    className="resize-none text-sm text-surface-6 bg-transparent border-t-0 border-x-0 border-b-1 border-surface-5 rounded-none p-0 py-1 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="resize-none text-sm text-surface-6 bg-transparent border-t-0 border-x-0 border-b-1 border-surface-5 rounded-none p-0 py-1 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 h-full min-h-[80px]"
                   />
                 </CardDescription>
               </div>
             </div>
-            <div className="mt-4">
-              <Label
-                htmlFor="cover-image"
-                className="text-sm font-medium mb-2 block"
-              >
+            <div className="mt-auto">
+              <Label htmlFor="cover-image" className="sr-only">
                 Pack Cover Image
               </Label>
               <div className="flex items-center gap-4">

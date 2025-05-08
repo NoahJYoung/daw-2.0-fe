@@ -9,7 +9,7 @@ import {
 import { CSSProperties } from "react";
 
 interface DropdownProps {
-  options: { label: string; value: string }[];
+  options: { label: string; value: string | null }[];
   value: string | null;
   onChange: (value: string) => void;
   colorOffset?: number;
@@ -77,7 +77,7 @@ export const StudioDropdown = ({
           <SelectItem
             className="bg-surface-1 hover:bg-surface-2 rounded-xs"
             key={option.value}
-            value={option.value}
+            value={option.value ?? ""}
           >
             {option.label}
           </SelectItem>

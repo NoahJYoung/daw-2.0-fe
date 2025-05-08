@@ -23,14 +23,14 @@ export const VerticalKeyboard = ({
   const triggerAttack = (noteString: string) => {
     if (parentTrack) {
       const { instrument } = parentTrack;
-      instrument.triggerAttack(noteString, Tone.now(), 64);
+      instrument?.triggerAttack(noteString, Tone.now(), 64);
     }
   };
 
   const triggerRelease = (noteString: string) => {
     if (parentTrack) {
       const { instrument } = parentTrack;
-      instrument.triggerRelease(noteString, Tone.now());
+      instrument?.triggerRelease(noteString, Tone.now());
     }
   };
 

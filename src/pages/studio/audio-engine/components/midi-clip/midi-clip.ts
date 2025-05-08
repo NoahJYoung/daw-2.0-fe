@@ -21,6 +21,8 @@ import { noteRef } from "../refs";
 import { AudioEngine } from "../../audio-engine";
 import { AudioClip } from "../audio-clip";
 import { audioBufferCache } from "../audio-buffer-cache";
+import { Synthesizer } from "../synthesizer";
+import { Sampler } from "../sampler";
 
 interface EventParams {
   on: number;
@@ -381,7 +383,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
           if (startTimeInSamples < loopEnd) {
             const startEventId = transport.scheduleOnce(
               (time) =>
-                parentTrack.instrument.triggerAttack(
+                parentTrack.instrument?.triggerAttack(
                   noteKey,
                   time,
                   event.velocity
@@ -391,7 +393,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
             if (endTimeInSamples <= loopEnd) {
               const stopEventId = transport.scheduleOnce(
-                (time) => parentTrack.instrument.triggerRelease(noteKey, time),
+                (time) => parentTrack.instrument?.triggerRelease(noteKey, time),
                 endTimeInSeconds
               );
 
@@ -507,12 +509,14 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const { mixer } = getRoot<AudioEngine>(this);
 
     const parentTrack = mixer.tracks.find((track) => track.id === this.trackId);
-    if (!parentTrack) return;
+    if (!parentTrack?.instrument) return;
 
     const duration = (this.end - this.start) / Tone.getContext().sampleRate;
 
     const audioBuffer = await Tone.Offline(async (context) => {
-      const instrumentClone = clone(parentTrack.instrument);
+      const instrumentClone = clone(
+        parentTrack.instrument as Synthesizer | Sampler
+      );
 
       instrumentClone.output.toDestination();
 

@@ -445,6 +445,7 @@ export const TrackPanel = observer(
                         options={[
                           { label: "Synthesizer", value: "synth" },
                           { label: "Sampler", value: "sampler" },
+                          { label: "No Instrument", value: "no instrument" },
                         ]}
                         value={track.instrumentKey}
                         placeholder={t(

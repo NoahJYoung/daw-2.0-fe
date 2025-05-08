@@ -130,7 +130,7 @@ export const usePianoRollEventHandlers = ({
           note,
           velocity: 64,
         };
-        parentTrack?.instrument.triggerAttackRelease(
+        parentTrack?.instrument?.triggerAttackRelease(
           note.join(""),
           "16n",
           Tone.now(),

@@ -24,7 +24,7 @@ import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { getOfflineBounce } from "@/pages/studio/audio-engine/helpers";
+import { getOnlineBounce } from "@/pages/studio/audio-engine/helpers";
 import { useToast } from "@/components/ui/use-toast";
 import {
   audioBufferCache,
@@ -241,7 +241,7 @@ export const Toolbar = observer(
         <StudioButton
           title={t("studio.toolbar.download")}
           icon={IoDownloadOutline}
-          onClick={async () => getOfflineBounce(audioEngine)}
+          onClick={async () => getOnlineBounce(audioEngine)}
         />
 
         <StudioDropdownMenu

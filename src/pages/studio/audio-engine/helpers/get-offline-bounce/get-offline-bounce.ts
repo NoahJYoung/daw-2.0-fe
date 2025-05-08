@@ -9,10 +9,11 @@ export const getOfflineBounce = async (audioEngine: AudioEngine) => {
   const { sampleRate } = Tone.getContext();
   const duration = audioEngine.getBounceEndFromLastClip(sampleRate);
 
-  const buffer = await Tone.Offline(() => {
+  const buffer = await Tone.Offline(async () => {
     const clonedEngine = clone(audioEngine, { generateNewIds: false });
     generateOfflineSends(clonedEngine);
-    clonedEngine.play();
+
+    await clonedEngine.play();
   }, duration + 1);
 
   const wav = await bufferToWav(buffer, audioEngine.projectName);

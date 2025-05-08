@@ -32,11 +32,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   name: prop<string>("New Track").withSetter(),
   clips: prop<Clip[]>(() => []),
   effectsChain: prop<EffectsChain>(() => new EffectsChain({})),
-  rgb: prop<[number, number, number]>(() => [
-    Math.floor(Math.random() * 251),
-    Math.floor(Math.random() * 251),
-    Math.floor(Math.random() * 251),
-  ]).withSetter(),
+  rgb: prop<[number, number, number]>(() => [175, 175, 175]).withSetter(),
   active: prop(false),
   mute: prop(false).withSetter(),
   solo: prop(false),
@@ -47,7 +43,9 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   inputType: prop<string | null>("mic"),
   synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
   sampler: prop<Sampler>(() => new Sampler({})).withSetter(),
-  instrumentKey: prop<"synth" | "sampler">("sampler").withSetter(),
+  instrumentKey: prop<"synth" | "sampler" | "no instrument">(
+    "no instrument"
+  ).withSetter(),
 }) {
   channel = new Tone.Channel();
   output = new Tone.Channel();
@@ -75,7 +73,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
       if (this.inputType === "mic") {
         this.mic.connect(this.splitter);
       } else {
-        this.instrument.connect(this.splitter);
+        this.instrument?.connect(this.splitter);
       }
     } else {
       this.output.connect(this.splitter);
@@ -145,6 +143,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     const instrumentMap = {
       synth: this.synth,
       sampler: this.sampler,
+      "no instrument": null,
     };
     return instrumentMap[this.instrumentKey];
   }
@@ -194,10 +193,10 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     } else {
       if (value) {
         this.output.disconnect(this.splitter);
-        this.instrument.connect(this.splitter);
+        this.instrument?.connect(this.splitter);
       } else {
         this.output.connect(this.splitter);
-        this.instrument.disconnect(this.splitter);
+        this.instrument?.disconnect(this.splitter);
       }
     }
     this.active = value;

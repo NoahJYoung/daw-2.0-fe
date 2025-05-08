@@ -84,7 +84,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       this.loadingStartTime = Date.now();
 
       this.loadingState = state;
-      this.setPlayDisabled(true);
+      if (state !== "Bouncing") {
+        this.setPlayDisabled(true);
+      }
     } else {
       if (this.loadingStartTime === null) {
         this.loadingStartTime = Date.now();
@@ -217,7 +219,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   pause = async () => {
     this.mixer.tracks.forEach((track) =>
-      track.instrument.releaseAll(Tone.now())
+      track.instrument?.releaseAll(Tone.now())
     );
     const transport = Tone.getTransport();
     this.metronome.stop();
@@ -236,7 +238,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
   stop = () => {
     this.mixer.tracks.forEach((track) =>
-      track.instrument.releaseAll(Tone.now())
+      track.instrument?.releaseAll(Tone.now())
     );
     const transport = Tone.getTransport();
     this.metronome.stop();
@@ -526,8 +528,8 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     this.setLoadingState(null);
   }
 
-  getBounceEndFromLastClip = (samplesPerPixel: number) => {
-    const duration = this.mixer.getLastClipEndSamples() / samplesPerPixel;
+  getBounceEndFromLastClip = (sampleRate: number) => {
+    const duration = this.mixer.getLastClipEndSamples() / sampleRate;
     return duration;
   };
 }
