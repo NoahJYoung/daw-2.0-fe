@@ -417,67 +417,125 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           fileInput.click();
         });
       } else {
-        console.log("loading project zip");
-        const data = await unzipProjectFile(projectZip);
-        const settingsBlob = data["settings.json"];
+        // Return a promise to properly handle the async loading process
+        return new Promise<void>(async (resolve, reject) => {
+          try {
+            // Step 1: Extract project data
+            this.setLoadingState("Extracting project data");
+            const data = await unzipProjectFile(projectZip);
+            const settingsBlob = data["settings.json"];
 
-        if (!settingsBlob) {
-          throw new Error("No settings data found");
-        }
-
-        const settings = (await blobToJsonObject(
-          settingsBlob
-        )) as unknown as AudioEngine;
-
-        const samplePathsToLoad: string[] = [];
-
-        settings.mixer.tracks.forEach((track) => {
-          if (track.instrumentKey === "sampler") {
-            const path = track.sampler.samplePath;
-            if (path) {
-              samplePathsToLoad.push(path);
+            if (!settingsBlob) {
+              throw new Error("No settings data found");
             }
+
+            // Step 2: Parse settings
+            this.setLoadingState("Parsing project settings");
+            const settings = (await blobToJsonObject(
+              settingsBlob
+            )) as unknown as AudioEngine;
+
+            // Step 3: Load samples - this is likely a CPU/network intensive operation
+            this.setLoadingState("Loading audio samples");
+            const samplePathsToLoad: string[] = [];
+
+            settings.mixer.tracks.forEach((track) => {
+              if (track.instrumentKey === "sampler") {
+                const path = track.sampler.samplePath;
+                if (path) {
+                  samplePathsToLoad.push(path);
+                }
+              }
+            });
+
+            const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
+            await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+
+            // Step 4: Create project objects from snapshots
+            this.setLoadingState("Reconstructing project state");
+            const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
+            const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+            const loadedMetronome = fromSnapshot(
+              settings.metronome
+            ) as Metronome;
+            const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
+            const loadedProjectId = fromSnapshot(settings.projectId) as string;
+            const loadedProjectName = fromSnapshot(
+              settings.projectName
+            ) as string;
+            const loadedAuxSendManager = fromSnapshot(
+              settings.auxSendManager
+            ) as AuxSendManager;
+
+            // Step 5: Process waveforms in chunks to avoid UI blocking
+            this.setLoadingState("Generating waveforms");
+
+            // Get all audio clips that need waveform processing
+            const audioClips: AudioClip[] = [];
+            loadedMixer.tracks.forEach((track) => {
+              track.clips.forEach((clip) => {
+                if (clip instanceof AudioClip) {
+                  audioClips.push(clip);
+                }
+              });
+            });
+
+            // Process waveforms in smaller chunks to prevent UI freezing
+            const chunkSize = 5; // Adjust based on performance testing
+            for (let i = 0; i < audioClips.length; i += chunkSize) {
+              const chunkClips = audioClips.slice(i, i + chunkSize);
+
+              // Process this chunk of clips
+              await Promise.all(
+                chunkClips.map(async (clip) => {
+                  const buffer = audioBufferCache.get(clip.id);
+                  if (buffer) {
+                    await clip.createWaveformCache(buffer);
+                  } else {
+                    console.warn(`No buffer found for clip ${clip.id}`);
+                  }
+                })
+              );
+
+              // Give the UI thread a chance to update between chunks
+              await new Promise((resolve) => setTimeout(resolve, 0));
+            }
+
+            // Step 6: Populate buffer cache with any remaining audio data
+            this.setLoadingState("Processing audio buffers");
+            await populateBufferCache(data);
+
+            // Step 7: Update UI state in a batched operation using requestAnimationFrame
+            // This ensures all state updates happen in a single render cycle
+            this.setLoadingState("Updating interface");
+
+            await new Promise<void>((resolveUI) => {
+              requestAnimationFrame(() => {
+                // Batch all UI updates in a single frame
+                this.setTimeline(loadedTimeline);
+                this.setMixer(loadedMixer);
+                this.setKeyboard(loadedKeyboard);
+                this.setProjectId(loadedProjectId);
+                this.setProjectName(loadedProjectName);
+                this.setMetronome(loadedMetronome);
+                this.setKey(settings.key as string);
+                this.setAuxSendManager(loadedAuxSendManager);
+
+                // Once UI updates are complete, resolve the inner promise
+                resolveUI();
+              });
+            });
+
+            // Everything is complete - reset loading state and resolve the outer promise
+            this.setLoadingState(null);
+            resolve();
+          } catch (error) {
+            // Handle errors gracefully
+            console.error("Error loading project:", error);
+            this.setLoadingState(null);
+            reject(error);
           }
         });
-
-        const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
-        await addInitialSamplesToCache(uniqueSamplePathsToLoad);
-
-        const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
-        const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
-        const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
-        const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
-        const loadedProjectId = fromSnapshot(settings.projectId) as string;
-        const loadedProjectName = fromSnapshot(settings.projectName) as string;
-
-        loadedMixer.tracks.forEach((track) =>
-          track.clips.forEach((clip) => {
-            if (clip instanceof AudioClip) {
-              const buffer = audioBufferCache.get(clip.id);
-              if (buffer) {
-                clip.createWaveformCache(buffer);
-              } else {
-                throw new Error("no buffer found");
-              }
-            }
-          })
-        );
-
-        this.setTimeline(loadedTimeline);
-        this.setMixer(loadedMixer);
-        this.setKeyboard(loadedKeyboard);
-        this.setProjectId(loadedProjectId);
-        this.setProjectName(loadedProjectName);
-        this.setMetronome(loadedMetronome);
-        this.setKey(settings.key as string);
-
-        const loadedAuxSendManager = fromSnapshot(
-          settings.auxSendManager
-        ) as AuxSendManager;
-
-        this.setAuxSendManager(loadedAuxSendManager);
-        await populateBufferCache(data);
-        this.setLoadingState(null);
       }
     } catch (error) {
       this.setLoadingState(null);
