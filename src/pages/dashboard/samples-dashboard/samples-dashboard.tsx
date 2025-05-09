@@ -7,7 +7,7 @@ import { EmptySamples } from "../projects-dashboard/components/projects-grid/emp
 export const SamplesDashboard = () => {
   const { quota, samplePacks } = useFileSystem();
   return (
-    <section className="flex flex-col bg-muted/40 h-full lg:pt-16">
+    <section className="flex flex-col bg-muted/40 h-full pt-[2%]">
       <div className="pt-3 px-3 pb-0">
         <div className="mx-auto max-w-7xl w-full">
           <div className="flex w-full items-center justify-between mb-2 lg:px-3">

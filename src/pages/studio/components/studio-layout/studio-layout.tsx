@@ -68,6 +68,7 @@ export const StudioLayout = observer(
 
       if (projectId) {
         initializeProject(projectId);
+        audioEngine.mixer.refreshTopPanelHeight();
       }
     }, [audioEngine, getProjectById, projectId, undoManager]);
 

@@ -43,7 +43,7 @@ export const DashboardHeader = () => {
   const isInsideStudio = location.pathname.includes("studio");
 
   return isInsideStudio ? null : (
-    <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
+    <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-2 lg:px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
         <img src="/logo32.png" />
         <span className="text-lg hidden sm:block">Velocity</span>
@@ -74,77 +74,87 @@ export const DashboardHeader = () => {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full lg:rounded-md"
+                  >
+                    <Settings className="h-6 w-6 text-primary" />
+                    <span className="hidden lg:block">Settings</span>
+                    <span className="sr-only">Settings</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    className="w-full flex gap-1 justify-between items-center"
+                    onClick={toggleTheme}
+                  >
+                    {theme === "dark" ? (
+                      <Sun className="h-4 w-4" />
+                    ) : (
+                      <Moon className="h-4 w-4" />
+                    )}
+                    <span className="font-semibold">
+                      {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                    </span>
+                    <span />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={
+                    isLoggedIn ? undefined : navigationMenuTriggerStyle()
+                  }
+                  asChild
+                >
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    {isLoggedIn ? (
+                      <Avatar>
+                        <AvatarImage src={avatarUrl} alt="profile_image" />
+                        <AvatarFallback>{initials ?? ""}</AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <>
+                        <User className="h-5 w-5" />
+                        <span className="hidden lg:block">Account</span>
+                      </>
+                    )}
+                    <span className="sr-only">Account</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {isLoggedIn ? (
+                    <DropdownMenuItem
+                      className="w-full flex gap-1 justify-between items-center"
+                      onClick={signOut}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span className="font-semibold">Sign Out</span>
+                      <span />
+                    </DropdownMenuItem>
+                  ) : (
+                    <Link to="/app/signin">
+                      <DropdownMenuItem className="w-full gap-1 flex justify-between items-center">
+                        <LogIn className="h-4 w-4" />
+                        <span className="font-semibold">Sign In</span>
+                        <span />
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className={navigationMenuTriggerStyle()} asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full lg:rounded-md"
-            >
-              <Settings className="h-6 w-6 text-primary" />
-              <span className="hidden lg:block">Settings</span>
-              <span className="sr-only">Settings</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              className="w-full flex gap-4 items-center"
-              onClick={toggleTheme}
-            >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-              <span className="font-semibold">
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-              </span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={isLoggedIn ? undefined : navigationMenuTriggerStyle()}
-            asChild
-          >
-            <Button variant="ghost" size="icon" className="rounded-full">
-              {isLoggedIn ? (
-                <Avatar>
-                  <AvatarImage src={avatarUrl} alt="profile_image" />
-                  <AvatarFallback>{initials ?? ""}</AvatarFallback>
-                </Avatar>
-              ) : (
-                <>
-                  <User className="h-5 w-5" />
-                  <span className="hidden lg:block">Account</span>
-                </>
-              )}
-              <span className="sr-only">Account</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {isLoggedIn ? (
-              <DropdownMenuItem
-                className="w-full flex gap-4 items-center"
-                onClick={signOut}
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="font-semibold">Sign Out</span>
-              </DropdownMenuItem>
-            ) : (
-              <Link to="/app/signin">
-                <DropdownMenuItem className="w-full flex gap-4 items-center">
-                  <LogIn className="h-4 w-4" />
-                  <span className="font-semibold">Sign In</span>
-                </DropdownMenuItem>
-              </Link>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </header>
   );

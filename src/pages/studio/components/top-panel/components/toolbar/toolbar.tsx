@@ -23,7 +23,7 @@ import { FaFileExport as ExportIcon } from "react-icons/fa";
 import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
 import { pasteClips } from "../timeline-view/components/clips/helpers";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { getOnlineBounce } from "@/pages/studio/audio-engine/helpers";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -45,12 +45,23 @@ export const Toolbar = observer(
     const { toggleTheme } = useThemeContext();
     const { saveProject } = useFileSystem();
     const navigate = useNavigate();
+    // const router = useRouter();
+    const tempProjectId = useSearch({
+      from: projectId
+        ? "/app/projects/studio/$projectId"
+        : "/app/projects/studio",
+      select: (search) => search.tempProjectId,
+    });
     const audioEngine = useAudioEngine();
     const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
     const { toast } = useToast();
     const [projectSettingsModalOpen, setProjectSettingsModalOpen] =
       useState(false);
+
+    const updateURLWithoutNavigation = (createdId: string) => {
+      navigate({ search: { tempProjectId: createdId } as any });
+    };
 
     const handleSave = async () => {
       try {
@@ -59,10 +70,11 @@ export const Toolbar = observer(
           const createdId = await saveProject(
             audioEngine.projectName,
             zip,
-            projectId
+            tempProjectId ?? projectId
           );
           if (createdId) {
-            navigate({ to: `${createdId}` });
+            updateURLWithoutNavigation(createdId);
+
             toast({
               title: "Success!",
               description: "Project created successfully",
@@ -89,7 +101,8 @@ export const Toolbar = observer(
         if (zip) {
           const projectId = await saveProject(audioEngine.projectName, zip);
           if (projectId) {
-            navigate({ to: `/studio/${projectId}` });
+            updateURLWithoutNavigation(projectId);
+
             toast({
               title: "Success!",
               description: "Project created successfully",
@@ -186,7 +199,7 @@ export const Toolbar = observer(
               label: "Save As",
               icon: SaveAsIcon,
               onClick: handleSaveAs,
-              disabled: !projectId,
+              disabled: !(tempProjectId || projectId),
             },
             { separator: true },
             {
