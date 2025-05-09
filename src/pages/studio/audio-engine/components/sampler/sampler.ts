@@ -10,7 +10,7 @@ import { action, observable } from "mobx";
 export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   id: idProp,
   outputGain: prop(0.03).withSetter(),
-  samplePath: prop<string>("/sounds/samples/grand_piano/grand_piano.zip"),
+  samplePath: prop<string | null>(null),
   imgUrl: prop<string>("").withSetter(),
 }) {
   output = new Tone.Channel();
@@ -72,6 +72,8 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   async getCoverImage() {
+    if (!this.samplePath) return;
+
     const instrumentName = this.samplePath.split("/")[3];
     try {
       const response = await fetch(this.samplePath);
@@ -92,6 +94,8 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   async loadSamples() {
+    if (!this.samplePath) return;
+    console.log("started sample load");
     this.setLoading(true);
 
     if (audioBufferCache.has(this.samplePath)) {
@@ -145,6 +149,8 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setLoading(false);
       }
     }
+    console.log("finished sample load");
+    console.log({ audioBufferCache });
   }
 
   triggerAttack(note: string, time: Tone.Unit.Time, velocity: number) {

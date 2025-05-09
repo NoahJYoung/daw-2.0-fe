@@ -43,9 +43,9 @@ export const DashboardHeader = () => {
   const isInsideStudio = location.pathname.includes("studio");
 
   return isInsideStudio ? null : (
-    <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-2 lg:px-6">
+    <header className="flex w-full top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-3 lg:px-6">
       <Link to="/" className="flex items-center gap-2 font-semibold">
-        <img src="/logo32.png" />
+        <img height={48} width={48} src="/logo192.png" />
         <span className="text-lg hidden sm:block">Velocity</span>
       </Link>
 

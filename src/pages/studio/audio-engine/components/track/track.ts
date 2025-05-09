@@ -43,9 +43,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   inputType: prop<string | null>("mic"),
   synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
   sampler: prop<Sampler>(() => new Sampler({})).withSetter(),
-  instrumentKey: prop<"synth" | "sampler" | "no instrument">(
-    "no instrument"
-  ).withSetter(),
+  instrumentKey: prop<"synth" | "sampler" | null>(null).withSetter(),
 }) {
   channel = new Tone.Channel();
   output = new Tone.Channel();
@@ -143,9 +141,8 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
     const instrumentMap = {
       synth: this.synth,
       sampler: this.sampler,
-      "no instrument": null,
     };
-    return instrumentMap[this.instrumentKey];
+    return this.instrumentKey ? instrumentMap[this.instrumentKey] : null;
   }
 
   @modelAction

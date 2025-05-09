@@ -97,7 +97,7 @@ export const Loader = observer(
       >
         <span className="flex flex-col gap-1 justify-center items-center">
           {global && (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center font-semibold text-surface-7">
               <span style={{ minWidth: "4ch" }}>
                 {audioEngine.loadingState}
               </span>

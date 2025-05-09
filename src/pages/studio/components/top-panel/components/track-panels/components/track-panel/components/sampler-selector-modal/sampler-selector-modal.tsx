@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import { IconType } from "react-icons/lib";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { isMobileDevice } from "@/pages/studio/utils";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Loader } from "@/pages/studio/components/loader";
 import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { FaGuitar } from "react-icons/fa6";
@@ -23,10 +23,6 @@ export const SamplerSelectorModal = observer(
       []
     );
 
-    const [selectedInstrument, setSelectedInstrument] = useState<string | null>(
-      instruments?.[0].path || null
-    );
-
     const { outputGain } = track.sampler;
 
     const {
@@ -36,12 +32,12 @@ export const SamplerSelectorModal = observer(
       track.sampler.setOutputGain(value)
     );
 
-    const options = instruments.map(
-      (instrument: { name: string; path: string }) => ({
+    const options = [
+      ...instruments.map((instrument: { name: string; path: string }) => ({
         label: instrument.name,
         value: instrument.path,
-      })
-    );
+      })),
+    ];
 
     const loading = track.sampler.loading;
     const imgUrl = track.sampler.imgUrl;
@@ -57,11 +53,11 @@ export const SamplerSelectorModal = observer(
             <StudioDropdown
               style={{ width: 300 }}
               options={options}
-              value={selectedInstrument}
+              value={track.sampler.samplePath}
               placeholder="Instruments"
               disabled={options.length < 1 || loading}
               icon={<FaGuitar />}
-              onChange={(instrument) => setSelectedInstrument(instrument)}
+              onChange={(instrument) => track.sampler.setSamplePath(instrument)}
               colorOffset={1}
             />
           </div>

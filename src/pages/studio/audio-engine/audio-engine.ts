@@ -24,12 +24,14 @@ import { Keyboard } from "./components";
 import { MidiNote } from "./components/midi-note";
 import { EventData } from "./components/keyboard/types";
 import {
+  addInitialSamplesToCache,
   blobToJsonObject,
   populateBufferCache,
   unzipProjectFile,
 } from "./helpers";
 import JSZip from "jszip";
 import { bufferToWav } from "../utils";
+import { Sampler } from "./components/sampler";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -97,7 +99,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
       if (remainingTime > 0) {
         this.loadingTimeout = setTimeout(() => {
-          this.loadingState = null;
+          this.setLoadingState(null);
           this.setPlayDisabled(false);
           this.loadingStartTime = null;
           this.loadingTimeout = null;
@@ -305,83 +307,141 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   async loadProjectDataFromFile(projectZip?: File) {
-    this.setLoadingState("Loading project");
+    try {
+      this.setLoadingState("Loading project");
 
-    if (!projectZip) {
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = ".zip";
-      fileInput.style.display = "none";
+      if (!projectZip) {
+        return new Promise<void>((resolve, reject) => {
+          const fileInput = document.createElement("input");
+          fileInput.type = "file";
+          fileInput.accept = ".zip";
+          fileInput.style.display = "none";
 
-      document.body.appendChild(fileInput);
+          document.body.appendChild(fileInput);
 
-      fileInput.onchange = async (event) => {
-        const file = (event.target as HTMLInputElement).files?.[0];
-        if (!file) return;
+          fileInput.onchange = async (event) => {
+            try {
+              const file = (event.target as HTMLInputElement).files?.[0];
+              if (!file) {
+                this.setLoadingState(null);
+                return resolve();
+              }
 
-        const data = await unzipProjectFile(file);
+              const data = await unzipProjectFile(file);
+              const settingsBlob = data["settings.json"];
 
-        await populateBufferCache(data);
+              if (!settingsBlob) {
+                throw new Error("No settings data found");
+              }
 
-        document.body.removeChild(fileInput);
+              const settings = (await blobToJsonObject(
+                settingsBlob
+              )) as unknown as AudioEngine;
 
+              const samplePathsToLoad: string[] = [];
+
+              settings.mixer.tracks.forEach((track) => {
+                if (track.instrumentKey === "sampler") {
+                  const path = (track.instrument as Sampler).samplePath;
+                  if (path) {
+                    samplePathsToLoad.push(path);
+                  }
+                }
+              });
+
+              const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
+
+              await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+              await populateBufferCache(data);
+
+              document.body.removeChild(fileInput);
+
+              const loadedTimeline = fromSnapshot(
+                settings.timeline
+              ) as Timeline;
+              const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+              const loadedMetronome = fromSnapshot(
+                settings.metronome
+              ) as Metronome;
+              const loadedKeyboard = fromSnapshot(
+                settings.keyboard
+              ) as Keyboard;
+              const loadedProjectId = fromSnapshot(
+                settings.projectId
+              ) as string;
+              const loadedProjectName = fromSnapshot(
+                settings.projectName
+              ) as string;
+
+              loadedMixer.tracks.forEach((track) =>
+                track.clips.forEach((clip) => {
+                  if (clip instanceof AudioClip) {
+                    const buffer = audioBufferCache.get(clip.id);
+                    if (buffer) {
+                      clip.createWaveformCache(buffer);
+                    } else {
+                      throw new Error("no buffer found");
+                    }
+                  }
+                })
+              );
+
+              this.setTimeline(loadedTimeline);
+              this.setMixer(loadedMixer);
+              this.setKeyboard(loadedKeyboard);
+              this.setProjectId(loadedProjectId);
+              this.setProjectName(loadedProjectName);
+              this.setMetronome(loadedMetronome);
+              this.setKey(settings.key);
+
+              const loadedAuxSendManager = fromSnapshot(
+                settings.auxSendManager
+              ) as AuxSendManager;
+
+              this.setAuxSendManager(loadedAuxSendManager);
+
+              this.setLoadingState(null);
+              resolve();
+            } catch (error) {
+              this.setLoadingState(null);
+              reject(error);
+            }
+          };
+
+          fileInput.oncancel = () => {
+            document.body.removeChild(fileInput);
+            this.setLoadingState(null);
+            resolve();
+          };
+
+          fileInput.click();
+        });
+      } else {
+        console.log("loading project zip");
+        const data = await unzipProjectFile(projectZip);
         const settingsBlob = data["settings.json"];
 
-        if (settingsBlob) {
-          const settings = (await blobToJsonObject(
-            settingsBlob
-          )) as unknown as AudioEngine;
-
-          const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
-          const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
-          const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
-          const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
-          const loadedProjectId = fromSnapshot(settings.projectId) as string;
-          const loadedProjectName = fromSnapshot(
-            settings.projectName
-          ) as string;
-
-          loadedMixer.tracks.forEach((track) =>
-            track.clips.forEach((clip) => {
-              if (clip instanceof AudioClip) {
-                const buffer = audioBufferCache.get(clip.id);
-                if (buffer) {
-                  clip.createWaveformCache(buffer);
-                } else {
-                  throw new Error("no buffer found");
-                }
-              }
-            })
-          );
-
-          this.setTimeline(loadedTimeline);
-          this.setMixer(loadedMixer);
-          this.setKeyboard(loadedKeyboard);
-          this.setProjectId(loadedProjectId);
-          this.setProjectName(loadedProjectName);
-          this.setMetronome(loadedMetronome);
-          this.setKey(settings.key);
-
-          const loadedAuxSendManager = fromSnapshot(
-            settings.auxSendManager
-          ) as AuxSendManager;
-
-          this.setAuxSendManager(loadedAuxSendManager);
-        } else {
+        if (!settingsBlob) {
           throw new Error("No settings data found");
         }
-      };
 
-      fileInput.click();
-    } else {
-      const data = await unzipProjectFile(projectZip);
+        const settings = (await blobToJsonObject(
+          settingsBlob
+        )) as unknown as AudioEngine;
 
-      await populateBufferCache(data);
+        const samplePathsToLoad: string[] = [];
 
-      const settingsBlob = data["settings.json"];
+        settings.mixer.tracks.forEach((track) => {
+          if (track.instrumentKey === "sampler") {
+            const path = track.sampler.samplePath;
+            if (path) {
+              samplePathsToLoad.push(path);
+            }
+          }
+        });
 
-      if (settingsBlob) {
-        const settings = await blobToJsonObject(settingsBlob);
+        const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
+        await addInitialSamplesToCache(uniqueSamplePathsToLoad);
 
         const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
         const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
@@ -416,12 +476,13 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         ) as AuxSendManager;
 
         this.setAuxSendManager(loadedAuxSendManager);
-      } else {
-        throw new Error("No settings data found");
+        await populateBufferCache(data);
+        this.setLoadingState(null);
       }
+    } catch (error) {
+      this.setLoadingState(null);
+      throw error;
     }
-
-    this.setLoadingState(null);
   }
 
   async loadProjectDataFromObject(settings: Record<string, unknown>) {

@@ -84,6 +84,10 @@ export class AudioBufferCache {
 
   addSamples(params: AddSamplesParams) {
     const { path, samples } = params;
+
+    if (this.loadedSamplePaths.includes(path)) {
+      return;
+    }
     Object.keys(samples).map((note) => {
       const fullKey = `${path}/${note}`;
       const buffer = samples[note];

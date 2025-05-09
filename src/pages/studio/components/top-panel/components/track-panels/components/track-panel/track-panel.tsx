@@ -445,7 +445,6 @@ export const TrackPanel = observer(
                         options={[
                           { label: "Synthesizer", value: "synth" },
                           { label: "Sampler", value: "sampler" },
-                          { label: "No Instrument", value: "no instrument" },
                         ]}
                         value={track.instrumentKey}
                         placeholder={t(
@@ -459,17 +458,27 @@ export const TrackPanel = observer(
                           )
                         }
                       />
-                      {track.instrumentKey === "sampler" ? (
-                        <SamplerSelectorModal
-                          triggerClassName={settingsButtonClassName}
-                          triggerIcon={SettingsIcon}
-                          track={track}
-                        />
+
+                      {track.instrumentKey ? (
+                        track.instrumentKey === "sampler" ? (
+                          <SamplerSelectorModal
+                            triggerClassName={settingsButtonClassName}
+                            triggerIcon={SettingsIcon}
+                            track={track}
+                          />
+                        ) : (
+                          <SynthSettingsModal
+                            triggerClassName={settingsButtonClassName}
+                            triggerIcon={SettingsIcon}
+                            track={track}
+                          />
+                        )
                       ) : (
-                        <SynthSettingsModal
-                          triggerClassName={settingsButtonClassName}
-                          triggerIcon={SettingsIcon}
-                          track={track}
+                        <StudioButton
+                          className={settingsButtonClassName}
+                          icon={SettingsIcon}
+                          // Disabled until input manager implementation is complete
+                          disabled
                         />
                       )}
                     </span>
