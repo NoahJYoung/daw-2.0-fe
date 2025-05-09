@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 import {
   model,
   prop,
