@@ -45,7 +45,6 @@ export const Toolbar = observer(
     const { toggleTheme } = useThemeContext();
     const { saveProject } = useFileSystem();
     const navigate = useNavigate();
-    // const router = useRouter();
     const tempProjectId = useSearch({
       from: projectId
         ? "/app/projects/studio/$projectId"
