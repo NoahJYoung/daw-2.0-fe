@@ -85,13 +85,7 @@ export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
         marginBottom: "6px",
       }}
     >
-      <Loader
-        height={clipHeight / 2}
-        color="#444"
-        global={false}
-        borderRadius="8px"
-        barCount={clipWidth / 12}
-      />
+      <Loader />
     </span>
   ) : (
     <canvas

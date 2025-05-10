@@ -25,10 +25,11 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
     this.loading = state;
   }
 
-  init() {
+  async init() {
+    console.log("initializing");
     this.sampler?.chain(this.gain, this.output);
     this.sync();
-    this.loadSamples();
+    await this.loadSamples();
   }
 
   sync() {
@@ -37,6 +38,7 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   setSamplePath(path: string) {
+    console.log("setting sample path");
     this.samplePath = path;
     this.loadSamples();
   }

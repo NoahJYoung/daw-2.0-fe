@@ -21,7 +21,6 @@ import { noteRef } from "../refs";
 import { AudioEngine } from "../../audio-engine";
 import { AudioClip } from "../audio-clip";
 import { audioBufferCache } from "../audio-buffer-cache";
-import { Synthesizer } from "../synthesizer";
 import { Sampler } from "../sampler";
 
 interface EventParams {
@@ -514,29 +513,52 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     const duration = (this.end - this.start) / Tone.getContext().sampleRate;
 
     const audioBuffer = await Tone.Offline(async (context) => {
-      const instrumentClone = clone(
-        parentTrack.instrument as Synthesizer | Sampler
-      );
+      if (parentTrack.instrument) {
+        const instrumentClone = clone(parentTrack.instrument);
+        if (instrumentClone instanceof Sampler) {
+          await instrumentClone.loadSamples();
 
-      instrumentClone.output.toDestination();
+          instrumentClone.output.toDestination();
 
-      const sortedEvents = [...this.events].sort((a, b) => a.on - b.on);
+          const sortedEvents = [...this.events].sort((a, b) => a.on - b.on);
 
-      sortedEvents.forEach((event) => {
-        const startTime = event.on / Tone.getContext().sampleRate;
-        const duration = (event.off - event.on) / Tone.getContext().sampleRate;
+          sortedEvents.forEach((event) => {
+            const startTime = event.on / Tone.getContext().sampleRate;
+            const duration =
+              (event.off - event.on) / Tone.getContext().sampleRate;
 
-        context.transport.scheduleOnce((time) => {
-          instrumentClone.triggerAttackRelease(
-            event.note.join(""),
-            duration,
-            time,
-            event.velocity
-          );
-        }, startTime);
-      });
+            context.transport.scheduleOnce((time) => {
+              instrumentClone.triggerAttackRelease(
+                event.note.join(""),
+                duration,
+                time,
+                event.velocity
+              );
+            }, startTime);
+          });
+          context.transport.start();
+        } else {
+          instrumentClone.output.toDestination();
 
-      context.transport.start();
+          const sortedEvents = [...this.events].sort((a, b) => a.on - b.on);
+
+          sortedEvents.forEach((event) => {
+            const startTime = event.on / Tone.getContext().sampleRate;
+            const duration =
+              (event.off - event.on) / Tone.getContext().sampleRate;
+
+            context.transport.scheduleOnce((time) => {
+              instrumentClone.triggerAttackRelease(
+                event.note.join(""),
+                duration,
+                time,
+                event.velocity
+              );
+            }, startTime);
+          });
+          context.transport.start();
+        }
+      }
     }, duration);
 
     const monoBuffer = audioBuffer.toMono();

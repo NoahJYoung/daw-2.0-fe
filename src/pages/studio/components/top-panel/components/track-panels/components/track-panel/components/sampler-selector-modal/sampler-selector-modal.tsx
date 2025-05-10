@@ -64,13 +64,7 @@ export const SamplerSelectorModal = observer(
           <div className="flex w-full h-full justify-center items-center">
             {loading ? (
               <span className="flex flex-col items-center justify-center gap-4 h-full">
-                <Loader
-                  height={100}
-                  color="#444"
-                  global={false}
-                  borderRadius="8px"
-                  barCount={300 / 12}
-                />
+                <Loader />
                 <span className="text-surface-6">Loading...</span>
               </span>
             ) : (
