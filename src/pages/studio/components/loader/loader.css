@@ -1,0 +1,11 @@
+@keyframes waveform {
+  0%,
+  100% {
+    transform: scaleY(1);
+    background-color: #888888;
+  }
+  50% {
+    transform: scaleY(10);
+    background-color: hsl(341, 98%, 60%);
+  }
+}
