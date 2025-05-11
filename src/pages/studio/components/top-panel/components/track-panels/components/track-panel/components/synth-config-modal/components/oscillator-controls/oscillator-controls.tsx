@@ -14,6 +14,7 @@ import {
 import { useOscillatorControls } from "./hooks";
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
 import { isMobileDevice } from "@/pages/studio/utils";
+import { GrPower } from "react-icons/gr";
 
 const icons: Record<OscillatorType, IconType> = {
   sine: SineIcon,
@@ -58,7 +59,7 @@ export const OscillatorControls = observer(
 
     return (
       <div className="sm:w-[220px] md:w-[280px] flex gap-2 items-start justify-between text-surface-6 py-1 px-2 shadow-sm border rounded-md z-20">
-        <div className="flex w-[128px] h-[128px] md:h-[170px] z-20">
+        <div className="flex w-[128px] items-center h-[128px] md:h-[170px] z-20">
           <MeterFader
             faderHeight={faderHeight}
             onChange={onVolumeChange}
@@ -76,9 +77,11 @@ export const OscillatorControls = observer(
             <StudioButton
               on={oscillator.mute}
               onClick={() => oscillator.setMute(!oscillator.mute)}
-              label="M"
-              onClassName="p-0 text-surface-10 border border-primary rounded-sm "
-              className="p-0 rounded-sm focus-visible:ring-0 shadow-none text-sm relative flex items-center justify-center w-6 h-6 bg-transparent border border-surface-5 text-surface-5 hover:opacity-80 hover:bg-transparent"
+              icon={() => (
+                <GrPower className="text-lg w-5 h-5 flex items-center justify-center" />
+              )}
+              onClassName="p-0 text-surface-5 font-bold"
+              className="p-0 rounded-sm flex items-center w-6 h-6 justify-center text-lg focus-visible:ring-0 shadow-none relative flex items-center justify-center bg-transparent text-brand-1 hover:opacity-80 hover:bg-transparent"
             />
             <Icon className="text-2xl h-8 w-8" />
           </span>
