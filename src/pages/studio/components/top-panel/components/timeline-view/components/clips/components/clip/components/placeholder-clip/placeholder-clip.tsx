@@ -36,7 +36,7 @@ export const getPlaceholderNoteYPosition = (
     "Db",
     "C",
   ];
-  return notes.indexOf(note.note[0]) * noteHeight;
+  return 8 + notes.indexOf(note.note[0]) * noteHeight;
 };
 
 export const getPlaceholderNoteWidth = (
@@ -71,7 +71,6 @@ const MemoizedNotes = observer(
             height={noteHeight}
             width={getPlaceholderNoteWidth(event, timeline)}
             x={getPlaceholderNoteXPosition(event, timeline, left)}
-            rx="2px"
             y={getPlaceholderNoteYPosition(event, noteHeight)}
           />
         ))}

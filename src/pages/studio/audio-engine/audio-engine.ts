@@ -636,4 +636,17 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const duration = this.mixer.getLastClipEndSamples() / sampleRate;
     return duration;
   };
+
+  resetTone() {
+    const transport = Tone.getTransport();
+    transport.stop();
+
+    transport.cancel(0);
+
+    transport.position = 0;
+
+    transport.bpm.value = 120;
+
+    transport.timeSignature = [4, 4];
+  }
 }

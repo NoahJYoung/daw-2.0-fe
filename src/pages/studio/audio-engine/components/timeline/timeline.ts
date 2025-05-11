@@ -10,10 +10,13 @@ import { MAX_SAMPLES_PER_PIXEL, MIN_SAMPLES_PER_PIXEL } from "../../constants";
 import * as Tone from "tone";
 import { computed } from "mobx";
 import { AudioEngineState } from "../../types";
+import { AudioEngine } from "../../audio-engine";
+import { MidiClip } from "../midi-clip";
+import { AudioClip } from "../audio-clip";
 
 @model("AudioEngine/Transport")
 export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
-  bpm: prop(Tone.getTransport().bpm.value).withSetter(),
+  bpm: prop(Tone.getTransport().bpm.value),
   timeSignature: prop(Tone.getTransport().timeSignature as number).withSetter(),
   measures: prop(301).withSetter(),
   samplesPerPixel: prop(4096).withSetter(),
@@ -54,6 +57,24 @@ export class Timeline extends ExtendedModel(BaseAudioNodeWrapper, {
 
   pixelsToSamples(pixels: number) {
     return pixels * this.samplesPerPixel;
+  }
+
+  @modelAction
+  setBpm(newBpm: number, repositionNotesAndClips: boolean = true) {
+    this.bpm = newBpm;
+    if (repositionNotesAndClips) {
+      const audioEngine = getRoot<AudioEngine>(this);
+      audioEngine.mixer.tracks.forEach((track) => {
+        track.clips.forEach((clip) => {
+          if (clip instanceof MidiClip) {
+            clip.events.forEach((event) => event.setOnOffFromTicks());
+            clip.setStartAndEndFromTicks();
+          } else if (clip instanceof AudioClip) {
+            clip.midiNotes.forEach((midiNote) => midiNote.setOnOffFromTicks());
+          }
+        });
+      });
+    }
   }
 
   @modelAction

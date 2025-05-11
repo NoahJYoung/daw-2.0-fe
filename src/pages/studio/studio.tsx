@@ -34,8 +34,10 @@ export const Studio = observer(() => {
   });
 
   useEffect(() => {
-    if (tempProjectId)
+    if (tempProjectId) {
       navigate({ to: `/app/projects/studio/${tempProjectId}` });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

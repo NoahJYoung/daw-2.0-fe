@@ -54,7 +54,7 @@ export const Loader = observer(
         {(text || loadingText) && (
           <div
             style={{ zIndex: 100 }}
-            className="absolute text-center pt-12 font-semibold text-surface-8"
+            className="absolute text-center pt-12 font-bold text-surface-8"
           >
             {text || loadingText}
           </div>

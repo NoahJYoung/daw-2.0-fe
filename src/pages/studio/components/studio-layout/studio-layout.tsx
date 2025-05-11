@@ -69,6 +69,12 @@ export const StudioLayout = observer(
       }
     }, [audioEngine, getProjectById, projectId, undoManager]);
 
+    useEffect(() => {
+      return () => {
+        audioEngine.resetTone();
+      };
+    }, [audioEngine]);
+
     return (
       <section className="bg-surface-0 text-foreground p-1">
         <PanelGroup

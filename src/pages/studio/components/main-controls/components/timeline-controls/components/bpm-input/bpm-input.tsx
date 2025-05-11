@@ -1,18 +1,31 @@
 import { useAudioEngine } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const BpmInput = observer(({ className }: { className: string }) => {
   const { timeline } = useAudioEngine();
   const bpmRef = useRef<HTMLInputElement>(null);
+  const [localBpmValue, setLocalBpmValue] = useState(timeline.bpm);
 
   const handleWheel = (e: React.WheelEvent) => {
     if (e.deltaY > 0) {
-      timeline.setBpm(timeline.bpm - 1);
+      setLocalBpmValue(localBpmValue - 1);
     } else {
-      timeline.setBpm(timeline.bpm + 1);
+      setLocalBpmValue(localBpmValue + 1);
     }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalBpmValue(parseInt(e.target.value));
+  };
+
+  const handleBlur = () => {
+    timeline.setBpm(localBpmValue);
+  };
+
+  useEffect(() => {
+    setLocalBpmValue(timeline.bpm);
+  }, [timeline.bpm]);
 
   return (
     <span className={className}>
@@ -22,9 +35,10 @@ export const BpmInput = observer(({ className }: { className: string }) => {
         ref={bpmRef}
         type="number"
         className="text-surface-4 w-[64px] text-xl lg:text-2xl bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
-        value={timeline.bpm}
+        value={localBpmValue}
         onClick={(e) => e.stopPropagation()}
-        onChange={(e) => timeline.setBpm(parseInt(e.target.value))}
+        onChange={handleChange}
+        onBlur={handleBlur}
         onWheel={handleWheel}
         onKeyDown={(e) => {
           if (e.key === "Enter") {

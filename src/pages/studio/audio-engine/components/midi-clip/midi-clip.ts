@@ -36,7 +36,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
   trackId: prop<string>(),
   type: prop("midi"),
   start: prop<number>(),
-  end: prop<number>().withSetter(),
+  end: prop<number>(),
   events: prop<MidiNote[]>(() => []).withSetter(),
   loopSamples: prop<number>(0),
   locked: prop<boolean>(false).withSetter(),
@@ -64,6 +64,9 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @observable
   loading = false;
+
+  startTicks = Tone.Time(this.start, "samples").toTicks();
+  endTicks = Tone.Time(this.end, "samples").toTicks();
 
   getRefId() {
     return this.id;
@@ -232,6 +235,14 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
     }
   }
 
+  setStartAndEndFromTicks() {
+    const currentTickOnTimeInSamples = Tone.Ticks(this.startTicks).toSamples();
+    const currentTickOffTimeInSamples = Tone.Ticks(this.endTicks).toSamples();
+
+    this.setStart(currentTickOnTimeInSamples);
+    this.setEnd(currentTickOffTimeInSamples);
+  }
+
   @modelAction
   unselectNote(note: MidiNote) {
     if (!this.events.includes(note)) throw new Error("unknown midi note");
@@ -264,10 +275,19 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   setStart(newStart: number) {
+    this.startTicks = Tone.Time(newStart, "samples").toTicks();
     const difference = newStart - this.start;
     this.setEnd(this.end + difference);
     this.start = newStart;
 
+    this.eventTimingsCache.clear();
+    this.requestBatchUpdate();
+  }
+
+  @modelAction
+  setEnd(newEnd: number) {
+    this.endTicks = Tone.Time(newEnd, "samples").toTicks();
+    this.end = newEnd;
     this.eventTimingsCache.clear();
     this.requestBatchUpdate();
   }

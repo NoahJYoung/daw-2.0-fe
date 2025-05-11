@@ -309,6 +309,16 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     return new Tone.ToneAudioBuffer(concatenatedBuffer);
   };
 
+  getLastNoteEndInSamples() {
+    if (this.midiNotes.length === 0) {
+      return this.end;
+    }
+
+    const sortedNotes = [...this.midiNotes].sort((a, b) => a.off - b.off);
+
+    return sortedNotes[sortedNotes.length - 1].off;
+  }
+
   async convertToMidiClip() {
     if (!this.canConvertToMidi || !this.midiNotes) {
       return;
@@ -320,10 +330,16 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
     const { loopSamples, fadeInSamples, fadeOutSamples } = this;
 
+    const lastNoteEndInSamples = this.getLastNoteEndInSamples();
+
+    const adjustedEnd = this.start + lastNoteEndInSamples;
+
+    const trueEnd = Math.max(this.end, adjustedEnd);
+
     const clip = new MidiClip({
       trackId: this.trackId,
       start: this.start,
-      end: this.end,
+      end: trueEnd,
       loopSamples,
       fadeInSamples,
       fadeOutSamples,
