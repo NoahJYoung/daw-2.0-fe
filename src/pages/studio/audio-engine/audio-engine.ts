@@ -32,6 +32,7 @@ import {
 } from "./helpers";
 import JSZip from "jszip";
 import { bufferToWav } from "../utils";
+import { Sampler } from "./components/sampler";
 
 @model("AudioEngine")
 export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -306,111 +307,221 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     URL.revokeObjectURL(link.href);
   }
 
-  async loadProjectDataFromFile(projectZip: File) {
+  async loadProjectDataFromFile(projectZip?: File) {
     try {
       this.setLoadingState("Loading project");
 
-      return new Promise<void>(async (resolve, reject) => {
-        try {
-          this.setLoadingState("Extracting project data");
-          const data = await unzipProjectFile(projectZip);
-          const settingsBlob = data["settings.json"];
+      if (!projectZip) {
+        return new Promise<void>((resolve, reject) => {
+          const fileInput = document.createElement("input");
+          fileInput.type = "file";
+          fileInput.accept = ".zip";
+          fileInput.style.display = "none";
 
-          if (!settingsBlob) {
-            throw new Error("No settings data found");
-          }
+          document.body.appendChild(fileInput);
 
-          this.setLoadingState("Parsing project settings");
-          const settings = (await blobToJsonObject(
-            settingsBlob
-          )) as unknown as AudioEngine;
-
-          this.setLoadingState("Loading audio samples");
-          const samplePathsToLoad: string[] = [];
-
-          settings.mixer.tracks.forEach((track) => {
-            if (track.instrumentKey === "sampler") {
-              const path = track.sampler.samplePath;
-              if (path) {
-                samplePathsToLoad.push(path);
+          fileInput.onchange = async (event) => {
+            try {
+              const file = (event.target as HTMLInputElement).files?.[0];
+              if (!file) {
+                this.setLoadingState(null);
+                return resolve();
               }
-            }
-          });
 
-          const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
-          await addInitialSamplesToCache(uniqueSamplePathsToLoad);
-          await populateBufferCache(data);
+              const data = await unzipProjectFile(file);
+              const settingsBlob = data["settings.json"];
 
-          this.setLoadingState("Reconstructing project state");
-          const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
-          const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
-          const loadedMetronome = fromSnapshot(settings.metronome) as Metronome;
-          const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
-          const loadedProjectId = fromSnapshot(settings.projectId) as string;
-          const loadedProjectName = fromSnapshot(
-            settings.projectName
-          ) as string;
-          const loadedAuxSendManager = fromSnapshot(
-            settings.auxSendManager
-          ) as AuxSendManager;
-
-          this.setLoadingState("Generating waveforms");
-
-          const audioClips: AudioClip[] = [];
-          loadedMixer.tracks.forEach((track) => {
-            track.clips.forEach((clip) => {
-              if (clip instanceof AudioClip) {
-                audioClips.push(clip);
+              if (!settingsBlob) {
+                throw new Error("No settings data found");
               }
-            });
-          });
 
-          const chunkSize = 5;
-          for (let i = 0; i < audioClips.length; i += chunkSize) {
-            const chunkClips = audioClips.slice(i, i + chunkSize);
+              const settings = (await blobToJsonObject(
+                settingsBlob
+              )) as unknown as AudioEngine;
 
-            await Promise.all(
-              chunkClips.map(async (clip) => {
-                const buffer = audioBufferCache.get(clip.id);
-                if (buffer) {
-                  await clip.createWaveformCache(buffer);
-                } else {
-                  console.warn(`No buffer found for clip ${clip.id}`);
+              const samplePathsToLoad: string[] = [];
+
+              settings.mixer.tracks.forEach((track) => {
+                if (track.instrumentKey === "sampler") {
+                  const path = (track.instrument as Sampler).samplePath;
+                  if (path) {
+                    samplePathsToLoad.push(path);
+                  }
                 }
-              })
-            );
+              });
 
-            await new Promise((resolve) => setTimeout(resolve, 0));
-          }
+              const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
 
-          this.setLoadingState("Processing audio buffers");
+              await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+              await populateBufferCache(data);
 
-          this.setLoadingState("Building audio engine");
+              document.body.removeChild(fileInput);
 
-          await new Promise<void>((resolveUI) => {
-            requestAnimationFrame(() => {
+              const loadedTimeline = fromSnapshot(
+                settings.timeline
+              ) as Timeline;
+              const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+              const loadedMetronome = fromSnapshot(
+                settings.metronome
+              ) as Metronome;
+              const loadedKeyboard = fromSnapshot(
+                settings.keyboard
+              ) as Keyboard;
+              const loadedProjectId = fromSnapshot(
+                settings.projectId
+              ) as string;
+              const loadedProjectName = fromSnapshot(
+                settings.projectName
+              ) as string;
+
+              loadedMixer.tracks.forEach((track) =>
+                track.clips.forEach((clip) => {
+                  if (clip instanceof AudioClip) {
+                    const buffer = audioBufferCache.get(clip.id);
+                    if (buffer) {
+                      clip.createWaveformCache(buffer);
+                    } else {
+                      throw new Error("no buffer found");
+                    }
+                  }
+                })
+              );
+
               this.setTimeline(loadedTimeline);
               this.setMixer(loadedMixer);
               this.setKeyboard(loadedKeyboard);
               this.setProjectId(loadedProjectId);
               this.setProjectName(loadedProjectName);
               this.setMetronome(loadedMetronome);
-              this.setKey(settings.key as string);
+              this.setKey(settings.key);
+
+              const loadedAuxSendManager = fromSnapshot(
+                settings.auxSendManager
+              ) as AuxSendManager;
+
               this.setAuxSendManager(loadedAuxSendManager);
 
-              resolveUI();
-            });
-          });
+              this.setLoadingState(null);
+              resolve();
+            } catch (error) {
+              this.setLoadingState(null);
+              reject(error);
+            }
+          };
 
-          this.setLoadingState(null);
-          this.mixer.refreshTopPanelHeight();
-          resolve();
-        } catch (error) {
-          console.error("Error loading project:", error);
-          this.setLoadingState(null);
-          reject(error);
-        }
-      });
+          fileInput.oncancel = () => {
+            document.body.removeChild(fileInput);
+            this.setLoadingState(null);
+            resolve();
+          };
+
+          fileInput.click();
+        });
+      } else {
+        return new Promise<void>(async (resolve, reject) => {
+          try {
+            this.setLoadingState("Extracting project data");
+            const data = await unzipProjectFile(projectZip);
+            const settingsBlob = data["settings.json"];
+
+            if (!settingsBlob) {
+              throw new Error("No settings data found");
+            }
+
+            this.setLoadingState("Parsing project settings");
+            const settings = (await blobToJsonObject(
+              settingsBlob
+            )) as unknown as AudioEngine;
+
+            this.setLoadingState("Loading audio samples");
+            const samplePathsToLoad: string[] = [];
+
+            settings.mixer.tracks.forEach((track) => {
+              if (track.instrumentKey === "sampler") {
+                const path = track.sampler.samplePath;
+                if (path) {
+                  samplePathsToLoad.push(path);
+                }
+              }
+            });
+
+            const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
+            await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+            await populateBufferCache(data);
+
+            this.setLoadingState("Reconstructing project state");
+            const loadedTimeline = fromSnapshot(settings.timeline) as Timeline;
+            const loadedMixer = fromSnapshot(settings.mixer) as Mixer;
+            const loadedMetronome = fromSnapshot(
+              settings.metronome
+            ) as Metronome;
+            const loadedKeyboard = fromSnapshot(settings.keyboard) as Keyboard;
+            const loadedProjectId = fromSnapshot(settings.projectId) as string;
+            const loadedProjectName = fromSnapshot(
+              settings.projectName
+            ) as string;
+            const loadedAuxSendManager = fromSnapshot(
+              settings.auxSendManager
+            ) as AuxSendManager;
+
+            this.setLoadingState("Generating waveforms");
+
+            const audioClips: AudioClip[] = [];
+            loadedMixer.tracks.forEach((track) => {
+              track.clips.forEach((clip) => {
+                if (clip instanceof AudioClip) {
+                  audioClips.push(clip);
+                }
+              });
+            });
+
+            const chunkSize = 5;
+            for (let i = 0; i < audioClips.length; i += chunkSize) {
+              const chunkClips = audioClips.slice(i, i + chunkSize);
+
+              await Promise.all(
+                chunkClips.map(async (clip) => {
+                  const buffer = audioBufferCache.get(clip.id);
+                  if (buffer) {
+                    await clip.createWaveformCache(buffer);
+                  } else {
+                    console.warn(`No buffer found for clip ${clip.id}`);
+                  }
+                })
+              );
+
+              await new Promise((resolve) => setTimeout(resolve, 0));
+            }
+
+            this.setLoadingState("Processing audio buffers");
+
+            this.setLoadingState("Building audio engine");
+
+            await new Promise<void>((resolveUI) => {
+              requestAnimationFrame(() => {
+                this.setTimeline(loadedTimeline);
+                this.setMixer(loadedMixer);
+                this.setKeyboard(loadedKeyboard);
+                this.setProjectId(loadedProjectId);
+                this.setProjectName(loadedProjectName);
+                this.setMetronome(loadedMetronome);
+                this.setKey(settings.key as string);
+                this.setAuxSendManager(loadedAuxSendManager);
+
+                resolveUI();
+              });
+            });
+
+            this.setLoadingState(null);
+            this.mixer.refreshTopPanelHeight();
+            resolve();
+          } catch (error) {
+            console.error("Error loading project:", error);
+            this.setLoadingState(null);
+            reject(error);
+          }
+        });
+      }
     } catch (error) {
       this.setLoadingState(null);
       throw error;
