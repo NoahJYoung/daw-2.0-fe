@@ -9,7 +9,6 @@ import {
   useUndoManager,
 } from "../../hooks";
 import { useParams } from "@tanstack/react-router";
-import demoProject from "../../utils/sampleProject.json";
 import { useFileSystem } from "@/hooks";
 
 interface StudioLayoutProps {
@@ -54,9 +53,7 @@ export const StudioLayout = observer(
     useEffect(() => {
       const initializeProject = async (projectId: string) => {
         undoManager.withoutUndo(() => {
-          if (projectId === "DEMO") {
-            audioEngine.loadProjectDataFromObject(demoProject);
-          } else if (projectId) {
+          if (projectId) {
             const project = getProjectById(projectId);
             if (project && !hasLoaded.current) {
               audioEngine.loadProjectDataFromFile(project.data);

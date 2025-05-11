@@ -51,7 +51,7 @@ export const DashboardHeader = () => {
 
       <div className="ml-auto flex items-center gap-4">
         <NavigationMenu>
-          <NavigationMenuList className="gap-2">
+          <NavigationMenuList className="items-center gap-2">
             <NavigationMenuItem>
               <Link to="/app/projects">
                 <NavigationMenuLink

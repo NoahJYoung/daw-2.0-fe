@@ -79,13 +79,14 @@ export const MidiClipView = observer(({ clip, track }: MidiClipViewProps) => {
 
   return clip.loading ? (
     <span
+      className="overflow-hidden max-w-full"
       style={{
         width: clipWidth,
         height: clipHeight,
         marginBottom: "6px",
       }}
     >
-      <Loader />
+      <Loader loading={clipWidth >= 80} text="Converting" />
     </span>
   ) : (
     <canvas

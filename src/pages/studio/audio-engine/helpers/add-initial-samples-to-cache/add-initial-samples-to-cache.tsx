@@ -38,8 +38,6 @@ export const addInitialSamplesToCache = async (
         path: path,
         samples: samplesMap,
       });
-
-      console.log("samples loaded");
     })
   );
 };
