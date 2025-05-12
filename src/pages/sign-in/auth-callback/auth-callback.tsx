@@ -2,9 +2,7 @@ import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 export const AuthCallback = () => {
-  console.log("callback component rendered");
   useEffect(() => {
-    console.log("effect running");
     const handleCallback = async () => {
       const { data, error } = await supabase.auth.getSession();
 

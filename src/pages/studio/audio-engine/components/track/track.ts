@@ -80,7 +80,6 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   init() {
-    console.log("initializing track");
     this.sync();
     this.splitter.connect(this.meterL, 0);
     this.splitter.connect(this.meterR, 1);

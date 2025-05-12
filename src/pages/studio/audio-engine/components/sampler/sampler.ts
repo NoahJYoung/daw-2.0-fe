@@ -26,7 +26,6 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   async init() {
-    console.log("initializing");
     this.sampler?.chain(this.gain, this.output);
     this.sync();
     await this.loadSamples();
@@ -38,7 +37,6 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   setSamplePath(path: string) {
-    console.log("setting sample path");
     this.samplePath = path;
     this.loadSamples();
   }
@@ -97,7 +95,6 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
 
   async loadSamples() {
     if (!this.samplePath) return;
-    console.log("started sample load");
     this.setLoading(true);
 
     if (audioBufferCache.has(this.samplePath)) {
@@ -151,8 +148,6 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
         this.setLoading(false);
       }
     }
-    console.log("finished sample load");
-    console.log({ audioBufferCache });
   }
 
   triggerAttack(note: string, time: Tone.Unit.Time, velocity: number) {
