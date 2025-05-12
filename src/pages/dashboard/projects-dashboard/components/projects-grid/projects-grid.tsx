@@ -33,6 +33,7 @@ import { formatBytes } from "@/hooks/use-file-system/helpers";
 import { getTimeSignatureLabel } from "@/pages/studio/audio-engine/types";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useThemeContext } from "@/hooks";
+import { useToast } from "@/components/ui/use-toast";
 
 export const ProjectsGrid = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -42,6 +43,7 @@ export const ProjectsGrid = () => {
     useFileSystem();
   const { theme } = useThemeContext();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleDelete = (e: React.MouseEvent, project: Project) => {
     e.stopPropagation();
@@ -52,6 +54,10 @@ export const ProjectsGrid = () => {
   const confirmDelete = async () => {
     if (projectToDelete) {
       await deleteProject(projectToDelete.id);
+      toast({
+        title: "Success!",
+        description: "Project deleted successfully",
+      });
     }
     setDeleteDialogOpen(false);
     setProjectToDelete(null);

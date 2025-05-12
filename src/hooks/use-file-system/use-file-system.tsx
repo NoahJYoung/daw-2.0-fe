@@ -31,7 +31,7 @@ export interface Project {
 export interface SamplePack {
   id: string;
   name: string;
-  samples: number;
+  totalSamples: number;
   lastModified: string;
   description: string;
   data: File;
@@ -112,7 +112,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
 
   const { data: samplePacks, isFetching: isLoadingSamplePacks } = useQuery({
     queryKey: ["SAMPLE-PACKS"],
-    queryFn: () => getSamplePacks(samplePacksDirectory),
+    queryFn: async () => getSamplePacks(samplePacksDirectory),
     enabled: !!rootDirectory && !!samplePacksDirectory,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -313,14 +313,12 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
       const fileName = `${packName}.${packId}.velocity.app`;
 
       try {
-        const existingFiles = await getSamplePacks(samplePacksDirectory);
-        const existingFile = existingFiles?.find((file) =>
-          file.name.includes(packId)
-        );
+        const packs = await getSamplePacks(samplePacksDirectory);
+        const existingPack = packs?.find((pack) => pack.id === packId);
 
-        if (existingFile) {
-          if (existingFile.name !== fileName) {
-            await samplePacksDirectory.removeEntry(existingFile.name);
+        if (existingPack) {
+          if (existingPack.name !== fileName) {
+            await samplePacksDirectory.removeEntry(existingPack.data.name);
           }
         }
 
