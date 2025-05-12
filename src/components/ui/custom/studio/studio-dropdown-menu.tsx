@@ -35,7 +35,7 @@ export const StudioDropdownMenu = ({
       <DropdownMenuTrigger disabled={disabled} asChild>
         <Button
           title={title}
-          className="rounded-xs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3"
+          className="rounded-xs text-2xl relative flex items-center justify-centers p-1 w-8 h-8 bg-surface-2 text-surface-5 hover:bg-surface-3 active:bg-surface-3 focus:bg-surface-3"
         >
           {Icon && <Icon />}
           {label && label}
@@ -59,7 +59,7 @@ export const StudioDropdownMenu = ({
               disabled={option.disabled}
               key={option.label ?? i}
               className={cn(
-                "bg-surface-1 text-surface-5 rounded-xs cursor-pointer",
+                "bg-surface-1 text-surface-5 hover:bg-surface-2 hover:text-surface-6 focus:bg-surface-2 focus:text-surface-6 focus-visible:bg-surface-2 focus-visible:text-surface-6 rounded-xs cursor-pointer data-[highlighted]:bg-surface-2 data-[highlighted]:text-surface-6",
                 { "font-bold text-surface-6": value && option?.value === value }
               )}
               onClick={(e) => {
