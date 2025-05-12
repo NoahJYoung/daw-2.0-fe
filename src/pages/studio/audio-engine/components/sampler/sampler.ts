@@ -12,6 +12,9 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   outputGain: prop(0.03).withSetter(),
   samplePath: prop<string | null>(null),
   imgUrl: prop<string>("").withSetter(),
+  attack: prop(0).withSetter(),
+  release: prop(0.1).withSetter(),
+  curve: prop<"exponential" | "linear">("exponential").withSetter(),
 }) {
   output = new Tone.Channel();
   private gain = new Tone.Gain(this.outputGain);
@@ -33,6 +36,8 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
 
   sync() {
     this.gain.set({ gain: this.outputGain });
+    const { curve, attack, release } = this;
+    this.sampler.set({ curve, attack, release });
   }
 
   @modelAction
