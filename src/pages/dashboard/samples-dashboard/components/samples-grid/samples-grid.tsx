@@ -23,6 +23,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { formatDistanceToNow } from "date-fns";
+import { formatBytes } from "@/hooks/use-file-system/helpers";
 
 export const SamplesGrid = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -88,9 +90,10 @@ export const SamplesGrid = () => {
               </div>
               <CardHeader>
                 <CardTitle className="text-surface-8">{pack.name}</CardTitle>
-                <CardDescription className="text-surface-6">
-                  {pack.totalSamples} samples • Last modified{" "}
-                  {pack.lastModified}
+                <CardDescription className="text-surface-6 max-w-full text-ellipsis">
+                  {pack.totalSamples} samples • {` ${formatBytes(pack.size)} `}•
+                  Last modified
+                  {` ${formatDistanceToNow(new Date(pack.lastModified))} `} ago
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-sm text-surface-6 max-w-full max-h-full truncate">
