@@ -47,9 +47,11 @@ export const ProjectSettingsDialog = observer(
       audioEngine.timeline.timeSignature,
     ]);
 
-    const handleCancel = () => {
-      onOpenChange(false);
-      resetValues();
+    const handleOpenChange = (open: boolean) => {
+      if (!open) {
+        resetValues();
+      }
+      onOpenChange(open);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -74,7 +76,7 @@ export const ProjectSettingsDialog = observer(
         triggerClassName=""
         renderTrigger={false}
         open={open}
-        onOpenChange={onOpenChange}
+        onOpenChange={handleOpenChange}
       >
         <form
           onSubmit={handleSubmit}
