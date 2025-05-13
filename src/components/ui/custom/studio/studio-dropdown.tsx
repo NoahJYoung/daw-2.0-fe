@@ -75,7 +75,7 @@ export const StudioDropdown = ({
         {label && <SelectLabel>{label}</SelectLabel>}
         {options.map((option) => (
           <SelectItem
-            className="bg-surface-1 hover:bg-surface-2 rounded-xs"
+            className="bg-surface-1 hover:bg-surface-2 text-surface-6 cursor-pointer data-[state='checked']:cursor-default rounded-xs data-[highlighted]:bg-surface-2 data-[highlighted]:text-surface-6"
             key={option.value}
             value={option.value ?? ""}
           >
