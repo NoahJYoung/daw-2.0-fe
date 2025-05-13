@@ -494,7 +494,11 @@ export const TrackPanel = observer(
                       colorOffset={selectedBgOffset}
                       placeholder={t("studio.trackPanel.placeholders.input")}
                       icon={<MdOutlineSettingsInputComponent />}
-                      onChange={(input) => track.setInputType(input)}
+                      onChange={(input) =>
+                        track.setInputType(
+                          input as "midi" | "mic" | "sends" | null
+                        )
+                      }
                     />
                     <StudioButton
                       className={settingsButtonClassName}

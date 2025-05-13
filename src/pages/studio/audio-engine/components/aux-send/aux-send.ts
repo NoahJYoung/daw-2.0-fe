@@ -34,7 +34,7 @@ export class AuxSend extends ExtendedModel(BaseAudioNodeWrapper, {
   connect() {
     try {
       if (this.from && this.to) {
-        this.from.channel.connect(this.channel);
+        this.from.output.connect(this.channel);
         this.channel.connect(this.to?.channel);
       }
     } catch (error) {

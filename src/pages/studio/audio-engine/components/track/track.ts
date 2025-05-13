@@ -40,7 +40,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   laneHeight: prop(INITIAL_LANE_HEIGHT),
   volume: prop(0).withSetter(),
   selectedRefs: prop<Ref<Clip>[]>(() => []),
-  inputType: prop<string | null>("mic"),
+  inputType: prop<"mic" | "midi" | "sends" | null>("mic"),
   synth: prop<Synthesizer>(() => new Synthesizer({})).withSetter(),
   sampler: prop<Sampler>(() => new Sampler({})).withSetter(),
   instrumentKey: prop<"synth" | "sampler" | null>(null).withSetter(),
@@ -52,6 +52,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   meterR = new Tone.Meter(METER_SMOOTHING_VALUE);
   splitter = new Tone.Split();
   mic = new Tone.UserMedia().connect(this.waveform);
+  recorder = new Tone.Recorder();
 
   @observable
   isResizing: boolean = false;
@@ -200,7 +201,7 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   @modelAction
-  setInputType(value: string) {
+  setInputType(value: "mic" | "midi" | "sends" | null) {
     if (this.active) {
       this.setActive(false);
       this.inputType = value;

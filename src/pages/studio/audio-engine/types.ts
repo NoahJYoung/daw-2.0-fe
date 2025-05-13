@@ -5,7 +5,7 @@ export enum AudioEngineState {
   stopped = "STOPPED",
 }
 
-export const inputOptions = ["mic", "midi"];
+export const inputOptions = ["mic", "midi", "sends"] as const;
 
 export const timeSignatureOptions = [
   { label: "2/4", value: "2" },

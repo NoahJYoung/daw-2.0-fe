@@ -21,61 +21,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useFileSystem } from "@/hooks";
 import { useToast } from "@/components/ui/use-toast";
-import JSZip from "jszip";
 
 import * as Tone from "tone";
 import { AppLoader } from "@/components/ui/custom/app-loader";
+import { SampleMap, createSamplesZip } from "./helpers";
 
 const NOTES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 const OCTAVES = [1, 2, 3, 4, 5, 6, 7, 8];
-
-type SampleData = {
-  file: File | null;
-  name: string;
-};
-
-type SampleMap = {
-  [key: string]: SampleData;
-};
-
-const createSamplesZip = async (
-  packName: string,
-  description: string,
-  samples: SampleMap,
-  cover: File | null
-) => {
-  let totalFileSize = 0;
-  let totalSamples = 0;
-
-  const zip = new JSZip();
-  Object.keys(samples).forEach((key) => {
-    const file = samples[key].file;
-    if (file) {
-      zip.file(key, file);
-      totalFileSize += file.size;
-      totalSamples += 1;
-    }
-  });
-  if (cover) {
-    zip.file("cover.png", cover);
-    totalFileSize += cover.size;
-  }
-
-  const metadata = JSON.stringify({
-    packName,
-    lastModified: new Date().toISOString(),
-    size: totalFileSize,
-    totalSamples,
-    description,
-  });
-
-  const zipBlob = await zip.generateAsync({
-    type: "blob",
-    comment: metadata,
-  });
-
-  return zipBlob;
-};
 
 export const SampleEditor = () => {
   const [loading, setLoading] = useState(false);
@@ -198,7 +150,7 @@ export const SampleEditor = () => {
     };
     loadSamplePackData();
     initAudioContext();
-  }, [getSamplePackById, samplePackId, sampler, toast]); // Remove samples from dependency array
+  }, [getSamplePackById, samplePackId, sampler, toast]);
 
   return (
     <>

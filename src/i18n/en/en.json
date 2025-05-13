@@ -45,6 +45,7 @@
       "inputOptions": {
         "mic": "Microphone",
         "midi": "Keyboard",
+        "sends": "Sends",
         "noInput": "No input"
       }
     }

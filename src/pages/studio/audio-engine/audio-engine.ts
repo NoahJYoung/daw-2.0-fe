@@ -139,6 +139,10 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     activeTracks.forEach((activeTrack) => {
       if (activeTrack.inputType === "mic") {
         activeTrack.mic.connect(recorder);
+      } else if (activeTrack.inputType === "sends") {
+        activeTrack.channel.connect(activeTrack.recorder);
+
+        activeTrack.recorder.start();
       }
     });
 
@@ -155,6 +159,33 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
       const audioBuffer = url
         ? await new Tone.ToneAudioBuffer().load(url)
         : null;
+
+      activeTracks
+        .filter((track) => track.inputType === "sends")
+        .forEach(async (track) => {
+          const sendRecording = await track.recorder.stop();
+
+          const sendUrl = sendRecording
+            ? URL.createObjectURL(sendRecording)
+            : null;
+          const sendAudioBuffer = sendUrl
+            ? await new Tone.ToneAudioBuffer().load(sendUrl)
+            : null;
+
+          const clip = new AudioClip({
+            trackId: track.id,
+            start,
+          });
+
+          if (sendAudioBuffer) {
+            audioBufferCache.add(clip.id, sendAudioBuffer.toMono());
+            clip.setBuffer(sendAudioBuffer);
+
+            clip.createWaveformCache(sendAudioBuffer);
+            track.createAudioClip(clip);
+          }
+          track.channel.disconnect(track.recorder);
+        });
 
       const stringifiedEvents = JSON.stringify(this.keyboard.events);
 

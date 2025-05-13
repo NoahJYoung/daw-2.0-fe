@@ -11,7 +11,7 @@ export const generateOfflineSends = (engine: AudioEngine) => {
     const to = mixer.tracks.find((track) => track.id === send.to?.id);
 
     if (from && to) {
-      from.channel.connect(offlineSend);
+      from.output.connect(to.channel);
       offlineSend.connect(to.channel);
     }
   });

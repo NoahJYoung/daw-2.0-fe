@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useAudioEngine } from "@/pages/studio/hooks";
-import { NewTrackPanelsButton, TrackPanel } from "./components";
+import { NewTrackPanelsButton, SamplePackForm, TrackPanel } from "./components";
 import {
   SCROLLBAR_OFFSET,
   TRACK_PANEL_EXPANDED_WIDTH,
@@ -9,6 +9,9 @@ import { isTouchDevice } from "@/pages/studio/utils";
 import { StudioContextMenu } from "@/components/ui/custom/studio/studio-context-menu";
 import { AudioEngineState } from "@/pages/studio/audio-engine/types";
 import { useTracksContextMenuActions } from "./hooks";
+import { useState } from "react";
+import { Upload } from "lucide-react";
+import { Track } from "@/pages/studio/audio-engine/components";
 
 interface TrackPanelsProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -19,6 +22,10 @@ export const TrackPanels = observer(
   ({ scrollRef, onScroll }: TrackPanelsProps) => {
     const audioEngine = useAudioEngine();
     const items = useTracksContextMenuActions();
+    const [newSampleFormOpen, setNewSampleFormOpen] = useState(false);
+    const [tracksToCreateSamplePack, setTracksToCreateSamplePack] = useState<
+      Track[]
+    >([]);
 
     const { mixer, state } = audioEngine;
     const { tracks } = mixer;
@@ -31,13 +38,31 @@ export const TrackPanels = observer(
       mixer.unselectAllTracks();
     };
 
+    const preparedItems = [
+      ...items,
+      { separator: true },
+      {
+        label: "Create Sample Pack",
+        key: "create-sample-pack",
+        onClick: () => {
+          setTracksToCreateSamplePack(audioEngine.mixer.selectedTracks);
+          setNewSampleFormOpen(true);
+        },
+        icon: () => <Upload className="w-4 h-4" />,
+        disabled:
+          state === AudioEngineState.playing ||
+          state === AudioEngineState.recording ||
+          mixer.selectedTracks.length < 1,
+      },
+    ];
+
     return (
       <StudioContextMenu
         disabled={
           state === AudioEngineState.playing ||
           state === AudioEngineState.recording
         }
-        items={items}
+        items={preparedItems}
       >
         <div
           ref={scrollRef}
@@ -68,6 +93,14 @@ export const TrackPanels = observer(
               <div style={{ minHeight: SCROLLBAR_OFFSET }} />
             )}
           </div>
+          <SamplePackForm
+            open={newSampleFormOpen}
+            onOpenChange={(open) => {
+              setTracksToCreateSamplePack([]);
+              setNewSampleFormOpen(open);
+            }}
+            tracks={tracksToCreateSamplePack}
+          />
         </div>
       </StudioContextMenu>
     );
