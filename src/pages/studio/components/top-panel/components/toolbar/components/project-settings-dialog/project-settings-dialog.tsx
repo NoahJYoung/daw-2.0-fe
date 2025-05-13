@@ -193,17 +193,10 @@ export const ProjectSettingsDialog = observer(
 
           <div className="w-full flex items-center justify-end gap-1">
             <Button
-              onClick={handleCancel}
-              type="button"
-              className="bg-transparent hover:bg-transparent hover:text-surface-10 text-surface-8 rounded-xs"
-            >
-              Cancel
-            </Button>
-            <Button
               type="submit"
               className="bg-surface-7 hover:bg-surface-8 text-surface-1 rounded-xs"
             >
-              Save
+              OK
             </Button>
           </div>
         </form>

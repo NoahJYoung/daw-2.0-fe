@@ -53,6 +53,9 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   clipboard = new Clipboard();
 
   @observable
+  loaded = false;
+
+  @observable
   loadingState: string | null = "Initializing";
 
   @observable

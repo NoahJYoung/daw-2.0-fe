@@ -61,11 +61,14 @@ export const StudioLayout = observer(
             }
           }
         });
+        audioEngine.loaded = true;
       };
 
       if (projectId) {
         initializeProject(projectId);
         audioEngine.mixer.refreshTopPanelHeight();
+      } else {
+        audioEngine.loaded = true;
       }
     }, [audioEngine, getProjectById, projectId, undoManager]);
 

@@ -31,7 +31,7 @@ import {
   waveformCache,
 } from "@/pages/studio/audio-engine/components";
 import { ProjectSettingsDialog } from "./components";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -55,8 +55,23 @@ export const Toolbar = observer(
     const { timeline, metronome, clipboard, mixer } = audioEngine;
     const { t } = useTranslation();
     const { toast } = useToast();
+
+    const hasOpenedNewProjectDialog = useRef(false);
+    const isNewProject = !projectId && !tempProjectId;
     const [projectSettingsModalOpen, setProjectSettingsModalOpen] =
       useState(false);
+
+    useEffect(() => {
+      const hasOpened = hasOpenedNewProjectDialog.current;
+      if (
+        isNewProject &&
+        !hasOpened &&
+        !audioEngine.loadingState &&
+        audioEngine.loaded === true
+      ) {
+        setProjectSettingsModalOpen(true);
+      }
+    }, [audioEngine.loaded, audioEngine.loadingState, isNewProject]);
 
     const updateURLWithoutNavigation = (createdId: string) => {
       navigate({ search: { tempProjectId: createdId } as any });
