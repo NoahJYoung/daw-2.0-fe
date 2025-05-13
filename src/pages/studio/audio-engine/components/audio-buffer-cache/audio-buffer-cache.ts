@@ -54,6 +54,10 @@ export class AudioBufferCache {
     this.cache.delete(id);
   }
 
+  get loadedSamples() {
+    return this.loadedSamplePaths;
+  }
+
   clear(options?: clearCacheOptions) {
     this.loadedSamplePaths = [];
     if (!options) {

@@ -10,6 +10,7 @@ import { useDeferredUpdate } from "@/pages/studio/hooks";
 import { FaGuitar } from "react-icons/fa6";
 import { Knob } from "@/components/ui/custom/studio/studio-knob";
 import { NumberInput } from "@/pages/studio/components/bottom-panel/components/track-effects-view/components/effects-chain-view/components/effect-dialog/components/graphic-eq-view/components/band-controls/components";
+import { useFileSystem } from "@/hooks";
 
 interface SamplerSelectorModalProps {
   track: Track;
@@ -19,10 +20,18 @@ interface SamplerSelectorModalProps {
 
 export const SamplerSelectorModal = observer(
   ({ track, triggerClassName, triggerIcon }: SamplerSelectorModalProps) => {
+    const { samplePacks } = useFileSystem();
     const grandPianoPath = "/sounds/samples/grand_piano/grand_piano.zip";
+    const localSamplePackOptions = samplePacks.map(({ name, id }) => ({
+      name,
+      path: `localSamples://${id}`,
+    }));
     const instruments = useMemo(
-      () => [{ name: "Grand Piano", path: grandPianoPath }],
-      []
+      () => [
+        { name: "Grand Piano", path: grandPianoPath },
+        ...localSamplePackOptions,
+      ],
+      [localSamplePackOptions]
     );
 
     const { outputGain } = track.sampler;

@@ -352,7 +352,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
               const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
 
-              await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+              try {
+                await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+              } catch (error) {
+                console.error(error);
+              }
               await populateBufferCache(data);
 
               document.body.removeChild(fileInput);
@@ -446,7 +450,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
             });
 
             const uniqueSamplePathsToLoad = [...new Set(samplePathsToLoad)];
-            await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+            try {
+              await addInitialSamplesToCache(uniqueSamplePathsToLoad);
+            } catch (error) {
+              console.error(error);
+            }
             await populateBufferCache(data);
 
             this.setLoadingState("Reconstructing project state");
