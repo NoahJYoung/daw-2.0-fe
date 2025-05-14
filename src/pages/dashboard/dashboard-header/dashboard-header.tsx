@@ -7,6 +7,7 @@ import {
   Settings,
   Sun,
   User,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
@@ -142,13 +143,22 @@ export const DashboardHeader = () => {
                       <span />
                     </DropdownMenuItem>
                   ) : (
-                    <Link to="/app/signin">
-                      <DropdownMenuItem className="w-full gap-1 flex justify-between items-center">
-                        <LogIn className="h-4 w-4" />
-                        <span className="font-semibold">Sign In</span>
-                        <span />
-                      </DropdownMenuItem>
-                    </Link>
+                    <>
+                      <Link to="/app/auth?mode=sign_in">
+                        <DropdownMenuItem className="w-full gap-1 flex justify-between items-center">
+                          <LogIn className="h-4 w-4" />
+                          <span className="font-semibold">Sign In</span>
+                          <span />
+                        </DropdownMenuItem>
+                      </Link>
+                      <Link to="/app/auth?mode=sign_up">
+                        <DropdownMenuItem className="w-full gap-1 flex justify-between items-center">
+                          <UserPlus className="h-4 w-4" />
+                          <span className="font-semibold">Sign Up</span>
+                          <span />
+                        </DropdownMenuItem>
+                      </Link>
+                    </>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>

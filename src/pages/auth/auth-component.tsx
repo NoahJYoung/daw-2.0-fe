@@ -3,14 +3,19 @@ import { supabase } from "@/lib/supabase";
 import { useThemeContext } from "@/hooks";
 import { getThemeObject } from "./helpers";
 import { useAuth } from "@/context/auth-context";
-import { Navigate } from "@tanstack/react-router";
+import { Navigate, useSearch } from "@tanstack/react-router";
 import { isInStandaloneMode, isMobileDevice } from "../studio/utils";
 import { MobileAuth } from "./mobile-auth";
 
-export const SignIn = () => {
+export const AuthComponent = () => {
   const { theme } = useThemeContext();
   const { isLoggedIn } = useAuth();
   const usePopupAuth = isInStandaloneMode() || isMobileDevice();
+
+  const mode = useSearch({
+    from: "/app/auth",
+    select: (search) => search.mode,
+  });
 
   return isLoggedIn ? (
     <Navigate to="/app" />
@@ -34,6 +39,7 @@ export const SignIn = () => {
                 appearance={{
                   theme: getThemeObject(theme),
                 }}
+                view={mode}
                 providers={["google"]}
                 redirectTo={`${window.location.origin}/app/projects`}
               />

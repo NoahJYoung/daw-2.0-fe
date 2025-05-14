@@ -4,14 +4,14 @@ import {
   createRootRoute,
   redirect,
 } from "@tanstack/react-router";
-import { Dashboard, SignIn, Studio } from "@/pages";
+import { AuthComponent, Dashboard, Studio } from "@/pages";
 import { ProjectsDashboard } from "@/pages/dashboard/projects-dashboard";
 import {
   SampleEditor,
   SamplesDashboard,
 } from "@/pages/dashboard/samples-dashboard";
 import { AuthProvider } from "@/context/auth-context";
-import { AuthCallback } from "@/pages/sign-in/auth-callback";
+import { AuthCallback } from "@/pages/auth/auth-callback";
 
 const isInAuthFlow = () => {
   const url = new URL(window.location.href);
@@ -90,8 +90,8 @@ const createSamplesDashboardRoute = createRoute({
 
 const authRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
-  path: "/signin",
-  component: () => <SignIn />,
+  path: "/auth",
+  component: () => <AuthComponent />,
 });
 
 const newProjectRoute = createRoute({
