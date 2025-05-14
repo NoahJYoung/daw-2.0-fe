@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Upload, Check } from "lucide-react";
+import { X, Upload } from "lucide-react";
 import { useFileSystem } from "@/hooks";
 import { AudioClip, Track } from "@/pages/studio/audio-engine/components";
 import { useToast } from "@/components/ui/use-toast";
