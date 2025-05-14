@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   // DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -24,6 +25,7 @@ import {
   SampleMap,
 } from "@/pages/dashboard/samples-dashboard/components/sample-editor/helpers";
 import { bufferToWav } from "@/pages/studio/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface SamplePackFormProps {
   open: boolean;
@@ -123,47 +125,62 @@ export const SamplePackForm = ({
     setPreviewUrl(null);
   };
 
+  const getNoteName = (name: string) => {
+    return name.replace("#", "♯").replace("b", "♭");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-surf border-surface-1 text-surface-8">
+      <DialogContent className="sm:max-w-[500px] max-h-screen overflow-y-auto bg-surface-1 border-surface-1 text-surface-6">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-white">
+            <DialogTitle className="text-xl font-bold text-surface-6">
               Create a New Sample Pack
             </DialogTitle>
-            {/* <DialogDescription className="text-zinc-400">
-              Fill in the details for your new sample pack.
-            </DialogDescription> */}
+            <DialogDescription className="text-surface-6">
+              {`Creating sample pack from ${tracks.length} samples:`}
+              <ul className="list-style-none w-full overflow-y-auto grid grid grid-cols-6 gap-2 max-h-32 p-2 rounded-xs ">
+                {tracks.map((track) => (
+                  <li key={track.id} className="text-surface-6 ">
+                    <Badge
+                      style={{ background: track.color }}
+                      className="bg-zinc-600 text-black font-semibold"
+                    >
+                      {getNoteName(track.name)}
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name" className="text-white">
+              <Label htmlFor="name" className="text-surface-6">
                 Sample Pack Name
               </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="bg-zinc-800 border-zinc-700 text-white"
+                className="bg-transparent border-surface-5 text-surface-6 rounded-xs"
                 placeholder="e.g., Deep House Essentials"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description" className="text-white">
+              <Label htmlFor="description" className="text-surface-6">
                 Description
               </Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="bg-zinc-800 border-zinc-700 text-white min-h-[100px]"
+                className="bg-transparent border-surface-5 text-surface-6 min-h-[100px] resize-none rounded-xs"
                 placeholder="Describe your sample pack..."
-                required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="cover" className="text-white">
+              <Label htmlFor="cover" className="text-surface-6">
                 Cover Image
               </Label>
               {!previewUrl ? (
@@ -177,9 +194,9 @@ export const SamplePackForm = ({
                   />
                   <Label
                     htmlFor="cover"
-                    className="flex flex-col items-center justify-center w-full h-32 bg-zinc-800 border-2 border-dashed border-zinc-700 rounded-md cursor-pointer hover:bg-zinc-750"
+                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-md bg-transparent border-surface-5 text-surface-6 cursor-pointer hover:bg-surface-2 transition-all transition-300"
                   >
-                    <Upload className="w-8 h-8 text-zinc-500 mb-2" />
+                    <Upload className="w-8 h-8 text-zinc-500 mb-2 rounded-xs" />
                     <span className="text-sm text-zinc-500">
                       Click to upload cover image
                     </span>
@@ -205,17 +222,21 @@ export const SamplePackForm = ({
               )}
             </div>
           </div>
-          <DialogFooter className="bg-zinc-900">
+          <DialogFooter className="flex-col-reverse gap-2 lg:flex-row bg-transparent flex justify-evenly w-full lg:items-center">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-zinc-700 text-white hover:bg-zinc-800"
+              className="text-surface-6 hover:bg-surface-2 inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-violet-600 hover:bg-violet-700">
-              <Check className="mr-2 h-4 w-4" /> Save Sample Pack
+            <Button
+              type="submit"
+              className="bg-brand-1 hover:bg-brand-2 text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
+              disabled={!name || !tracks.length}
+            >
+              Save Sample Pack
             </Button>
           </DialogFooter>
         </form>

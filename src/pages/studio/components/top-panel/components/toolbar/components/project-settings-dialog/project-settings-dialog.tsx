@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { StudioDialog } from "@/components/ui/custom/studio/studio-dialog";
 import { StudioDropdown } from "@/components/ui/custom/studio/studio-dropdown";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { keys, timeSignatureOptions } from "@/pages/studio/audio-engine/types";
 import { TimeSignatureIcon } from "@/pages/studio/components/main-controls/components/timeline-controls/components";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
@@ -85,12 +86,12 @@ export const ProjectSettingsDialog = observer(
           <div>
             <div className="flex w-full justify-between">
               <span className="flex flex-col gap-1 p-1 w-4/5">
-                <label
+                <Label
                   className="whitespace-nowrap text-surface-6 text-sm "
                   htmlFor="projectName"
                 >
                   Project Name:
-                </label>
+                </Label>
                 <Input
                   className="w-full rounded-xs h-10"
                   id="projectName"
@@ -101,12 +102,12 @@ export const ProjectSettingsDialog = observer(
               </span>
 
               <span className="flex flex-col gap-1 p-1 w-1/5">
-                <label
+                <Label
                   className="whitespace-nowrap text-surface-6 text-sm "
                   htmlFor="measures"
                 >
                   Measures:
-                </label>
+                </Label>
                 <input
                   className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
                   type="number"
@@ -121,12 +122,12 @@ export const ProjectSettingsDialog = observer(
             </div>
             <div className="flex w-full justify-between gap-1">
               <span className="flex flex-col gap-1 p-1 w-1/5">
-                <label
+                <Label
                   className="whitespace-nowrap text-surface-6 text-sm "
                   htmlFor="key"
                 >
                   Key:
-                </label>
+                </Label>
                 <StudioDropdown
                   className="h-10"
                   id="key"
@@ -149,12 +150,12 @@ export const ProjectSettingsDialog = observer(
               </span>
 
               <span className="flex flex-col gap-1 p-1 w-1/5 ml-auto">
-                <label
+                <Label
                   className="whitespace-nowrap text-surface-6 text-sm"
                   htmlFor="measures"
                 >
                   Time Signature:
-                </label>
+                </Label>
                 <StudioDropdown
                   className="h-10"
                   options={timeSignatureOptions}
@@ -173,12 +174,12 @@ export const ProjectSettingsDialog = observer(
                 />
               </span>
               <span className="flex flex-col gap-1 py-1 w-1/5">
-                <label
+                <Label
                   className="whitespace-nowrap text-surface-6 text-sm"
                   htmlFor="measures"
                 >
                   Bpm:
-                </label>
+                </Label>
                 <input
                   className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
                   type="number"

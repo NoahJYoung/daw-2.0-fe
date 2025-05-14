@@ -123,6 +123,7 @@ export const SamplerSelectorModal = observer(
                         max={1}
                         step={0.01}
                         value={outputGain}
+                        allowDecimal
                         onCommit={onOutputGainCommit}
                       />
                     </span>
@@ -146,6 +147,7 @@ export const SamplerSelectorModal = observer(
                           max={1}
                           value={track.sampler.attack}
                           onCommit={onAttackCommit}
+                          allowDecimal
                           suffix="s"
                         />
                       </span>
@@ -167,6 +169,7 @@ export const SamplerSelectorModal = observer(
                           max={1}
                           value={track.sampler.release}
                           onCommit={onReleaseCommit}
+                          allowDecimal
                           suffix="s"
                         />
                       </span>

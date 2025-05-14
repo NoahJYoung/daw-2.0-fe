@@ -135,13 +135,17 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
 
     const recorder = new Tone.Recorder();
+    // const osc = new Tone.Oscillator(1, "sine").set({
+    //   volume: -Infinity,
+    // });
 
     activeTracks.forEach((activeTrack) => {
       if (activeTrack.inputType === "mic") {
         activeTrack.mic.connect(recorder);
       } else if (activeTrack.inputType === "sends") {
         activeTrack.channel.connect(activeTrack.recorder);
-
+        // osc.connect(activeTrack.recorder);
+        // // osc.start();
         activeTrack.recorder.start();
       }
     });
@@ -161,7 +165,11 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
         : null;
 
       activeTracks
-        .filter((track) => track.inputType === "sends")
+        .filter(
+          (track) =>
+            track.inputType === "sends" &&
+            !!this.auxSendManager.getReceivesByTrack(track).length
+        )
         .forEach(async (track) => {
           const sendRecording = await track.recorder.stop();
 

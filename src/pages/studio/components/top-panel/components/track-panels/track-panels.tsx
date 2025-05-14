@@ -12,6 +12,7 @@ import { useTracksContextMenuActions } from "./hooks";
 import { useState } from "react";
 import { Upload } from "lucide-react";
 import { Track } from "@/pages/studio/audio-engine/components";
+import { validateTrackNameForSampler } from "./helpers/validate-track-name-for-sampler";
 
 interface TrackPanelsProps {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -21,11 +22,15 @@ interface TrackPanelsProps {
 export const TrackPanels = observer(
   ({ scrollRef, onScroll }: TrackPanelsProps) => {
     const audioEngine = useAudioEngine();
-    const items = useTracksContextMenuActions();
     const [newSampleFormOpen, setNewSampleFormOpen] = useState(false);
     const [tracksToCreateSamplePack, setTracksToCreateSamplePack] = useState<
       Track[]
     >([]);
+    const convertibleTracks = tracksToCreateSamplePack.filter(
+      (track) =>
+        validateTrackNameForSampler(track.name) && track.clips.length > 0
+    );
+    const items = useTracksContextMenuActions();
 
     const { mixer, state } = audioEngine;
     const { tracks } = mixer;
@@ -52,7 +57,10 @@ export const TrackPanels = observer(
         disabled:
           state === AudioEngineState.playing ||
           state === AudioEngineState.recording ||
-          mixer.selectedTracks.length < 1,
+          !mixer.selectedTracks.every(
+            (track) =>
+              validateTrackNameForSampler(track.name) && track.clips.length > 0
+          ),
       },
     ];
 
@@ -99,7 +107,7 @@ export const TrackPanels = observer(
               setTracksToCreateSamplePack([]);
               setNewSampleFormOpen(open);
             }}
-            tracks={tracksToCreateSamplePack}
+            tracks={convertibleTracks}
           />
         </div>
       </StudioContextMenu>
