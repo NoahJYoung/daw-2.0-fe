@@ -19,16 +19,17 @@ import {
 } from "react-icons/md";
 import { HiOutlineTrash as DeleteIcon } from "react-icons/hi";
 import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
-import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
 import {
-  PiMusicNoteSimpleFill,
-  PiSelectionAllThin as SelectAllIcon,
-} from "react-icons/pi";
+  NoteValue,
+  SubdivisionSelectOptions,
+} from "@/pages/studio/audio-engine/components/timeline/types";
+import { PiSelectionAllThin as SelectAllIcon } from "react-icons/pi";
 import { Slider } from "@/components/ui/slider";
 import { pasteNotes } from "../piano-roll/hooks/actions";
 import { LiaMousePointerSolid as MouseIcon } from "react-icons/lia";
 import { PiPencilSimpleDuotone as PencilIcon } from "react-icons/pi";
 import { useRef } from "react";
+import { Note } from "@/components/ui/custom/note";
 
 const MIN_VELOCITY = 0;
 const MAX_VELOCITY = 127;
@@ -147,11 +148,18 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
         />
 
         <StudioDropdownMenu
-          triggerIcon={PiMusicNoteSimpleFill}
+          triggerIcon={() => (
+            <Note className="w-6 h-6" value={clip.subdivision as NoteValue} />
+          )}
           title={t("studio.toolbar.subdivision")}
           value={clip.subdivision}
           onValueChange={(newValue) => clip.setSubdivision(newValue)}
-          options={SubdivisionSelectOptions}
+          options={SubdivisionSelectOptions.map((option) => ({
+            label: option.label,
+            value: option.value,
+            icon: () => <Note className="w-5 h-5" value={option.value} />,
+            disabled: false,
+          }))}
         />
         <input
           ref={velocityRef}

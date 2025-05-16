@@ -10,41 +10,52 @@ export enum GridSubdivision {
   SIXTEENTH_NOTE_TRIPLET = "16t",
 }
 
-export const SubdivisionSelectOptions = [
+export type NoteValue =
+  | "1n"
+  | "2n"
+  | "2t"
+  | "4n"
+  | "4t"
+  | "8n"
+  | "8t"
+  | "16n"
+  | "16t";
+
+export const SubdivisionSelectOptions: { label: string; value: NoteValue }[] = [
   {
-    label: "1/1",
+    label: "Whole Note",
     value: "1n",
   },
   {
-    label: "1/2",
+    label: "Half Note",
     value: "2n",
   },
   {
-    label: "1/2T",
+    label: "Triplet Half",
     value: "2t",
   },
   {
-    label: "1/4",
+    label: "Quarter Note",
     value: "4n",
   },
   {
-    label: "1/4T",
+    label: "Triplet Quarter",
     value: "4t",
   },
   {
-    label: "1/8",
+    label: "Eighth Note",
     value: "8n",
   },
   {
-    label: "1/8T",
+    label: "Triplet Eighth",
     value: "8t",
   },
   {
-    label: "1/16",
+    label: "Sixteenth Note",
     value: "16n",
   },
   {
-    label: "1/16T",
+    label: "Triplet Sixteenth",
     value: "16t",
   },
   // {

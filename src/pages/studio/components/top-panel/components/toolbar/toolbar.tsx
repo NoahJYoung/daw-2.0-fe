@@ -10,7 +10,6 @@ import {
   IoIosSettings,
 } from "react-icons/io";
 import { IoExitOutline } from "react-icons/io5";
-import { PiMusicNoteSimpleFill } from "react-icons/pi";
 import { IoDownloadOutline } from "react-icons/io5";
 import { CiRedo, CiUndo, CiZoomIn, CiZoomOut } from "react-icons/ci";
 import { observer } from "mobx-react-lite";
@@ -18,7 +17,10 @@ import { TRACK_PANEL_EXPANDED_WIDTH } from "@/pages/studio/utils/constants";
 import { useFileSystem, useThemeContext } from "@/hooks";
 import { useTranslation } from "react-i18next";
 import { StudioDropdownMenu } from "@/components/ui/custom/studio/studio-dropdown-menu";
-import { SubdivisionSelectOptions } from "@/pages/studio/audio-engine/components/timeline/types";
+import {
+  NoteValue,
+  SubdivisionSelectOptions,
+} from "@/pages/studio/audio-engine/components/timeline/types";
 import { FaFileExport as ExportIcon } from "react-icons/fa";
 import { FaFileImport as ImportIcon } from "react-icons/fa";
 import { MdSaveAs as SaveAsIcon } from "react-icons/md";
@@ -32,6 +34,8 @@ import {
 } from "@/pages/studio/audio-engine/components";
 import { ProjectSettingsDialog } from "./components";
 import { useEffect, useRef, useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { Note } from "@/components/ui/custom/note";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -42,7 +46,7 @@ export const Toolbar = observer(
   ({ panelExpanded, togglePanelView }: ToolbarProps) => {
     const { projectId } = useParams({ strict: false });
     const { undoManager } = useUndoManager();
-    const { toggleTheme } = useThemeContext();
+    const { toggleTheme, theme } = useThemeContext();
     const { saveProject } = useFileSystem();
     const navigate = useNavigate();
     const tempProjectId = useSearch({
@@ -178,11 +182,21 @@ export const Toolbar = observer(
         />
 
         <StudioDropdownMenu
-          triggerIcon={PiMusicNoteSimpleFill}
+          triggerIcon={() => (
+            <Note
+              className="w-6 h-6"
+              value={timeline.subdivision as NoteValue}
+            />
+          )}
           title={t("studio.toolbar.subdivision")}
           value={timeline.subdivision}
           onValueChange={(newValue) => timeline.setSubdivision(newValue)}
-          options={SubdivisionSelectOptions}
+          options={SubdivisionSelectOptions.map((option) => ({
+            label: option.label,
+            value: option.value,
+            icon: () => <Note className="w-5 h-5" value={option.value} />,
+            disabled: false,
+          }))}
         />
 
         <StudioButton
@@ -276,10 +290,20 @@ export const Toolbar = observer(
           title={t("studio.toolbar.settings")}
           onValueChange={() => {}}
           options={[
-            { label: "Toggle Theme", onClick: toggleTheme },
+            {
+              label: theme === "dark" ? "Light Mode" : "Dark Mode",
+              onClick: toggleTheme,
+              icon: () =>
+                theme === "dark" ? (
+                  <Sun className="h-4 w-5" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                ),
+            },
             {
               label: "Project Settings",
               onClick: () => setProjectSettingsModalOpen(true),
+              icon: () => <IoIosSettings className="h-4 w-4" />,
             },
           ]}
         />

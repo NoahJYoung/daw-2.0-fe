@@ -26,6 +26,7 @@ import {
 } from "@/pages/dashboard/samples-dashboard/components/sample-editor/helpers";
 import { bufferToWav } from "@/pages/studio/utils";
 import { Badge } from "@/components/ui/badge";
+import { normalizeNoteName } from "../../helpers/normalize-note-name";
 
 interface SamplePackFormProps {
   open: boolean;
@@ -75,16 +76,18 @@ export const SamplePackForm = ({
                 throw new Error("Audio buffer not found for clip.");
               }
 
-              console.log(audioBuffer);
-
               const file = await bufferToWav(audioBuffer, `${track.name}.wav`);
 
               const newSample = {
                 file,
                 name: track.name,
               };
-              samplesMap[track.name] = newSample;
-              console.log("Sample added to samplesMap", newSample);
+              const normalizedName = normalizeNoteName(track.name);
+              if (normalizedName) {
+                samplesMap[normalizedName] = newSample;
+              } else {
+                samplesMap[track.name] = newSample;
+              }
             }
           }
         })
