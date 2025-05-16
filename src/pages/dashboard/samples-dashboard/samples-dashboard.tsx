@@ -5,7 +5,23 @@ import { FolderInput } from "lucide-react";
 import { EmptySamples } from "../projects-dashboard/components/projects-grid/empty-samples";
 
 export const SamplesDashboard = () => {
-  const { quota, samplePacks } = useFileSystem();
+  const { quota, samplePacks, importFile } = useFileSystem();
+
+  const handleImportSamplePack = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".zip";
+
+    fileInput.addEventListener("change", (event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (file) {
+        importFile(file, "sample");
+      }
+    });
+
+    fileInput.click();
+  };
   return (
     <section className="flex flex-col bg-muted/40 h-full pt-[2%]">
       <div className="pt-3 px-3 pb-0">
@@ -21,7 +37,7 @@ export const SamplesDashboard = () => {
             </span>
             <Button
               variant="ghost"
-              onClick={() => alert("not implemented yet")}
+              onClick={handleImportSamplePack}
               className="text-surface-6 hover:bg-surface-2 inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
             >
               <FolderInput />

@@ -16,6 +16,7 @@ import {
   getStorageInfo,
 } from "./helpers";
 import { v4 as uuidv4 } from "uuid";
+import { useToast } from "@/components/ui/use-toast";
 
 export interface Project {
   lastModified: string;
@@ -58,6 +59,7 @@ export interface FileSystemContextType {
   ) => Promise<string | void>;
   getSamplePackById: (packId: string) => SamplePack | null;
   deleteSamplePack: (packId: string) => Promise<void>;
+  importFile: (file: File, type: "project" | "sample") => Promise<void>;
   quota?: FormattedStorageQuota;
 }
 
@@ -90,6 +92,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     []
   );
   const [isFetchingRootDirectory, setIsFetchingRootDirectory] = useState(true);
+  const { toast } = useToast();
 
   const invalidateProjectQuery = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["PROJECTS"] });
@@ -401,6 +404,41 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     [samplePacks, samplePacksDirectory]
   );
 
+  const importFile = useCallback(
+    async (file: File, type: "project" | "sample") => {
+      try {
+        if (!rootDirectory) {
+          throw new Error("Root directory not initialized");
+        }
+
+        if (type === "project") {
+          await createProject(file.name.replace(".zip", ""), file);
+          toast({
+            title: "Success!",
+            description: "Project imported successfully.",
+            variant: "default",
+          });
+        } else {
+          await createSamplePack(file.name.replace(".zip", ""), file);
+          toast({
+            title: "Success!",
+            description: "Sample pack imported successfully.",
+            variant: "default",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Error importing file",
+          description:
+            (error as Error).message ||
+            "Failed to import file. Please try again.",
+          variant: "destructive",
+        });
+      }
+    },
+    [createProject, createSamplePack, rootDirectory, toast]
+  );
+
   const contextValue: FileSystemContextType = {
     projects: projects || [],
     samplePacks: samplePacks || [],
@@ -414,6 +452,7 @@ export const FileSystemProvider: React.FC<{ children: ReactNode }> = ({
     getSamplePackById,
     deleteProject,
     deleteSamplePack,
+    importFile,
   };
 
   return (

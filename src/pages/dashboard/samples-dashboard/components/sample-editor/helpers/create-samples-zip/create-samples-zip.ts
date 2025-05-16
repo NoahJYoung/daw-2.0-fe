@@ -16,7 +16,6 @@ export const createSamplesZip = async (
 ) => {
   let totalFileSize = 0;
   let totalSamples = 0;
-  console.log("Creating zip file with samples", samples);
   const zip = new JSZip();
   Object.keys(samples).forEach((key) => {
     const file = samples[key].file;

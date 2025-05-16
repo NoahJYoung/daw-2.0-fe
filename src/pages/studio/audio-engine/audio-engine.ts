@@ -343,7 +343,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     }
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipBlob);
-    link.download = `${this.projectName}.velocity.zip`;
+    link.download = `${this.projectName}.zip`;
     link.click();
 
     URL.revokeObjectURL(link.href);

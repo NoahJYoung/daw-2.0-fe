@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { useFileSystem, useThemeContext } from "@/hooks";
@@ -31,7 +31,7 @@ export const SamplesGrid = () => {
   const [packToDelete, setPackToDelete] = useState<SamplePack | null>(null);
   const { toast } = useToast();
   const { theme } = useThemeContext();
-  const { samplePacks, deleteSamplePack } = useFileSystem();
+  const { samplePacks, deleteSamplePack, getSamplePackById } = useFileSystem();
 
   const handleDelete = (e: React.MouseEvent, pack: SamplePack) => {
     setDeleteDialogOpen(true);
@@ -49,6 +49,19 @@ export const SamplesGrid = () => {
     }
     setDeleteDialogOpen(false);
     setPackToDelete(null);
+  };
+
+  const handleDownload = (e: React.MouseEvent, packId: string) => {
+    e.stopPropagation();
+    const pack = getSamplePackById(packId);
+    if (pack) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(pack.data);
+      link.download = `${pack.name}.zip`;
+      link.click();
+
+      URL.revokeObjectURL(link.href);
+    }
   };
 
   const maskGradient =
@@ -110,6 +123,15 @@ export const SamplesGrid = () => {
                     Edit
                   </Button>
                 </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-surface-3 text-surface-6 hover:bg-surface-2"
+                  onClick={(e) => handleDownload(e, pack.id)}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
