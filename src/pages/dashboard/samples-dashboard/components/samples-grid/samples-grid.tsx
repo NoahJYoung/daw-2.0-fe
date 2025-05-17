@@ -133,9 +133,9 @@ export const SamplesGrid = () => {
                   Download
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   size="sm"
-                  className="border-surface-3 text-surface-6 hover:bg-surface-2"
+                  className="text-white hover:bg-destructive/80 bg-destructive"
                   onClick={(e) => handleDelete(e, pack)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
