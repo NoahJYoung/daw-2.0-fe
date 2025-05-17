@@ -121,7 +121,7 @@ export const ProjectsGrid = () => {
                       {project.name}
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      {project.key.replace("b", "♭").replace("#", "♯")} •{" "}
+                      {project.key?.replace("b", "♭").replace("#", "♯")} •{" "}
                       {getTimeSignatureLabel(project.timeSignature.toString())}
                     </p>
                   </div>

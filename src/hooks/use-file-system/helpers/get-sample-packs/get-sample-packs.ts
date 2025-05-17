@@ -31,7 +31,8 @@ export const getSamplePacks = async (
           const samplePackObject = {
             data: file,
             name:
-              metadata.packName || file.name.replace(/\.(velocity\.)?zip$/, ""),
+              metadata.packName ||
+              file.name?.replace(/\.(velocity\.)?zip$/, ""),
             id: file.name.split(".")[1],
             totalSamples: metadata.totalSamples || 0,
             description: metadata.description || "",
