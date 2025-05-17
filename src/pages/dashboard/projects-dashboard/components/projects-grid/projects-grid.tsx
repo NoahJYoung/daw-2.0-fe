@@ -121,8 +121,11 @@ export const ProjectsGrid = () => {
                       {project.name}
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      {project.key?.replace("b", "♭").replace("#", "♯")} •{" "}
-                      {getTimeSignatureLabel(project.timeSignature.toString())}
+                      {(project.key || "C").replace("b", "♭").replace("#", "♯")}{" "}
+                      •{" "}
+                      {getTimeSignatureLabel(
+                        (project.timeSignature || 4).toString()
+                      )}
                     </p>
                   </div>
                   <DropdownMenu
@@ -160,7 +163,7 @@ export const ProjectsGrid = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-muted-foreground">Size</span>
-                      <span>{formatBytes(project.size)}</span>
+                      <span>{formatBytes(project.size || 0)}</span>
                     </div>
                   </div>
                 </CardContent>
