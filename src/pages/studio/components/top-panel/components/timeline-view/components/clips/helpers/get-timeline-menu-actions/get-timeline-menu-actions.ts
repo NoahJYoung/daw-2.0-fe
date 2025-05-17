@@ -75,7 +75,27 @@ export const getTimelineMenuActions = (
       (selectedClip) => selectedClip.type === mixer.selectedClips[0].type
     );
 
-  const isConvertDisabled = mixer.selectedClips.length !== 1;
+  const isConvertDisabled = () => {
+    if (mixer.selectedClips.length !== 1) return true;
+    const [selectedClip] = mixer.selectedClips;
+    const parentTrack = mixer.tracks.find(
+      (track) => track.id === selectedClip.trackId
+    );
+    if (!parentTrack) return true;
+
+    if (selectedClip instanceof MidiClip) {
+      if (parentTrack?.instrumentKey === "sampler") {
+        const samplerSelected = !!parentTrack.sampler.samplePath;
+        return !samplerSelected;
+      } else if (parentTrack?.instrumentKey === "synth") {
+        return false;
+      }
+    } else if (selectedClip instanceof AudioClip) {
+      return !selectedClip.midiNotes.length;
+    }
+
+    return true;
+  };
 
   const onlySelectedClipIsAudio =
     !isConvertDisabled && mixer.selectedClips[0] instanceof AudioClip;
@@ -142,7 +162,7 @@ export const getTimelineMenuActions = (
     { separator: true },
     {
       label: onlySelectedClipIsAudio ? "Convert to midi" : "Convert to audio",
-      disabled: isConvertDisabled,
+      disabled: isConvertDisabled(),
       onClick: onlySelectedClipIsAudio
         ? handleConvertToMidi
         : handleConvertToAudio,
