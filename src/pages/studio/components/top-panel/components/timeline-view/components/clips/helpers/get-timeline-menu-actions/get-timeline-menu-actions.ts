@@ -98,7 +98,7 @@ export const getTimelineMenuActions = (
   };
 
   const onlySelectedClipIsAudio =
-    !isConvertDisabled && mixer.selectedClips[0] instanceof AudioClip;
+    !isConvertDisabled() && mixer.selectedClips[0] instanceof AudioClip;
 
   return [
     {
