@@ -83,7 +83,7 @@ export const MonoLevelView = ({
       <text
         className="fill-current text-surface-5"
         x={textX}
-        y={posMinus60db - 2}
+        y={posMinus60db - 5}
         fontSize="12"
       >
         -60
