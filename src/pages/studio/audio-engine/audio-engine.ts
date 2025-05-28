@@ -16,6 +16,7 @@ import {
   MidiClip,
   Metronome,
   AuxSendManager,
+  LatencyCalibrator,
 } from "./components";
 import { audioBufferCache } from "./components/audio-buffer-cache";
 import { action, observable } from "mobx";
@@ -51,6 +52,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   @observable
   state: AudioEngineState = AudioEngineState.stopped;
   clipboard = new Clipboard();
+  latencyCalibrator = new LatencyCalibrator();
 
   @observable
   loaded = false;
@@ -135,17 +137,13 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
     const transport = Tone.getTransport();
 
     const recorder = new Tone.Recorder();
-    // const osc = new Tone.Oscillator(1, "sine").set({
-    //   volume: -Infinity,
-    // });
 
     activeTracks.forEach((activeTrack) => {
       if (activeTrack.inputType === "mic") {
         activeTrack.mic.connect(recorder);
       } else if (activeTrack.inputType === "sends") {
         activeTrack.channel.connect(activeTrack.recorder);
-        // osc.connect(activeTrack.recorder);
-        // // osc.start();
+
         activeTrack.recorder.start();
       }
     });
@@ -205,10 +203,14 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           });
 
           if (audioBuffer) {
-            audioBufferCache.add(clip.id, audioBuffer.toMono());
-            clip.setBuffer(audioBuffer);
+            const latency = this.latencyCalibrator.loadFromStorage() || 0;
+            console.log({ latency });
+            const latencyAdjustedBuffer =
+              this.latencyCalibrator.getCompensatedBuffer(audioBuffer, latency);
+            audioBufferCache.add(clip.id, latencyAdjustedBuffer.toMono());
+            clip.setBuffer(latencyAdjustedBuffer);
 
-            clip.createWaveformCache(audioBuffer);
+            clip.createWaveformCache(latencyAdjustedBuffer);
           }
 
           track.createAudioClip(clip);

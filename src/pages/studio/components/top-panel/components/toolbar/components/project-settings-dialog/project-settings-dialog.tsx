@@ -8,6 +8,7 @@ import { TimeSignatureIcon } from "@/pages/studio/components/main-controls/compo
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { observer } from "mobx-react-lite";
 import { useCallback, useEffect, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 interface ProjectSettingsDialogProps {
   open: boolean;
@@ -19,6 +20,10 @@ export const ProjectSettingsDialog = observer(
     const audioEngine = useAudioEngine();
     const { undoManager } = useUndoManager();
     const [projectName, setProjectName] = useState(audioEngine.projectName);
+    const [latency, setLatency] = useLocalStorage(
+      audioEngine.latencyCalibrator.storageKey,
+      0
+    );
     const [measures, setMeasures] = useState(audioEngine.timeline.measures);
     const [key, setKey] = useState(audioEngine.key);
     const [timeSignature, setTimeSignature] = useState(
@@ -150,10 +155,7 @@ export const ProjectSettingsDialog = observer(
               </span>
 
               <span className="flex flex-col gap-1 p-1 w-1/5 ml-auto">
-                <Label
-                  className="whitespace-nowrap text-surface-6 text-sm"
-                  htmlFor="measures"
-                >
+                <Label className="whitespace-nowrap text-surface-6 text-sm">
                   Time Signature:
                 </Label>
                 <StudioDropdown
@@ -176,7 +178,7 @@ export const ProjectSettingsDialog = observer(
               <span className="flex flex-col gap-1 py-1 w-1/5">
                 <Label
                   className="whitespace-nowrap text-surface-6 text-sm"
-                  htmlFor="measures"
+                  htmlFor="bpm"
                 >
                   Bpm:
                 </Label>
@@ -192,6 +194,22 @@ export const ProjectSettingsDialog = observer(
                 />
               </span>
             </div>
+            <span className="flex flex-col gap-1 py-1 w-1/5">
+              <Label
+                className="whitespace-nowrap text-surface-6 text-sm"
+                htmlFor="latency"
+              >
+                Latency Offset:
+              </Label>
+              <input
+                className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
+                type="number"
+                id="latency"
+                name="latency"
+                value={latency}
+                onChange={(e) => setLatency(parseInt(e.target.value))}
+              />
+            </span>
           </div>
 
           <div className="w-full flex items-center justify-end gap-1">
