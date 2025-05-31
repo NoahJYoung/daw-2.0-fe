@@ -20,8 +20,12 @@ export const ProjectSettingsDialog = observer(
     const audioEngine = useAudioEngine();
     const { undoManager } = useUndoManager();
     const [projectName, setProjectName] = useState(audioEngine.projectName);
-    const [latency, setLatency] = useLocalStorage(
-      audioEngine.latencyCalibrator.storageKey,
+    const [audioLatency, setAudioLatency] = useLocalStorage(
+      audioEngine.latencyCalibrator.audioLatencyStorageKey,
+      0
+    );
+    const [midiLatency, setMidiLatency] = useLocalStorage(
+      audioEngine.latencyCalibrator.midiNoteLatencyStorageKey,
       0
     );
     const [measures, setMeasures] = useState(audioEngine.timeline.measures);
@@ -88,7 +92,7 @@ export const ProjectSettingsDialog = observer(
           onSubmit={handleSubmit}
           className="flex flex-col justify-between gap-2 p-4 h-full"
         >
-          <div>
+          <div className="flex flex-col gap-2 h-full">
             <div className="flex w-full justify-between">
               <span className="flex flex-col gap-1 p-1 w-4/5">
                 <Label
@@ -194,22 +198,46 @@ export const ProjectSettingsDialog = observer(
                 />
               </span>
             </div>
-            <span className="flex flex-col gap-1 py-1 w-1/5">
-              <Label
-                className="whitespace-nowrap text-surface-6 text-sm"
-                htmlFor="latency"
-              >
-                Latency Offset:
-              </Label>
-              <input
-                className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
-                type="number"
-                id="latency"
-                name="latency"
-                value={latency}
-                onChange={(e) => setLatency(parseInt(e.target.value))}
-              />
-            </span>
+            <div className="flex w-full gap-1">
+              <span className="flex w-fit p-1 flex-col gap-1 py-1 w-1/5">
+                <Label
+                  className="whitespace-nowrap text-surface-6 text-sm"
+                  htmlFor="audio_latency"
+                >
+                  {`Audio Latency Offset (ms):`}
+                </Label>
+                <input
+                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
+                  type="number"
+                  id="audio_latency"
+                  name="audio_latency"
+                  value={audioLatency}
+                  onChange={(e) => setAudioLatency(parseInt(e.target.value))}
+                />
+              </span>
+
+              <span className="flex p-1 w-fit flex-col gap-1 py-1 w-1/5">
+                <Label
+                  className="whitespace-nowrap text-surface-6 text-sm"
+                  htmlFor="latency"
+                >
+                  {`Midi Note Latency Offset (ms):`}
+                </Label>
+                <input
+                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
+                  type="number"
+                  id="midi_latency"
+                  name="midi_latency"
+                  value={midiLatency}
+                  onChange={(e) => setMidiLatency(parseInt(e.target.value))}
+                />
+              </span>
+              <span className="flex justify-end flex-col gap-1 pb-[4px] w-1/5">
+                <Button type="button" disabled className="h-10 rounded-xs">
+                  Calibrate
+                </Button>
+              </span>
+            </div>
           </div>
 
           <div className="w-full flex items-center justify-end gap-1">

@@ -1,7 +1,9 @@
 import * as Tone from "tone";
 
 export class LatencyCalibrator {
-  readonly storageKey: string = "audio_latency_calibration";
+  readonly audioLatencyStorageKey: string = "audio_latency_offset";
+  readonly midiNoteLatencyStorageKey: string = "midi_note_latency_offset";
+
   // private userMedia: Tone.UserMedia = new Tone.UserMedia();
   // private recorder: Tone.Recorder = new Tone.Recorder();
   // private testSignal: Tone.Oscillator = new Tone.Oscillator(440, "sine");
@@ -76,19 +78,27 @@ export class LatencyCalibrator {
   //   }
   // }
 
-  loadFromStorage(): number | null {
+  loadFromStorage(key: "audio" | "midi" = "audio"): number {
+    const storageKey =
+      key === "audio"
+        ? this.audioLatencyStorageKey
+        : this.midiNoteLatencyStorageKey;
     try {
-      const data = localStorage.getItem(this.storageKey);
-      return data ? parseInt(data) : null;
+      const data = localStorage.getItem(storageKey);
+      return data ? parseInt(data) : 0;
     } catch (e) {
       console.warn("Could not load latency calibration:", e);
-      return null;
+      return 0;
     }
   }
 
-  saveToStorage(data: number): void {
+  saveToStorage(data: number, key: "audio" | "midi" = "audio"): void {
+    const storageKey =
+      key === "audio"
+        ? this.audioLatencyStorageKey
+        : this.midiNoteLatencyStorageKey;
     try {
-      localStorage.setItem(this.storageKey, JSON.stringify(data));
+      localStorage.setItem(storageKey, JSON.stringify(data));
     } catch (e) {
       console.warn("Could not save latency calibration:", e);
     }

@@ -216,13 +216,20 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
           track.createAudioClip(clip);
         } else if (track.inputType === "midi") {
           if (this.keyboard.events.length) {
+            const latencyOffset =
+              this.latencyCalibrator.loadFromStorage("midi");
+
+            const latencyOffsetSamples = Tone.Time(
+              latencyOffset / 1000,
+              "s"
+            ).toSamples();
             const events = [
               ...JSON.parse(stringifiedEvents).map(
                 (event: EventData) =>
                   new MidiNote({
                     ...event,
-                    on: event.on - start,
-                    off: event.off - start,
+                    on: event.on - start - latencyOffsetSamples,
+                    off: event.off - start - latencyOffsetSamples,
                   })
               ),
             ];
