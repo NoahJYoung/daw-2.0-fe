@@ -204,10 +204,10 @@ export const ProjectSettingsDialog = observer(
                   className="whitespace-nowrap text-surface-6 text-sm"
                   htmlFor="audio_latency"
                 >
-                  {`Audio Latency Offset (ms):`}
+                  {`Audio Latency (ms):`}
                 </Label>
                 <input
-                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
+                  className="w-32 h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
                   type="number"
                   id="audio_latency"
                   name="audio_latency"
@@ -221,10 +221,10 @@ export const ProjectSettingsDialog = observer(
                   className="whitespace-nowrap text-surface-6 text-sm"
                   htmlFor="latency"
                 >
-                  {`Midi Note Latency Offset (ms):`}
+                  {`Midi Note Offset (ms):`}
                 </Label>
                 <input
-                  className="w-full h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
+                  className="w-32 h-10 text-surface-8 p-1 bg-transparent border border-surface-2 rounded-xs"
                   type="number"
                   id="midi_latency"
                   name="midi_latency"
