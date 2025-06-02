@@ -53,6 +53,7 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   state: AudioEngineState = AudioEngineState.stopped;
   clipboard = new Clipboard();
   latencyCalibrator = new LatencyCalibrator();
+  // harmonicAnalyzer = new HarmonicAnalyzer(this.mixer, this.timeline);
 
   @observable
   loaded = false;

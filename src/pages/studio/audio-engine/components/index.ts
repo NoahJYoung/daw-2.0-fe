@@ -18,3 +18,4 @@ export { EffectsChain } from "./effects-chain";
 export { audioBufferCache } from "./audio-buffer-cache";
 export { waveformCache } from "./waveform-cache";
 export { LatencyCalibrator } from "./latency-calibrator";
+export { HarmonicAnalyzer } from "./harmonic-analyzer";

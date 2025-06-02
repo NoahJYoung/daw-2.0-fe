@@ -7,6 +7,7 @@ import { RgbColorPicker as ColorPicker } from "react-colorful";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { selectAllTracks, deleteSelectedTracks } from "../../helpers";
 import { useState } from "react";
+import { HarmonicAnalyzer } from "@/pages/studio/audio-engine/components";
 
 interface ColorChangeParams {
   r: number;
@@ -15,7 +16,7 @@ interface ColorChangeParams {
 }
 
 export const useTracksContextMenuActions = () => {
-  const { mixer } = useAudioEngine();
+  const { mixer, timeline } = useAudioEngine();
   const { undoManager } = useUndoManager();
 
   const [localColorValue, setLocalColorValue] = useState<ColorChangeParams>(
@@ -82,6 +83,18 @@ export const useTracksContextMenuActions = () => {
         },
       ],
       icon: ColorIcon,
+    },
+    {
+      separator: true,
+    },
+    {
+      label: "Analyze",
+      onClick: () => {
+        const analyzer = new HarmonicAnalyzer(mixer, timeline);
+        const key = analyzer.getKey();
+        const analysis = analyzer.getRomanNumeralAnalysis();
+        console.log(key, analysis);
+      },
     },
   ];
 };
