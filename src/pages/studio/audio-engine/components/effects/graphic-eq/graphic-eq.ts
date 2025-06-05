@@ -101,4 +101,17 @@ export class GraphicEQ extends ExtendedModel(Effect, {
     this.disconnectBands();
     this.hasConnected = false;
   }
+
+  dispose() {
+    this.disconnect();
+
+    this.bands.forEach((band) => band.dispose());
+
+    this.bands = [];
+
+    this.fft.dispose();
+
+    this.hasConnected = false;
+    this.selectedBandId = undefined;
+  }
 }

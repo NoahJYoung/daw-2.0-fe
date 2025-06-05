@@ -53,7 +53,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
   state: AudioEngineState = AudioEngineState.stopped;
   clipboard = new Clipboard();
   latencyCalibrator = new LatencyCalibrator();
-  // harmonicAnalyzer = new HarmonicAnalyzer(this.mixer, this.timeline);
 
   @observable
   loaded = false;
@@ -205,7 +204,6 @@ export class AudioEngine extends ExtendedModel(BaseAudioNodeWrapper, {
 
           if (audioBuffer) {
             const latency = this.latencyCalibrator.loadFromStorage() || 0;
-            console.log({ latency });
             const latencyAdjustedBuffer =
               this.latencyCalibrator.getCompensatedBuffer(audioBuffer, latency);
             audioBufferCache.add(clip.id, latencyAdjustedBuffer.toMono());

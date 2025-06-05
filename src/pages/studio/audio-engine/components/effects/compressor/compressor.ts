@@ -61,4 +61,12 @@ export class Compressor extends ExtendedModel(Effect, {
     this.compressor.disconnect();
     this.hasConnected = false;
   }
+
+  dispose() {
+    this.disconnect();
+    this.compressor.dispose();
+    this.gain.dispose();
+    this.inputMeter.dispose();
+    this.hasConnected = false;
+  }
 }

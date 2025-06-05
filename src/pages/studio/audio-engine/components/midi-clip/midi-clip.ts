@@ -608,7 +608,7 @@ export class MidiClip extends ExtendedModel(BaseAudioNodeWrapper, {
 
   dispose() {
     this.clearEvents();
-
+    this.events.forEach((event) => event.dispose());
     if (this.batchUpdateTimer) {
       clearTimeout(this.batchUpdateTimer);
       this.batchUpdateTimer = null;

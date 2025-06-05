@@ -64,4 +64,12 @@ export class Reverb extends ExtendedModel(Effect, {
     this.reverb.disconnect();
     this.hasConnected = false;
   }
+
+  dispose() {
+    this.disconnect();
+    this.reverb.dispose();
+    this.volumeCompensator.dispose();
+    this.hasConnected = false;
+    this.loading = false;
+  }
 }

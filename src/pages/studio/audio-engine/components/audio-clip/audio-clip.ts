@@ -18,6 +18,7 @@ import { MidiNote } from "../midi-note";
 import { AudioEngine } from "../../audio-engine";
 import { MidiClip } from "../midi-clip";
 import { EventData } from "../keyboard/types";
+import { getMidiNotesFromAudioBuffer } from "../../helpers/get-midi-notes-from-audio-buffer";
 
 @model("AudioEngine/Mixer/Track/AudioClip")
 export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
@@ -351,6 +352,14 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
     return clip;
   }
 
+  async attemptNoteDetection() {
+    const audioBuffer = audioBufferCache.get(this.id);
+    if (audioBuffer) {
+      const midiNotes = await getMidiNotesFromAudioBuffer(audioBuffer);
+      console.log("MIDI NOTES: ", midiNotes);
+    }
+  }
+
   sync() {
     if (!this.buffer) {
       const cachedBuffer = audioBufferCache.get(this.id);
@@ -364,6 +373,14 @@ export class AudioClip extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   dispose() {
-    // TODO:
+    this.clearEvents();
+    if (this.player) {
+      this.player.dispose();
+    }
+    this.buffer = null;
+    this.midiNotes.length = 0;
+    this.loading = false;
+    this.startEventId = null;
+    this.stopEventId = null;
   }
 }

@@ -274,4 +274,15 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   disconnect(node: Tone.ToneAudioNode) {
     this.output.disconnect(node);
   }
+
+  dispose() {
+    this.releaseAll(Tone.now());
+    if (this.imgUrl && this.imgUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(this.imgUrl);
+    }
+    this.sampler.dispose();
+    this.gain.dispose();
+    this.output.dispose();
+    this.loading = false;
+  }
 }

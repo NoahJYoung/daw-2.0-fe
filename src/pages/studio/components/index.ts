@@ -5,3 +5,4 @@ export { TopPanel } from "./top-panel";
 export { MainControls } from "./main-controls";
 export { ModalProvider } from "./modal-provider";
 export { Loader } from "./loader";
+export { HarmonicAnalysisModal } from "./harmonic-analysis-modal";

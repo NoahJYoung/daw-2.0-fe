@@ -226,9 +226,26 @@ export class Track extends ExtendedModel(BaseAudioNodeWrapper, {
 
   @modelAction
   dispose() {
-    this.channel.dispose();
     this.clips.forEach((clip) => clip.dispose());
     this.clips = [];
+
+    this.selectedRefs = [];
+
+    this.channel.dispose();
+    this.output.dispose();
+    this.waveform.dispose();
+    this.meterL.dispose();
+    this.meterR.dispose();
+    this.splitter.dispose();
+    this.recorder.dispose();
+
+    if (this.mic) {
+      this.mic.close();
+      this.mic.dispose();
+    }
+    this.synth.dispose();
+    this.sampler.dispose();
+    this.effectsChain.dispose();
   }
 
   @modelAction

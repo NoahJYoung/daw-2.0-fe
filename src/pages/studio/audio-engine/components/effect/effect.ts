@@ -58,6 +58,10 @@ export class Effect
     this.bypass.disconnect();
     this.output.disconnect();
   }
+
+  dispose() {
+    throw new Error("'Effect' subclasses must implement the dispose method");
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

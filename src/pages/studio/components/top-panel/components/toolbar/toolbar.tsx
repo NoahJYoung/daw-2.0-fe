@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StudioButton } from "@/components/ui/custom/studio/studio-button";
+import { BookHeadphones } from "lucide-react";
 import { useAudioEngine, useUndoManager } from "@/pages/studio/hooks";
 import { PiMetronomeFill, PiMagnetStraight } from "react-icons/pi";
 import { MdContentPasteGo, MdContentCopy } from "react-icons/md";
@@ -36,6 +37,7 @@ import { ProjectSettingsDialog } from "./components";
 import { useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Note } from "@/components/ui/custom/note";
+import { HarmonicAnalysisModal } from "../../../harmonic-analysis-modal";
 
 interface ToolbarProps {
   panelExpanded: boolean;
@@ -45,6 +47,7 @@ interface ToolbarProps {
 export const Toolbar = observer(
   ({ panelExpanded, togglePanelView }: ToolbarProps) => {
     const { projectId } = useParams({ strict: false });
+    const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
     const { undoManager } = useUndoManager();
     const { toggleTheme, theme } = useThemeContext();
     const { saveProject } = useFileSystem();
@@ -64,6 +67,8 @@ export const Toolbar = observer(
     const isNewProject = !projectId && !tempProjectId;
     const [projectSettingsModalOpen, setProjectSettingsModalOpen] =
       useState(false);
+
+    const toggleAnalysisModal = () => setIsAnalysisModalOpen((prev) => !prev);
 
     useEffect(() => {
       const hasOpened = hasOpenedNewProjectDialog.current;
@@ -240,6 +245,12 @@ export const Toolbar = observer(
               icon: ImportIcon,
               onClick: () => audioEngine.loadProjectDataFromFile(),
             },
+            { separator: true },
+            {
+              label: "Bounce to .wav",
+              icon: IoDownloadOutline,
+              onClick: async () => getOnlineBounce(audioEngine),
+            },
           ]}
         />
 
@@ -280,9 +291,9 @@ export const Toolbar = observer(
         />
 
         <StudioButton
-          title={t("studio.toolbar.download")}
-          icon={IoDownloadOutline}
-          onClick={async () => getOnlineBounce(audioEngine)}
+          title={"Analysis"}
+          icon={() => <BookHeadphones />}
+          onClick={toggleAnalysisModal}
         />
 
         <StudioDropdownMenu
@@ -310,6 +321,10 @@ export const Toolbar = observer(
         <ProjectSettingsDialog
           open={projectSettingsModalOpen}
           onOpenChange={setProjectSettingsModalOpen}
+        />
+        <HarmonicAnalysisModal
+          onClose={() => setIsAnalysisModalOpen(false)}
+          isOpen={isAnalysisModalOpen}
         />
       </div>
     );

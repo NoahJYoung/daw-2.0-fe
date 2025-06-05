@@ -72,4 +72,15 @@ export class EffectsChain extends ExtendedModel(BaseAudioNodeWrapper, {
       [...this.effects].filter((effect) => effect.id !== effectId)
     );
   }
+
+  dispose() {
+    this.disconnectRoutes();
+    this.effects.forEach((effect) => effect.dispose());
+    this.effects = [];
+    this.input.dispose();
+    this.output.dispose();
+
+    this.isInputConnectedToOutput = false;
+    this.previousLastEffect = null;
+  }
 }

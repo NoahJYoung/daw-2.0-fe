@@ -184,11 +184,15 @@ export class Oscillator extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   dispose() {
+    this.releaseAll(Tone.now());
+
     if (this._volumeRampTimeout) {
       window.clearTimeout(this._volumeRampTimeout);
+      this._volumeRampTimeout = null;
     }
 
     this._disposers.forEach((dispose) => dispose());
+    this._disposers = [];
 
     this.synth.dispose();
     this.channel.dispose();

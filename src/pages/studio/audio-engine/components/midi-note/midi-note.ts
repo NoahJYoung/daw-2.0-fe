@@ -81,4 +81,18 @@ export class MidiNote extends ExtendedModel(BaseAudioNodeWrapper, {
     const quantizedOff = quantizedGlobalPosition - clipStart;
     this.setOff(quantizedOff);
   }
+
+  dispose() {
+    const transport = Tone.getTransport();
+
+    if (this.startEventId !== null) {
+      transport.clear(this.startEventId);
+      this.startEventId = null;
+    }
+
+    if (this.stopEventId !== null) {
+      transport.clear(this.stopEventId);
+      this.stopEventId = null;
+    }
+  }
 }

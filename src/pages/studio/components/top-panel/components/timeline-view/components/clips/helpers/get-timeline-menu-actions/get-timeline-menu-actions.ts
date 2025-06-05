@@ -97,8 +97,7 @@ export const getTimelineMenuActions = (
     return true;
   };
 
-  const onlySelectedClipIsAudio =
-    !isConvertDisabled() && mixer.selectedClips[0] instanceof AudioClip;
+  const onlySelectedClipIsAudio = mixer.selectedClips[0] instanceof AudioClip;
 
   return [
     {
@@ -163,10 +162,21 @@ export const getTimelineMenuActions = (
     {
       label: onlySelectedClipIsAudio ? "Convert to midi" : "Convert to audio",
       disabled: isConvertDisabled(),
-      onClick: onlySelectedClipIsAudio
-        ? handleConvertToMidi
-        : handleConvertToAudio,
+      onClick:
+        !isConvertDisabled() && onlySelectedClipIsAudio
+          ? handleConvertToMidi
+          : handleConvertToAudio,
       icon: onlySelectedClipIsAudio ? MidiIcon : AudioIcon,
     },
+    // {
+    //   label: "Attempt Note Detection",
+    //   disabled: !onlySelectedClipIsAudio,
+    //   onClick: async () => {
+    //     const [audioClip] = mixer.selectedClips;
+    //     if (audioClip instanceof AudioClip) {
+    //       await audioClip.attemptNoteDetection();
+    //     }
+    //   },
+    // },
   ];
 };

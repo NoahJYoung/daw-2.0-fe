@@ -32,4 +32,9 @@ export class Band extends ExtendedModel(BaseAudioNodeWrapper, {
   disconnect(node?: Tone.ToneAudioNode) {
     this.filter.disconnect(node);
   }
+
+  dispose() {
+    this.filter.disconnect();
+    this.filter.dispose();
+  }
 }

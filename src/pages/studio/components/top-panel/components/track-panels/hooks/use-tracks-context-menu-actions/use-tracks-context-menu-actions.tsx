@@ -91,9 +91,12 @@ export const useTracksContextMenuActions = () => {
       label: "Analyze",
       onClick: () => {
         const analyzer = new HarmonicAnalyzer(mixer, timeline);
-        const key = analyzer.getKey();
-        const analysis = analyzer.getRomanNumeralAnalysis();
-        console.log(key, analysis);
+        const useSelected = mixer.selectedTracks.length > 0;
+        const key = analyzer.getKey({ useSelectedTracksOnly: useSelected });
+        const analysis = analyzer.getRomanNumeralAnalysis({
+          useSelectedTracksOnly: useSelected,
+        });
+        console.log(key.key, analysis);
       },
     },
   ];
