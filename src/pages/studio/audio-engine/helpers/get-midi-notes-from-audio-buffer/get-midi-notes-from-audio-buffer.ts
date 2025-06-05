@@ -55,23 +55,17 @@ export const getMidiNotesFromAudioBuffer = async (
     quantization,
   });
 
-  console.log("Raw frequencies:", rawFrequencies);
-
-  // Smooth frequencies to handle transients
   const smoothedFrequencies = smoothFrequencies(
     rawFrequencies,
     transientSmoothingWindow
   );
 
-  // Calculate amplitudes for the entire signal
   const amplitudes = calculateAmplitudes(float32Array, rawFrequencies.length);
 
-  // Calculate time per sample based on quantization and tempo
   const beatsPerSecond = tempo / 60;
   const samplesPerBeat = quantization;
   const timePerSample = 1 / (beatsPerSecond * samplesPerBeat);
 
-  // Process frequencies into MIDI notes with improved logic
   const midiNotes: MidiNote[] = [];
   let currentNote: Partial<MidiNote> | null = null;
   let silenceCounter = 0;
@@ -140,17 +134,14 @@ export const getMidiNotesFromAudioBuffer = async (
     }
   });
 
-  // Finish the last note if it exists
   if (currentNote) {
     const totalDuration = smoothedFrequencies.length * timePerSample;
     finishNote(currentNote, totalDuration, midiNotes, minNoteDuration);
   }
 
-  console.log("Processed MIDI notes:", midiNotes);
   return midiNotes;
 };
 
-// Smooth frequencies to handle transients and brief pitch detection failures
 const smoothFrequencies = (
   frequencies: (number | null)[],
   windowSize: number

@@ -78,12 +78,10 @@ export class Sampler extends ExtendedModel(BaseAudioNodeWrapper, {
   }
 
   async getCoverImage() {
-    console.log("getting cover");
     if (!this.samplePath) return;
 
     if (this.samplePath?.startsWith("localSamples://")) {
       try {
-        console.log("IMG TRY BLOCk");
         const root = await navigator.storage.getDirectory();
 
         const samplePacksDir = await root.getDirectoryHandle("sample-packs");

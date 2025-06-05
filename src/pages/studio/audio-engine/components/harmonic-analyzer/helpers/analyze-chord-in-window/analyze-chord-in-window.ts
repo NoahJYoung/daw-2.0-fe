@@ -43,7 +43,6 @@ export function analyzeChordInWindow(
       );
 
       if (matchingChordScale) {
-        console.log("SCALE FOUND: ", matchingChordScale);
         scale = matchingChordScale;
       }
     } else {
