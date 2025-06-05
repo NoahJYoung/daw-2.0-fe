@@ -89,6 +89,25 @@ export const HarmonicAnalysisModal = observer(
 
     const flatAnalysis = analysis.flat();
 
+    const getChordDuration = (
+      chordsInMeasure: RomanNumeralAnalysis[],
+      currentChordIndex: number
+    ): number => {
+      const currentChord = chordsInMeasure[currentChordIndex];
+      const nextChord = chordsInMeasure[currentChordIndex + 1];
+
+      if (nextChord) {
+        return nextChord.beat - currentChord.beat;
+      } else {
+        // Last chord in measure - duration until end of measure
+        return timeline.timeSignature + 1 - currentChord.beat;
+      }
+    };
+
+    const getChordStartPosition = (chord: RomanNumeralAnalysis): number => {
+      return chord.beat - 1; // Convert to 0-based index
+    };
+
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-6xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden p-3 sm:p-6">
@@ -140,7 +159,7 @@ export const HarmonicAnalysisModal = observer(
                 </h3>
               </div>
 
-              <div className="grid gap-2 sm:gap-4">
+              <div className="grid py-2 px-12 gap-6 sm:gap-4">
                 {analysis.map((measureChords, measureIndex) => (
                   <div key={measureIndex} className="relative">
                     <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-3">
@@ -154,21 +173,13 @@ export const HarmonicAnalysisModal = observer(
                     </div>
 
                     <div
-                      className={`py-2 px-10 grid gap-4 ${
-                        measureChords.length === 1
-                          ? "grid-cols-1"
-                          : measureChords.length === 2
-                            ? "grid-cols-2"
-                            : measureChords.length === 3
-                              ? "grid-cols-3"
-                              : measureChords.length === 4
-                                ? "grid-cols-2 sm:grid-cols-4"
-                                : measureChords.length === 5
-                                  ? "grid-cols-3 sm:grid-cols-5"
-                                  : measureChords.length === 6
-                                    ? "grid-cols-3 sm:grid-cols-6"
-                                    : "grid-cols-2 sm:grid-cols-4"
-                      }`}
+                      className="relative py-2 px-4"
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: `repeat(${timeline.timeSignature}, 1fr)`,
+                        gap: "8px",
+                        minHeight: isLandscape ? "60px" : "120px",
+                      }}
                     >
                       {measureChords.map((chord, chordIndex) => {
                         const globalIndex = flatAnalysis.findIndex(
@@ -180,6 +191,12 @@ export const HarmonicAnalysisModal = observer(
                         const isCurrentChord =
                           isPlaying && globalIndex === currentChordIndex;
 
+                        const startPosition = getChordStartPosition(chord);
+                        const duration = getChordDuration(
+                          measureChords,
+                          chordIndex
+                        );
+
                         return (
                           <Popover
                             key={`${chord.measure}-${chord.beat}-${chordIndex}`}
@@ -190,19 +207,18 @@ export const HarmonicAnalysisModal = observer(
                                   isCurrentChord
                                     ? "ring-2 ring-[hsl(341,98%,60%)] ring-offset-2 shadow-lg shadow-[hsl(341,98%,60%)]/25 scale-105 border-[hsl(341,98%,60%)]"
                                     : "hover:shadow-md border-zinc-200 dark:border-zinc-700"
-                                } ${getQualityColor(chord.quality)} ${
-                                  isLandscape
-                                    ? measureChords.length <= 3
-                                      ? "aspect-square"
-                                      : "aspect-[3/4]"
-                                    : "w-full"
-                                }`}
+                                } ${getQualityColor(chord.quality)}`}
+                                style={{
+                                  gridColumnStart: startPosition + 1,
+                                  gridColumnEnd: startPosition + duration + 1,
+                                  minHeight: isLandscape ? "50px" : "100px",
+                                }}
                               >
                                 <CardContent
-                                  className={`p-2 ${isLandscape ? "h-full flex flex-col justify-center" : "sm:p-4"}`}
+                                  className={`p-2 h-full flex flex-col justify-center ${!isLandscape && "sm:p-4"}`}
                                 >
                                   {isLandscape ? (
-                                    // Landscape mobile view - responsive layout
+                                    // Landscape mobile view - compact layout
                                     <div className="flex flex-col items-center justify-center h-full space-y-1">
                                       <Badge
                                         variant="outline"
@@ -210,14 +226,10 @@ export const HarmonicAnalysisModal = observer(
                                       >
                                         {chord.beat}
                                       </Badge>
-                                      <div
-                                        className={`font-bold font-mono ${measureChords.length <= 3 ? "text-lg" : "text-base"}`}
-                                      >
+                                      <div className="text-sm font-bold font-mono">
                                         {chord.romanNumeral}
                                       </div>
-                                      <div
-                                        className={`font-medium text-center ${measureChords.length <= 3 ? "text-sm" : "text-xs"}`}
-                                      >
+                                      <div className="text-xs font-medium text-center">
                                         {chord.chordSymbol}
                                       </div>
                                       {isCurrentChord && (
@@ -238,7 +250,6 @@ export const HarmonicAnalysisModal = observer(
                                           <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[hsl(341,98%,60%)] animate-pulse"></div>
                                         )}
                                       </div>
-                                      {/* Mobile portrait: horizontal layout */}
                                       <div className="flex sm:hidden items-center justify-between gap-2">
                                         <div className="text-lg font-bold font-mono">
                                           {chord.romanNumeral}
@@ -252,7 +263,6 @@ export const HarmonicAnalysisModal = observer(
                                           </div>
                                         </div>
                                       </div>
-                                      {/* Desktop/tablet: vertical layout */}
                                       <div className="hidden sm:block text-center space-y-0.5 sm:space-y-1">
                                         <div className="text-lg sm:text-2xl font-bold font-mono">
                                           {chord.romanNumeral}
@@ -313,6 +323,18 @@ export const HarmonicAnalysisModal = observer(
                                       {chord.quality}
                                     </Badge>
                                   </div>
+                                  <div>
+                                    <div className="font-medium text-muted-foreground text-xs">
+                                      Duration
+                                    </div>
+                                    <div className="text-zinc-900 dark:text-zinc-100">
+                                      {getChordDuration(
+                                        measureChords,
+                                        chordIndex
+                                      )}{" "}
+                                      beats
+                                    </div>
+                                  </div>
                                 </div>
 
                                 {chord.chordScale && (
@@ -360,7 +382,6 @@ export const HarmonicAnalysisModal = observer(
               </div>
             </div>
 
-            {/* Current Chord Display */}
             {isPlaying && (
               <div className="sticky bottom-0 bg-background/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-700 p-2 sm:p-4 rounded-lg">
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
