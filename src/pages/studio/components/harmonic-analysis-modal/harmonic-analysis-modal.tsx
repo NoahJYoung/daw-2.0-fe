@@ -6,7 +6,7 @@ import { RomanNumeralAnalysis } from "../../audio-engine/components/harmonic-ana
 import { observer } from "mobx-react-lite";
 import { useAudioEngine, useUndoManager } from "../../hooks";
 import { HarmonicAnalyzer } from "../../audio-engine/components";
-import { Header, Measure } from "./components";
+import { EmptyAnalysis, Header, Measure } from "./components";
 import { getQualityColor } from "./helpers";
 import { AudioEngineState } from "../../audio-engine/types";
 
@@ -39,7 +39,7 @@ export const HarmonicAnalysisModal = observer(
           });
           setAnalysis(analysis);
         } catch (error) {
-          console.warn(error);
+          console.error(error);
         }
       } else {
         setAnalysis([]);
@@ -176,6 +176,8 @@ export const HarmonicAnalysisModal = observer(
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-6xl h-screen lg:max-h-[95vh] overflow-hidden gap-1 p-0">
           <Header
+            trackCount={mixer.selectedTracks.length}
+            totalTracks={mixer.tracks.length}
             playbackState={audioEngine.state}
             onPause={pause}
             onPlay={play}
@@ -183,48 +185,54 @@ export const HarmonicAnalysisModal = observer(
             analysis={analysis}
           />
 
-          <div className="space-y-3 sm:space-y-6 overflow-y-auto no-scrollbar max-h-full">
-            <div className="relative">
-              <div className="grid py-2 px-8 gap-6 sm:gap-4">
-                {analysis.map((measureChords, measureIndex) => (
-                  <Measure
-                    chords={measureChords}
-                    measureIndex={measureIndex}
-                    currentChordIndex={currentChordIndex}
-                    timeline={timeline}
-                    flatAnalysis={flatAnalysis}
-                    isLandscape={isLandscape}
-                    isPlaying={isPlaying}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {isPlaying && typeof currentChordIndex === "number" && (
-              <div className="sticky bottom-0 bg-background/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-700 p-2 sm:p-4 rounded-lg">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    Now Playing:
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="text-2xl sm:text-3xl font-bold font-mono text-brand-1">
-                      {flatAnalysis[currentChordIndex]?.romanNumeral}
-                    </div>
-                    <div className="text-base sm:text-lg font-medium text-zinc-900 dark:text-zinc-100">
-                      {flatAnalysis[currentChordIndex]?.chordSymbol}
-                    </div>
-                    <Badge
-                      className={getQualityColor(
-                        flatAnalysis[currentChordIndex]?.quality || ""
-                      )}
-                    >
-                      {flatAnalysis[currentChordIndex]?.quality}
-                    </Badge>
-                  </div>
+          {analysis.length === 0 ? (
+            <EmptyAnalysis
+              isSelectedTracksEmpty={mixer.selectedTracks.length === 0}
+            />
+          ) : (
+            <div className="space-y-3 sm:space-y-6 overflow-y-auto no-scrollbar max-h-full">
+              <div className="relative">
+                <div className="grid py-2 px-8 gap-6 sm:gap-4">
+                  {analysis.map((measureChords, measureIndex) => (
+                    <Measure
+                      chords={measureChords}
+                      measureIndex={measureIndex}
+                      currentChordIndex={currentChordIndex}
+                      timeline={timeline}
+                      flatAnalysis={flatAnalysis}
+                      isLandscape={isLandscape}
+                      isPlaying={isPlaying}
+                    />
+                  ))}
                 </div>
               </div>
-            )}
-          </div>
+
+              {isPlaying && typeof currentChordIndex === "number" && (
+                <div className="sticky bottom-0 bg-background/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-700 p-2 sm:p-4 rounded-lg">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                    <div className="text-xs sm:text-sm text-muted-foreground">
+                      Now Playing:
+                    </div>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="text-2xl sm:text-3xl font-bold font-mono text-brand-1">
+                        {flatAnalysis[currentChordIndex]?.romanNumeral}
+                      </div>
+                      <div className="text-base sm:text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                        {flatAnalysis[currentChordIndex]?.chordSymbol}
+                      </div>
+                      <Badge
+                        className={getQualityColor(
+                          flatAnalysis[currentChordIndex]?.quality || ""
+                        )}
+                      >
+                        {flatAnalysis[currentChordIndex]?.quality}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     );

@@ -7,7 +7,6 @@ import type {
   TonalChord,
 } from "../../types";
 import { getSamplesPerMeasure } from "../get-samples-per-measure";
-import { getWeightedPitchClasses } from "../get-weighted-pitch-classes";
 import type { Timeline } from "../../../timeline";
 import { generateRomanNumeral } from "../generate-roman-numeral";
 import { prepareChordSymbol } from "../prepare-chord-symbol";
@@ -18,11 +17,9 @@ export function analyzeChordInWindow(
   keyResult: KeyAnalysisResult,
   prevChord?: RomanNumeralAnalysis
 ): RomanNumeralAnalysis | null {
-  if (notes.length === 0) return null;
-
-  const pitchData = getWeightedPitchClasses(notes);
-
-  if (pitchData.length < 2) return null;
+  if (notes.length < 2) {
+    return null;
+  }
 
   const noteNames = notes.map((p) => Tonal.Note.fromMidi(60 + p.pitch));
 
@@ -64,8 +61,7 @@ export function analyzeChordInWindow(
         extended.push(noteName);
       }
     });
-
-    chordSymbol = Tonal.Chord.detect(extended)?.[0];
+    chordSymbol = Tonal.Chord.detect(extended)?.[0] || "";
   } else {
     chordSymbol = chordCandidates?.[0] || noteNames.join("/");
   }

@@ -30,7 +30,7 @@ export const Measure = ({
         variant="secondary"
         className="font-mono text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200"
       >
-        M{chords[0]?.measure || measureIndex + 1}
+        M{chords[0]?.measure || measureIndex}
       </Badge>
       <div className="h-px bg-zinc-300 dark:bg-zinc-600 flex-1"></div>
     </div>

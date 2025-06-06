@@ -11,6 +11,8 @@ interface HeaderProps {
   onPause: () => void;
   onStop: () => void;
   playbackState: AudioEngineState;
+  trackCount: number;
+  totalTracks: number;
 }
 
 export const Header = ({
@@ -19,6 +21,8 @@ export const Header = ({
   onPause,
   onStop,
   playbackState,
+  trackCount,
+  totalTracks,
 }: HeaderProps) => (
   <DialogHeader className="pb-2 px-8 pt-4 pb-2 justify-center">
     <div className="flex flex-row items-start items-center justify-between gap-2 sm:gap-3">
@@ -35,7 +39,21 @@ export const Header = ({
           variant="outline"
           className="text-xs sm:text-sm border-zinc-300 dark:border-zinc-600"
         >
-          Key: {analysis[0]?.[0]?.key || "C major"}
+          {analysis[0]?.[0]?.key || "C major"}
+        </Badge>
+
+        <Badge
+          variant="outline"
+          className="text-xs sm:text-sm border-zinc-300 dark:border-zinc-600 lg:hidden"
+        >
+          {`${trackCount} tracks`}
+        </Badge>
+
+        <Badge
+          variant="outline"
+          className="text-xs sm:text-sm border-zinc-300 dark:border-zinc-600 hidden lg:inline"
+        >
+          {`Analyzing ${trackCount} of ${totalTracks} tracks`}
         </Badge>
 
         <div className="flex items-center gap-1">
@@ -97,7 +115,7 @@ export const Header = ({
               playbackState === AudioEngineState.playing
                 ? "bg-brand-1 animate-pulse"
                 : playbackState === AudioEngineState.paused
-                  ? "bg-yellow-500"
+                  ? "bg-zinc-600"
                   : "bg-zinc-400"
             }`}
           />

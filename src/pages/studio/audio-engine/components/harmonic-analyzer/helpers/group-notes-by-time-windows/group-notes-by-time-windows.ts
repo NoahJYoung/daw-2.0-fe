@@ -16,8 +16,9 @@ export function groupNotesByTimeWindows(
       (note) => note.absoluteStartTime < end && note.absoluteEndTime > start
     );
 
-    if (windowNotes.length > 0) {
-      windows.push(windowNotes.sort((a, b) => a.pitch - b.pitch));
+    if (windowNotes.length > 1) {
+      const sortedNotes = windowNotes.sort((a, b) => a.pitch - b.pitch);
+      windows.push(sortedNotes);
     }
   }
 

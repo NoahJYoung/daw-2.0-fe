@@ -21,12 +21,18 @@ function processSingleMeasure(chords: RomanNumeralAnalysis[]) {
           chord.quality === "Unknown" &&
           chord.tonalChordSymbol.split("/").length > 0
         ) {
-          const combinedChordNotes = [
-            ...Tonal.Chord.notes(prevChord?.tonalChordSymbol),
-            ...chord.tonalChordSymbol
-              .split("/")
-              .map((noteName) => noteName.replace(/\d/g, "")),
-          ];
+          const combinedChordNotes = prevChord?.tonalChordSymbol
+            ? [
+                ...Tonal.Chord.notes(prevChord?.tonalChordSymbol),
+                ...chord.tonalChordSymbol
+                  .split("/")
+                  .map((noteName) => noteName.replace(/\d/g, "")),
+              ]
+            : [
+                ...chord.tonalChordSymbol
+                  .split("/")
+                  .map((noteName) => noteName.replace(/\d/g, "")),
+              ];
 
           const newChordSymbol = Tonal.Chord.detect(combinedChordNotes)[0];
 
@@ -34,6 +40,7 @@ function processSingleMeasure(chords: RomanNumeralAnalysis[]) {
             ...prevChord,
             tonalChordSymbol: newChordSymbol,
             chordSymbol: prepareChordSymbol(newChordSymbol),
+            quality: Tonal.Chord.get(newChordSymbol).quality,
           };
           processedChords[processedChords.length - 1] = combinedAnalysis;
         }
@@ -52,6 +59,7 @@ function processSingleMeasure(chords: RomanNumeralAnalysis[]) {
         ...prevChord,
         tonalChordSymbol: newChordSymbol,
         chordSymbol: prepareChordSymbol(newChordSymbol),
+        quality: Tonal.Chord.get(newChordSymbol).quality,
       };
       processedChords[processedChords.length - 1] = combinedAnalysis;
     }
