@@ -44,4 +44,5 @@ export interface TonalChord {
 
 export interface UseSelectedOptions {
   useSelectedTracksOnly: boolean;
+  filterPassingTones?: boolean;
 }

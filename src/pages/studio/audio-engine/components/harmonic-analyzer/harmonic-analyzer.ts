@@ -30,7 +30,12 @@ export class HarmonicAnalyzer {
       return this.cachedKey;
     }
 
-    const allNotes = extractAllMidiNotes(this.mixer, options);
+    const allNotes = extractAllMidiNotes(
+      this.mixer,
+      options
+        ? { ...options, filterPassingTones: false }
+        : { filterPassingTones: false, useSelectedTracksOnly: false }
+    );
 
     if (allNotes.length === 0) {
       throw new Error("No MIDI notes found for key analysis");
