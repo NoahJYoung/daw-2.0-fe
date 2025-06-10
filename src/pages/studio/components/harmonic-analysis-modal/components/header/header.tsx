@@ -24,17 +24,17 @@ export const Header = ({
   trackCount,
   totalTracks,
 }: HeaderProps) => (
-  <DialogHeader className="pb-2 px-8 pt-4 pb-2 justify-center">
+  <DialogHeader className="pb-2 px-2 md:px-8 pt-4 pb-2 justify-center">
     <div className="flex flex-row items-start items-center justify-between gap-2 sm:gap-3">
       <div className="flex items-center sm:gap-3">
         <div className="p-1.5 sm:p-2 rounded-lg bg-zinc-900 dark:bg-zinc-100">
           <Music className="w-4 h-4 sm:w-5 sm:h-5 text-white dark:text-zinc-900" />
         </div>
-        <DialogTitle className="text-lg sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+        <DialogTitle className="text-lg hidden md:inline sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
           Harmonic Analysis
         </DialogTitle>
       </div>
-      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto mr-2">
+      <div className="flex items-center gap-2 justify-evenly sm:gap-3 w-full sm:w-auto mr-2">
         <Badge
           variant="outline"
           className="text-xs sm:text-sm border-zinc-300 dark:border-zinc-600"

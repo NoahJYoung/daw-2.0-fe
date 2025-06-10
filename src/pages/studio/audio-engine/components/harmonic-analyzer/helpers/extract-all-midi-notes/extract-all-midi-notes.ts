@@ -1,14 +1,20 @@
 import { AudioClip } from "../../../audio-clip";
 import { MidiClip } from "../../../midi-clip";
-import { ProcessedNote, UseSelectedOptions } from "../../types";
+import { ProcessedNote, MidiNoteExtractionOptions } from "../../types";
 import * as Tone from "tone";
 import { Mixer } from "../../../mixer";
 import { MidiNote } from "../../../midi-note";
 
+export interface PassingToneFilterOptions {
+  filterChromatic?: boolean;
+  filterStepwise?: boolean;
+}
+
 const isPassingTone = (
   prevNote: MidiNote,
   currentNote: MidiNote,
-  nextNote: MidiNote
+  nextNote: MidiNote,
+  filterOptions?: PassingToneFilterOptions
 ): boolean => {
   const prevPitch = Tone.Midi(prevNote.note.join("")).valueOf();
   const currentPitch = Tone.Midi(currentNote.note.join("")).valueOf();
@@ -23,23 +29,65 @@ const isPassingTone = (
 
   const intervalToPrev = Math.abs(currentPitch - prevPitch);
   const intervalToNext = Math.abs(nextPitch - currentPitch);
-  const isChromatic = intervalToPrev === 1 || intervalToNext === 1;
-  const isStepwise = intervalToPrev === 2 || intervalToNext === 2;
   const overallInterval = Math.abs(nextPitch - prevPitch);
+
   const isActuallyPassing =
     overallInterval > Math.max(intervalToPrev, intervalToNext);
 
-  return (isChromatic || isStepwise) && isActuallyPassing;
+  if (!isActuallyPassing) {
+    return false;
+  }
+
+  const isChromatic = intervalToPrev === 1 && intervalToNext === 1;
+  const isStepwise = intervalToPrev === 2 || intervalToNext === 2;
+  const isDiatonic =
+    isStepwise ||
+    (intervalToPrev === 1 && intervalToNext === 2) ||
+    (intervalToPrev === 2 && intervalToNext === 1);
+
+  if (!filterOptions) {
+    return isChromatic || isStepwise;
+  }
+
+  const { filterChromatic = false, filterStepwise = false } = filterOptions;
+
+  if (!filterChromatic && !filterStepwise) {
+    return false;
+  }
+
+  if (filterChromatic && isChromatic) {
+    console.log([prevNote, currentNote, nextNote], {
+      intervalToPrev,
+      intervalToNext,
+      prevPitch,
+      currentPitch,
+      nextPitch,
+    });
+    return true;
+  }
+
+  if (filterStepwise && isDiatonic) {
+    return true;
+  }
+
+  return false;
 };
 
-const filterPassingTones = (sortedNotes: MidiNote[]): MidiNote[] => {
+const filterPassingTones = (
+  sortedNotes: MidiNote[],
+  filterOptions?: PassingToneFilterOptions
+): MidiNote[] => {
   if (sortedNotes.length <= 2) {
     return sortedNotes;
   }
 
   const filteredNotes: MidiNote[] = [];
+  const indexesToSkip = new Set<number>();
 
   for (let i = 0; i < sortedNotes.length; i++) {
+    if (indexesToSkip.has(i)) {
+      continue;
+    }
     const currentNote = sortedNotes[i];
 
     if (i === 0 || i === sortedNotes.length - 1) {
@@ -53,7 +101,11 @@ const filterPassingTones = (sortedNotes: MidiNote[]): MidiNote[] => {
     const isSequential =
       prevNote.off <= currentNote.on && currentNote.off <= nextNote.on;
 
-    if (isSequential && isPassingTone(prevNote, currentNote, nextNote)) {
+    if (
+      isSequential &&
+      isPassingTone(prevNote, currentNote, nextNote, filterOptions)
+    ) {
+      indexesToSkip.add(i + 1);
       continue;
     }
 
@@ -65,9 +117,23 @@ const filterPassingTones = (sortedNotes: MidiNote[]): MidiNote[] => {
 
 export function extractAllMidiNotes(
   mixer: Mixer,
-  options?: UseSelectedOptions
+  options?: MidiNoteExtractionOptions
 ): ProcessedNote[] {
   const allNotes: ProcessedNote[] = [];
+
+  let shouldFilter = false;
+  let filterOptions: PassingToneFilterOptions | undefined;
+
+  if (
+    options?.filterChromaticPassingTones ||
+    options?.filterDiatonicPassingTones
+  ) {
+    shouldFilter = true;
+    filterOptions = {
+      filterChromatic: options?.filterChromaticPassingTones,
+      filterStepwise: options?.filterDiatonicPassingTones,
+    };
+  }
 
   const tracksToUse = options?.useSelectedTracksOnly
     ? mixer.selectedTracks
@@ -95,8 +161,8 @@ export function extractAllMidiNotes(
         return a.on - b.on;
       });
 
-      const filteredClipNotes = options?.filterPassingTones
-        ? filterPassingTones(sortedClipNotes)
+      const filteredClipNotes = shouldFilter
+        ? filterPassingTones(sortedClipNotes, filterOptions)
         : sortedClipNotes;
 
       for (const note of filteredClipNotes) {
@@ -122,10 +188,14 @@ export function extractAllMidiNotes(
     }
   }
 
-  return allNotes.sort((a, b) => {
+  const notes = allNotes.sort((a, b) => {
     if (a.absoluteStartTime === b.absoluteStartTime) {
       return a.pitch - b.pitch;
     }
     return a.absoluteStartTime - b.absoluteStartTime;
   });
+
+  console.log(shouldFilter, filterOptions, notes);
+
+  return notes;
 }

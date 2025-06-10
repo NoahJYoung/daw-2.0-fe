@@ -192,7 +192,7 @@ export const HarmonicAnalysisModal = observer(
           ) : (
             <div className="space-y-3 sm:space-y-6 overflow-y-auto no-scrollbar max-h-full">
               <div className="relative">
-                <div className="grid py-2 px-8 gap-6 sm:gap-4">
+                <div className="grid py-2 px-2 md:px-8 gap-6 sm:gap-4">
                   {analysis.map((measureChords, measureIndex) => (
                     <Measure
                       chords={measureChords}

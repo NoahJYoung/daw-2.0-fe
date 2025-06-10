@@ -42,36 +42,34 @@ export const Studio = observer(() => {
   }, []);
 
   return (
-    <OrientationManager requireLandscape={isMobileDevice()}>
-      <AudioEngineProvider>
-        <UndoManagerProvider>
-          <BottomPanelProvider>
-            <HotKeysManager />
-            <StudioLayout
-              upperPanel={<TopPanel />}
-              middlePanel={<MainControls />}
-              lowerPanel={<BottomPanel />}
-            />
-            <Loader />
-            <ModalProvider />
-          </BottomPanelProvider>
-          <Block
-            shouldBlockFn={({ current, next }) => {
-              const isSaving =
-                current.pathname === next.pathname &&
-                current.search !== next.search;
-              const isNavigatingAfterRefresh =
-                current.search.tempProjectId === next.params.projectId;
-
-              if (isSaving || isNavigatingAfterRefresh) return false;
-              const shouldLeave = confirm(
-                "Are you sure you want to leave? You will lose any unsaved changes"
-              );
-              return !shouldLeave;
-            }}
+    <AudioEngineProvider>
+      <UndoManagerProvider>
+        <BottomPanelProvider>
+          <HotKeysManager />
+          <StudioLayout
+            upperPanel={<TopPanel />}
+            middlePanel={<MainControls />}
+            lowerPanel={<BottomPanel />}
           />
-        </UndoManagerProvider>
-      </AudioEngineProvider>
-    </OrientationManager>
+          <Loader />
+          <ModalProvider />
+        </BottomPanelProvider>
+        <Block
+          shouldBlockFn={({ current, next }) => {
+            const isSaving =
+              current.pathname === next.pathname &&
+              current.search !== next.search;
+            const isNavigatingAfterRefresh =
+              current.search.tempProjectId === next.params.projectId;
+
+            if (isSaving || isNavigatingAfterRefresh) return false;
+            const shouldLeave = confirm(
+              "Are you sure you want to leave? You will lose any unsaved changes"
+            );
+            return !shouldLeave;
+          }}
+        />
+      </UndoManagerProvider>
+    </AudioEngineProvider>
   );
 });

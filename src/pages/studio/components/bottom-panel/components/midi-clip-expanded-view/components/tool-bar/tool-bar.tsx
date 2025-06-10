@@ -74,8 +74,8 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
     );
 
   return (
-    <div className="flex items-center gap-1 justify-between md:justify-evenly">
-      <span className="flex items-center gap-1">
+    <div className="flex items-center gap-1 justify-between min-w-screen min-h-[2rem] no-scrollbar overflow-x-scroll md:justify-evenly">
+      <span className="flex flex-shrink-0 w-content min-h-[2rem] items-center gap-1">
         <StudioButton
           title={t("studio.toolbar.undo")}
           disabled={!undoManager.canUndo}
@@ -103,20 +103,7 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
         />
       </span>
 
-      <span className="flex items-center gap-1 min-w-[220px]">
-        <Slider
-          className="max-w-[80px] text-surface-5 flex-shrink-0"
-          value={[clip.quantizePercentage]}
-          onValueChange={onValueChange}
-          onValueCommit={commitValueChange}
-          min={0}
-          max={1}
-          step={0.01}
-          orientation="horizontal"
-        />
-        <p className="text-surface-5 text-sm w-[40px] flex-shrink-0 text-center">{`${Math.round(
-          clip.quantizePercentage * 100
-        )}%`}</p>
+      <span className="flex items-center gap-1">
         <StudioDropdownMenu
           disabled={clip.selectedNotes.length < 1}
           triggerIcon={QuantizeStartIcon}
@@ -144,6 +131,26 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
               onClick: () =>
                 undoManager.withGroup(() => clip.quantizeSelectedOff()),
             },
+            { separator: true },
+            {
+              render: () => (
+                <span className="flex gap-1 w-[120px] items-center justify-between">
+                  <Slider
+                    className="max-w-[80px] text-surface-5 flex-shrink-0"
+                    value={[clip.quantizePercentage]}
+                    onValueChange={onValueChange}
+                    onValueCommit={commitValueChange}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    orientation="horizontal"
+                  />
+                  <p className="text-surface-5 text-sm w-[40px] flex-shrink-0 text-center">{`${Math.round(
+                    clip.quantizePercentage * 100
+                  )}%`}</p>
+                </span>
+              ),
+            },
           ]}
         />
 
@@ -167,7 +174,7 @@ export const ToolBar = observer(({ clip }: ToolBarProps) => {
           max={MAX_VELOCITY}
           disabled={clip.selectedNotes.length < 1}
           type="number"
-          className="text-surface-4 w-[56px] h-[32px] text-md bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
+          className="text-surface-4 w-[56px] h-[32px] border border-surface-2 text-md bg-surface-mid focus:bg-surface-2 focus:select-text p-1 text-ellipsis focus:outline-none"
           value={clip.velocity}
           onChange={handleVelocityChange}
           onWheel={handleWheel}

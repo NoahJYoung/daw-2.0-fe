@@ -2,7 +2,7 @@ import { Mixer } from "../mixer";
 import { Timeline } from "../timeline";
 import type {
   KeyAnalysisResult,
-  UseSelectedOptions,
+  MidiNoteExtractionOptions,
   RomanNumeralAnalysis,
 } from "./types";
 import {
@@ -18,24 +18,25 @@ import {
 export class HarmonicAnalyzer {
   private mixer: Mixer;
   private timeline: Timeline;
-  private cachedKey: KeyAnalysisResult | null = null;
 
   constructor(mixer: Mixer, timeline: Timeline) {
     this.mixer = mixer;
     this.timeline = timeline;
   }
 
-  public getKey(options?: UseSelectedOptions): KeyAnalysisResult {
-    if (this.cachedKey) {
-      return this.cachedKey;
-    }
+  public getKey(options?: MidiNoteExtractionOptions): KeyAnalysisResult {
+    const extendedOptions: MidiNoteExtractionOptions = options
+      ? {
+          ...options,
+          filterChromaticPassingTones: true,
+          filterDiatonicPassingTones: false,
+        }
+      : {
+          filterChromaticPassingTones: true,
+          filterDiatonicPassingTones: false,
+        };
 
-    const allNotes = extractAllMidiNotes(
-      this.mixer,
-      options
-        ? { ...options, filterPassingTones: false }
-        : { filterPassingTones: false, useSelectedTracksOnly: false }
-    );
+    const allNotes = extractAllMidiNotes(this.mixer, extendedOptions);
 
     if (allNotes.length === 0) {
       throw new Error("No MIDI notes found for key analysis");
@@ -44,15 +45,23 @@ export class HarmonicAnalyzer {
     const pitchClassProfile = createPitchClassProfile(allNotes);
     const keyResult = findBestKey(pitchClassProfile);
 
-    this.cachedKey = keyResult;
     return keyResult;
   }
 
   public getRomanNumeralAnalysis(
-    options?: UseSelectedOptions
+    options?: MidiNoteExtractionOptions
   ): RomanNumeralAnalysis[][] {
     const keyResult = this.getKey(options);
-    const allNotes = extractAllMidiNotes(this.mixer, options);
+
+    const extendedOptions: MidiNoteExtractionOptions = options
+      ? {
+          ...options,
+          filterChromaticPassingTones: true,
+          filterDiatonicPassingTones: true,
+        }
+      : { filterChromaticPassingTones: true, filterDiatonicPassingTones: true };
+
+    const allNotes = extractAllMidiNotes(this.mixer, extendedOptions);
 
     if (allNotes.length === 0) {
       return [];
@@ -95,9 +104,5 @@ export class HarmonicAnalyzer {
     const processedAnalysis = processMeasures(groupedAnalysis);
 
     return processedAnalysis;
-  }
-
-  public invalidateCache(): void {
-    this.cachedKey = null;
   }
 }

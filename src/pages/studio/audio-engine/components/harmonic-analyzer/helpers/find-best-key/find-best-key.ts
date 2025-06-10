@@ -1,5 +1,19 @@
 import * as Tonal from "tonal";
-import { KeyAnalysisResult } from "../../types";
+
+export interface KeyCandidate {
+  key: string;
+  correlation: number;
+  confidence: number;
+  tonic: number;
+}
+
+export interface KeyAnalysisResult {
+  key: string;
+  mode: "major";
+  confidence: number;
+  pitchClassProfile: number[];
+  candidates: KeyCandidate[];
+}
 
 function rotateArray<T>(arr: T[], positions: number): T[] {
   const len = arr.length;
@@ -32,56 +46,50 @@ function calculateCorrelation(a: number[], b: number[]): number {
   return denominator === 0 ? 0 : numerator / denominator;
 }
 
-export function findBestKey(pitchClassProfile: number[]): KeyAnalysisResult {
+export function findBestKey(
+  pitchClassProfile: number[],
+  maxCandidates: number = 6
+): KeyAnalysisResult {
   const majorProfile = [
     6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88,
   ];
-  const minorProfile = [
-    6.33, 2.68, 3.52, 5.38, 2.6, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17,
-  ];
 
-  let bestKey = "C";
-  let bestMode: "major" | "minor" = "major";
-  let bestCorrelation = -1;
-  let detectedTonic = 0;
+  const candidates: KeyCandidate[] = [];
 
   for (let tonic = 0; tonic < 12; tonic++) {
     const rotatedMajorProfile = rotateArray(majorProfile, tonic);
-    const majorCorrelation = calculateCorrelation(
+    const correlation = calculateCorrelation(
       pitchClassProfile,
       rotatedMajorProfile
     );
 
-    const rotatedMinorProfile = rotateArray(minorProfile, tonic);
-    const minorCorrelation = calculateCorrelation(
-      pitchClassProfile,
-      rotatedMinorProfile
-    );
-
-    if (majorCorrelation > bestCorrelation) {
-      bestCorrelation = majorCorrelation;
-      detectedTonic = tonic;
-      bestMode = "major";
-    }
-
-    if (minorCorrelation > bestCorrelation) {
-      bestCorrelation = minorCorrelation;
-      detectedTonic = tonic;
-      bestMode = "minor";
-    }
+    const keyName = Tonal.Note.fromMidi(60 + tonic);
+    candidates.push({
+      key: keyName,
+      correlation: correlation,
+      confidence: Math.max(0, correlation),
+      tonic: tonic,
+    });
   }
 
-  if (bestMode === "minor") {
-    const relativeMajorTonic = (detectedTonic + 3) % 12;
-    bestKey = Tonal.Note.fromMidi(60 + relativeMajorTonic);
-  } else {
-    bestKey = Tonal.Note.fromMidi(60 + detectedTonic);
-  }
+  const sortedCandidates = candidates
+    .sort((a, b) => b.correlation - a.correlation)
+    .slice(0, maxCandidates);
+
+  const bestCorrelation = sortedCandidates[0]?.correlation || 0;
+  const normalizedCandidates = sortedCandidates.map((candidate) => ({
+    ...candidate,
+    confidence:
+      bestCorrelation > 0 ? candidate.correlation / bestCorrelation : 0,
+  }));
+
+  const primaryKey = normalizedCandidates[0];
 
   return {
-    key: bestKey,
+    key: primaryKey.key,
     mode: "major",
-    confidence: Math.max(0, bestCorrelation),
+    confidence: primaryKey.confidence,
     pitchClassProfile,
+    candidates: normalizedCandidates,
   };
 }

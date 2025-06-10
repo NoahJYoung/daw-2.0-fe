@@ -14,6 +14,7 @@ import { RomanNumeralAnalysis } from "@/pages/studio/audio-engine/components/har
 import { Badge } from "@/components/ui/badge";
 import { Timeline } from "@/pages/studio/audio-engine/components";
 import { cn } from "@/lib/utils";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 interface ChardCardProps {
   chord: RomanNumeralAnalysis;
@@ -52,67 +53,35 @@ export const ChordCard = ({
         style={{
           gridColumnStart: startPosition + 1,
           gridColumnEnd: startPosition + duration + 1,
-          minHeight: isLandscape ? "50px" : "100px",
+          minHeight: isMobileDevice() ? "50px" : "100px",
         }}
       >
         <CardContent
-          className={`p-2 h-full flex flex-col justify-center ${!isLandscape && "sm:p-4"}`}
+          className={`p-2 h-full flex flex-col justify-center ${!isMobileDevice() && "sm:p-4"}`}
         >
-          {isLandscape ? (
-            <div className="flex flex-col items-center justify-center h-full space-y-1">
-              <Badge
-                variant="outline"
-                className="text-[10px] font-mono border-zinc-400 dark:border-zinc-500 px-1"
-              >
-                {chord.beat}
-              </Badge>
-              <div className="text-sm font-bold font-mono">
-                {chord.romanNumeral}
-              </div>
-              <div className="text-xs font-medium text-center">
-                {chord.chordSymbol}
-              </div>
-              {isCurrentChord && (
-                <div className="w-6 h-6 rounded-full bg-brand-1 animate-pulse"></div>
-              )}
+          <div className="flex flex-col lg:gap-1 items-center justify-center h-full space-y-1">
+            <Badge
+              variant="outline"
+              className="text-sm block md:hidden mr-auto font-mono border-zinc-400 dark:border-zinc-500 px-1"
+            >
+              {chord.beat}
+            </Badge>
+            <Badge
+              variant="outline"
+              className="hidden md:block text-sm mr-auto font-mono border-zinc-400 dark:border-zinc-500 px-1"
+            >
+              {`Beat ${chord.beat}`}
+            </Badge>
+            <div className="text-md lg:text-xl font-bold font-mono">
+              {chord.romanNumeral}
             </div>
-          ) : (
-            <div className="space-y-1 sm:space-y-2">
-              <div className="flex items-center justify-between">
-                <Badge
-                  variant="outline"
-                  className="text-xs font-mono border-zinc-400 dark:border-zinc-500"
-                >
-                  B{chord.beat}
-                </Badge>
-                {isCurrentChord && (
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-1 animate-pulse"></div>
-                )}
-              </div>
-              <div className="flex sm:hidden items-center justify-between gap-2">
-                <div className="text-lg font-bold font-mono">
-                  {chord.romanNumeral}
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-medium">{chord.chordSymbol}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {chord.root} {chord.quality}
-                  </div>
-                </div>
-              </div>
-              <div className="hidden sm:block text-center space-y-0.5 sm:space-y-1">
-                <div className="text-lg sm:text-2xl font-bold font-mono">
-                  {chord.romanNumeral}
-                </div>
-                <div className="text-xs sm:text-sm font-medium">
-                  {chord.chordSymbol}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {chord.root} {chord.quality}
-                </div>
-              </div>
+            <div className="text-xs lg:text-sm font-medium text-center">
+              {chord.chordSymbol}
             </div>
-          )}
+            {isCurrentChord && (
+              <div className="w-6 h-6 rounded-full bg-brand-1 animate-pulse"></div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </PopoverTrigger>

@@ -42,7 +42,8 @@ export interface TonalChord {
   notes: string[];
 }
 
-export interface UseSelectedOptions {
-  useSelectedTracksOnly: boolean;
-  filterPassingTones?: boolean;
+export interface MidiNoteExtractionOptions {
+  useSelectedTracksOnly?: boolean;
+  filterChromaticPassingTones?: boolean;
+  filterDiatonicPassingTones?: boolean;
 }

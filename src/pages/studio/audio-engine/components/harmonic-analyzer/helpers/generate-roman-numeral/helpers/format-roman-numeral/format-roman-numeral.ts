@@ -10,9 +10,9 @@ export function formatRomanNumeral(
 
   if (!base) return "?";
 
-  const isMinorChord = quality.includes("m") && !quality.includes("M");
-  const isDiminished = quality.includes("dim") || quality.includes("°");
-  const isAugmented = quality.includes("aug") || quality.includes("+");
+  const isMinorChord = quality === "minor";
+  const isDiminished = quality === "diminished";
+  const isAugmented = quality === "augmented";
 
   let result = base;
 
