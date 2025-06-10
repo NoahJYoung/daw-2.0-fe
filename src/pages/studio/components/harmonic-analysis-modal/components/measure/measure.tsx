@@ -4,12 +4,12 @@ import { Timeline } from "@/pages/studio/audio-engine/components";
 import { RomanNumeralAnalysis } from "@/pages/studio/audio-engine/components/harmonic-analyzer/types";
 import { getChordStartPosition, getChordDuration } from "../../helpers";
 import { ChordCard } from "./components";
+import { isMobileDevice } from "@/pages/studio/utils";
 
 interface MeasureProps {
   timeline: Timeline;
   measureIndex: number;
   chords: RomanNumeralAnalysis[];
-  isLandscape: boolean;
   flatAnalysis: RomanNumeralAnalysis[];
   isPlaying: boolean;
   currentChordIndex: number | null;
@@ -19,7 +19,6 @@ export const Measure = ({
   timeline,
   measureIndex,
   chords,
-  isLandscape,
   flatAnalysis,
   isPlaying,
   currentChordIndex,
@@ -41,7 +40,7 @@ export const Measure = ({
         display: "grid",
         gridTemplateColumns: `repeat(${timeline.timeSignature}, 1fr)`,
         gap: "8px",
-        minHeight: isLandscape ? "60px" : "120px",
+        minHeight: isMobileDevice() ? "60px" : "120px",
       }}
     >
       {chords.map((chord, chordIndex) => {
@@ -62,7 +61,6 @@ export const Measure = ({
             duration={duration}
             startPosition={startPosition}
             timeline={timeline}
-            isLandscape={isLandscape}
             chord={chord}
             chordIndex={chordIndex}
             chords={chords}

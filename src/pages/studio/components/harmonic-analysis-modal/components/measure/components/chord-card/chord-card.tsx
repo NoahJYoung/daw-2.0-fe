@@ -23,7 +23,6 @@ interface ChardCardProps {
   isCurrentChord: boolean;
   startPosition: number;
   duration: number;
-  isLandscape: boolean;
   timeline: Timeline;
 }
 
@@ -35,7 +34,6 @@ export const ChordCard = ({
   isCurrentChord,
   startPosition,
   duration,
-  isLandscape,
 }: ChardCardProps) => (
   <Popover key={`${chord.measure}-${chord.beat}-${chordIndex}`}>
     <PopoverTrigger asChild>
@@ -56,9 +54,7 @@ export const ChordCard = ({
           minHeight: isMobileDevice() ? "50px" : "100px",
         }}
       >
-        <CardContent
-          className={`p-2 h-full flex flex-col justify-center ${!isMobileDevice() && "sm:p-4"}`}
-        >
+        <CardContent className="p-2 h-full flex flex-col justify-between">
           <div className="flex flex-col lg:gap-1 items-center justify-center h-full space-y-1">
             <Badge
               variant="outline"
@@ -68,14 +64,14 @@ export const ChordCard = ({
             </Badge>
             <Badge
               variant="outline"
-              className="hidden md:block text-sm mr-auto font-mono border-zinc-400 dark:border-zinc-500 px-1"
+              className="hidden md:block text-xs mr-auto font-mono border-zinc-400 dark:border-zinc-500 px-1"
             >
               {`Beat ${chord.beat}`}
             </Badge>
-            <div className="text-md lg:text-xl font-bold font-mono">
+            <div className="text-lg lg:text-xl font-bold font-mono">
               {chord.romanNumeral}
             </div>
-            <div className="text-xs lg:text-sm font-medium text-center">
+            <div className="text-sm lg:text-md font-medium text-center">
               {chord.chordSymbol}
             </div>
             {isCurrentChord && (

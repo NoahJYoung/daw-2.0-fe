@@ -21,7 +21,6 @@ export const HarmonicAnalysisModal = observer(
     const [currentChordIndex, setCurrentChordIndex] = useState<number | null>(
       null
     );
-    const [isLandscape, setIsLandscape] = useState(false);
     const audioEngine = useAudioEngine();
     const [analysis, setAnalysis] = useState<RomanNumeralAnalysis[][]>([]);
 
@@ -45,19 +44,6 @@ export const HarmonicAnalysisModal = observer(
         setAnalysis([]);
       }
     }, [mixer, timeline, isOpen]);
-
-    useEffect(() => {
-      const checkOrientation = () => {
-        setIsLandscape(
-          window.matchMedia("(orientation: landscape) and (max-height: 500px)")
-            .matches
-        );
-      };
-
-      checkOrientation();
-      window.addEventListener("resize", checkOrientation);
-      return () => window.removeEventListener("resize", checkOrientation);
-    }, []);
 
     const play = useCallback(() => {
       undoManager.withoutUndo(() => {
@@ -200,7 +186,6 @@ export const HarmonicAnalysisModal = observer(
                       currentChordIndex={currentChordIndex}
                       timeline={timeline}
                       flatAnalysis={flatAnalysis}
-                      isLandscape={isLandscape}
                       isPlaying={isPlaying}
                     />
                   ))}
