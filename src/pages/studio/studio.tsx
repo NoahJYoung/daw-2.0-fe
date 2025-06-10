@@ -13,8 +13,6 @@ import {
   ModalProvider,
   Loader,
 } from "./components";
-import { OrientationManager } from "@/components/ui/custom/orientation-manager";
-import { isMobileDevice } from "./utils";
 import {
   Block,
   useNavigate,
