@@ -69,10 +69,15 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   const panelGroupRef = useRef<ImperativePanelGroupHandle>(null);
 
   const isMobile = isMobileDevice();
+  const isLandscape = isMobile && window.innerWidth > window.innerHeight;
 
   const getDefaultExpandDimensions = () => {
     if (isMobile) {
-      return [0, 100];
+      if (isLandscape) {
+        return [0, 100];
+      } else {
+        return [50, 50];
+      }
     } else if (windowSize.height <= 800) {
       return [30, 70];
     } else return windowSize.width >= 640 ? [55, 45] : [35, 65];
@@ -83,10 +88,22 @@ export const BottomPanelProvider: React.FC<{ children: ReactNode }> = ({
   const toggleBottomPanel = () => {
     if (panelGroupRef.current) {
       const currentLayout = panelGroupRef.current.getLayout();
-      if (currentLayout[1] > 0) {
-        panelGroupRef.current.setLayout([100, 0]);
+      if (isMobile && !isLandscape) {
+        if (currentLayout[1] > 0) {
+          if (currentLayout[1] < 100) {
+            panelGroupRef.current.setLayout([0, 100]);
+          } else {
+            panelGroupRef.current.setLayout([100, 0]);
+          }
+        } else {
+          panelGroupRef.current.setLayout(defaultExpandedDimensions);
+        }
       } else {
-        panelGroupRef.current.setLayout(defaultExpandedDimensions);
+        if (currentLayout[1] > 0) {
+          panelGroupRef.current.setLayout([100, 0]);
+        } else {
+          panelGroupRef.current.setLayout(defaultExpandedDimensions);
+        }
       }
     }
   };

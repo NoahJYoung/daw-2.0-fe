@@ -92,8 +92,8 @@ export const Header = ({
                 size="sm"
                 className={`gap-1 text-xs sm:text-sm px-2 sm:px-3 ${
                   playbackState === AudioEngineState.paused
-                    ? "bg-transparent hover:bg-surface-5 text-white border border-surface-9"
-                    : "border-surface-9 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    ? "bg-transparent hover:bg-surface-5 text-surface-10 border border-surface-9"
+                    : "border-surface-9 text-surface-10 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
                 disabled={playbackState === AudioEngineState.paused}
               >
@@ -111,8 +111,8 @@ export const Header = ({
                 size="sm"
                 className={`gap-1 text-xs sm:text-sm px-2 sm:px-3 ${
                   playbackState === AudioEngineState.stopped
-                    ? "bg-transparent hover:bg-surface-5 text-white border border-surface-9"
-                    : "border-surface-9 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    ? "bg-transparent hover:bg-surface-5 text-surface-10 border border-surface-9"
+                    : "border-surface-9 text-surface-10 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
                 disabled={playbackState === AudioEngineState.stopped}
               >
