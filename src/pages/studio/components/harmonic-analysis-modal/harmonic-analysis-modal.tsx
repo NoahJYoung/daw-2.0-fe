@@ -46,20 +46,20 @@ export const HarmonicAnalysisModal = observer(
     }, [mixer, timeline, isOpen]);
 
     const play = useCallback(() => {
-      undoManager.withoutUndo(() => {
-        audioEngine.play();
+      undoManager.withoutUndo(async () => {
+        await audioEngine.play();
       });
     }, [audioEngine, undoManager]);
 
     const stop = useCallback(() => {
-      undoManager.withoutUndo(() => {
+      undoManager.withoutUndo(async () => {
         audioEngine.stop();
       });
     }, [audioEngine, undoManager]);
 
     const pause = useCallback(() => {
-      undoManager.withoutUndo(() => {
-        audioEngine.pause();
+      undoManager.withoutUndo(async () => {
+        await audioEngine.pause();
       });
     }, [audioEngine, undoManager]);
 
