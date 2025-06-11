@@ -31,7 +31,7 @@ export const Header = ({
   const renderAsPauseButton =
     state === AudioEngineState.playing || state === AudioEngineState.recording;
   return (
-    <DialogHeader className="pb-2 px-2 h-fit md:px-8 pt-4 pb-2 justify-center">
+    <DialogHeader className="pb-2 px-4 h-fit md:px-8 pt-4 pb-2 justify-center">
       <div className="flex flex-row items-start items-center justify-between gap-2 sm:gap-3">
         <div className="flex items-center sm:gap-3">
           <div className="p-1.5 sm:p-2 rounded-lg bg-zinc-900 dark:bg-zinc-100">
