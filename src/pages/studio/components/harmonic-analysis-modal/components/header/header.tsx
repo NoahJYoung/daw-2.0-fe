@@ -14,6 +14,7 @@ interface HeaderProps {
   playbackState: AudioEngineState;
   trackCount: number;
   totalTracks: number;
+  disabled?: boolean;
 }
 
 export const Header = ({
@@ -24,12 +25,13 @@ export const Header = ({
   playbackState,
   trackCount,
   totalTracks,
+  disabled,
 }: HeaderProps) => {
   const { state } = useAudioEngine();
   const renderAsPauseButton =
     state === AudioEngineState.playing || state === AudioEngineState.recording;
   return (
-    <DialogHeader className="pb-2 px-2 md:px-8 pt-4 pb-2 justify-center">
+    <DialogHeader className="pb-2 px-2 h-fit md:px-8 pt-4 pb-2 justify-center">
       <div className="flex flex-row items-start items-center justify-between gap-2 sm:gap-3">
         <div className="flex items-center sm:gap-3">
           <div className="p-1.5 sm:p-2 rounded-lg bg-zinc-900 dark:bg-zinc-100">
@@ -75,7 +77,7 @@ export const Header = ({
                   ? "bg-brand-1 hover:bg-brand-1 text-white border-brand-1"
                   : "border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800"
               }`}
-              disabled={playbackState === AudioEngineState.playing}
+              disabled={disabled || playbackState === AudioEngineState.playing}
             >
               <Play className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="hidden lg:inline">Play</span>
@@ -95,7 +97,7 @@ export const Header = ({
                     ? "bg-transparent hover:bg-surface-5 text-surface-10 border border-surface-9"
                     : "border-surface-9 text-surface-10 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
-                disabled={playbackState === AudioEngineState.paused}
+                disabled={disabled || playbackState === AudioEngineState.paused}
               >
                 <Pause className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden lg:inline">Pause</span>
@@ -114,7 +116,9 @@ export const Header = ({
                     ? "bg-transparent hover:bg-surface-5 text-surface-10 border border-surface-9"
                     : "border-surface-9 text-surface-10 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
-                disabled={playbackState === AudioEngineState.stopped}
+                disabled={
+                  disabled || playbackState === AudioEngineState.stopped
+                }
               >
                 <Square className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden lg:inline">Stop</span>

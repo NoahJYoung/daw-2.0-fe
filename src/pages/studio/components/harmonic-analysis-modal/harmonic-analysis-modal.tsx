@@ -158,20 +158,26 @@ export const HarmonicAnalysisModal = observer(
       }
     }, [currentChordIndex, isPlaying, flatAnalysis]);
 
+    const noAnalysis = analysis.length === 0;
+
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-6xl h-screen lg:max-h-[95vh] overflow-hidden gap-1 p-0">
+        <DialogContent
+          style={{ gridTemplateRows: "1fr 9fr" }}
+          className="max-w-6xl h-screen lg:max-h-[95vh] overflow-hidden gap-1 p-0"
+        >
           <Header
             trackCount={mixer.selectedTracks.length}
             totalTracks={mixer.tracks.length}
             playbackState={audioEngine.state}
+            disabled={noAnalysis}
             onPause={pause}
             onPlay={play}
             onStop={stop}
             analysis={analysis}
           />
 
-          {analysis.length === 0 ? (
+          {noAnalysis ? (
             <EmptyAnalysis
               isSelectedTracksEmpty={mixer.selectedTracks.length === 0}
             />
